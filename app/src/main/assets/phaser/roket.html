@@ -405,7 +405,11 @@ class GameScene extends Phaser.Scene {
 
     /* ağız algılayıcısı (staticGroup — callback parametre sırası için) */
     this.huniAgzi = this.physics.add.staticGroup();
-    this.huniAgzi.add(this.add.rectangle(EN / 2, HUNI_Y - 26, 136, 30, 0, 0));
+    /* Bazı katalog etiketleri 184 px'e kadar genişliyor. Kabul alanı
+       yalnız görsel ağzın 136 px genişliğinde kalınca doğru blok dudağa
+       çarpıp yana sekebiliyordu; yalnız sürüklenip bırakılan (dusuyor)
+       bloklar sayıldığı için alanı büyütmek pasif blokları yutmaz. */
+    this.huniAgzi.add(this.add.rectangle(EN / 2, HUNI_Y - 22, 216, 50, 0, 0));
   }
 
   huniCiz(acik){
@@ -549,7 +553,17 @@ class GameScene extends Phaser.Scene {
       this.huniCiz(false);
       this.tweens.add({ targets:blok, scale:1, duration:130 });
 
-      /* bırakıldı: yerçekimi açılsın, blok gerçekten düşsün */
+      /* Parmak huninin yakınına bilinçli bırakıldıysa geniş blok dudağa
+         çarpıp sekmeden kabul edilir. Doğru/yanlış kararı yine tek merkez
+         olan huniyeDustu() içinde verilir. */
+      if (Math.abs(blok.x - EN / 2) <= 118 &&
+          blok.y >= HUNI_Y - 122 && blok.y <= HUNI_Y + 24){
+        blok.setData('dusuyor', true);
+        this.huniyeDustu(blok, null);
+        return;
+      }
+
+      /* huni uzağına bırakıldı: yerçekimi açılsın, blok gerçekten düşsün */
       blok.setData('dusuyor', true);
       blok.body.setAllowGravity(true);
       blok.body.setBounce(0.35, 0.35);
@@ -725,6 +739,10 @@ class GameScene extends Phaser.Scene {
     blok.body.setBounce(1, 1);
     blok.x = Phaser.Math.Between(60, EN - 60);
     blok.y = Phaser.Math.Between(UZAY_UST + 50, UZAY_ALT - 50);
+    /* Container taşındığında Arcade gövdesi bazı uzun bloklarda eski
+       aşağıdaki koordinatta kalıp bir sonraki adımda nesneyi ekran dışına
+       geri çekiyordu. Görsel ve fizik konumunu atomik olarak eşitle. */
+    blok.body.reset(blok.x, blok.y);
     blok.body.setVelocity(
       Phaser.Math.Between(-90, 90) || 60,
       Phaser.Math.Between(-70, 70) || 50

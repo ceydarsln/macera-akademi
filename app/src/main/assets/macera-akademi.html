@@ -21049,9 +21049,13 @@ const PHASER_TIPLER = {
   countToTarget:  'oruntu',       /*  4 oyun · m11, m12, m22, m28 */
   groupMultiply:  'paketleme',    /*  3 oyun · v18, w20, p21 */
   shareDivide:    'paketleme',    /*  2 oyun · v19, w05 */
-  typeWord:       'daktilo'       /*  5 oyun · t09, y14, y56, y60, z16 */
-  /* kesirsaat (fractionCut/clockSet) BİLEREK dışarıda: yazıldı ama test
-     edilmedi. para (placeValueLoad/moneyBuild) ve geometri şablonu yok. */
+  typeWord:       'daktilo',       /*  5 oyun · t09, y14, y56, y60, z16 */
+  fractionCut:    'kesirsaat',     /*  2 oyun · v08, w10 */
+  clockSet:       'kesirsaat',     /*  2 oyun · v11, w12 */
+  placeValueLoad: 'para',          /*  2 oyun · v02, w02 */
+  moneyBuild:     'para',          /*  2 oyun · v09, v10 */
+  solidScan:      'geometri',      /*  2 oyun */
+  drawSegments:   'geometri'       /*  6 oyun */
 };
 
 /* Bazı oyunların içeriği metin değil, satır içi çizim işaretlemesi.
@@ -21069,7 +21073,8 @@ const SARMAL_ISARETI    = /<(div|table)/i;
 
 /* Şablonuna SVG çizici bağlanmış mekanikler */
 const SVG_CIZEN_TIPLER = {
-  beltSort:1, dragMatch:1, choiceQuestion:1, memoryPairs:1, serveOrder:1
+  beltSort:1, dragMatch:1, choiceQuestion:1, memoryPairs:1, serveOrder:1,
+  drawSegments:1
 };
 
 function icerikCizimMi(o, svgOlur){

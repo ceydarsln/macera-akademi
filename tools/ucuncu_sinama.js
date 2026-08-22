@@ -808,6 +808,132 @@ S.oynaDragSlider = async function(id){
 })(window);
 
 /* =====================================================================
+   Sonradan kataloğa bağlanan mekanikler
+   fractionCut · clockSet · moneyBuild · placeValueLoad · drawSegments · solidScan
+   ===================================================================== */
+(function(kok){
+'use strict';
+const S = kok.SINAMA;
+
+async function oyunHazir(id){
+  const w = await S.ac(id);
+  S.ilerlet(w, 30, 16);
+  const sc = w.OYUN.scene.getScene('Game');
+  if (!sc || !sc.sys || !sc.sys.isActive()) throw new Error('Game sahnesi açılmadı');
+  return { w, sc };
+}
+
+function rapor(id, sc, ek){
+  const bitti = !!S.KAYIT.bitti;
+  return Object.assign({
+    id, bitti, puan:S.KAYIT.puan, can:sc && sc.can,
+    hata:S.KAYIT.hatalar.slice(), sonuc:bitti ? 'TAMAM' : 'bitmedi'
+  }, ek || {});
+}
+
+S.oynaFractionCut = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let hamle = 0, not = '';
+  for (let d = 0; d < 600 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 16); continue; }
+    const t = sc.aktifTur, a = t && t.adimlar && t.adimlar[sc.adim];
+    if (!a){ S.ilerlet(w, 12, 16); continue; }
+    sc.kes(t, a.gerek); hamle++;
+    S.ilerlet(w, 20, 16);
+  }
+  const r = rapor(id, sc, { hamle, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaClockSet = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let onay = 0, ayar = 0, not = '';
+  for (let d = 0; d < 900 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 16); continue; }
+    const t = sc.aktifTur, a = t && t.adimlar && t.adimlar[sc.adim];
+    if (!a){ S.ilerlet(w, 12, 16); continue; }
+    let koruma = 0;
+    while (sc.saat !== a.saat && koruma++ < 12){ sc.saatAyar(t, 1, 0); ayar++; }
+    koruma = 0;
+    while (sc.dakika !== a.dakika && koruma++ < 4){ sc.saatAyar(t, 0, 15); ayar++; }
+    if (sc.saat !== a.saat || sc.dakika !== a.dakika){ not = 'hedef saat ayarlanamadı'; break; }
+    sc.saatOnay(t); onay++;
+    S.ilerlet(w, 20, 16);
+  }
+  const r = rapor(id, sc, { onay, ayar, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaValueBuild = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let eklenen = 0, not = '';
+  for (let d = 0; d < 900 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 16); continue; }
+    const t = sc.aktifTur;
+    if (!t){ not = 'aktif tur yok'; break; }
+    const kalan = t.hedef - sc.toplam;
+    if (kalan <= 0){ S.ilerlet(w, 12, 16); continue; }
+    let ix = -1, deger = -1;
+    t.jetonlar.forEach((j, i) => { if (j.deger <= kalan && j.deger > deger){ ix = i; deger = j.deger; } });
+    if (ix < 0){ not = 'hedef kalanını oluşturan jeton yok: ' + kalan; break; }
+    const once = sc.toplam;
+    sc.tut(ix);
+    if (!sc.tasinan){ not = 'jeton raftan alınamadı'; break; }
+    sc.birak();
+    for (let i = 0; i < 80 && sc.toplam === once && !sc.kilit; i++) S.ilerlet(w, 2, 16);
+    if (sc.toplam === once && !sc.kilit){ not = 'jeton kaba düşmedi: ' + deger; break; }
+    eklenen++;
+  }
+  const r = rapor(id, sc, { eklenen, toplam:sc.toplam, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaDrawSegments = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let cizgi = 0, not = '';
+  for (let d = 0; d < 1200 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 16); continue; }
+    const t = sc.aktifTur;
+    const cift = t && t.gerekli && t.gerekli.find(g =>
+      !(sc.cizilen || []).some(x => (x[0] === g[0] && x[1] === g[1]) || (x[0] === g[1] && x[1] === g[0])));
+    if (!cift){ S.ilerlet(w, 12, 16); continue; }
+    const bul = ad => (sc.koseNesne || []).find(o => o && o.getData && o.getData('ad') === ad);
+    const a = bul(cift[0]), b = bul(cift[1]);
+    if (!a || !b){ not = 'çizgi noktası bulunamadı: ' + cift.join('–'); break; }
+    sc.koseSec(t, a); sc.koseSec(t, b); cizgi++;
+    S.ilerlet(w, 10, 16);
+  }
+  const r = rapor(id, sc, { cizgi, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaSolidScan = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let taranan = 0, not = '';
+  for (let d = 0; d < 1600 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 16); continue; }
+    const t = sc.aktifTur;
+    const oge = (sc.ogeNesne || []).find(o => o && o.getData && !o.getData('tarandi'));
+    if (!oge){ S.ilerlet(w, 12, 16); continue; }
+    sc.ogeTara(t, oge); taranan++;
+    S.ilerlet(w, 4, 16);
+  }
+  const r = rapor(id, sc, { taranan, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+})(window);
+
+/* =====================================================================
    Ekran görüntüsü: tuvali sunucuya PNG olarak yazdır
    ===================================================================== */
 (function(kok){

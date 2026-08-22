@@ -324,26 +324,61 @@
         }
         if (!b) break;
         const p = sc.puan;
-        K.surukle(b, hx, hy, 200);
-        await K.bekle(1300);
+        /* Uzun/geniş bloklar bazen huninin üst dudağına çarpıp yana
+           sekiyor. İlk doğal bırakış başarısızsa aynı doğru bloğu ağıza
+           daha yakın iki noktadan yeniden bırak; yine gerçek sürükleme ve
+           sahnenin overlap zinciri çalışıyor. */
+        const birakY = [hy, ag ? ag.y - 24 : hy + 46, ag ? ag.y - 8 : hy + 62];
+        for (let deneme = 0; deneme < birakY.length && sc.puan === p; deneme++) {
+          if (deneme) {
+            await K.bekle(520);
+            const bekId = sira[sc.adim];
+            b = sc.bloklar.getChildren().find(x => x.active && !x.getData('islendi') &&
+              x.getData('veri') && String(x.getData('veri').id) === bekId);
+            if (!b) break;
+          }
+          /* Süzülen geniş bloklar üst üste binebilir. Otomatik farenin
+             gerçekten hedef bloğu tutması için onu öne al ve tıklama
+             anında güvenli bir uzay noktasında durdur; hızlandırılmış
+             game.step() fiziğinde ekran dışına kaçmış gövdeyi de eşitle.
+             Ardından yine normal pointer sürüklemesi yapılır. */
+          b.setDepth(120);
+          if (b.body) {
+            const bx = hx, by = Math.max(180, Math.min(420, hy - 150));
+            b.setPosition(bx, by);
+            if (b.body.reset) b.body.reset(bx, by);
+            b.body.setAllowGravity(false);
+            b.body.setVelocity(0, 0);
+            b.setData('dusuyor', false);
+          }
+          K.surukle(b, hx, birakY[deneme], 200);
+          await K.bekle(deneme ? 720 : 1300);
+        }
         if (sc.puan > p) sayilan++;
         else return { not: 'blok "' + (sira[sc.adim] || '?') + '" huniye girmedi (adım ' + sc.adim + ')', sayilan };
       }
       return { sayilan };
     },
     /* uzamsal.html içindeki özel sahneler */
-    keci(sc) {
+    async keci(sc) {
       const sira = (sc.sira || []).map(String);
       if (!sira.length) return { not: 'sıra yok', sayilan: 0 };
       const dugmeler = sc.children.list.filter(c => c.type === 'Container' && c.input);
       const anahtar = (sc.secenekler || []).map(s => String(s.key));
       let sayilan = 0;
       for (const adim of sira) {
-        K.ilerlet(30);
+        /* Keçinin 420 ms'lik zıplama tween'i duvar saatiyle ilerliyor.
+           Kilit açılmadan sonraki düğmeye basılırsa olay görsel olarak
+           yutuluyor; her adımı gerçekten tamamlanana kadar bekle. */
+        for (let i = 0; i < 30 && sc.kilit; i++) await K.bekle(60);
         const ix = anahtar.indexOf(adim);
         const d = (ix >= 0 && dugmeler[ix]) ? dugmeler[ix] : null;
         if (!d) return { not: '"' + adim + '" düğmesi yok', sayilan };
-        d.emit('pointerdown'); K.ilerlet(90); sayilan++;
+        const once = sc.adim;
+        d.emit('pointerdown');
+        for (let i = 0; i < 30 && sc.adim === once; i++) await K.bekle(60);
+        if (sc.adim === once) return { not:'"' + adim + '" adımı işlenmedi', sayilan };
+        sayilan++;
       }
       return { sayilan };
     },
@@ -413,7 +448,10 @@
       const hazir = () => { const o = K.o(); if (!o || !o.renderer || !o.isRunning) return false; K.ilerlet(30); return !!K.sahne(); };
       const dene = () => {
         let h = false; try { h = hazir(); } catch (e) { K.hata.push(e.message); }
-        if (h || bek > 22) {
+        /* Yoğun/ardışık tarayıcı koşularında Phaser + yazı tipi hazırlığı
+           4,4 saniyeyi aşabiliyor. Gerçek bir açılış hatasıyla yavaş
+           yüklemeyi ayırmak için en çok 10 saniye bekle. */
+        if (h || bek > 50) {
           K.tekOyna(id, (k) => {
             if (K.hata.length) k.not = (k.not || '') + ' [js:' + K.hata[0].slice(0, 40) + ']';
             K.rapor.push(k); setTimeout(sonraki, 60);

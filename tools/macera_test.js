@@ -12,7 +12,7 @@
 
    Bu giriş noktası üç eski aracın uzmanlığını korur:
      · KOSUM  — genel Phaser mekaniklerini gerçekten oynar
-     · SINAMA — dokuz özel mekanik için ayrıntılı oyuncuları çalıştırır
+     · SINAMA — on beş özel mekanik için ayrıntılı oyuncuları çalıştırır
      · ANLAM  — katalog görevlerinin içerik tutarlılığını tarar
    Sonuçlar test-results/ altında tek JSON dosyasına yazılır.
    ===================================================================== */
@@ -40,7 +40,13 @@
     jumpPath: 'oynaJumpPath',
     numPad: 'oynaNumPad',
     graphBuild: 'oynaGraphBuild',
-    dragSlider: 'oynaDragSlider'
+    dragSlider: 'oynaDragSlider',
+    fractionCut: 'oynaFractionCut',
+    clockSet: 'oynaClockSet',
+    moneyBuild: 'oynaValueBuild',
+    placeValueLoad: 'oynaValueBuild',
+    drawSegments: 'oynaDrawSegments',
+    solidScan: 'oynaSolidScan'
   };
 
   const GENEL_TIPLER = new Set([

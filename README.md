@@ -6,8 +6,9 @@ Macera Akademi, 1–4. sınıf düzeyleri için 658 müfredat oyunu içeren bir 
 
 - Sürüm: `2.8-test` (`versionCode 20`)
 - Toplam oyun: 658
-- Phaser motorunda çalışan: 641
-- DOM motorunda çalışan: 17
+- Phaser motorunda çalışan: 657
+- DOM motorunda çalışan: 1 (`v40`)
+- Otomatik oynanabilen mekanik kapsamı: 578 / 658
 - Android minimum sürüm: API 23
 - Ses sırası: hazır Chatterbox kaydı → Piper → sistem TTS
 
@@ -63,12 +64,20 @@ await MACERA_TEST.bekle()
 MACERA_TEST.ozet()
 ```
 
-`macera_test.js`, genel mekanikler için `kosum.js`, dokuz özel mekanik için `ucuncu_sinama.js` ve içerik denetimi için `anlam_denetimi.js` araçlarını tek API altında yönlendirir. Raporlar varsayılan olarak `test-results/macera-test-*.json` altında saklanır. Otomatik oyuncusu olmayan oyunlar sessizce atlanmaz; raporda `DESTEKLENMİYOR` olarak görünür.
+`macera_test.js`, genel mekanikler için `kosum.js`, on beş özel mekanik için `ucuncu_sinama.js` ve içerik denetimi için `anlam_denetimi.js` araçlarını tek API altında yönlendirir. Raporlar varsayılan olarak `test-results/macera-test-*.json` altında saklanır. Otomatik oyuncusu olmayan oyunlar sessizce atlanmaz; raporda `DESTEKLENMİYOR` olarak görünür.
+
+## Son doğrulama — 22 Ağustos 2026
+
+- `fractionCut`, `clockSet`, `moneyBuild`, `placeValueLoad`, `drawSegments` ve `solidScan` kullanan 16 oyun canlı Phaser köprüsünde baştan sona oynandı: **16 / 16 TAMAM**.
+- 658 oyunluk katalog dört sınıf grubunda tarandı. Otomatik oyuncusu bulunan 578 mekanik sonuç, tam tarama ve sorunlu kayıtların sakin tek-oturum yeniden koşuları birlikte değerlendirildiğinde tamamlandı; otomatik oyuncusu olmayan 80 kayıt açıkça `DESTEKLENMİYOR` olarak raporlandı.
+- Paylaşılan `orderSequence` yolu son sürümde yeniden tarandı: toplu turdaki 59 oyun ve özel `m03` yeniden koşusu birlikte **60 / 60 TAMAM**.
+- Android `assembleDebug` derlemesi başarıyla tamamlandı.
+- Anlam denetiminde 20 içerik uyarısı kaldı; bunlar mekanik çökme değil, içerik derinliği/görsel ölçüt inceleme kuyruğudur.
 
 ## Bilinen açıklar
 
-- `fractionCut` ve `clockSet` için `kesirsaat` şablonu hazır fakat doğrulanmamıştır.
-- `moneyBuild`/`placeValueLoad` için `para`, `drawSegments`/`solidScan` için `geometri` şablonları henüz canlı katalog köprüsüne dönüştürülmemiştir.
+- 80 katalog oyunu için henüz otomatik oyuncu yoktur; birleşik raporda `DESTEKLENMİYOR` görünürler.
+- Anlam denetiminin işaretlediği 20 içerik kaydı insan incelemesi beklemektedir.
 - `v40` HTML tabanlı özel grafiği nedeniyle bilinçli olarak DOM motorundadır.
 - Chatterbox kayıt üretimi tamamlanmadan Piper kaldırılmamalıdır.
 - İmzalı AAB, gizlilik politikası ve Play Store varlıkları henüz hazırlanmamıştır.
