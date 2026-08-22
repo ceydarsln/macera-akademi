@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Uzamsal İlişkiler — Phaser 3</title>
+<script src="phaser.min.js"></script>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#dff0fb;overflow:hidden;
+    font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+    -webkit-tap-highlight-color:transparent;touch-action:none}
+  #oyun{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  canvas{display:block}
+</style>
+</head>
+<body>
+<div id="oyun"></div>
+<script>
+/* =====================================================================
+   UZAMSAL İLİŞKİLER — GERÇEK OYUNLAR
+
+   NEDEN AYRI DOSYA?
+   Bu oyunların katalog verisi oynanabilir bir oyun tarif etmiyor; niyeti
+   parantez içinde yazıyor:
+     m03: sequence:['ileri','yukari',…] — dağ, yol, keçi, zirve YOK
+     m04: 🍎 · 🍏 · 🍎 + '⚫ (silüet)' — boyut bilgisi YOK, ayırt edici
+          tek şey renk; silüet ipucu vermiyor
+     m06: '🔑 (tam uyan)' — cevap etiketin içinde yazılı
+   Hangi motor kullanılırsa kullanılsın bu veriyle oyun anlamlı olamaz.
+   Bu yüzden eksik parametreler (yol geometrisi, boyut oranları, anahtar
+   açıları) burada YAZILDI ve her oyun kendi sahnesi olarak kuruldu.
+   Katalogdan gelen kısım korunuyor: yönerge, doğru cevabın kimliği,
+   düğme etiketleri, emojiler.
+   ===================================================================== */
+
+const EN = 480, BOY = 800;
+
+/* ---------------- uygulama köprüsü ---------------- */
+const KOPRU = (function(){
+  try{
+    const p = new URLSearchParams(location.hash.slice(1));
+    const id = p.get('oyun');
+    if (id && window.parent && window.parent !== window &&
+        typeof window.parent.getGame === 'function'){
+      const g = window.parent.getGame(id);
+      if (g && g.cfg) return {
+        oyun:g, cfg:g.cfg,
+        bitir(mesaj, puan){ try{ window.parent.completeGame(mesaj||'', puan); }catch(e){} },
+        oku(metin){ try{ if(window.parent.oku) window.parent.oku(metin); }catch(e){} },
+        atla(){ try{ if(window.parent.sonrakiOyunaGec) window.parent.sonrakiOyunaGec(); }catch(e){} }
+      };
+    }
+  }catch(e){}
+  return null;
+})();
+
+/* HTML varlıklarını çöz: katalogda "Pay &lt; payda" gibi yazımlar var,
+   çözülmezse ekranda "&lt;" olarak görünüyor ve öyle okunuyor. */
+function varlikCoz(m){
+  return String(m)
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
+    .replace(/&hellip;/gi, '…').replace(/&mdash;/gi, '—').replace(/&ndash;/gi, '–')
+    .replace(/&times;/gi, '×').replace(/&divide;/gi, '÷').replace(/&deg;/gi, '°')
+    .replace(/&rarr;/gi, '→').replace(/&larr;/gi, '←')
+    .replace(/&amp;/gi, '&');            /* en sona: çift çözmeyi önler */
+}
+
+function duzMetin(x){
+  return varlikCoz(String(x == null ? '' : x).replace(/<br\s*\/?>/gi,' ')
+    .replace(/<[^>]+>/g,'')).replace(/[“”]/g,'"').replace(/\s+/g,' ').trim();
+}
+
+const OYUN_ID = (new URLSearchParams(location.hash.slice(1))).get('oyun') || 'm03';
+const CFG     = KOPRU ? KOPRU.cfg : {};
+const CAN_SAYISI = 3;
+
+/* Cihaz piksel yoğunluğunda çizim (yazılar ve kenarlar keskin olsun) */
+const NETLIK = Math.min(3, Math.max(1, Math.round((window.devicePixelRatio||1)*2)/2));
+(function(){
+  const TS = Phaser.GameObjects.TextStyle.prototype, e = TS.setStyle;
+  TS.setStyle = function(s,u,d){ if(s && s.resolution===undefined) s.resolution = NETLIK; return e.call(this,s,u,d); };
+})();
+(function(){
+  const SS = Phaser.Scenes.Systems.prototype, e = SS.start;
+  SS.start = function(v){
+    const r = e.call(this,v), sc = this.scene;
+    try{
+      if(sc.cameras && sc.cameras.main){ sc.cameras.main.setZoom(NETLIK); sc.cameras.main.centerOn(EN/2, BOY/2); }
+      if(sc.physics && sc.physics.world) sc.physics.world.setBounds(0,0,EN,BOY);
+    }catch(x){}
+    return r;
+  };
+})();
+function imlec(p){ return { x:p.x/NETLIK, y:p.y/NETLIK }; }
+
+/* ---------------- ortak arayüz ---------------- */
+class Temel extends Phaser.Scene {
+  arayuzKur(yonerge){
+    this.can = CAN_SAYISI; this.puan = 0; this.kilit = false;
+
+    const yon = this.add.text(EN/2, 20, yonerge, {
+      fontFamily:'system-ui, sans-serif',
+      fontSize: yonerge.length > 70 ? '15px' : '18px', fontStyle:'bold',
+      color:'#20344a', align:'center', wordWrap:{ width:EN-44 }, lineSpacing:3
+    }).setOrigin(0.5,0).setDepth(61);
+
+    const boy = Math.max(78, yon.height + 52);
+    const s = this.add.graphics().setDepth(60);
+    s.fillStyle(0xffffff, 0.86); s.fillRoundedRect(10, 10, EN-20, boy, 16);
+    s.lineStyle(2, 0xbcdcf2, 1); s.strokeRoundedRect(10, 10, EN-20, boy, 16);
+    yon.setDepth(61);
+    this.seritAlt = 10 + boy;
+
+    const satirY = 10 + boy - 20;
+    this.puanYazi = this.add.text(28, satirY, 'Puan 0', {
+      fontFamily:'system-ui, sans-serif', fontSize:'16px', fontStyle:'bold', color:'#c47b1f'
+    }).setOrigin(0,0.5).setDepth(61);
+    this.canYazi = this.add.text(EN-28, satirY, '', { fontSize:'16px' })
+      .setOrigin(1,0.5).setDepth(61);
+    this.durumYazi = this.add.text(EN/2, satirY, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'15px', fontStyle:'bold', color:'#4a7fa8'
+    }).setOrigin(0.5).setDepth(61);
+
+    this.mesajYazi = this.add.text(EN/2, BOY-42, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'16px', fontStyle:'bold',
+      color:'#b5453b', align:'center', wordWrap:{ width:EN-50 }
+    }).setOrigin(0.5).setDepth(62);
+
+    this.kivilcim = this.add.particles(0,0,'kivilcim',{
+      speed:{min:120,max:320}, angle:{min:0,max:360}, scale:{start:1,end:0},
+      alpha:{start:1,end:0}, lifespan:600, gravityY:380, blendMode:'ADD', emitting:false
+    }).setDepth(90);
+
+    this.tazele();
+    if (KOPRU) KOPRU.oku(duzMetin(CFG.speak) || yonerge);
+  }
+  tazele(){
+    this.puanYazi.setText('Puan ' + this.puan);
+    this.canYazi.setText('❤️'.repeat(Math.max(0,this.can)) + '🖤'.repeat(Math.max(0,CAN_SAYISI-this.can)));
+  }
+  mesaj(m, renk){
+    this.mesajYazi.setColor(renk||'#b5453b').setText(m);
+    this.time.delayedCall(2200, ()=>{ if(this.mesajYazi.text===m) this.mesajYazi.setText(''); });
+  }
+  hata(m){
+    this.can--; this.tazele();
+    this.cameras.main.shake(220,0.012); this.cameras.main.flash(160,220,90,90);
+    this.mesaj(m);
+    if (this.can<=0){ this.kilit=true; this.time.delayedCall(900, ()=>this.bitir(false)); }
+  }
+  odul(n, x, y){
+    this.puan += n; this.tazele();
+    this.kivilcim.setParticleTint(0x54c98a); this.kivilcim.explode(20, x, y);
+    const u = this.add.text(x, y-18, '+'+n, { fontFamily:'system-ui, sans-serif',
+      fontSize:'24px', fontStyle:'bold', color:'#2f8f5b' }).setOrigin(0.5).setDepth(95);
+    this.tweens.add({ targets:u, y:u.y-60, alpha:0, duration:700, onComplete:()=>u.destroy() });
+  }
+  bitir(kazandi){
+    if (kazandi && KOPRU){ KOPRU.bitir(this.basariMesaji || 'Harika! Tamamladın.', this.puan); return; }
+    this.scene.start('Sonuc', { kazandi, puan:this.puan, can:this.can });
+  }
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+class BootScene extends Phaser.Scene {
+  constructor(){ super('Boot'); }
+  create(){
+    let g = this.make.graphics({add:false});
+    g.fillStyle(0xffffff,1); g.fillCircle(6,6,6);
+    g.generateTexture('kivilcim',12,12); g.destroy();
+
+    /* elma silueti/gövdesi: gerçek elma biçimi (iki yumru + sap) */
+    const elma = (ad, renk, sapRenk, yaprakRenk) => {
+      const g2 = this.make.graphics({add:false});
+      g2.fillStyle(renk,1);
+      g2.fillCircle(46,64,34); g2.fillCircle(74,64,34);
+      g2.fillCircle(60,84,32);
+      g2.fillStyle(sapRenk,1); g2.fillRect(57,20,7,22);
+      if (yaprakRenk!=null){ g2.fillStyle(yaprakRenk,1); g2.fillEllipse(78,28,30,16); }
+      g2.generateTexture(ad,120,120); g2.destroy();
+    };
+    /* çorap: uzunluğu parametreli (desen+boyut oyunu için) */
+    const corap = (ad, renk, uzun, cizgili) => {
+      const g3 = this.make.graphics({add:false});
+      const boy = uzun ? 128 : 84;
+      g3.fillStyle(renk,1);
+      g3.fillRoundedRect(22, 6, 42, boy-28, 12);          /* bacak */
+      g3.fillRoundedRect(22, boy-40, 74, 34, 14);          /* ayak */
+      if (cizgili){
+        /* Desen her boyda AYNI görünsün: şerit aralığı uzunluğa göre
+           ölçekleniyor (sabit adımda kısa çorapta tek şerit kalıyordu ve
+           desen karşılaştırması yapılamıyordu). */
+        g3.fillStyle(0xffffff,0.78);
+        const bas = 20, son = boy - 48, adet = 3;
+        for (let i=0; i<adet; i++){
+          const y = bas + (son-bas) * i / adet;
+          g3.fillRect(22, y, 42, Math.max(6, (son-bas)/adet*0.42));
+        }
+      }
+      g3.fillStyle(0xffffff,0.9); g3.fillRoundedRect(22,6,42,12,6); /* lastik */
+      g3.generateTexture(ad,104,boy+8); g3.destroy();
+    };
+    corap('corapUzunKirmizi', 0xd94a5a, true,  true);
+    corap('corapKisaKirmizi', 0xd94a5a, false, true);
+    corap('corapKisaMavi',    0x4a7fd6, false, true);
+    corap('corapUzunMavi',    0x4a7fd6, true,  true);
+
+    /* anahtar: sap + gövde + dişler (açısı sahnede veriliyor) */
+    const g4 = this.make.graphics({add:false});
+    g4.fillStyle(0xd9a53b,1);
+    g4.fillCircle(26,26,20);                    /* sap */
+    g4.fillStyle(0x8a6a1f,1); g4.fillCircle(26,26,8);
+    g4.fillStyle(0xd9a53b,1);
+    g4.fillRect(44,20,72,12);                   /* gövde */
+    g4.fillRect(96,32,10,18); g4.fillRect(112,32,10,26);  /* dişler */
+    g4.generateTexture('anahtar',130,56); g4.destroy();
+
+    /* kilit: gövde + belirli açıda anahtar deliği */
+    const g5 = this.make.graphics({add:false});
+    g5.fillStyle(0x6b7d8c,1); g5.fillRoundedRect(6,44,116,96,16);
+    g5.lineStyle(14,0x8b9aa8,1); g5.beginPath();
+    g5.arc(64,50,34,Math.PI,0); g5.strokePath();
+    g5.fillStyle(0x2f3b46,1); g5.fillCircle(64,86,17);
+    g5.fillRect(56,92,16,32);
+    g5.generateTexture('kilit',130,150); g5.destroy();
+
+    elma('elmaKirmizi', 0xe0495c, 0x8a5a2f, 0x5cb85c);
+    elma('elmaYesil',   0x76c043, 0x8a5a2f, 0x3f8f3f);
+    elma('elmaSiluet',  0x2f3b46, 0x2f3b46, null);
+
+    this.scene.start(SAHNE_ADI);
+  }
+}
+
+/* =====================================================================
+   1) DAĞCI KEÇİ  (m03) — gerçek dağ, görünen yol, tırmanan keçi
+   ---------------------------------------------------------------------
+   Katalogdan: sequence (ileri/yukari) ve düğme etiketleri.
+   Burada yazılan: yolun geometrisi. Her 'ileri' bir basamak sağa, her
+   'yukari' bir basamak yukarı taşıyor; basamaklar EKRANDA görünüyor,
+   keçi zıplayarak ilerliyor, tepede bayrak var. Böylece "keçiyi zirveye
+   çıkar" yönergesi görünür bir hedefe karşılık geliyor.
+   ===================================================================== */
+class KeciScene extends Temel {
+  constructor(){ super('Keci'); }
+
+  create(){
+    const c = CFG;
+    this.sira = (c.sequence || ['ileri','yukari','ileri','yukari','yukari']).map(String);
+    this.secenekler = (c.choices || [{key:'ileri',label:'➡️ İleri'},{key:'yukari',label:'⬆️ Yukarı'}]);
+    this.adim = 0;
+    this.basariMesaji = 'Zirveye çıktın! Yukarı ve ileri yönlerini doğru kullandın 🐐🚩';
+
+    this.gokyuzu();
+    this.arayuzKur(duzMetin(c.instruction) || 'Keçiyi zirveye çıkar!');
+    this.yolKur();
+    this.keciKur();
+    this.dugmeleriKur();
+    this.durumTazele();
+  }
+
+  gokyuzu(){
+    const g = this.add.graphics().setDepth(0);
+    g.fillGradientStyle(0xbfe6ff,0xbfe6ff,0xe9f7ff,0xe9f7ff,1);
+    g.fillRect(0,0,EN,BOY);
+    /* uzak dağ silsilesi */
+    g.fillStyle(0xa9c6d8,1);
+    g.beginPath(); g.moveTo(-20,560); g.lineTo(120,380); g.lineTo(250,560); g.closePath(); g.fillPath();
+    g.beginPath(); g.moveTo(200,560); g.lineTo(340,400); g.lineTo(500,560); g.closePath(); g.fillPath();
+    for(let i=0;i<3;i++){
+      const b = this.add.text(60+i*160, 190+i*26, '☁️', { fontSize:'34px' }).setAlpha(0.9).setDepth(1);
+      this.tweens.add({ targets:b, x:b.x+26, duration:4200+i*700, yoyo:true, repeat:-1, ease:'Sine.easeInOut' });
+    }
+  }
+
+  /* Yolu diziden üret: kaç sağa, kaç yukarı gidiliyorsa o kadar basamak */
+  yolKur(){
+    const sagAdim = this.sira.filter(x=>x==='ileri').length;
+    const yukAdim = this.sira.filter(x=>x==='yukari').length;
+
+    const solKenar = 62, tabanY = BOY - 176;
+    const enUst = Math.max(this.seritAlt + 84, 250);
+    const dx = Math.min(74, (EN - solKenar*2) / Math.max(1,sagAdim));
+    const dy = Math.min(64, (tabanY - enUst) / Math.max(1,yukAdim));
+
+    /* her adımın konumu: başlangıçtan itibaren diziyi izle */
+    this.noktalar = [{ x:solKenar, y:tabanY }];
+    let x = solKenar, y = tabanY;
+    this.sira.forEach(yon=>{
+      if (yon==='ileri') x += dx; else y -= dy;
+      this.noktalar.push({ x, y });
+    });
+
+    /* dağ gövdesi: yolun altını dolduran üçgen kütle */
+    const d = this.add.graphics().setDepth(2);
+    d.fillStyle(0x8aa79b,1);
+    d.beginPath();
+    d.moveTo(solKenar-46, tabanY+42);
+    this.noktalar.forEach(n=>d.lineTo(n.x, n.y+16));
+    d.lineTo(this.noktalar[this.noktalar.length-1].x+50, tabanY+42);
+    d.closePath(); d.fillPath();
+    d.fillStyle(0x9db9ad,1);
+    d.beginPath();
+    d.moveTo(solKenar-46, tabanY+42);
+    this.noktalar.forEach(n=>d.lineTo(n.x-10, n.y+26));
+    d.lineTo(this.noktalar[this.noktalar.length-1].x+50, tabanY+42);
+    d.closePath(); d.fillPath();
+
+    /* basamak taşları */
+    this.basamaklar = this.noktalar.map((n,i)=>{
+      const t = this.add.graphics().setDepth(3);
+      const son = i === this.noktalar.length-1;
+      t.fillStyle(son ? 0xf0c14b : 0xcfd9d0, 1);
+      t.fillRoundedRect(n.x-28, n.y+2, 56, 16, 7);
+      t.lineStyle(2, son ? 0xc79a2c : 0xa9b6ad, 1);
+      t.strokeRoundedRect(n.x-28, n.y+2, 56, 16, 7);
+      return t;
+    });
+
+    /* zirvede bayrak */
+    const zirve = this.noktalar[this.noktalar.length-1];
+    this.bayrak = this.add.text(zirve.x, zirve.y-26, '🚩', { fontSize:'38px' })
+      .setOrigin(0.5,1).setDepth(6);
+    this.tweens.add({ targets:this.bayrak, angle:{from:-8,to:8}, duration:900,
+      yoyo:true, repeat:-1, ease:'Sine.easeInOut' });
+    /* Etiket bayrağın ÜSTÜNDE: aynı yükseklikte olunca üst üste biniyordu. */
+    const et = this.add.text(zirve.x, zirve.y-74, 'ZİRVE', { fontFamily:'system-ui, sans-serif',
+      fontSize:'14px', fontStyle:'bold', color:'#6a5a24' }).setOrigin(0.5).setDepth(7);
+    const ka = this.add.graphics().setDepth(6);
+    ka.fillStyle(0xfff3cd, 0.95);
+    ka.fillRoundedRect(et.x-et.width/2-8, et.y-et.height/2-3, et.width+16, et.height+6, 8);
+    et.setDepth(7);
+  }
+
+  keciKur(){
+    const b = this.noktalar[0];
+    this.keci = this.add.text(b.x, b.y-4, (KOPRU && KOPRU.oyun.emo) || '🐐',
+      { fontSize:'44px' }).setOrigin(0.5,1).setDepth(20);
+    /* durup beklerken hafif nefes alma */
+    this.tweens.add({ targets:this.keci, scaleY:0.95, duration:700, yoyo:true, repeat:-1, ease:'Sine.easeInOut' });
+  }
+
+  dugmeleriKur(){
+    const n = this.secenekler.length;
+    this.secenekler.forEach((s,i)=>{
+      const x = EN/2 + (i-(n-1)/2) * 150;
+      const y = BOY - 104;
+      const c = this.add.container(x,y).setDepth(30);
+      const g = this.add.graphics();
+      g.fillStyle(0xffffff,0.96); g.fillRoundedRect(-66,-34,132,68,18);
+      g.lineStyle(3,0x8fc4e6,1); g.strokeRoundedRect(-66,-34,132,68,18);
+      const et = duzMetin(s.label);
+      c.add([g, this.add.text(0,0,et,{ fontFamily:'system-ui, sans-serif',
+        fontSize: et.length>10 ? '15px':'19px', fontStyle:'bold', color:'#20344a',
+        align:'center', wordWrap:{width:120} }).setOrigin(0.5)]);
+      c.setSize(150,86); c.setInteractive();
+      c.on('pointerdown', ()=>{
+        if (this.kilit) return;
+        this.tweens.add({ targets:c, scale:0.93, duration:80, yoyo:true });
+        this.bas(String(s.key));
+      });
+    });
+  }
+
+  durumTazele(){
+    this.durumYazi.setText(this.adim + ' / ' + this.sira.length + ' adım');
+  }
+
+  bas(anahtar){
+    if (anahtar !== this.sira[this.adim]){
+      /* yanlış yön: keçi kayar, yerinde kalır */
+      /* Sarsıntı bitince keçi TAM yerine dönsün: tek sayıda yoyo tekrarı
+         onu 14 px kaymış bırakıyordu. */
+      const yer = this.noktalar[this.adim].x;
+      this.tweens.add({ targets:this.keci, x:yer-14, duration:70, yoyo:true, repeat:2,
+        onComplete:()=>this.keci.setX(yer) });
+      this.hata('Olmadı! Keçi kaydı — yola bak, sıradaki adım nereye gidiyor?');
+      return;
+    }
+    const hedef = this.noktalar[this.adim+1];
+    this.adim++;
+    this.kilit = true;
+
+    /* GERÇEK ZIPLAMA: yay çizerek bir üst basamağa */
+    const t = this.tweens.addCounter({ from:0, to:1, duration:420, ease:'Sine.easeInOut',
+      onUpdate: tw => {
+        const k = tw.getValue();
+        const bas = this.noktalar[this.adim-1];
+        this.keci.x = Phaser.Math.Linear(bas.x, hedef.x, k);
+        this.keci.y = Phaser.Math.Linear(bas.y-4, hedef.y-4, k) - Math.sin(k*Math.PI)*46;
+      },
+      onComplete: ()=>{
+        this.kilit = false;
+        this.odul(120, this.keci.x, this.keci.y-20);
+        this.durumTazele();
+        if (this.adim >= this.sira.length){
+          this.kilit = true;
+          this.kivilcim.setParticleTint(0xf0c14b);
+          this.kivilcim.explode(40, hedef.x, hedef.y-30);
+          this.cameras.main.flash(280,255,235,150);
+          this.mesaj('Zirve! 🚩', '#2f8f5b');
+          this.time.delayedCall(900, ()=>this.bitir(true));
+        }
+      }
+    });
+    void t;
+  }
+}
+
+/* =====================================================================
+   2) GÖLGE AVCILARI (m04) — boyutu ölçülebilir silüet
+   ---------------------------------------------------------------------
+   Katalogdan: hangi elmanın doğru olduğu (match dolu olan) ve emojiler.
+   Burada yazılan: BOYUTLAR. Doğru elma silüetle aynı ölçüde; diğerleri
+   belirgin biçimde küçük ve büyük. Silüet de gerçek elma biçiminde, kesik
+   çizgili çerçeve içinde. Artık çocuk bakarak karar verebiliyor —
+   eskiden üç elma da aynı boyuttaydı ve tahmine kalıyordu.
+   ===================================================================== */
+class GolgeScene extends Temel {
+  constructor(){ super('Golge'); }
+
+  create(){
+    const c = CFG;
+    const kaynak = (c.sources || []).map(s=>({ id:String(s.id), etiket:duzMetin(s.label), dogru: !!s.match }));
+    if (!kaynak.length) kaynak.push({id:'a1',etiket:'🍎',dogru:true});
+    /* doğru olanı ortada olmayacak şekilde karıştır ve boyut ata:
+       doğru = silüet ölçüsü, diğerleri ±%28 */
+    this.olcu = 118;
+    const oranlar = [0.72, 1.0, 1.3];
+    const digerOranlar = oranlar.filter(o=>o!==1);
+    let k = 0;
+    this.elmalar = Phaser.Utils.Array.Shuffle(kaynak.slice()).map(x=>({
+      ...x, oran: x.dogru ? 1.0 : digerOranlar[k++ % digerOranlar.length]
+    }));
+    this.basariMesaji = 'Doğru! Silüetle aynı büyüklükteki elmayı buldun 🍎';
+
+    this.zeminCiz();
+    this.arayuzKur(duzMetin(c.instruction) || 'Silüetle tam eşleşen elmayı sürükle!');
+    this.siluetKur();
+    this.elmalariKur();
+    this.surukleKur();
+    this.add.text(EN/2, BOY - 118, '👆 Elmayı silüetin üstüne sürükle',
+      { fontFamily:'system-ui, sans-serif', fontSize:'15px', fontStyle:'bold', color:'#4a6b55' })
+      .setOrigin(0.5).setDepth(21);
+  }
+
+  zeminCiz(){
+    const g = this.add.graphics().setDepth(0);
+    g.fillGradientStyle(0xdff3d8,0xdff3d8,0xf4fbef,0xf4fbef,1);
+    g.fillRect(0,0,EN,BOY);
+    for(let i=0;i<7;i++) this.add.text(24+i*72, BOY-30, i%2?'🌳':'🌲',{fontSize:'30px'})
+      .setOrigin(0.5).setAlpha(0.85).setDepth(1);
+  }
+
+  siluetKur(){
+    const y = this.seritAlt + 132;
+    this.siluetY = y;
+    const cerceve = this.add.graphics().setDepth(4);
+    cerceve.fillStyle(0xffffff,0.9); cerceve.fillRoundedRect(EN/2-98, y-100, 196, 200, 20);
+    cerceve.lineStyle(4, 0xf0b93b, 1);
+    /* kesik çizgi etkisi: kısa parçalar */
+    for(let a=0;a<360;a+=12){
+      const r1=Phaser.Math.DegToRad(a), r2=Phaser.Math.DegToRad(a+6);
+      cerceve.lineBetween(EN/2+Math.cos(r1)*104, y+Math.sin(r1)*104,
+                          EN/2+Math.cos(r2)*104, y+Math.sin(r2)*104);
+    }
+    /* silüet: elma biçiminde koyu gölge, ÖLÇÜSÜ belli */
+    this.siluet = this.add.image(EN/2, y, 'elmaSiluet')
+      .setDisplaySize(this.olcu, this.olcu).setTint(0x2f3b46).setAlpha(0.9).setDepth(5);
+    this.add.text(EN/2, y+118, 'SİLÜET — bu ölçüdeki elmayı getir',
+      { fontFamily:'system-ui, sans-serif', fontSize:'14px', fontStyle:'bold', color:'#4a6b55' })
+      .setOrigin(0.5).setDepth(5);
+  }
+
+  elmalariKur(){
+    /* Elma sırası ağaç şeridinin üstünde kalsın (üst üste biniyordu). */
+    const y = BOY - 210;
+    const n = this.elmalar.length;
+    this.elmaNesne = this.elmalar.map((e,i)=>{
+      const x = EN/2 + (i-(n-1)/2) * Math.min(130, (EN-60)/n);
+      const boy = this.olcu * e.oran;
+      const im = this.add.image(x, y, e.etiket.indexOf('🍏')>=0 ? 'elmaYesil':'elmaKirmizi')
+        .setDisplaySize(boy, boy).setDepth(20);
+      im.setData('dogru', e.dogru); im.setData('ev', {x,y}); im.setData('boy', boy);
+      /* dokunma alanı görselden biraz geniş */
+      im.setInteractive({ useHandCursor:true, pixelPerfect:false });
+      this.input.setDraggable(im);
+      /* Sayısal ölçü YAZILMIYOR: bu oyunun amacı gözle karşılaştırmak;
+         "118 birim" yazınca görsel eşleme sayı okumaya dönüşüyor. */
+      return im;
+    });
+  }
+
+  surukleKur(){
+    this.input.on('dragstart', (p,o)=>{ if(this.kilit) return; o.setDepth(40);
+      this.tweens.add({targets:o, scale:o.scale*1.06, duration:110}); });
+    this.input.on('drag', (p,o,x,y)=>{ if(this.kilit) return; o.x=x; o.y=y; });
+    this.input.on('dragend', (p,o)=>{
+      if (this.kilit) return;
+      o.setDepth(20);
+      const d = Phaser.Math.Distance.Between(o.x,o.y, EN/2, this.siluetY);
+      const boy = o.getData('boy');
+      this.tweens.add({ targets:o, displayWidth:boy, displayHeight:boy, duration:110 });
+      if (d > 120){ this.eveDon(o); return; }
+
+      if (o.getData('dogru')){
+        this.kilit = true;
+        /* Yanlış denemeden kalan elmalar silüetin üstünde takılı kalmasın:
+           kazanınca hepsi yerine dönüyor, sahnede yalnız doğru elma kalıyor. */
+        this.tweens.killTweensOf(this.elmaNesne);
+        this.elmaNesne.forEach(d=>{
+          if (d === o) return;
+          const ev = d.getData('ev');
+          d.setPosition(ev.x, ev.y);
+          d.setDisplaySize(d.getData('boy'), d.getData('boy'));
+        });
+        o.setDepth(30);
+        this.tweens.add({ targets:o, x:EN/2, y:this.siluetY, duration:240, ease:'Back.easeOut' });
+        this.siluet.setAlpha(0.25);
+        this.odul(300, EN/2, this.siluetY);
+        this.cameras.main.flash(240,150,240,180);
+        this.mesaj('Tam oturdu! Aynı ölçü 🍎', '#2f8f5b');
+        this.time.delayedCall(900, ()=>this.bitir(true));
+      } else {
+        /* görsel geri bildirim: büyükse sığmıyor, küçükse boşluk kalıyor */
+        const buyukMu = boy > this.olcu;
+        this.tweens.add({ targets:o, x:EN/2, y:this.siluetY, duration:200, yoyo:true,
+          hold:260, onComplete:()=>this.eveDon(o) });
+        this.hata(buyukMu ? 'Bu elma silüete SIĞMADI — daha küçüğünü dene.'
+                          : 'Bu elma silüetten KÜÇÜK — kenarlarda boşluk kaldı.');
+      }
+    });
+  }
+
+  eveDon(o){
+    const ev = o.getData('ev');
+    this.tweens.add({ targets:o, x:ev.x, y:ev.y, duration:280, ease:'Back.easeOut' });
+  }
+}
+
+/* =====================================================================
+   3) ÇORAP EŞLEŞTİRMECE (m05) — desen VE boyut birlikte
+   ---------------------------------------------------------------------
+   Katalog etiketlerinde ölçü bilgisi metin olarak var: "Uzun-Kırmızı",
+   "Kısa-Kırmızı", "Kısa-Mavi". Eskiden bu yalnız yazıydı; artık çorap
+   GERÇEKTEN uzun/kısa ve kırmızı/mavi çiziliyor. İpteki tek çorap örnek;
+   çocuk hem deseni hem boyu karşılaştırıyor.
+   ===================================================================== */
+class CorapScene extends Temel {
+  constructor(){ super('Corap'); }
+
+  ozellik(etiket){
+    const t = etiket.toLocaleLowerCase('tr');
+    return { uzun: t.indexOf('uzun') >= 0, mavi: t.indexOf('mavi') >= 0 };
+  }
+  doku(o){
+    return o.mavi ? (o.uzun ? 'corapUzunMavi' : 'corapKisaMavi')
+                  : (o.uzun ? 'corapUzunKirmizi' : 'corapKisaKirmizi');
+  }
+
+  create(){
+    const c = CFG;
+    const kaynak = (c.sources || []).map(s=>({
+      etiket: duzMetin(s.label), dogru: !!s.match
+    }));
+    if (!kaynak.length){
+      kaynak.push({etiket:'🧦 Uzun-Kırmızı',dogru:false},
+                  {etiket:'🧦 Kısa-Kırmızı',dogru:true},
+                  {etiket:'🧦 Kısa-Mavi',dogru:false});
+    }
+    this.coraplar = Phaser.Utils.Array.Shuffle(kaynak.slice());
+    this.basariMesaji = 'Doğru! Hem deseni hem boyu aynı olan çorabı buldun 🧦';
+
+    /* zemin */
+    const g = this.add.graphics().setDepth(0);
+    g.fillGradientStyle(0xfdf1e0,0xfdf1e0,0xfff9f0,0xfff9f0,1); g.fillRect(0,0,EN,BOY);
+
+    this.arayuzKur(duzMetin(c.instruction) || 'Sepetteki çorabın tam eşini bul!');
+    this.ipKur();
+    this.sepetKur();
+    this.surukleKur();
+  }
+
+  ipKur(){
+    const y = this.seritAlt + 96;
+    this.ipY = y;
+    const g = this.add.graphics().setDepth(3);
+    g.lineStyle(4, 0xb98a5a, 1); g.lineBetween(24, y-56, EN-24, y-46);
+    this.add.text(EN/2, y-84, 'İPTEKİ ÖRNEK — bunun tam eşini getir',
+      { fontFamily:'system-ui, sans-serif', fontSize:'14px', fontStyle:'bold', color:'#8a6a45' })
+      .setOrigin(0.5).setDepth(4);
+
+    /* örnek çorap = doğru cevabın özellikleri */
+    const dogru = this.coraplar.find(x=>x.dogru) || this.coraplar[0];
+    this.hedefOzellik = this.ozellik(dogru.etiket);
+    this.ornek = this.add.image(EN/2, y, this.doku(this.hedefOzellik))
+      .setOrigin(0.5,0).setDepth(5).setScale(1.05);
+    /* mandal */
+    this.add.text(EN/2, y-8, '🪡', { fontSize:'22px' }).setOrigin(0.5).setDepth(6);
+  }
+
+  sepetKur(){
+    const y = BOY - 236;
+    this.add.text(EN/2, y - 96, '🧺 SEPET', { fontFamily:'system-ui, sans-serif',
+      fontSize:'15px', fontStyle:'bold', color:'#8a6a45' }).setOrigin(0.5).setDepth(4);
+    const n = this.coraplar.length;
+    this.corapNesne = this.coraplar.map((cr,i)=>{
+      const x = EN/2 + (i-(n-1)/2) * Math.min(132, (EN-52)/n);
+      const o = this.ozellik(cr.etiket);
+      const im = this.add.image(x, y, this.doku(o)).setOrigin(0.5,0).setDepth(20).setScale(1.05);
+      im.setData('dogru', cr.dogru); im.setData('ev', {x,y});
+      im.setInteractive({ useHandCursor:true });
+      this.input.setDraggable(im);
+      return im;
+    });
+    this.add.text(EN/2, BOY-58, '👆 Eşini ipin yanına sürükle',
+      { fontFamily:'system-ui, sans-serif', fontSize:'15px', fontStyle:'bold', color:'#8a6a45' })
+      .setOrigin(0.5).setDepth(21);
+  }
+
+  surukleKur(){
+    this.input.on('dragstart', (p,o)=>{ if(this.kilit) return; o.setDepth(40); });
+    this.input.on('drag', (p,o,x,y)=>{ if(this.kilit) return; o.x=x; o.y=y; });
+    this.input.on('dragend', (p,o)=>{
+      if (this.kilit) return;
+      o.setDepth(20);
+      const d = Phaser.Math.Distance.Between(o.x,o.y, EN/2, this.ipY+40);
+      if (d > 150){ this.eve(o); return; }
+      if (o.getData('dogru')){
+        this.kilit = true;
+        this.tweens.add({ targets:o, x:EN/2+96, y:this.ipY, duration:240, ease:'Back.easeOut' });
+        this.odul(300, EN/2, this.ipY+40);
+        this.cameras.main.flash(240,150,240,180);
+        this.mesaj('Tam eşi! 🧦', '#2f8f5b');
+        this.time.delayedCall(900, ()=>this.bitir(true));
+      } else {
+        const o2 = { uzun: o.texture.key.indexOf('Uzun')>=0, mavi: o.texture.key.indexOf('Mavi')>=0 };
+        const neden = (o2.mavi !== this.hedefOzellik.mavi)
+          ? 'Deseni/rengi farklı — örneğe bak.'
+          : 'Boyu farklı — örnek daha ' + (this.hedefOzellik.uzun ? 'uzun' : 'kısa') + '.';
+        this.hata(neden);
+        this.eve(o);
+      }
+    });
+  }
+  eve(o){ const e=o.getData('ev'); this.tweens.add({targets:o,x:e.x,y:e.y,duration:280,ease:'Back.easeOut'}); }
+}
+
+/* =====================================================================
+   4) ANAHTAR VE KİLİT (m06) — açı ile eşleme
+   ---------------------------------------------------------------------
+   Katalogda cevap etiketin İÇİNDE yazılıydı: '🔑 (tam uyan)'. Artık o
+   yazılar gösterilmiyor; parantezdeki niyet AÇIYA çevriliyor:
+     (tam uyan) → 0°   (ters) → 180°   (yamuk/eğik) → 35°
+   Çocuk kilit deliğinin yönüne bakıp doğru duran anahtara dokunuyor.
+   ===================================================================== */
+class AnahtarScene extends Temel {
+  constructor(){ super('Anahtar'); }
+
+  aciCikar(etiket){
+    const t = etiket.toLocaleLowerCase('tr');
+    if (t.indexOf('ters') >= 0) return 180;
+    if (t.indexOf('yamuk') >= 0 || t.indexOf('eğik') >= 0) return 35;
+    return 0;
+  }
+
+  create(){
+    const c = CFG;
+    const dogrular = (c.correct || []).map(String);
+    let ogeler = (c.items || []).map(i=>({
+      id:String(i.id), etiket:duzMetin(i.label), dogru: dogrular.indexOf(String(i.id))>=0
+    }));
+    if (!ogeler.length) ogeler = [
+      {id:'k1',etiket:'🗝️ (ters)',dogru:false},
+      {id:'k2',etiket:'🔑 (tam uyan)',dogru:true},
+      {id:'k3',etiket:'🗝️ (yamuk)',dogru:false}];
+    this.anahtarlar = Phaser.Utils.Array.Shuffle(ogeler.map(o=>({
+      ...o, aci: o.dogru ? 0 : (this.aciCikar(o.etiket) || 145)
+    })));
+    this.basariMesaji = 'Kilit açıldı! Anahtarın yönünü doğru okudun 🔑';
+
+    const g = this.add.graphics().setDepth(0);
+    g.fillGradientStyle(0xe6e9f2,0xe6e9f2,0xf6f7fb,0xf6f7fb,1); g.fillRect(0,0,EN,BOY);
+
+    this.arayuzKur(duzMetin(c.instruction) || 'Kilide tam uyan anahtara dokun!');
+    this.kilitKur();
+    this.anahtarlariKur();
+  }
+
+  kilitKur(){
+    const y = this.seritAlt + 130;
+    this.kilitY = y;
+    this.add.image(EN/2, y, 'kilit').setDisplaySize(150,173).setDepth(5);
+    /* deliğin yönünü gösteren kılavuz: yatay */
+    const g = this.add.graphics().setDepth(6);
+    g.lineStyle(5, 0xf0b93b, 1);
+    g.lineBetween(EN/2-52, y+16, EN/2+52, y+16);
+    g.fillStyle(0xf0b93b,1);
+    g.fillTriangle(EN/2+52, y+8, EN/2+66, y+16, EN/2+52, y+24);
+    this.add.text(EN/2, y+108, 'Kilit deliği bu yönde — aynı yönde duran anahtarı seç',
+      { fontFamily:'system-ui, sans-serif', fontSize:'13.5px', fontStyle:'bold',
+        color:'#5a6472', align:'center', wordWrap:{width:EN-60} }).setOrigin(0.5).setDepth(6);
+  }
+
+  anahtarlariKur(){
+    const y = BOY - 180;
+    const n = this.anahtarlar.length;
+    this.anahtarNesne = this.anahtarlar.map((a,i)=>{
+      const x = EN/2 + (i-(n-1)/2) * Math.min(140, (EN-48)/n);
+      const c = this.add.container(x,y).setDepth(20);
+      const g = this.add.graphics();
+      g.fillStyle(0xffffff,0.95); g.fillRoundedRect(-62,-52,124,104,18);
+      g.lineStyle(3,0xc3cbd6,1); g.strokeRoundedRect(-62,-52,124,104,18);
+      const im = this.add.image(0,0,'anahtar').setDisplaySize(104,45).setAngle(a.aci);
+      c.add([g, im]);
+      c.setSize(150,120); c.setInteractive({ useHandCursor:true });
+      c.setData('dogru', !!a.dogru);      /* otomatik denetim için */
+      c.on('pointerdown', ()=>{
+        if (this.kilit) return;
+        this.tweens.add({ targets:c, scale:0.94, duration:80, yoyo:true });
+        if (a.dogru){
+          this.kilit = true;
+          this.tweens.add({ targets:c, x:EN/2, y:this.kilitY+16, duration:320, ease:'Back.easeOut' });
+          this.tweens.add({ targets:im, angle:a.aci+90, duration:420, delay:320 });
+          this.odul(300, EN/2, this.kilitY);
+          this.cameras.main.flash(240,150,240,180);
+          this.mesaj('Klik! Kilit açıldı 🔓', '#2f8f5b');
+          this.time.delayedCall(1100, ()=>this.bitir(true));
+        } else {
+          this.tweens.add({ targets:c, angle:{from:-6,to:6}, duration:70, yoyo:true, repeat:2,
+            onComplete:()=>c.setAngle(0) });
+          this.hata(a.aci===180 ? 'Bu anahtar TERS duruyor — deliğe girmez.'
+                                : 'Bu anahtar EĞİK duruyor — deliğe oturmaz.');
+        }
+      });
+      return c;
+    });
+  }
+}
+
+/* =====================================================================
+   5) PUSULA KORSANI (m02) — 3×3 ızgarada sayarak bulma
+   ---------------------------------------------------------------------
+   Katalogda 9 kutu vardı ve hazine EKRANDA GÖRÜNÜYORDU (💰); çocuk
+   sayacağı yerde doğrudan ona dokunuyordu. Artık kutular kapalı: korsan
+   sol üstte duruyor, yönerge "2 adım sağda, 1 adım aşağıda" diyor ve
+   çocuk sayarak doğru kutuya dokunuyor. Doğru kutunun indeksi katalogdan
+   (correct) geliyor; ızgara 3×3 olarak yazıldı.
+   ===================================================================== */
+class PusulaScene extends Temel {
+  constructor(){ super('Pusula'); }
+
+  create(){
+    const c = CFG;
+    const ogeler = (c.items || []).map(i=>String(i.id));
+    const dogrular = (c.correct || []).map(String);
+    this.sutun = 3; this.satir = Math.max(1, Math.ceil((ogeler.length||9)/3));
+    this.dogruIndex = Math.max(0, ogeler.indexOf(dogrular[0]));
+    if (!ogeler.length){ this.dogruIndex = 5; }
+    this.basariMesaji = 'Hazineyi buldun! Sağ-sol ve aşağı-yukarı saymayı kullandın 💰';
+
+    const g = this.add.graphics().setDepth(0);
+    g.fillGradientStyle(0xfdf0d5,0xfdf0d5,0xfff8e8,0xfff8e8,1); g.fillRect(0,0,EN,BOY);
+
+    this.arayuzKur(duzMetin(c.instruction) || 'Hazinenin yerini say ve doğru kareye dokun!');
+    this.izgaraKur();
+  }
+
+  izgaraKur(){
+    const kutu = 92, ara = 10;
+    const genislik = this.sutun*kutu + (this.sutun-1)*ara;
+    const sol = (EN - genislik)/2;
+    const ust = this.seritAlt + 84;
+    this.kutular = [];
+    for (let r=0; r<this.satir; r++){
+      for (let s=0; s<this.sutun; s++){
+        const i = r*this.sutun + s;
+        const x = sol + s*(kutu+ara) + kutu/2;
+        const y = ust + r*(kutu+ara) + kutu/2;
+        const c = this.add.container(x,y).setDepth(10);
+        const g = this.add.graphics();
+        g.fillStyle(0xe8c98f,1); g.fillRoundedRect(-kutu/2,-kutu/2,kutu,kutu,14);
+        g.lineStyle(3,0xc9a469,1); g.strokeRoundedRect(-kutu/2,-kutu/2,kutu,kutu,14);
+        const kum = this.add.text(0,0,'🟫',{fontSize:'34px'}).setOrigin(0.5).setAlpha(0.35);
+        c.add([g,kum]);
+        c.setSize(kutu+8,kutu+8); c.setInteractive({ useHandCursor:true });
+        c.setData('index', i); c.setData('cizim', g); c.setData('kum', kum);
+        c.setData('dogru', i === this.dogruIndex);   /* otomatik denetim için */
+        c.on('pointerdown', ()=>this.kutuyaDokun(c));
+        this.kutular.push(c);
+      }
+    }
+    /* korsan sol üst karede: sayma buradan başlıyor */
+    const ilk = this.kutular[0];
+    this.add.text(ilk.x, ilk.y, '🏴‍☠️', { fontSize:'40px' }).setOrigin(0.5).setDepth(14);
+    /* Etiket karenin SOL ÜSTÜNDE: altına yazınca ikinci sıradaki kareye
+       biniyordu. */
+    this.add.text(ilk.x - 4, ilk.y - 62, '👇 buradan say',
+      { fontFamily:'system-ui, sans-serif', fontSize:'12.5px', fontStyle:'bold',
+        color:'#8a6a45', backgroundColor:'#fff6e2', padding:{x:6,y:3} })
+      .setOrigin(0.5).setDepth(14);
+    this.durumYazi.setText('Kapalı kareler: sayarak bul');
+  }
+
+  kutuyaDokun(k){
+    if (this.kilit || k.getData('acildi')) return;
+    k.setData('acildi', true);
+    const dogru = k.getData('index') === this.dogruIndex;
+    const g = k.getData('cizim');
+    k.getData('kum').setVisible(false);
+    g.clear();
+    g.fillStyle(dogru ? 0xf7e08a : 0xd8bfa0, 1);
+    g.fillRoundedRect(-46,-46,92,92,14);
+    g.lineStyle(3, dogru ? 0xd9a53b : 0xb59a80, 1);
+    g.strokeRoundedRect(-46,-46,92,92,14);
+    k.add(this.add.text(0,0, dogru ? '💰' : '🕳️', { fontSize:'40px' }).setOrigin(0.5));
+
+    if (dogru){
+      this.kilit = true;
+      this.odul(300, k.x, k.y);
+      this.cameras.main.flash(260,255,235,150);
+      this.mesaj('Hazine! 💰', '#2f8f5b');
+      this.time.delayedCall(900, ()=>this.bitir(true));
+    } else {
+      this.hata('Burası boş çukur — korsandan tekrar say.');
+    }
+  }
+}
+
+/* =====================================================================
+   SONUÇ (yalnız tek başına açıldığında)
+   ===================================================================== */
+class SonucScene extends Phaser.Scene {
+  constructor(){ super('Sonuc'); }
+  init(v){ this.v = v||{}; }
+  create(){
+    this.add.rectangle(EN/2,BOY/2,EN,BOY, this.v.kazandi?0xe9f7ef:0xfaeceb);
+    this.add.text(EN/2,300, this.v.kazandi?'🎉':'💪',{fontSize:'86px'}).setOrigin(0.5);
+    this.add.text(EN/2,392, this.v.kazandi?'TAMAMLADIN!':'TEKRAR DENE',{
+      fontFamily:'system-ui, sans-serif', fontSize:'30px', fontStyle:'bold',
+      color: this.v.kazandi?'#2f8f5b':'#b5453b'}).setOrigin(0.5);
+    this.add.text(EN/2,452,'Puan '+(this.v.puan||0),{
+      fontFamily:'system-ui, sans-serif', fontSize:'24px', fontStyle:'bold', color:'#c47b1f'}).setOrigin(0.5);
+    const d = this.add.text(EN/2,540,'↻  TEKRAR OYNA',{
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', fontStyle:'bold',
+      color:'#ffffff', backgroundColor:'#3f9d6a', padding:{x:22,y:12}})
+      .setOrigin(0.5).setInteractive({useHandCursor:true});
+    d.on('pointerdown', ()=>this.scene.start(SAHNE_ADI));
+    if (KOPRU){
+      const a = this.add.text(EN/2,610,'⏭  SIRADAKİ OYUN',{
+        fontFamily:'system-ui, sans-serif', fontSize:'18px', fontStyle:'bold',
+        color:'#ffffff', backgroundColor:'#4a679e', padding:{x:20,y:11}})
+        .setOrigin(0.5).setInteractive({useHandCursor:true});
+      a.on('pointerdown', ()=>KOPRU.atla());
+    }
+  }
+}
+
+/* ---------------- hangi oyun? ---------------- */
+
+/* =====================================================================
+   IzScene — m07 "Dedektif Büyüteci"
+   Katalogda ayakkabıların yanında "(3 çizgi)" YAZIYORDU: çocuk çizgi
+   saymıyor, sayıyı okuyordu. Üstelik karşılaştırılacak çamurdaki iz hiç
+   çizilmemişti. Burada iz de tabanlar da GERÇEKTEN çiziliyor, hiçbir
+   yerde sayı yazmıyor — çocuk saymak zorunda.
+   ===================================================================== */
+class IzScene extends Temel {
+  constructor(){ super('Iz'); }
+
+  /* "👟 (3 çizgi)" → { emo:'👟', adet:3 } */
+  cozumle(etiket){
+    const t = duzMetin(etiket);
+    const m = t.match(/(\d+)\s*çizgi/i);
+    const emo = (t.match(/^\s*(\p{Extended_Pictographic}+)/u) || [,''])[1];
+    return { emo: emo || '👟', adet: m ? Number(m[1]) : 0 };
+  }
+
+  /* Taban: yumurta biçimli bir taban ve üstünde N tane diş (çizgi) */
+  tabanCiz(g, x, y, en, boy, adet, renk, cizgiRenk){
+    g.fillStyle(renk, 1);
+    g.fillRoundedRect(x - en/2, y - boy/2, en, boy, en/2.6);
+    g.lineStyle(3, 0x2f2a45, 1);
+    g.strokeRoundedRect(x - en/2, y - boy/2, en, boy, en/2.6);
+    /* çizgiler eşit aralıklı; kenarlarda pay bırakılıyor */
+    const pay = boy * 0.16;
+    const alan = boy - pay * 2;
+    g.lineStyle(6, cizgiRenk, 1);
+    for (let i = 0; i < adet; i++){
+      const ty = y - boy/2 + pay + (adet === 1 ? alan/2 : alan * i / (adet - 1));
+      g.beginPath();
+      g.moveTo(x - en*0.30, ty);
+      g.lineTo(x + en*0.30, ty);
+      g.strokePath();
+    }
+  }
+
+  create(){
+    const yon = duzMetin(CFG.instruction) || 'İzdeki çizgileri say, aynı sayıda çizgisi olan ayakkabıya dokun!';
+    this.arayuzKur(yon);
+    this.basariMesaji = duzMetin(CFG.successMsg) || 'Dedektif gibi! Çizgileri doğru saydın 🔍';
+
+    /* Ölçüt sayısı KATALOGDAN (cfg.izCizgi). Yönergeye yazılırsa çocuk
+       saymadan okur; bu yüzden metin artık sayı söylemiyor. */
+    const m = String(yon).match(/(\d+)\s*çizgi/i);
+    this.hedefAdet = Number(CFG.izCizgi) || (m ? Number(m[1]) : 4);
+
+    const ogeler = (CFG.items || []).map(i => Object.assign(this.cozumle(i.label), { id:String(i.id) }));
+    const dogrular = new Set((CFG.correct || []).map(String));
+
+    /* ---- çamurdaki iz ---- */
+    const izY = this.seritAlt + 132;   /* başlık yönerge panelinin altında kalsın */
+    const gz = this.add.graphics().setDepth(5);
+    gz.fillStyle(0x8a6a44, 1);                       /* çamur birikintisi */
+    gz.fillEllipse(EN/2, izY + 6, 300, 150);
+    gz.fillStyle(0x6f5334, 1);
+    gz.fillEllipse(EN/2, izY + 10, 250, 120);
+    this.tabanCiz(gz, EN/2, izY, 92, 132, this.hedefAdet, 0x3c2c1a, 0xe8d9b8);
+    this.add.text(EN/2, izY - 96, 'ÇAMURDAKİ İZ', {
+      fontFamily:'system-ui, sans-serif', fontSize:'17px', fontStyle:'bold', color:'#5b4326'
+    }).setOrigin(0.5).setDepth(6);
+    this.add.text(EN/2 + 112, izY - 30, '🔍', { fontSize:'44px' }).setOrigin(0.5).setDepth(7);
+
+    /* ---- ayakkabılar ---- */
+    const n = ogeler.length;
+    const kartEn = Math.min(132, (EN - 40) / n - 10);
+    const kartBoy = 186;
+    const tabanY = Math.min(izY + 232, BOY - 150);
+
+    ogeler.forEach((o, i) => {
+      const x = EN * (i + 0.5) / n;
+      const c = this.add.container(x, tabanY).setDepth(12);
+      const g = this.add.graphics();
+      g.fillStyle(0xfffdf6, 1);
+      g.fillRoundedRect(-kartEn/2, -kartBoy/2, kartEn, kartBoy, 16);
+      g.lineStyle(3, 0xc9b98f, 1);
+      g.strokeRoundedRect(-kartEn/2, -kartBoy/2, kartEn, kartBoy, 16);
+      c.add(g);
+
+      const tg = this.add.graphics();
+      this.tabanCiz(tg, 0, 6, kartEn * 0.56, kartBoy * 0.72, o.adet, 0xd8c9a8, 0x4a3b28);
+      c.add(tg);
+      c.add(this.add.text(0, -kartBoy/2 + 18, o.emo, { fontSize:'26px' }).setOrigin(0.5));
+
+      c.setSize(kartEn + 12, kartBoy + 12);
+      c.setInteractive({ useHandCursor:true });
+      /* seçilebilir her kap doğruluk bilgisini taşır: otomatik denetim
+         hangi kaba dokunacağını buradan biliyor */
+      c.setData('dogru', dogrular.has(o.id) || o.adet === this.hedefAdet);
+      c.on('pointerdown', () => {
+        if (this.kilit) return;
+        if (c.getData('dogru')) {
+          this.kilit = true;
+          this.odul(200, x, tabanY);
+          this.tweens.add({ targets:c, scale:1.12, duration:200, yoyo:true,
+            onComplete: () => this.time.delayedCall(500, () => this.bitir(true)) });
+        } else {
+          this.tweens.add({ targets:c, angle:{ from:-6, to:6 }, duration:80, yoyo:true, repeat:2,
+            onComplete: () => c.setAngle(0) });
+          this.hata('Bu tabanda ' + o.adet + ' çizgi var, izde ' + this.hedefAdet + ' çizgi vardı. Tekrar say!');
+        }
+      });
+    });
+
+    this.durumYazi.setText('Kaç çizgi?');
+  }
+  hedefAtama(){ return this.hedefAdet; }
+}
+
+
+/* =====================================================================
+   SiraScene — m16 "Orman Maratonu", m19 "Otobüs Durakları"
+   Katalogda sıra bilgisi etikete YAZILIYDI ("🦊 (1.)"), yani çocuk
+   sıralamıyor, sayıyı okuyordu. Burada sıra GÖRÜNÜR: yarışta hayvanlar
+   bitiş çizgisine göre dizili, otobüs hattında duraklar yol boyunca
+   sıralı. Hiçbir yerde sıra numarası yazmıyor.
+   cfg.siraTur: 'yaris' (1. en önde/sağda) | 'yol' (1. durak solda)
+   ===================================================================== */
+class SiraScene extends Temel {
+  constructor(){ super('Sira'); }
+
+  emojiAyir(etiket){
+    const t = duzMetin(etiket);
+    const emo = (t.match(/^\s*(\p{Extended_Pictographic}[\u200d\ufe0f\p{Extended_Pictographic}]*)/u) || [,''])[1];
+    /* "(1.)" ve "(2. durak)" gibi sıra bildiren parantezler ATILIYOR */
+    const ad = t.replace(/^\s*\p{Extended_Pictographic}[\u200d\ufe0f\p{Extended_Pictographic}]*/u, '')
+                .replace(/\(\s*\d+\.?[^)]*\)/g, '').trim();
+    return { emo: emo || '🙂', ad };
+  }
+
+  create(){
+    const yon = duzMetin(CFG.instruction) || 'Sıradaki kim?';
+    this.arayuzKur(yon);
+    this.basariMesaji = duzMetin(CFG.successMsg) || 'Sırayı doğru saydın! 🏁';
+
+    const tur = CFG.siraTur || 'yol';
+    const ogeler = (CFG.items || []).map((i, ix) => Object.assign(this.emojiAyir(i.label), {
+      id: String(i.id), sira: ix + 1
+    }));
+    const dogrular = new Set((CFG.correct || []).map(String));
+    const n = ogeler.length;
+
+    /* istenen sıra: yönergedeki "3." / "2." */
+    const sm = yon.match(/(\d+)\s*\./);
+    this.istenen = Number(CFG.siraNo) || (sm ? Number(sm[1]) : 1);
+
+    const zemin = this.add.graphics().setDepth(2);
+    const yolY = this.seritAlt + 190;
+
+    if (tur === 'yaris'){
+      /* pist: bitiş çizgisi sağda, 1. sıradaki ona en yakın */
+      zemin.fillStyle(0x8fd08a, 1); zemin.fillRect(0, yolY - 150, EN, 300);
+      zemin.fillStyle(0xd9a86c, 1); zemin.fillRoundedRect(14, yolY - 120, EN - 28, 240, 18);
+      /* bitiş çizgisi: damalı şerit */
+      for (let r = 0; r < 12; r++) for (let k = 0; k < 2; k++){
+        zemin.fillStyle(((r + k) % 2) ? 0x2f2a45 : 0xffffff, 1);
+        zemin.fillRect(EN - 46 + k * 16, yolY - 120 + r * 20, 16, 20);
+      }
+      this.add.text(EN - 30, yolY - 142, '🏁', { fontSize:'32px' }).setOrigin(0.5).setDepth(6);
+    } else {
+      /* hat: otobüs solda, duraklar sağa doğru sıralı */
+      zemin.fillStyle(0xbfd8ea, 1); zemin.fillRect(0, yolY - 118, EN, 236);
+      zemin.fillStyle(0x6b7280, 1); zemin.fillRoundedRect(10, yolY + 36, EN - 20, 54, 12);
+      zemin.lineStyle(4, 0xfff2b0, 1);
+      for (let x = 26; x < EN - 26; x += 46){
+        zemin.beginPath(); zemin.moveTo(x, yolY + 63); zemin.lineTo(x + 22, yolY + 63); zemin.strokePath();
+      }
+      this.add.text(28, yolY + 18, '🚌', { fontSize:'40px' }).setOrigin(0.5).setDepth(6);
+    }
+
+    const solPay = tur === 'yaris' ? 56 : 78;
+    const sagPay = tur === 'yaris' ? 86 : 34;
+    const alan = EN - solPay - sagPay;
+
+    ogeler.forEach(o => {
+      /* yarışta 1. en SAĞDA (bitişe en yakın), hatta 1. en SOLDA */
+      const k = tur === 'yaris' ? (n - o.sira) : (o.sira - 1);
+      const x = solPay + (n === 1 ? alan / 2 : alan * k / (n - 1));
+      const y = tur === 'yaris' ? yolY : yolY - 22;
+
+      const c = this.add.container(x, y).setDepth(12);
+      if (tur === 'yol'){
+        const direk = this.add.graphics();
+        direk.fillStyle(0x4b5563, 1); direk.fillRect(-3, 6, 6, 62);
+        direk.fillStyle(0x2563eb, 1); direk.fillRoundedRect(-17, -14, 34, 24, 6);
+        c.add(direk);
+        c.add(this.add.text(0, -2, '🚏', { fontSize:'18px' }).setOrigin(0.5));
+      }
+      const kisi = this.add.text(0, tur === 'yol' ? -48 : 0, o.emo, { fontSize:'58px' }).setOrigin(0.5);
+      c.add(kisi);
+      if (o.ad){
+        c.add(this.add.text(0, tur === 'yol' ? 84 : 42, o.ad, {
+          fontFamily:'system-ui, sans-serif', fontSize:'14px', fontStyle:'bold',
+          color:'#33415c', align:'center', wordWrap:{ width:92 }
+        }).setOrigin(0.5));
+      }
+
+      c.setSize(96, 150);
+      c.setInteractive({ useHandCursor:true });
+      c.setData('dogru', dogrular.size ? dogrular.has(o.id) : (o.sira === this.istenen));
+      c.on('pointerdown', () => {
+        if (this.kilit) return;
+        if (c.getData('dogru')){
+          this.kilit = true;
+          this.odul(200, x, y);
+          this.tweens.add({ targets:kisi, y:kisi.y - 26, duration:220, yoyo:true, repeat:1,
+            onComplete: () => this.time.delayedCall(500, () => this.bitir(true)) });
+        } else {
+          this.tweens.add({ targets:c, angle:{ from:-7, to:7 }, duration:80, yoyo:true, repeat:2,
+            onComplete: () => c.setAngle(0) });
+          this.hata(tur === 'yaris'
+            ? 'Bu ' + o.sira + '. sırada. ' + this.istenen + '. sıradakini bul — önden saymaya başla.'
+            : 'Bu ' + o.sira + '. durak. ' + this.istenen + '. durağı bul — otobüsten saymaya başla.');
+        }
+      });
+    });
+
+    this.durumYazi.setText(tur === 'yaris' ? 'Önden say' : 'Otobüsten say');
+  }
+}
+
+const SAHNELER = { m03:'Keci', m04:'Golge', m05:'Corap', m06:'Anahtar', m02:'Pusula', m07:'Iz',
+                   m16:'Sira', m19:'Sira' };
+const SAHNE_ADI = SAHNELER[OYUN_ID] || 'Keci';
+
+window.OYUN = new Phaser.Game({
+  type: Phaser.AUTO,
+  parent: 'oyun',
+  width: EN * NETLIK, height: BOY * NETLIK,
+  backgroundColor: '#dff0fb',
+  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+  physics: { default:'arcade', arcade:{ gravity:{ y:0 }, debug:false } },
+  scene: [BootScene, KeciScene, GolgeScene, CorapScene, AnahtarScene, PusulaScene, IzScene, SiraScene, SonucScene]
+});
+</script>
+</body>
+</html>

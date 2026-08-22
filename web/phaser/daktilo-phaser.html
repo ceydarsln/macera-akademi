@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Sihirli Daktilo — Phaser 3</title>
+<style>
+  html,body{margin:0;padding:0;background:#141118;overflow:hidden;height:100%}
+  #oyun{width:100%;height:100%}
+  canvas{display:block}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+</head>
+<body>
+<div id="oyun"></div>
+<script>
+/* ======================================================================
+   MACERA AKADEMİ — SİHİRLİ DAKTİLO                    (Phaser 3.80.1)
+
+   Kapsanan mekanik: typeWord (5 oyun)
+
+   NOT — beş oyun tek şablon:
+   typeWord'ün beş oyunu (Sihirli Daktilo, Kahramanlık / Kültür /
+   Pekiştirme / Millî Mücadele Diktesi) yalnızca kelime listesiyle
+   birbirinden ayrılıyor; oyun çekirdeği aynı: duyulan sözcüğü harf
+   tuşlarına sırayla basarak yazmak. Bu yüzden beşi tek sahnede
+   yaşıyor, menüden seçiliyor.
+
+   Test mantığı değil oyun: harflere basınca daktilonun çekici iniyor,
+   harf kâğıda fizikle uçup damgalanıyor, yanlış harfte kâğıt sıkışıp
+   mürekkep patlıyor. DİNLE sesli okur; ses yoksa (ya da GÖSTER'e
+   basılırsa) kelime kısa süre görünür — GÖSTER puan düşürür.
+
+   Tüm görseller Phaser'ın kendi çizim araçlarıyla üretiliyor; oyun
+   APK/IPA içinde çevrimdışı çalıştığı için dışarıdan resim çekmiyoruz.
+   ====================================================================== */
+
+const GEN = 480, YUK = 800;
+const CAN_SAYISI = 3;
+
+const KAGIT_Y = 196;          /* harflerin damgalandığı satır */
+const TUS_Y1 = 470, TUS_Y2 = 542;
+/* ---------------- uygulama köprüsü ----------------
+   Uygulamanın içine iframe olarak gömüldüğünde adres  daktilo.html#oyun=y14
+   biçiminde olur. Sayfa uygulamayla AYNI kaynaktan sunulduğu için üst
+   pencereden katalog verisi doğrudan okunabiliyor. Şablonun içinde beş
+   diktenin kelime listesi zaten duruyordu; köprü varsa liste KATALOGTAN
+   kuruluyor, böylece kelime eklendiğinde şablon da kendiliğinden güncel
+   kalıyor. Kazanınca completeGame() çağrılır; XP, altın, kutlama ve
+   sıradaki oyuna geçiş uygulamada kalır.
+   Köprü yoksa (dosya tek başına açıldıysa) menüden dikte seçilir.       */
+const KOPRU = (function(){
+  try{
+    const p = new URLSearchParams(location.hash.slice(1));
+    const id = p.get('oyun');
+    if (id && window.parent && window.parent !== window &&
+        typeof window.parent.getGame === 'function'){
+      const g = window.parent.getGame(id);
+      if (g && g.cfg) return {
+        oyun: g, cfg: g.cfg,
+        bitir(mesaj, puan){ try{ window.parent.completeGame(mesaj || '', puan); }catch(e){} },
+        /* Turun kendi metnini uygulamanın sesiyle okutur (Piper). */
+        oku(metin){ try{ if (window.parent.oku) window.parent.oku(metin); }catch(e){} },
+        /* Kaybetme ekranından: bu oyunu bırak, sıradakine geç. */
+        atla(){ try{ if (window.parent.sonrakiOyunaGec) window.parent.sonrakiOyunaGec(); }catch(e){} }
+      };
+    }
+  }catch(e){ /* çapraz kaynak engeli: tek başına oynanır */ }
+  return null;
+})();
+
+/* HTML varlıklarını çöz: katalogda "Pay &lt; payda" gibi yazımlar var,
+   çözülmezse ekranda "&lt;" olarak görünüyor ve öyle okunuyor. */
+function varlikCoz(m){
+  return String(m)
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
+    .replace(/&hellip;/gi, '…').replace(/&mdash;/gi, '—').replace(/&ndash;/gi, '–')
+    .replace(/&times;/gi, '×').replace(/&divide;/gi, '÷').replace(/&deg;/gi, '°')
+    .replace(/&rarr;/gi, '→').replace(/&larr;/gi, '←')
+    .replace(/&amp;/gi, '&');            /* en sona: çift çözmeyi önler */
+}
+
+function duzMetin(x){
+  return varlikCoz(String(x == null ? '' : x).replace(/<br\s*\/?>/gi,' ')
+    .replace(/<[^>]+>/g,'')).replace(/[“”]/g,'"').replace(/\s+/g,' ').trim();
+}
+
+const OYUNLAR = [
+  { ad:'Sihirli Daktilo', emo:'⌨️', renk:0x6f9ede,
+    ipucu:'Duyduğun kelimeyi yaz! 🔊 Dinle düğmesine bas ve harflere sırayla dokun.',
+    kelimeler:[ { hedef:'NANE', harfler:['N','A','N','E','K','T','İ','S'], seslen:'Nane' } ],
+    basari:'Daktilo çalıştı! Duyduğun kelimeyi doğru yazdın ⌨️' },
+
+  { ad:'Kahramanlık Diktesi', emo:'🎙️', renk:0xd98b52,
+    ipucu:'Dikte zamanı! 🔊 Dinle düğmesine bas, duyduğun sözcüğü harflere dokunarak yaz.',
+    kelimeler:[
+      { hedef:'CESARET', harfler:['C','E','S','A','R','T','K','M','L'], seslen:'Cesaret' },
+      { hedef:'ZAFER',   harfler:['Z','A','F','E','R','K','L','M'],     seslen:'Zafer' },
+      { hedef:'VATAN',   harfler:['V','A','T','N','K','S','E','L'],     seslen:'Vatan' },
+      { hedef:'BAYRAK',  harfler:['B','A','Y','R','K','M','T','S'],     seslen:'Bayrak' },
+      { hedef:'ORDU',    harfler:['O','R','D','U','A','K','T'],         seslen:'Ordu' } ],
+    basari:'Dikte tamam! Kahramanlık sözcüklerini doğru yazdın 🎙️' },
+
+  { ad:'Kültür Diktesi', emo:'🎤', renk:0x6fb98f,
+    ipucu:'Dikte zamanı! 🔊 Dinle düğmesine bas, duyduğun sözcüğü harflere dokunarak yaz.',
+    kelimeler:[
+      { hedef:'KÜLTÜR',  harfler:['K','Ü','L','T','R','M','A','S'], seslen:'Kültür' },
+      { hedef:'MÜZE',    harfler:['M','Ü','Z','E','A','K','T'],     seslen:'Müze' },
+      { hedef:'GELENEK', harfler:['G','E','L','N','K','T','A','M'], seslen:'Gelenek' },
+      { hedef:'TÜRKÜ',   harfler:['T','Ü','R','K','A','M','L'],     seslen:'Türkü' },
+      { hedef:'ANIT',    harfler:['A','N','I','T','K','M','R'],     seslen:'Anıt' } ],
+    basari:'Dikte tamam! Kültür sözcüklerini doğru yazdın 🎤' },
+
+  { ad:'Pekiştirme Diktesi', emo:'🔡', renk:0x9b7ede,
+    ipucu:'📏 Pekiştirmeli sözcükler bitişik yazılır: sapasağlam, tertemiz… 🔊 Dinle ve yaz!',
+    kelimeler:[
+      { hedef:'TERTEMİZ',   harfler:['T','E','R','M','İ','Z','A','S'], seslen:'Tertemiz' },
+      { hedef:'SAPASAĞLAM', harfler:['S','A','P','Ğ','L','M','T','R'], seslen:'Sapasağlam' },
+      { hedef:'YEPYENİ',    harfler:['Y','E','P','N','İ','A','K'],     seslen:'Yepyeni' },
+      { hedef:'ÇEPEÇEVRE',  harfler:['Ç','E','P','V','R','A','K','M'], seslen:'Çepeçevre' },
+      { hedef:'APAÇIK',     harfler:['A','P','Ç','I','K','T','M'],     seslen:'Apaçık' } ],
+    basari:'Dikte tamam! Pekiştirmeli sözcüklerin bitişik yazıldığını öğrendin 🔡' },
+
+  { ad:'Millî Mücadele Diktesi', emo:'🏳️', renk:0xcf5f6f,
+    ipucu:'Dikte zamanı! 🔊 Dinle düğmesine bas, duyduğun sözcüğü harflere dokunarak yaz.',
+    kelimeler:[
+      { hedef:'FEDAKÂRLIK', harfler:['F','E','D','A','K','Â','R','L','I','M','T'], seslen:'Fedakârlık' },
+      { hedef:'EGEMENLİK',  harfler:['E','G','M','N','L','İ','K','A','T'],         seslen:'Egemenlik' },
+      { hedef:'MÜCADELE',   harfler:['M','Ü','C','A','D','E','L','K','T'],         seslen:'Mücadele' },
+      { hedef:'İSTİKLÂL',   harfler:['İ','S','T','K','L','Â','A','M','R'],         seslen:'İstiklâl' },
+      { hedef:'ŞEHİTLİK',   harfler:['Ş','E','H','İ','T','L','K','A','M'],         seslen:'Şehitlik' } ],
+    basari:'Dikte tamam! Millî Mücadele sözcüklerini doğru yazdın 🎙️' }
+];
+
+/* Köprü varsa katalogdaki oyunun kelime listesi tek seçenek olur. */
+if (KOPRU){
+  const c = KOPRU.cfg;
+  /* Katalogda iki biçim var: çok turlu (cfg.rounds) ve tek kelimelik
+     (cfg.target + cfg.letters). */
+  const turlar = Array.isArray(c.rounds) && c.rounds.length
+    ? c.rounds
+    : (c.target ? [{ target:c.target, letters:c.letters, speak:c.speak }] : []);
+  const kelimeler = turlar.map(r => ({
+    hedef: duzMetin(r.target).toLocaleUpperCase('tr-TR'),
+    harfler: (r.letters || []).map(h => duzMetin(h)).filter(Boolean),
+    seslen: duzMetin(r.speak) || duzMetin(r.target)
+  })).filter(k => k.hedef && k.harfler.length);
+
+  if (kelimeler.length) OYUNLAR.splice(0, OYUNLAR.length, {
+    ad: duzMetin(KOPRU.oyun.title) || 'Dikte',
+    emo: KOPRU.oyun.emo || '⌨️',
+    renk: 0x6f9ede,
+    ipucu: duzMetin(c.instruction) || 'Duyduğun sözcüğü harflere dokunarak yaz.',
+    kelimeler: kelimeler,
+    basari: duzMetin(c.successMsg) || 'Dikte tamam! Duyduğun sözcükleri doğru yazdın ⌨️'
+  });
+}
+
+/* =============================== BOOT =============================== */
+class BootScene extends Phaser.Scene {
+  constructor(){ super('Boot'); }
+  yuvarlak(k, en, boy, r){
+    const g = this.make.graphics({ add:false });
+    g.fillStyle(0xffffff, 1); g.fillRoundedRect(0, 0, en, boy, r);
+    g.generateTexture(k, en, boy); g.destroy();
+  }
+  create(){
+    this.yuvarlak('tus', 56, 56, 12);
+    this.yuvarlak('kutu', 16, 16, 2);
+    this.yuvarlak('dugme', 150, 46, 22);
+    this.yuvarlak('kivilcim', 8, 8, 2);
+    this.yuvarlak('cekic', 26, 54, 6);
+    /* Uygulama içinde çocuk oyunu listeden zaten seçti; menüyü atla. */
+    this.scene.start(KOPRU ? 'Game' : 'Menu');
+  }
+}
+
+/* =============================== MENÜ =============================== */
+class MenuScene extends Phaser.Scene {
+  constructor(){ super('Menu'); }
+  create(){
+    this.add.rectangle(GEN/2, YUK/2, GEN, YUK, 0x1a1620);
+    const harfler = 'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ'.split('');
+    for (let i = 0; i < 22; i++){
+      const h = this.add.text(Phaser.Math.Between(20, GEN-20), Phaser.Math.Between(60, YUK-60),
+                 Phaser.Utils.Array.GetRandom(harfler),
+                 { fontFamily:'Courier New', fontSize:'36px', color:'#ffffff' })
+                .setOrigin(0.5).setAlpha(0.07);
+      this.tweens.add({ targets:h, y:h.y - Phaser.Math.Between(50, 140), angle:Phaser.Math.Between(-40, 40),
+                        duration:Phaser.Math.Between(3000, 6000), yoyo:true, repeat:-1,
+                        ease:'Sine.easeInOut' });
+    }
+    this.add.text(GEN/2, 108, '⌨️', { fontSize:'74px' }).setOrigin(0.5);
+    this.add.text(GEN/2, 178, 'SİHİRLİ DAKTİLO',
+      { fontFamily:'Courier New', fontSize:'36px', color:'#f2c14e',
+        fontStyle:'bold' }).setOrigin(0.5);
+    this.add.text(GEN/2, 216, 'Duyduğun sözcüğü harflere basarak yaz',
+      { fontFamily:'Verdana', fontSize:'16px', color:'#9c90a8' }).setOrigin(0.5);
+
+    OYUNLAR.forEach((o, i) => {
+      const y = 280 + i * 74;
+      const d = this.add.image(GEN/2, y, 'dugme').setDisplaySize(384, 60).setTint(o.renk)
+                .setInteractive({ useHandCursor:true });
+      this.add.text(GEN/2 - 160, y, o.emo, { fontSize:'29px' }).setOrigin(0.5);
+      this.add.text(GEN/2 + 12, y - 9, o.ad,
+        { fontFamily:'Verdana', fontSize:'20px', color:'#ffffff', fontStyle:'bold' })
+        .setOrigin(0.5);
+      this.add.text(GEN/2 + 12, y + 12,
+        o.kelimeler.length + ' sözcük',
+        { fontFamily:'Verdana', fontSize:'14px', color:'#f4ecff' }).setOrigin(0.5);
+      d.on('pointerover', () => d.setAlpha(0.85));
+      d.on('pointerout', () => d.setAlpha(1));
+      d.on('pointerdown', () => this.scene.start('Game', { oyun:i }));
+    });
+
+    this.add.text(GEN/2, YUK - 44, 'Ses yoksa 👁 GÖSTER sözcüğü kısa süre açar (puan düşer)',
+      { fontFamily:'Verdana', fontSize:'14px', color:'#6d6178' }).setOrigin(0.5);
+  }
+}
+
+/* =============================== OYUN =============================== */
+class GameScene extends Phaser.Scene {
+  constructor(){ super('Game'); }
+  init(d){ this.oyunNo = (d && typeof d.oyun === 'number') ? d.oyun : 0; }
+
+  create(){
+    const O = OYUNLAR[this.oyunNo];
+    this.O = O;
+    this.kelimeNo = 0; this.puan = 0; this.can = CAN_SAYISI; this.seri = 0;
+    this.nesil = 0; this.kilit = false;
+
+    /* Phaser sahneyi yeniden başlatırken aynı örneği kullanıyor;
+       tur içinde oluşturulan referansları elle sıfırlıyoruz. */
+    this.tuslar = []; this.yuvaYazi = []; this.yazilan = [];
+    this.gosterYazi = null;
+
+    this.add.rectangle(GEN/2, YUK/2, GEN, YUK, 0x1a1620).setDepth(-20);
+
+    /* ---------- üst bilgi ---------- */
+    this.add.rectangle(GEN/2, 29, GEN, 58, 0x120f17).setDepth(40);
+    this.add.text(GEN/2, 15, O.emo + '  ' + O.ad,
+      { fontFamily:'Verdana', fontSize:'16px', color:'#cfc4d8' }).setOrigin(0.5).setDepth(41);
+    this.puanYazi = this.add.text(18, 34, 'Puan 0',
+      { fontFamily:'Verdana', fontSize:'20px', color:'#f2c14e', fontStyle:'bold' })
+      .setOrigin(0, 0.5).setDepth(41);
+    this.sayacYazi = this.add.text(GEN/2, 34, '',
+      { fontFamily:'Verdana', fontSize:'16px', color:'#9c90a8' }).setOrigin(0.5).setDepth(41);
+    this.canYazi = this.add.text(GEN-18, 34, '',
+      { fontFamily:'Verdana', fontSize:'19px' }).setOrigin(1, 0.5).setDepth(41);
+
+    this.ipucuYazi = this.add.text(GEN/2, 66, O.ipucu,
+      { fontFamily:'Verdana', fontSize:'16px', color:'#d8cee2', align:'center',
+        lineSpacing:4, wordWrap:{ width:444 } }).setOrigin(0.5, 0);
+
+    /* ---------- kâğıt ---------- */
+    const kg = this.add.graphics().setDepth(1);
+    kg.fillStyle(0xf4eee2, 1);
+    kg.fillRoundedRect(46, 136, GEN - 92, 118, 8);
+    kg.fillStyle(0xe0d8c8, 1);
+    kg.fillRect(46, 244, GEN - 92, 10);                     /* kâğıdın kıvrımı */
+    kg.lineStyle(2, 0xc9bda6, 1);
+    kg.strokeRoundedRect(46, 136, GEN - 92, 118, 8);
+    this.add.text(GEN/2, 154, 'DAKTİLO KÂĞIDI',
+      { fontFamily:'Courier New', fontSize:'14px', color:'#a89880' })
+      .setOrigin(0.5).setDepth(2);
+
+    /* ---------- daktilo gövdesi ---------- */
+    const dg = this.add.graphics().setDepth(1);
+    dg.fillStyle(0x2b2333, 1);
+    dg.fillRoundedRect(60, 262, GEN - 120, 96, 14);
+    dg.fillStyle(0x3a3048, 1);
+    dg.fillRoundedRect(88, 276, GEN - 176, 40, 8);
+    dg.lineStyle(3, 0x4a3f58, 1);
+    dg.strokeRoundedRect(60, 262, GEN - 120, 96, 14);
+    for (let i = 0; i < 9; i++){                            /* çekiç yatağı */
+      dg.fillStyle(0x574a68, 1);
+      dg.fillRoundedRect(100 + i * 32, 330, 22, 16, 3);
+    }
+    /* Çekiç makinenin içindeki yuvada duruyor: kâğıda ya da marka
+       yazısına taşarsa harfleri kapatıyordu. */
+    this.cekic = this.add.image(GEN/2, 314, 'cekic').setTint(0xb3a690)
+                 .setDisplaySize(20, 34).setOrigin(0.5, 1).setDepth(3);
+    this.add.text(GEN/2, 366, '⌨️ MACERA 1',
+      { fontFamily:'Courier New', fontSize:'14px', color:'#6d6178' }).setOrigin(0.5).setDepth(2);
+
+    this.sesDalga = this.add.text(GEN/2, 398, '', { fontSize:'24px' }).setOrigin(0.5).setDepth(3);
+    this.hedefYazi = this.add.text(GEN/2, 424, '',
+      { fontFamily:'Verdana', fontSize:'16px', color:'#8fd6ac' }).setOrigin(0.5).setDepth(3);
+
+    /* ---------- uçan harfler ---------- */
+    this.ucanlar = this.physics.add.group();
+    this.kivilcim = this.add.particles(0, 0, 'kivilcim', {
+      speed:{ min:60, max:220 }, lifespan:520, scale:{ start:1.1, end:0 },
+      quantity:1, blendMode:'ADD', emitting:false
+    }).setDepth(30);
+
+    /* ---------- düğmeler ---------- */
+    const dugme = (x, etiket, renk, fn) => {
+      const d = this.add.image(x, 636, 'dugme').setDisplaySize(142, 50).setTint(renk)
+                .setInteractive({ useHandCursor:true }).setDepth(8);
+      const y = this.add.text(x, 636, etiket,
+        { fontFamily:'Verdana', fontSize:'17px', color:'#ffffff', fontStyle:'bold' })
+        .setOrigin(0.5).setDepth(9);
+      d.on('pointerdown', fn);
+      return { d, y };
+    };
+    dugme(84 + 0, '🔊 DİNLE', 0x3f9d6a, () => this.dinle());
+    dugme(240, '👁 GÖSTER', 0x8a7a4a, () => this.goster());
+    dugme(396, '⌫ SİL', 0x8a5a5a, () => this.sil());
+
+    this.mesajYazi = this.add.text(GEN/2, 690, '',
+      { fontFamily:'Verdana', fontSize:'16px', color:'#f0a5a5', align:'center',
+        wordWrap:{ width:450 } }).setOrigin(0.5).setDepth(9);
+
+    this.kelimeyiKur();
+  }
+
+  /* --------------------------- kelime kurulumu --------------------------- */
+  kelimeyiKur(){
+    const k = this.O.kelimeler[this.kelimeNo];
+    this.nesil++;
+    this.kilit = false; this.hatasiz = true;
+    this.yazilan = []; this.beklenen = 0;
+    this.ucanlar.clear(true, true);
+    this.mesajYazi.setText('');
+    if (this.gosterYazi){ this.gosterYazi.destroy(); this.gosterYazi = null; }
+
+    /* kâğıttaki boş yuvalar */
+    this.yuvaYazi.forEach(y => { y.cizgi.destroy(); y.yazi.destroy(); });
+    this.yuvaYazi = [];
+    const n = k.hedef.length;
+    const en = Math.min(44, 400 / n);
+    for (let i = 0; i < n; i++){
+      const x = GEN/2 + (i - (n - 1)/2) * en;
+      const c = this.add.rectangle(x, KAGIT_Y + 22, en - 6, 3, 0xb3a690).setDepth(2);
+      const y = this.add.text(x, KAGIT_Y, '',
+        { fontFamily:'Courier New', fontSize:'33px', color:'#2b2333', fontStyle:'bold' })
+        .setOrigin(0.5).setDepth(3);
+      this.yuvaYazi.push({ cizgi:c, yazi:y });
+    }
+
+    /* harf tuşları — iki sıraya dağılıyor, harfler tükenmiyor */
+    this.tuslar.forEach(t => { t.gorsel.destroy(); t.yazi.destroy(); });
+    this.tuslar = [];
+    const h = k.harfler;
+    const ilkSira = Math.ceil(h.length / 2);
+    h.forEach((harf, i) => {
+      const satir = i < ilkSira ? 0 : 1;
+      const sayi = satir === 0 ? ilkSira : h.length - ilkSira;
+      const sira = satir === 0 ? i : i - ilkSira;
+      const aralik = Math.min(64, 440 / sayi);
+      const x = GEN/2 + (sira - (sayi - 1)/2) * aralik;
+      const y = satir === 0 ? TUS_Y1 : TUS_Y2;
+      const g = this.add.image(x, y, 'tus').setDisplaySize(aralik - 8, 56)
+                .setTint(0x3a3048).setInteractive({ useHandCursor:true }).setDepth(4);
+      const t = this.add.text(x, y, harf,
+        { fontFamily:'Courier New', fontSize:'29px', color:'#ffffff', fontStyle:'bold' })
+        .setOrigin(0.5).setDepth(5);
+      g.on('pointerdown', () => this.harfBas(harf, x, y, g));
+      this.tuslar.push({ gorsel:g, yazi:t, harf });
+    });
+
+    this.hedefYazi.setText(this.yazilan.length + ' / ' + n + ' harf');
+    this.arayuzuTazele();
+
+    /* kelime açılınca bir kez okunuyor */
+    const nesil = this.nesil;
+    this.time.delayedCall(420, () => { if (nesil === this.nesil) this.dinle(); });
+  }
+
+  /* --------------------------- ses --------------------------- */
+  dinle(){
+    if (this.kilit) return;
+    const k = this.O.kelimeler[this.kelimeNo];
+    this.sesDalga.setText('🔊 ((( )))');
+    this.tweens.add({ targets:this.sesDalga, alpha:{ from:1, to:0.25 }, duration:340,
+                      yoyo:true, repeat:2,
+                      onComplete:() => this.sesDalga.setAlpha(1) });
+    let konustu = false;
+    /* Uygulama içindeyken okuma uygulamanın sesiyle yapılır (Piper);
+       şablonun kendi TTS'i yalnız tek başına açıldığında devrede. */
+    if (KOPRU){ KOPRU.oku(k.seslen); konustu = true; }
+    try {
+      if (konustu) throw 0;
+      /* Android WebView'in kendi speechSynthesis'i sessiz kalıyor; uygulama
+         içinde telefonun Türkçe okuma motoruna AndroidTTS köprüsüyle
+         gidiyoruz. Tarayıcıda bu köprü yok, speechSynthesis'e düşüyoruz. */
+      if (window.AndroidTTS && typeof window.AndroidTTS.speak === 'function'){
+        let durum = 'ok';
+        try { if (window.AndroidTTS.status) durum = window.AndroidTTS.status(); } catch (e2){}
+        if (durum !== 'missing' && durum !== 'failed'){
+          window.AndroidTTS.speak(k.seslen);
+          konustu = true;
+        }
+      } else if (window.speechSynthesis){
+        const u = new SpeechSynthesisUtterance(k.seslen);
+        u.lang = 'tr-TR'; u.rate = 0.82;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+        konustu = true;
+      }
+    } catch (e){ if (e !== 0) konustu = false; }
+    /* Cihazda Türkçe konuşma yoksa sözcüğü kısaca göstermek tek adil
+       çözüm — bu durumda puan düşmüyor. */
+    if (!konustu) this.kelimeyiAc(1300, false);
+  }
+
+  goster(){
+    if (this.kilit) return;
+    this.kelimeyiAc(1100, true);
+  }
+
+  kelimeyiAc(sure, cezali){
+    const k = this.O.kelimeler[this.kelimeNo];
+    if (this.gosterYazi) this.gosterYazi.destroy();
+    this.gosterYazi = this.add.text(GEN/2, 398, k.hedef,
+      { fontFamily:'Courier New', fontSize:'36px', color:'#f2c14e', fontStyle:'bold',
+        backgroundColor:'#2b2333', padding:{ x:14, y:6 } }).setOrigin(0.5).setDepth(20);
+    if (cezali){
+      this.puan = Math.max(0, this.puan - 40);
+      this.puanYazi.setText('Puan ' + this.puan);
+      this.mesajYazi.setColor('#f0d0a5').setText('Baktın: −40 puan. Şimdi yaz!');
+    }
+    const nesil = this.nesil;
+    this.time.delayedCall(sure, () => {
+      if (nesil !== this.nesil) return;
+      if (this.gosterYazi){
+        this.tweens.add({ targets:this.gosterYazi, alpha:0, duration:220,
+                          onComplete:() => { if (this.gosterYazi){ this.gosterYazi.destroy();
+                                             this.gosterYazi = null; } } });
+      }
+    });
+  }
+
+  /* --------------------------- harfe basma --------------------------- */
+  harfBas(harf, x, y, gorsel){
+    if (this.kilit) return;
+    const k = this.O.kelimeler[this.kelimeNo];
+    if (this.beklenen >= k.hedef.length) return;
+
+    /* tuş fiziksel olarak basılıyor */
+    this.tweens.add({ targets:gorsel, scaleY:gorsel.scaleY * 0.82, duration:70, yoyo:true });
+
+    if (harf === k.hedef[this.beklenen]){
+      const yuva = this.yuvaYazi[this.beklenen];
+      this.beklenen++;
+      const u = this.ucanlar.create(x, y, 'tus');
+      u.setDisplaySize(34, 34).setTint(0xf2c14e).setDepth(22);
+      u.body.setAllowGravity(false);
+      u.setData('harf', harf);
+      u.setData('hx', yuva.yazi.x); u.setData('hy', yuva.yazi.y);
+      u.setData('yuva', this.beklenen - 1);
+      u.etiketi = this.add.text(x, y, harf,
+        { fontFamily:'Courier New', fontSize:'24px', color:'#2b2333', fontStyle:'bold' })
+        .setOrigin(0.5).setDepth(23);
+      this.physics.moveTo(u, yuva.yazi.x, yuva.yazi.y, 760);
+      this.cekiciVur();
+    } else {
+      this.yanlisHarf(harf, x, y);
+    }
+  }
+
+  cekiciVur(){
+    this.tweens.add({ targets:this.cekic, y:296, duration:80, yoyo:true, ease:'Quad.easeOut' });
+  }
+
+  yanlisHarf(harf, x, y){
+    this.hatasiz = false;
+    this.can--;
+    this.arayuzuTazele();
+    this.cameras.main.shake(230, 0.013);
+    this.cameras.main.flash(170, 190, 60, 60);
+    this.kivilcim.setParticleTint(0x2b2333);
+    this.kivilcim.explode(16, x, y);
+    const k = this.O.kelimeler[this.kelimeNo];
+    this.mesajYazi.setColor('#f0a5a5')
+      .setText('Kâğıt sıkıştı! "' + harf + '" değil — ' + (this.beklenen + 1) +
+               '. harfi dinle.');
+    const nesil = this.nesil;
+    this.time.delayedCall(2200, () => {
+      if (nesil === this.nesil && this.mesajYazi.text.indexOf('Kâğıt sıkıştı') === 0)
+        this.mesajYazi.setText('');
+    });
+    if (this.can <= 0) this.oyunBitti(false);
+    else this.time.delayedCall(360, () => { if (nesil === this.nesil) this.dinle(); });
+  }
+
+  /* uçan harf yuvaya varınca damgalanıyor */
+  damgala(u){
+    const i = u.getData('yuva');
+    const harf = u.getData('harf');
+    const yuva = this.yuvaYazi[i];
+    if (yuva){
+      yuva.yazi.setText(harf).setScale(1.9);
+      this.tweens.add({ targets:yuva.yazi, scale:1, duration:220, ease:'Back.easeOut' });
+      yuva.cizgi.fillColor = 0x3f9d6a;
+    }
+    this.yazilan.push(harf);
+    this.puanEkle(45);
+    this.kivilcim.setParticleTint(0x8fd6ac);
+    this.kivilcim.explode(8, u.x, u.y);
+    if (u.etiketi){ u.etiketi.destroy(); u.etiketi = null; }
+    u.destroy();
+    const k = this.O.kelimeler[this.kelimeNo];
+    this.hedefYazi.setText(this.yazilan.length + ' / ' + k.hedef.length + ' harf');
+    if (this.yazilan.length === k.hedef.length) this.kelimeyiBitir();
+  }
+
+  /* --------------------------- sil --------------------------- */
+  sil(){
+    if (this.kilit) return;
+    if (this.ucanlar.getLength() > 0){
+      this.mesajYazi.setColor('#f0d0a5').setText('Harf uçuyor, biraz bekle.');
+      return;
+    }
+    if (!this.yazilan.length){
+      this.mesajYazi.setColor('#f0d0a5').setText('Kâğıt zaten boş.');
+      return;
+    }
+    this.yazilan.pop();
+    this.beklenen = this.yazilan.length;
+    const yuva = this.yuvaYazi[this.beklenen];
+    yuva.yazi.setText(''); yuva.cizgi.fillColor = 0xb3a690;
+    const k = this.O.kelimeler[this.kelimeNo];
+    this.hedefYazi.setText(this.yazilan.length + ' / ' + k.hedef.length + ' harf');
+    this.kivilcim.setParticleTint(0xd8cee2);
+    this.kivilcim.explode(6, yuva.yazi.x, yuva.yazi.y);
+  }
+
+  /* --------------------------- arayüz --------------------------- */
+  arayuzuTazele(){
+    this.puanYazi.setText('Puan ' + this.puan);
+    this.sayacYazi.setText((this.kelimeNo + 1) + ' / ' + this.O.kelimeler.length + ' sözcük');
+    this.canYazi.setText('❤️'.repeat(Math.max(0, this.can)));
+  }
+
+  puanEkle(n){
+    this.puan += n;
+    this.puanYazi.setText('Puan ' + this.puan);
+    this.tweens.add({ targets:this.puanYazi, scale:1.3, duration:120, yoyo:true,
+                      ease:'Back.easeOut' });
+  }
+
+  /* --------------------------- kelime sonu --------------------------- */
+  kelimeyiBitir(){
+    const k = this.O.kelimeler[this.kelimeNo];
+    this.kilit = true;
+    const bonus = 150 + 70 * this.seri;
+    this.puanEkle(bonus);
+    if (this.hatasiz) this.seri++; else this.seri = 0;
+
+    this.cameras.main.flash(280, 110, 200, 150);
+    this.kivilcim.setParticleTint(0xf2c14e);
+    this.kivilcim.explode(28, GEN/2, KAGIT_Y);
+    this.mesajYazi.setColor('#8fd6ac').setText('✓ ' + k.hedef + ' — doğru yazdın! 🔔');
+
+    /* kâğıt makineden çıkıyormuş gibi yukarı kayıyor */
+    this.yuvaYazi.forEach((y, i) => {
+      this.tweens.add({ targets:[y.yazi, y.cizgi], y:'-=54', alpha:0, duration:620,
+                        delay:i * 45, ease:'Quad.easeIn' });
+    });
+
+    const nesil = this.nesil;
+    this.time.delayedCall(1500, () => {
+      if (nesil !== this.nesil) return;
+      this.kelimeNo++;
+      if (this.kelimeNo >= this.O.kelimeler.length) this.oyunBitti(true);
+      else this.kelimeyiKur();
+    });
+  }
+
+  oyunBitti(kazandi){
+    this.kilit = true;
+    this.nesil++;
+    const k = this.O.kelimeler[Math.min(this.kelimeNo, this.O.kelimeler.length - 1)];
+    this.time.delayedCall(kazandi ? 300 : 900, () => {
+      this.scene.start('GameOver', {
+        kazandi, puan:this.puan, can:this.can, oyun:this.oyunNo,
+        mesaj: kazandi ? this.O.basari
+                       : 'Doğrusu "' + k.hedef + '" idi.\nDinleyip harfleri sırayla basmayı bir daha dene.'
+      });
+    });
+  }
+
+  update(){
+    if (!this.ucanlar || !this.ucanlar.children) return;
+    this.ucanlar.children.each(u => {
+      if (!u.body) return;
+      if (u.etiketi) u.etiketi.setPosition(u.x, u.y);
+      const d = Phaser.Math.Distance.Between(u.x, u.y, u.getData('hx'), u.getData('hy'));
+      if (d < 14){
+        u.body.setVelocity(0, 0);
+        this.damgala(u);
+      }
+    });
+  }
+}
+
+/* ============================ OYUN SONU ============================ */
+class GameOverScene extends Phaser.Scene {
+  constructor(){ super('GameOver'); }
+  init(d){ this.d = d || {}; }
+  create(){
+    const k = this.d.kazandi;
+
+    /* Uygulama içindeyken kazanma ekranı uygulamanın kutlamasıdır:
+       XP/altın, kutlama ve sıradaki oyuna geçiş orada. */
+    if (k && KOPRU){ KOPRU.bitir(this.d.mesaj || '', this.d.puan || 0); return; }
+    this.add.rectangle(GEN/2, YUK/2, GEN, YUK, k ? 0x18231c : 0x231619);
+    this.add.text(GEN/2, 200, k ? '⌨️' : '🧻', { fontSize:'88px' }).setOrigin(0.5);
+    this.add.text(GEN/2, 290, k ? 'DİKTE TAMAM!' : 'KÂĞIT SIKIŞTI',
+      { fontFamily:'Courier New', fontSize:'35px', fontStyle:'bold',
+        color: k ? '#8fd6ac' : '#f0a5a5' }).setOrigin(0.5);
+    this.add.text(GEN/2, 366, this.d.mesaj || '',
+      { fontFamily:'Verdana', fontSize:'17px', color:'#d8cee2', align:'center',
+        lineSpacing:6, wordWrap:{ width:420 } }).setOrigin(0.5);
+    this.add.text(GEN/2, 452, 'Puan ' + (this.d.puan || 0),
+      { fontFamily:'Verdana', fontSize:'29px', color:'#f2c14e', fontStyle:'bold' })
+      .setOrigin(0.5);
+    this.add.text(GEN/2, 492, 'Kalan can: ' + '❤️'.repeat(Math.max(0, this.d.can || 0)),
+      { fontFamily:'Verdana', fontSize:'19px', color:'#cfc4d8' }).setOrigin(0.5);
+
+    const dugme = (y, etiket, renk, fn) => {
+      const d = this.add.image(GEN/2, y, 'dugme').setDisplaySize(216, 60).setTint(renk)
+                .setInteractive({ useHandCursor:true });
+      this.add.text(GEN/2, y, etiket,
+        { fontFamily:'Verdana', fontSize:'22px', color:'#ffffff', fontStyle:'bold' })
+        .setOrigin(0.5);
+      d.on('pointerdown', fn);
+    };
+    dugme(586, '↻  TEKRAR OYNA', 0x3f9d6a,
+          () => this.scene.start('Game', { oyun:this.d.oyun || 0 }));
+    /* Çocuk bir oyunda takılıp kalmasın: uygulama içinde sıradakine geç. */
+    if (KOPRU)  dugme(662, '⏭  SIRADAKİ OYUN', 0x4a679e, () => KOPRU.atla());
+    if (!KOPRU) dugme(662, '☰  DİKTE SEÇ', 0x4a3f58, () => this.scene.start('Menu'));
+  }
+}
+
+/* =============================== KURULUM =============================== */
+/* =====================================================================
+   NETLİK — cihazın piksel yoğunluğunda çizim
+   ---------------------------------------------------------------------
+   Oyun 480x800 mantıksal tuvalde çiziliyordu; telefon bunu 1080 piksele
+   büyütünce yazılar ve kenarlar bulanıklaşıyordu. Çözüm: tuvali cihazın
+   gerçek piksel sayısında açmak, dünyayı ise kamerayı NETLIK katına
+   yakınlaştırarak yine 480x800 koordinatta tutmak. Böylece Graphics ile
+   çizilen her şey (kartlar, şeritler, kutular) vektör keskinliğinde,
+   yazılar da NETLIK çözünürlüğünde üretiliyor; oyun kodunun tek satırı
+   değişmiyor.
+   ===================================================================== */
+const NETLIK = Math.min(3, Math.max(1, Math.round((window.devicePixelRatio || 1) * 2) / 2));
+
+/* Phaser yazıyı kendi ara tuvaline çiziyor; çözünürlük verilmezse 1x
+   üretilip yakınlaştırmada bulanıklaşır. Bütün yazılara varsayılan
+   olarak NETLIK veriyoruz. */
+(function(){
+  const TS = Phaser.GameObjects.TextStyle.prototype;
+  const eskiSetStyle = TS.setStyle;
+  TS.setStyle = function(style, updateText, setDefaults){
+    if (style && style.resolution === undefined) style.resolution = NETLIK;
+    return eskiSetStyle.call(this, style, updateText, setDefaults);
+  };
+})();
+
+/* Tuval NETLIK katına büyüdüğü için Phaser imleç konumunu da o ölçekte
+   veriyor (0–960). Oyun koordinatına (0–480) çeviren yardımcı: sürükleme
+   olayları zaten dünya koordinatı verdiği için yalnız pointer olaylarında
+   kullanılıyor. */
+function imlec(p){ return { x: p.x / NETLIK, y: p.y / NETLIK }; }
+
+/* Her sahne başlarken kamerayı NETLIK katına yakınlaştırıp fizik
+   dünyasını mantıksal ölçüde tutuyoruz: tuval büyüdü, dünya büyümedi.
+   Sahne örnekleri oyun kurulumundan sonra eşzamansız oluştuğu için
+   kanca Systems.start üzerine takılıyor — yeniden başlatmalarda da
+   kendiliğinden çalışıyor. */
+(function(){
+  const SS = Phaser.Scenes.Systems.prototype;
+  const eskiStart = SS.start;
+  SS.start = function(veri){
+    const sonuc = eskiStart.call(this, veri);
+    const sc = this.scene;
+    try{
+      if (sc.cameras && sc.cameras.main){
+        sc.cameras.main.setZoom(NETLIK);
+        sc.cameras.main.centerOn(GEN / 2, YUK / 2);
+      }
+      if (sc.physics && sc.physics.world) sc.physics.world.setBounds(0, 0, GEN, YUK);
+    }catch(e){ /* netlik ayarı oyunu engellemesin */ }
+    return sonuc;
+  };
+})();
+
+window.OYUN = new Phaser.Game({
+  type: Phaser.AUTO,
+  parent: 'oyun',
+  width: GEN * NETLIK, height: YUK * NETLIK,
+  backgroundColor: '#141118',
+  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+  physics: { default:'arcade', arcade:{ gravity:{ y:0 }, debug:false } },
+  scene: [BootScene, MenuScene, GameScene, GameOverScene]
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+MACERA AKADEMİ — DEVİR PROMPTU
+(macera-tam-paket.zip ekte; içindeki OKUBENI.md ve belgeler/ klasörü bu
+promptun kanıt dosyalarıdır)
+
+Merhaba. "Macera Akademi" adlı bir Android eğitim uygulaması üzerinde
+çalışıyoruz: 1.-4. sınıf için 658 müfredat oyunu içeren TEK sayfalık bir web
+uygulaması (uygulama/macera-akademi-firebase-11.html, ~1.6MB; oyun kataloğu
+da bu dosyanın içinde) ve onu saran Android WebView projesi (MaceraAkademi-3).
+Oyunlar Phaser 3.80.1 ile *-phaser.html şablonlarında; uygulamaya aynı-köken
+iframe olarak gömülüp kataloğu window.parent.getGame(id) ile okuyor,
+window.parent.completeGame(mesaj,puan) ile bitiriyorlar.
+
+ÖNCE ŞUNLARI OKU (zip içinde):
+  1) OKUBENI.md — durum tablosu ve kurulum
+  2) belgeler/SABLON_KURALLARI.md — kod yazım kuralları; her kural gerçek
+     bir hatanın karşılığı, HARFİYEN uy
+  3) belgeler/katalog_istekleri.md — mekanik→şablon eşlemeleri ve notlar
+
+════════════════════════════════════════════
+BUGÜNE KADAR YAPILANLAR (tek tek, eksiksiz)
+════════════════════════════════════════════
+
+MOTOR / ALTYAPI
+1. 37 oyun mekaniğinden 27'si Phaser şablonlarına bağlandı; 658 oyunun
+   641'i (%97) Phaser motorunda çalışıyor.
+2. Aynı-köken iframe köprüsü kuruldu: oyunlar canlı katalog verisini okuyor,
+   puan/XP/altın/kutlama/otomatik geçiş uygulama tarafında işliyor.
+3. NETLIK sistemi: DPR ölçekleme + kamera zoom + yazı çözünürlük yaması +
+   imlec() dönüşümü — bulanıklık giderildi (tüm şablonlarda).
+4. svgciz.js yazıldı (~440 satır): katalogdaki satır içi SVG'leri
+   (polygon/line/rect/circle/ellipse/path M-L-Z-A/text/<g> dönüşümleri/
+   kesikli çizgi) Phaser Graphics ile çiziyor. İçerik sınırına göre ölçek,
+   çoklu SVG yan yana dizme, koyu zeminde açık plaka desteği var.
+   16 oyun bununla "?" görüntüsünden gerçek şekillere kavuştu.
+5. speechClean ve şablon duzMetin'lerine HTML varlık çözümü eklendi
+   ("Pay &lt; payda" → "Pay < payda"; sesli okumada "küçüktür").
+6. aynala.sh: şablonları CDN→yerel çevirip APK varlıklarına kopyalar,
+   svgciz.js'e içerik damgası basar (bayat önbellek önlenir).
+
+TEST ALTYAPISI
+7. kosum.js: oyunları GERÇEKTEN OYNAYAN otomatik koşucu (8 mekanik
+   oynayıcısı). Kritik bilgiler içinde: game.step() elle çağrılınca
+   loop.delta'yı da elle yazmak gerekir; Phaser 3.80 tween'leri DUVAR
+   SAATİYLE ilerler (elle adım yetmez, gerçek zaman beklemek şart);
+   gizli sayfada iframe 0×0 ölçülür, ScaleManager birim eşlemeye sabitlenir.
+8. anlam_denetimi.js: "görev anlamlı mı" taraması — cevabın etikette yazılı
+   olması, ayırt edilemez ögeler, ölçüt görselinin çizilmemesi, yönerge-veri
+   uyumsuzluğu, tek soruluk sığ içerik. 658 oyun tarandı, 38 bulgu çıktı,
+   kritik olanlar düzeltildi.
+
+DÜZELTİLEN OYUN KUSURLARI (kanıtlarıyla belgelerde)
+9.  m03 Dağcı Keçi, m04 Gölge, m05 Çorap, m06 Anahtar, m02 Pusula:
+    katalog verisi yetersizdi, uzamsal-phaser.html'de gerçek sahneler yazıldı.
+10. m07 Dedektif Büyüteci: "(4 çizgi)" etikette yazıyordu ve iz hiç
+    çizilmiyordu → IzScene yazıldı; iz + tabanlar gerçekten çiziliyor.
+11. m16 Orman Maratonu, m19 Otobüs Durakları: sıra "(1.)" olarak etikette
+    yazıyordu → SiraScene; sıra pistte/hat üzerinde GÖRÜNÜYOR.
+12. m13 Kement: 8 özdeş koyundan belirli 4'ü "doğru" sayılıyordu →
+    cfg.anyOf=4 eklendi (herhangi 4 geçerli).
+13. m23 Obur Canavar: çilek sayısı "(3)" yazıyordu → kaldırıldı, 3. tabak eklendi.
+14. Lazer (choiceQuestion): çocuğun ulaşamayacağı hedefler (gereken hız
+    717/720) → fizik gevşetildi (AZAMI_GUC 900, yerçekimi 300); uzun metinli
+    şerit düzeninde hiçbir temiz atış yoktu → dokunmalı hedefleme eklendi.
+15. Balık/kepçe (tapSelect): kenara değen her şey yakalanıyordu → merkeze
+    alma kuralı; yanlış ögeler kaçmıyordu → herkes kaçıyor; kaçanlar havuz
+    dışına itiliyordu → alan kırpması.
+16. Bant (beltSort): en yakın kazan kuralı, tüp aralığı, SVG kartlar.
+17. Roket (orderSequence): blok kırpması sabit 52px'ti, geniş bloklar ekran
+    dışına taşıyordu → blok ölçüsüne bağlandı (h69'da bulundu).
+18. 10 tek-soruluk oyuna (m10, m43, m47, m48, m49, m50, m51, m52, m61 + m23)
+    2-3'er tur içerik yazıldı; m10'da cevap sorunun içindeydi, düzeltildi.
+19. Üçüncü oturum 9 şablonda (radar/matbaa/tren/tamirhane/kargo/dedektif/
+    grafik/sirik/radarkod) 20+ kusur düzeltti — tam listesi
+    belgeler/UCUNCU_OTURUM_TUM_DEGISIKLIKLER.md içinde.
+20. İkinci oturum 11 şablon bağladı ve 79 oyunu baştan sona test etti —
+    belgeler/katalog_istekleri.md içinde.
+
+TEST DURUMU (otomatik, oyun baştan sona OYNANARAK)
+21. 1. sınıf matematik: 49/51 TAMAM (2 surveyChart koşucuda oynayıcısız ama
+    ikinci oturum elle test etti).
+22. 2. sınıf (benim 8 mekaniğim): 123 oyunun tamamı TAMAM.
+23. 3. sınıf: 97/101 TAMAM; w16/w24/h45 sonradan geçti, h69 için roket
+    düzeltmesi yapıldı ama YENİDEN DOĞRULANMADI.
+24. Diğer oturumlar: 79 + 164 oyun kendi şablonlarında test edildi.
+
+UYGULAMA KABUĞU (daha önceki oturumlardan)
+25. Ödül kartı + para sesi + otomatik sonraki oyuna geçiş; başarısızlıkta
+    "sıradaki oyuna geç" seçeneği; Phaser açılış ekranı kaldırıldı;
+    başlık renkleri okunur yapıldı; alt bilgi baloncukları kaldırıldı;
+    yazılar büyütüldü (289 CSS değeri).
+26. Android tarafı: KayitliSes (önceden üretilmiş OGG çalar) → PiperSes →
+    sistem TTS öncelik zinciri; sherpa-onnx JNI; APK 2.8-test (versionCode 20,
+    ~43MB) derlendi ve pakette.
+27. Ses üretim hattı: Chatterbox Multilingual V3 (Mac M4, MPS) kuruldu,
+    2151 kayıtlık manifest + üretici + kopyalama betiği hazır.
+
+════════════════════════════════════════════
+YAPILMAYANLAR / KALAN İŞLER (atlamadan)
+════════════════════════════════════════════
+
+A. SES — EN BÜYÜK EKSİK
+   - 2151 kaydın yalnız ~563'ü üretildi (%26). Üretim Mac'te
+     ~/Downloads/chatterbox/.venv ortamında şu komutla sürüyor
+     (İKİ işçi paralel; oturum kapanınca ÖLÜYORLAR, yeniden başlatmak gerek):
+       cd ~/Downloads/ses_uretim
+       nohup ~/Downloads/chatterbox/.venv/bin/python uret.py --parca 0 --toplam 2 >> gunluk/isci0.log 2>&1 &
+       nohup ~/Downloads/chatterbox/.venv/bin/python uret.py --parca 1 --toplam 2 >> gunluk/isci1.log 2>&1 &
+     İki işçiyle ~16 sn/kayıt → kalan ~1600 kayıt ≈ 7-8 saat.
+   - Bitince: uygulamaya_kopyala.sh ile assets/ses'e kopyala,
+     piperi_cikar.sh ile Piper'ı APK'dan çıkar (~13MB küçülür),
+     telefonda kayıtların çalındığını doğrula.
+   - İyileştirme önerisi: işçileri launchd görevine bağla ki oturumdan
+     bağımsız çalışsınlar.
+
+B. TEST EDİLMEMİŞ / BAĞLANMAMIŞ OYUNLAR (17 oyun DOM'da)
+   - kesirsaat şablonu (fractionCut 2 + clockSet 2 oyun): YAZILDI ama TEST
+     EDİLMEDİ. Test et; geçerse kataloğa "fractionCut:'kesirsaat',
+     clockSet:'kesirsaat'" satırlarını ekle (PHASER_TIPLER).
+   - para şablonu (moneyBuild 2 + placeValueLoad 2): HİÇ BAĞLANMADI.
+   - geometri şablonu (drawSegments 6 + solidScan 2): HİÇ BAĞLANMADI.
+   - 1 özel choiceQuestion DOM'da (kontrol et: neden dışarıda).
+
+C. DOĞRULAMA EKSİKLERİ
+   - h69: roket blok kırpması düzeltildi ama otomatik test TEKRARLANMADI.
+   - 4. sınıf: benim 8 mekaniğimdeki ~111 oyun kosum.js ile HİÇ taranmadı.
+   - 1. sınıf Türkçe (9 oyun) ve tüm derslerin anlam-denetimi bulgularından
+     "icerik-sig" listesindeki u03/u07/u09/u10 vb. 2.-4. sınıf tek-soruluk
+     oyunlarına içerik derinliği eklenmedi (yalnız 1. sınıftakiler yapıldı).
+   - APK 2.8-test telefonda ELLE denenmedi (yalnız tarayıcı testleri).
+
+D. YAYIN HAZIRLIĞI (hiç başlanmadı)
+   - İmzalı release AAB + keystore oluşturma
+   - Gizlilik politikası metni (Play Store zorunlu)
+   - Play Store kaydı, ekran görüntüleri, açıklama metinleri
+   - Öğretmen kodu için ana ekranda kısayol (söz verildi, yapılmadı)
+
+E. KÜÇÜK TEKNİK BORÇLAR (belgelerde işaretli)
+   - svgciz.js path C/Q (eğri) komutlarını desteklemiyor; simetri şablonu
+     kendi yerel çizicisini taşıyor — svgciz'e C eklenirse birleştirilebilir.
+   - balanceScale'de compare.options düz metin; {label,correct} biçimine
+     geçirilmesi önerildi.
+   - surveyChart oyunlarına katalogda successMsg alanı yok (şablon kendi
+     metnini kullanıyor).
+
+════════════════════════════════════════════
+ÇALIŞMA KURALLARIN
+════════════════════════════════════════════
+1. Her değişiklikten sonra ~/Downloads/aynala.sh çalıştır (şablon→APK varlığı).
+2. Test etmeden "bitti" deme: oyun BAŞTAN SONA OYNANMALI ve completeGame
+   çağrısı görülmeli. kosum.js bunun için var; SABLON_KURALLARI.md'deki
+   test yöntemi bölümünü uygula.
+3. Türkçe konuş, koddaki yorumları Türkçe yaz.
+4. APK derleme: JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradlew assembleDebug
+   (sistem Java'sı 1.8, derlemez.)
+5. Önerilen sıra: (B) kesirsaat testi + para/geometri bağlama →
+   (C) h69 + 4. sınıf taraması → (A) ses bitişi ve entegrasyonu →
+   (D) yayın hazırlığı.

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Geometri Laboratuvarı — Phaser 3</title>
+<script src="phaser.min.js"></script>
+<style>
+  html, body { margin:0; padding:0; height:100%; background:#0c1a24; overflow:hidden;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-tap-highlight-color: transparent; touch-action:none; }
+  #oyun { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+  canvas { display:block; }
+</style>
+</head>
+<body>
+<div id="oyun"></div>
+<script>
+/* =====================================================================
+   GEOMETRİ LABORATUVARI — Phaser 3
+   (mekanik: drawSegments + solidScan · 6 + 2 = 8 oyun)
+   ---------------------------------------------------------------------
+   Kazanım: MAT.3.3.2.a — Kare ve dikdörtgenin köşegenlerini keşfeder.
+   MAT.3.3.1.a/b/c — Cisimlerin köşe, yüz ve ayrıt özelliklerini inceler.
+
+   NOT — iki mekanik tek şablon:
+   drawSegments "komşu olmayan köşeleri birleştir (köşegen çiz)",
+   solidScan "cismin köşe/ayrıt/yüz ögelerine tek tek dokun" mantığıydı.
+   İkisi de "geometrik ögeyi tanı ve işaretle" işini yapıyor; şablon tur
+   tipine göre (kosegen / tarama) ilgili aşamayı kuruyor.
+
+   Fizik    : Arcade. Çizilen köşegen ışıldayan bir parçacık izi bırakır;
+              tur tamamlanınca ögeler yerçekimiyle savrulur. Yanlış
+              seçimde işaret geri tepilir.
+   ===================================================================== */
+
+const EN = 480, BOY = 800;
+
+const RENK = {
+  labUst  : 0x0f2433,
+  labAlt  : 0x1e4459,
+  dogru   : 0x34c47b,
+  yanlis  : 0xf07575,
+  kose    : 0xffd166,
+  cizgi   : 0x7fe7ff,
+  vurgu   : 0xffd166
+};
+
+/* ---------------------------------------------------------------------
+   İÇERİK — uygulamadaki w27 (drawSegments) ve w25 (solidScan)
+   oyunlarının birebir aynısı. Koordinatlar 0-200 kutusunda; ekrana
+   ORAN ile eşlenir.
+   ------------------------------------------------------------------- */
+const OYUN_ADI = 'GEOMETRİ\nLABORATUVARI';
+const OYUN_EMO = '🔍';
+const TALIMAT  = 'Köşegenleri çiz, sonra küpü tara';
+const IPUCU    = 'Köşegen komşu OLMAYAN köşeleri birleştirir. Ayrıt iki yüzün birleştiği çizgidir.';
+const BASARI   = 'Laboratuvar tamam! Köşegenleri çizdin, küpün köşe-ayrıt-yüzünü taradın 🔍';
+
+const TURLAR = [
+  { tip:'kosegen',
+    gorev:'KARE · Komşu olmayan köşeleri birleştir — 2 köşegen çiz!',
+    sekil:{ x:40, y:40, en:120, boy:120, renk:0x2f6b9a, dolgu:0x1d3f52 },
+    kose:[ { ad:'A', x:40,  y:40 },  { ad:'B', x:160, y:40 },
+           { ad:'C', x:160, y:160 }, { ad:'D', x:40,  y:160 } ],
+    gerekli:[['A','C'], ['B','D']],
+    hataMsj:'Bu iki köşe KOMŞU! Köşegen komşu olmayan köşeleri birleştirir 🔍',
+    tamam:'Karenin 2 köşegeni var: A–C ve B–D · Ortada birleşir, uzunlukları eşittir.' },
+
+  { tip:'kosegen',
+    gorev:'DİKDÖRTGEN · Bu kez de 2 köşegen çiz!',
+    sekil:{ x:20, y:62, en:160, boy:76, renk:0xb9762a, dolgu:0x4a3520 },
+    kose:[ { ad:'K', x:20,  y:62 },  { ad:'L', x:180, y:62 },
+           { ad:'M', x:180, y:138 }, { ad:'N', x:20,  y:138 } ],
+    gerekli:[['K','M'], ['L','N']],
+    hataMsj:'Komşu köşeler kenar oluşturur, köşegen değil!',
+    tamam:'Dikdörtgenin de 2 köşegeni var: K–M ve L–N.' },
+
+  { tip:'tarama',
+    gorev:'Küpü tara! Sırayla köşelere, ayrıtlara ve yüzlere dokun.',
+    modlar:[
+      { ad:'KÖŞE TARAYICI',  emoji:'📍', sayi:8,  ipucu:'Küpün 8 köşesi var — her noktaya birer kez dokun',
+        tamam:'8 köşe bulundu! Köşe, ayrıtların birleştiği noktadır.' },
+      { ad:'AYRIT TARAYICI', emoji:'📏', sayi:12, ipucu:'Ayrıt, iki yüzün birleştiği çizgidir — her çizgiye dokun',
+        tamam:'12 ayrıt bulundu! Ayrıt, iki yüzün birleştiği çizgidir.' },
+      { ad:'YÜZ TARAYICI',   emoji:'🟦', sayi:6,  ipucu:'Küpün açınımındaki 6 yüze dokun',
+        tamam:'6 yüz bulundu! Küpün altı yüzü vardır ve hepsi karedir.' }
+    ],
+    tamam:'Küp tarandı: 8 köşe · 12 ayrıt · 6 yüz 🧊' }
+];
+
+const CAN_SAYISI = 3;
+
+/* --- Yerleşim -------------------------------------------------------- */
+const KAYNAK = 200;                 /* içerik koordinat kutusu */
+const ALAN = { x0:80, y0:266, en:320, boy:320 };
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+class BootScene extends Phaser.Scene {
+  constructor(){ super('Boot'); }
+  create(){
+    let g = this.make.graphics({ add:false });
+    g.fillStyle(0xffffff, 1); g.fillCircle(8, 8, 8);
+    g.generateTexture('kivilcim', 16, 16); g.destroy();
+    g = this.make.graphics({ add:false });
+    for (let r = 14; r > 0; r--){ g.fillStyle(0xffffff, 0.06); g.fillCircle(14, 14, r); }
+    g.generateTexture('toz', 28, 28); g.destroy();
+    g = this.make.graphics({ add:false });
+    g.fillStyle(0xffffff, 1); g.fillRoundedRect(0, 0, 16, 16, 3);
+    g.generateTexture('parca', 16, 16); g.destroy();
+    this.scene.start('Menu');
+  }
+}
+
+/* =====================================================================
+   Ortak
+   ===================================================================== */
+function labCiz(sc){
+  const g = sc.add.graphics();
+  g.fillGradientStyle(RENK.labUst, RENK.labUst, RENK.labAlt, RENK.labAlt, 1);
+  g.fillRect(0, 0, EN, BOY);
+  for (let i = 0; i < 24; i++){
+    const s = sc.add.circle(Phaser.Math.Between(6, EN - 6), Phaser.Math.Between(6, BOY - 6),
+      Phaser.Math.FloatBetween(1.4, 3.2), 0xffffff, Phaser.Math.FloatBetween(0.04, 0.15));
+    sc.tweens.add({ targets:s, alpha:0.02, duration:Phaser.Math.Between(1300, 2900),
+      yoyo:true, repeat:-1, delay:Phaser.Math.Between(0, 1900) });
+  }
+  return g;
+}
+
+function dugmeYap(sc, x, y, metin, renk, geriCagri, genislik, yukseklik){
+  const W = genislik || 280, H = yukseklik || 60;
+  const c = sc.add.container(x, y);
+  const g = sc.add.graphics();
+  g.fillStyle(renk, 1);
+  g.fillRoundedRect(-W / 2, -H / 2, W, H, Math.min(H / 2, 26));
+  g.fillStyle(0xffffff, 0.16);
+  g.fillRoundedRect(-W / 2, -H / 2, W, H * 0.4, { tl:Math.min(H / 2, 26), tr:Math.min(H / 2, 26), bl:0, br:0 });
+  const t = sc.add.text(0, 0, metin, { fontFamily:'system-ui, sans-serif',
+    fontSize: H > 52 ? '20px' : '15px', fontStyle:'bold', color:'#ffffff', align:'center' }).setOrigin(0.5);
+  c.add([g, t]);
+  c.setSize(W, H).setInteractive({ useHandCursor:true });
+  c.on('pointerover', () => sc.tweens.add({ targets:c, scale:1.05, duration:110 }));
+  c.on('pointerout',  () => sc.tweens.add({ targets:c, scale:1.00, duration:110 }));
+  c.on('pointerdown', () => sc.tweens.add({ targets:c, scale:0.93, duration:90, yoyo:true, onComplete:geriCagri }));
+  return c;
+}
+
+/* =====================================================================
+   MENU
+   ===================================================================== */
+class MenuScene extends Phaser.Scene {
+  constructor(){ super('Menu'); }
+  create(){
+    labCiz(this);
+    const g = this.add.graphics().setDepth(6);
+    g.lineStyle(4, 0x2f6b9a, 1); g.strokeRect(EN / 2 - 60, 160, 120, 120);
+    g.lineStyle(3, RENK.cizgi, 0.9);
+    g.lineBetween(EN / 2 - 60, 160, EN / 2 + 60, 280);
+    g.lineBetween(EN / 2 + 60, 160, EN / 2 - 60, 280);
+    [[-60,160],[60,160],[60,280],[-60,280]].forEach(([dx, dy]) => {
+      const k = this.add.circle(EN / 2 + dx, dy, 8, RENK.kose, 1).setDepth(7);
+      this.tweens.add({ targets:k, scale:1.4, duration:800, yoyo:true, repeat:-1 });
+    });
+    const baslik = this.add.text(EN / 2, 352, OYUN_ADI, { fontFamily:'system-ui, sans-serif',
+      fontSize:'36px', fontStyle:'bold', color:'#ffffff', align:'center', lineSpacing:5 }).setOrigin(0.5);
+    this.tweens.add({ targets:baslik, scale:1.04, duration:1400, yoyo:true, repeat:-1, ease:'Sine.easeInOut' });
+    this.add.text(EN / 2, 434, TALIMAT, { fontFamily:'system-ui, sans-serif',
+      fontSize:'21px', color:'#cfe6ff', align:'center' }).setOrigin(0.5);
+    const kart = this.add.graphics();
+    kart.fillStyle(0x08161f, 0.92); kart.fillRoundedRect(30, 470, EN - 60, 84, 16);
+    kart.lineStyle(2, 0x2f6b9a, 1); kart.strokeRoundedRect(30, 470, EN - 60, 84, 16);
+    this.add.text(EN / 2, 512, IPUCU, { fontFamily:'system-ui, sans-serif', fontSize:'17px',
+      fontStyle:'bold', color:'#ffd166', align:'center', wordWrap:{ width:EN - 90 }, lineSpacing:4 }).setOrigin(0.5);
+    dugmeYap(this, EN / 2, 624, '▶  BAŞLA', RENK.dogru, () => this.scene.start('Game'));
+    this.add.text(EN / 2, 714, `${TURLAR.length} görev  ·  ${CAN_SAYISI} can`,
+      { fontFamily:'system-ui, sans-serif', fontSize:'20px', color:'#8fb8d6' }).setOrigin(0.5);
+  }
+}
+
+/* =====================================================================
+   GAME
+   ===================================================================== */
+class GameScene extends Phaser.Scene {
+  constructor(){ super('Game'); }
+
+  create(){
+    this.can = CAN_SAYISI; this.puan = 0; this.seri = 0; this.tur = 0; this.kilit = true;
+    this.koseNesne = null; this.ogeNesne = null; this.mesaj = null;
+    this.sekilCizim = null; this.cizgiCizim = null;
+
+    labCiz(this);
+
+    this.kivilcimlar = this.add.particles(0, 0, 'kivilcim', {
+      speed:{ min:120, max:330 }, angle:{ min:0, max:360 }, scale:{ start:0.8, end:0 },
+      alpha:{ start:1, end:0 }, lifespan:600, gravityY:300, blendMode:'ADD', emitting:false }).setDepth(90);
+    this.tozlar = this.add.particles(0, 0, 'toz', {
+      speed:{ min:40, max:150 }, angle:{ min:200, max:340 }, scale:{ start:0.9, end:2 },
+      alpha:{ start:0.5, end:0 }, lifespan:660, emitting:false }).setDepth(80);
+    this.parcalar = this.physics.add.group();
+
+    this.sekilCizim = this.add.graphics().setDepth(6);
+    this.cizgiCizim = this.add.graphics().setDepth(10);
+
+    this.arayuzKur();
+    this.turuBaslat();
+  }
+
+  nokta(x, y){
+    return { x: ALAN.x0 + x * ALAN.en / KAYNAK, y: ALAN.y0 + y * ALAN.boy / KAYNAK };
+  }
+
+  turuBaslat(){
+    const t = TURLAR[this.tur];
+    this.kilit = true;
+    if (this.koseNesne) this.koseNesne.forEach(o => o.destroy());
+    if (this.ogeNesne)  this.ogeNesne.forEach(o => o.destroy());
+    this.koseNesne = []; this.ogeNesne = [];
+    this.parcalar.clear(true, true);
+    this.sekilCizim.clear(); this.cizgiCizim.clear();
+
+    this.gorevYazi.setText(t.gorev);
+    this.tweens.add({ targets:this.gorevYazi, scale:{ from:0.88, to:1 }, duration:280, ease:'Back.easeOut' });
+
+    if (t.tip === 'kosegen') this.kosegenKur(t);
+    else                     this.taramaKur(t);
+
+    this.time.delayedCall(340, () => { this.kilit = false; });
+    this.arayuzuTazele();
+  }
+
+  /* ================= drawSegments ================= */
+  kosegenKur(t){
+    this.secili = null;
+    this.cizilen = [];
+    this.ipucuYazi.setText('İki köşeye sırayla dokun.');
+
+    /* şekil */
+    const g = this.sekilCizim;
+    const p0 = this.nokta(t.sekil.x, t.sekil.y);
+    const en = t.sekil.en * ALAN.en / KAYNAK, boy = t.sekil.boy * ALAN.boy / KAYNAK;
+    g.fillStyle(t.sekil.dolgu, 0.85);
+    g.fillRect(p0.x, p0.y, en, boy);
+    g.lineStyle(5, t.sekil.renk, 1);
+    g.strokeRect(p0.x, p0.y, en, boy);
+
+    /* köşeler */
+    t.kose.forEach(k => {
+      const p = this.nokta(k.x, k.y);
+      const c = this.add.circle(p.x, p.y, 15, RENK.kose, 1).setDepth(14)
+        .setInteractive({ useHandCursor:true });
+      c.setData('ad', k.ad);
+      c.on('pointerdown', () => this.koseSec(t, c));
+      const e = this.add.text(p.x, p.y, k.ad, { fontFamily:'system-ui, sans-serif',
+        fontSize:'17px', fontStyle:'bold', color:'#20303a' }).setOrigin(0.5).setDepth(15);
+      this.koseNesne.push(c, e);
+    });
+  }
+
+  koseSec(t, c){
+    if (this.kilit) return;
+    const ad = c.getData('ad');
+
+    if (!this.secili){
+      this.secili = c;
+      c.setFillStyle(RENK.cizgi, 1);
+      this.tweens.add({ targets:c, scale:1.35, duration:130, yoyo:true });
+      return;
+    }
+    if (this.secili === c){ this.secili = null; c.setFillStyle(RENK.kose, 1); return; }
+
+    const a = this.secili.getData('ad'), b = ad;
+    const ciftVar = (x, y) => t.gerekli.some(g => (g[0] === x && g[1] === y) || (g[0] === y && g[1] === x));
+    const cizildi = this.cizilen.some(g => (g[0] === a && g[1] === b) || (g[0] === b && g[1] === a));
+
+    this.secili.setFillStyle(RENK.kose, 1);
+    const ilk = this.secili;
+    this.secili = null;
+
+    if (!ciftVar(a, b) || cizildi){
+      /* komşu köşe ya da tekrar — GERÇEK FİZİK: işaret geri tepilir */
+      this.seri = 0; this.can--; this.arayuzuTazele();
+      const p = this.physics.add.existing(
+        this.add.image((ilk.x + c.x) / 2, (ilk.y + c.y) / 2, 'parca')
+          .setTint(RENK.yanlis).setScale(1.6).setDepth(30));
+      this.parcalar.add(p);
+      p.body.setAllowGravity(true);
+      p.body.setVelocity(Phaser.Math.Between(-140, 140), -280);
+      this.tozlar.explode(12, (ilk.x + c.x) / 2, (ilk.y + c.y) / 2);
+      this.cameras.main.shake(220, 0.011);
+      this.cameras.main.flash(160, 220, 90, 90);
+      this.tweens.add({ targets:this.canYazi, angle:{ from:-12, to:12 }, duration:70,
+        yoyo:true, repeat:3, onComplete:() => this.canYazi.setAngle(0) });
+      this.mesajGoster(cizildi ? 'Bu köşegen zaten çizildi.' : t.hataMsj, '#b5453b');
+      if (this.can <= 0){ this.kilit = true; this.time.delayedCall(900, () => this.bitir(false)); }
+      return;
+    }
+
+    /* köşegen çizildi */
+    this.cizilen.push([a, b]);
+    this.kosegenleriCiz();
+    this.kivilcimlar.setParticleTint(RENK.cizgi);
+    for (let i = 0; i <= 8; i++){
+      const x = Phaser.Math.Linear(ilk.x, c.x, i / 8), y = Phaser.Math.Linear(ilk.y, c.y, i / 8);
+      this.kivilcimlar.explode(2, x, y);
+    }
+    this.puanEkle(120, (ilk.x + c.x) / 2, (ilk.y + c.y) / 2 - 20);
+    this.ipucuYazi.setText(this.cizilen.length + ' / ' + t.gerekli.length + ' köşegen');
+
+    if (this.cizilen.length >= t.gerekli.length){
+      this.kilit = true;
+      this.time.delayedCall(600, () => this.turuBitir(t));
+    }
+  }
+
+  kosegenleriCiz(){
+    const t = TURLAR[this.tur];
+    const g = this.cizgiCizim;
+    g.clear();
+    this.cizilen.forEach(([a, b]) => {
+      const ka = t.kose.find(k => k.ad === a), kb = t.kose.find(k => k.ad === b);
+      const pa = this.nokta(ka.x, ka.y), pb = this.nokta(kb.x, kb.y);
+      g.lineStyle(5, RENK.cizgi, 1);
+      g.lineBetween(pa.x, pa.y, pb.x, pb.y);
+    });
+  }
+
+  /* ================= solidScan ================= */
+  taramaKur(t){
+    this.modIdx = 0;
+    this.modaGec(t);
+  }
+
+  modaGec(t){
+    const m = t.modlar[this.modIdx];
+    this.tarandi = 0;
+    if (this.ogeNesne) this.ogeNesne.forEach(o => o.destroy());
+    this.ogeNesne = [];
+    this.sekilCizim.clear(); this.cizgiCizim.clear();
+
+    this.ipucuYazi.setText(m.emoji + '  ' + m.ad + ' — ' + m.ipucu);
+
+    /* küp: ön ve arka kare + bağlayıcılar */
+    const g = this.sekilCizim;
+    const on = [[40,60],[140,60],[140,160],[40,160]];
+    const arka = on.map(([x, y]) => [x + 34, y - 32]);
+    const cizKare = (kose, renk, kalin) => {
+      g.lineStyle(kalin, renk, 1);
+      for (let i = 0; i < 4; i++){
+        const a = this.nokta(kose[i][0], kose[i][1]);
+        const b = this.nokta(kose[(i + 1) % 4][0], kose[(i + 1) % 4][1]);
+        g.lineBetween(a.x, a.y, b.x, b.y);
+      }
+    };
+    g.fillStyle(0x1d3f52, 0.7);
+    const p0 = this.nokta(40, 60);
+    g.fillRect(p0.x, p0.y, 100 * ALAN.en / KAYNAK, 100 * ALAN.boy / KAYNAK);
+    cizKare(arka, 0x4a7fd6, 2);
+    for (let i = 0; i < 4; i++){
+      const a = this.nokta(on[i][0], on[i][1]), b = this.nokta(arka[i][0], arka[i][1]);
+      g.lineStyle(2, 0x4a7fd6, 0.8);
+      g.lineBetween(a.x, a.y, b.x, b.y);
+    }
+    cizKare(on, 0x7fb2f0, 3);
+
+    if (m.sayi === 8){
+      /* 8 köşe */
+      on.concat(arka).forEach(([x, y], i) => {
+        const p = this.nokta(x, y);
+        const c = this.add.circle(p.x, p.y, 13, RENK.kose, 1).setDepth(14)
+          .setInteractive({ useHandCursor:true });
+        c.on('pointerdown', () => this.ogeTara(t, c));
+        this.ogeNesne.push(c);
+      });
+    } else if (m.sayi === 12){
+      /* 12 ayrıt — orta noktalarına dokunulur */
+      const ayrit = [];
+      for (let i = 0; i < 4; i++){
+        ayrit.push([on[i], on[(i + 1) % 4]]);
+        ayrit.push([arka[i], arka[(i + 1) % 4]]);
+        ayrit.push([on[i], arka[i]]);
+      }
+      ayrit.forEach(([a, b]) => {
+        const pa = this.nokta(a[0], a[1]), pb = this.nokta(b[0], b[1]);
+        const c = this.add.circle((pa.x + pb.x) / 2, (pa.y + pb.y) / 2, 11, RENK.cizgi, 0.9)
+          .setDepth(14).setInteractive({ useHandCursor:true });
+        c.on('pointerdown', () => this.ogeTara(t, c));
+        this.ogeNesne.push(c);
+      });
+    } else {
+      /* 6 yüz — açınım kareleri */
+      const yerler = [[100,20],[100,90],[100,160],[30,90],[170,90],[100,230]];
+      yerler.forEach(([x, y]) => {
+        const p = this.nokta(x, y);
+        const c = this.add.rectangle(p.x, p.y, 52, 52, 0x4a7fd6, 0.85)
+          .setDepth(14).setInteractive({ useHandCursor:true });
+        c.setStrokeStyle(2, 0x9fd0ff, 1);
+        c.on('pointerdown', () => this.ogeTara(t, c));
+        this.ogeNesne.push(c);
+      });
+    }
+  }
+
+  ogeTara(t, c){
+    if (this.kilit) return;
+    if (c.getData('tarandi')) {
+      this.mesajGoster('Buraya zaten dokundun — başka bir ögeye geç.', '#2f5f80');
+      return;
+    }
+    c.setData('tarandi', true);
+    if (c.setFillStyle) c.setFillStyle(RENK.dogru, 1);
+    this.tweens.add({ targets:c, scale:1.4, duration:140, yoyo:true, ease:'Back.easeOut' });
+    this.kivilcimlar.setParticleTint(RENK.dogru);
+    this.kivilcimlar.explode(8, c.x, c.y);
+    this.tarandi++;
+    this.puanEkle(22, c.x, c.y - 18);
+
+    const m = t.modlar[this.modIdx];
+    this.ipucuYazi.setText(m.emoji + '  ' + m.ad + ' — ' + this.tarandi + ' / ' + m.sayi);
+
+    if (this.tarandi >= m.sayi){
+      this.kilit = true;
+      this.mesajGoster(m.tamam, '#1f6d4a');
+      this.modIdx++;
+      this.time.delayedCall(1800, () => {
+        if (this.modIdx >= t.modlar.length){ this.turuBitir(t); return; }
+        this.modaGec(t);
+        this.kilit = false;
+      });
+    }
+  }
+
+  /* ---------- ortak ---------- */
+  puanEkle(kazanc, x, y){
+    this.seri++;
+    const p = kazanc + (this.seri - 1) * 2;
+    this.puan += p;
+    this.puanYazi.setText('Puan ' + this.puan);
+    this.tweens.add({ targets:this.puanYazi, scale:1.32, duration:115, yoyo:true, ease:'Back.easeOut' });
+    const u = this.add.text(x, y, '+' + p, { fontFamily:'system-ui, sans-serif',
+      fontSize:'21px', fontStyle:'bold', color:'#7ce0a3' }).setOrigin(0.5).setDepth(95);
+    this.tweens.add({ targets:u, y:u.y - 38, alpha:0, duration:580, onComplete:() => u.destroy() });
+  }
+
+  turuBitir(t){
+    this.kilit = true;
+    this.puan += 200;
+    this.puanYazi.setText('Puan ' + this.puan);
+    /* GERÇEK FİZİK: ögeler savrulur */
+    const kaynak = (this.ogeNesne.length ? this.ogeNesne : this.koseNesne)
+      .filter(o => o.x !== undefined);
+    kaynak.slice(0, 10).forEach(o => {
+      const p = this.physics.add.existing(
+        this.add.image(o.x, o.y, 'parca').setTint(RENK.vurgu).setScale(1.4).setDepth(30));
+      this.parcalar.add(p);
+      p.body.setAllowGravity(true);
+      p.body.setVelocity(Phaser.Math.Between(-220, 220), Phaser.Math.Between(-420, -240));
+    });
+    this.kivilcimlar.setParticleTint(RENK.vurgu);
+    this.kivilcimlar.explode(26, ALAN.x0 + ALAN.en / 2, ALAN.y0 + ALAN.boy / 2);
+    this.cameras.main.flash(150, 80, 210, 140);
+    this.mesajGoster(t.tamam, '#1f6d4a');
+    this.tur++;
+    this.arayuzuTazele();
+    this.time.delayedCall(2400, () => {
+      if (this.tur >= TURLAR.length){ this.bitir(true); return; }
+      this.turuBaslat();
+    });
+  }
+
+  mesajGoster(metin, arka){
+    if (this.mesaj) this.mesaj.destroy();
+    this.mesaj = this.add.text(EN / 2, 630, metin, { fontFamily:'system-ui, sans-serif',
+      fontSize:'17px', fontStyle:'bold', color:'#ffffff', backgroundColor:arka,
+      padding:{ x:12, y:7 }, align:'center', wordWrap:{ width:EN - 60 }, lineSpacing:3
+    }).setOrigin(0.5).setDepth(96).setAlpha(0);
+    const t = this.mesaj;
+    this.tweens.add({ targets:t, alpha:1, duration:150 });
+    this.time.delayedCall(1800, () => {
+      if (!t.active) return;
+      this.tweens.add({ targets:t, alpha:0, duration:250,
+        onComplete:() => { if (this.mesaj === t) this.mesaj = null; t.destroy(); } });
+    });
+  }
+
+  arayuzKur(){
+    const serit = this.add.graphics().setDepth(60);
+    serit.fillStyle(0x081420, 0.97); serit.fillRoundedRect(10, 10, EN - 20, 104, 18);
+    this.add.text(EN / 2, 38, OYUN_EMO + '  Geometri laboratuvarı', { fontFamily:'system-ui, sans-serif',
+      fontSize:'20px', fontStyle:'bold', color:'#ffffff' }).setOrigin(0.5).setDepth(61);
+    this.puanYazi = this.add.text(30, 80, 'Puan 0', { fontFamily:'system-ui, sans-serif',
+      fontSize:'20px', fontStyle:'bold', color:'#ffd166' }).setOrigin(0, 0.5).setDepth(61);
+    this.canYazi = this.add.text(EN - 30, 80, '', { fontSize:'20px' }).setOrigin(1, 0.5).setDepth(61);
+    this.ilerlemeYazi = this.add.text(EN / 2, 80, '', { fontFamily:'system-ui, sans-serif',
+      fontSize:'19px', fontStyle:'bold', color:'#8fb8d6' }).setOrigin(0.5).setDepth(61);
+    this.gorevYazi = this.add.text(EN / 2, 158, '', { fontFamily:'system-ui, sans-serif',
+      fontSize:'19px', fontStyle:'bold', color:'#ffffff', align:'center',
+      wordWrap:{ width:EN - 44 }, lineSpacing:4 }).setOrigin(0.5).setDepth(61);
+    this.ipucuYazi = this.add.text(EN / 2, 216, '', { fontFamily:'system-ui, sans-serif',
+      fontSize:'16px', fontStyle:'bold', color:'#ffd166', align:'center',
+      wordWrap:{ width:EN - 44 }, lineSpacing:3 }).setOrigin(0.5).setDepth(61);
+    this.arayuzuTazele();
+  }
+
+  arayuzuTazele(){
+    this.canYazi.setText('❤️'.repeat(Math.max(0, this.can)) + '🖤'.repeat(Math.max(0, CAN_SAYISI - this.can)));
+    this.ilerlemeYazi.setText(`${this.tur} / ${TURLAR.length} görev`);
+  }
+
+  bitir(kazandi){
+    this.scene.start('GameOver', { kazandi, puan:this.puan, can:this.can,
+      tur:this.tur, toplam:TURLAR.length });
+  }
+
+  update(){
+    if (!this.parcalar || !this.parcalar.children) return;
+    this.parcalar.getChildren().forEach(p => {
+      if (p.active && (p.y > BOY + 60 || p.x < -60 || p.x > EN + 60)) p.destroy();
+    });
+  }
+}
+
+/* =====================================================================
+   GAME OVER
+   ===================================================================== */
+class GameOverScene extends Phaser.Scene {
+  constructor(){ super('GameOver'); }
+  init(veri){ this.veri = veri; }
+  create(){
+    const { kazandi, puan, can, tur, toplam } = this.veri;
+    labCiz(this);
+    const emo = this.add.text(EN / 2, 190, kazandi ? '🧊' : '💪', { fontSize:'97px' })
+      .setOrigin(0.5).setScale(0);
+    this.tweens.add({ targets:emo, scale:1, duration:520, ease:'Back.easeOut' });
+    this.add.text(EN / 2, 300, kazandi ? 'LABORATUVAR TAMAM!' : 'TEKRAR DENE',
+      { fontFamily:'system-ui, sans-serif', fontSize:'32px', fontStyle:'bold',
+        color: kazandi ? '#7ce0a3' : '#ffd166', align:'center', wordWrap:{ width:EN - 50 } }).setOrigin(0.5);
+    this.add.text(EN / 2, 360, kazandi ? BASARI : `${tur} / ${toplam} görevi tamamladın — bir daha deneyelim mi?`,
+      { fontFamily:'system-ui, sans-serif', fontSize:'21px', color:'#cfe6ff', align:'center',
+        wordWrap:{ width:EN - 70 }, lineSpacing:5 }).setOrigin(0.5);
+    const py = this.add.text(EN / 2, 456, 'Puan 0', { fontFamily:'system-ui, sans-serif',
+      fontSize:'42px', fontStyle:'bold', color:'#ffd166' }).setOrigin(0.5);
+    const s = { v:0 };
+    this.tweens.add({ targets:s, v:puan, duration:900, ease:'Cubic.easeOut',
+      onUpdate:() => py.setText('Puan ' + Math.round(s.v)) });
+    this.add.text(EN / 2, 506, 'Kalan can: ' + (can > 0 ? '❤️'.repeat(can) : '—'),
+      { fontFamily:'system-ui, sans-serif', fontSize:'21px', color:'#8fb8d6' }).setOrigin(0.5);
+    if (kazandi){
+      const k = this.add.particles(EN / 2, -20, 'kivilcim', {
+        speed:{ min:90, max:260 }, angle:{ min:60, max:120 }, scale:{ start:0.8, end:0 },
+        alpha:{ start:1, end:0 }, lifespan:2000, gravityY:180, quantity:2, frequency:70,
+        tint:[0xffd166, 0x7ce0a3, 0x7fe7ff, 0x4a7fd6] }).setDepth(5);
+      this.time.delayedCall(2600, () => k.stop());
+    }
+    dugmeYap(this, EN / 2, 606, '↻  TEKRAR OYNA', RENK.dogru, () => this.scene.start('Game'));
+    dugmeYap(this, EN / 2, 684, '☰  MENÜ', 0x2f6b9a, () => this.scene.start('Menu'));
+  }
+}
+
+/* =====================================================================
+   NETLİK — cihazın piksel yoğunluğunda çizim
+   ---------------------------------------------------------------------
+   Oyun 480x800 mantıksal tuvalde çiziliyordu; telefon bunu 1080 piksele
+   büyütünce yazılar ve kenarlar bulanıklaşıyordu. Çözüm: tuvali cihazın
+   gerçek piksel sayısında açmak, dünyayı ise kamerayı NETLIK katına
+   yakınlaştırarak yine 480x800 koordinatta tutmak. Böylece Graphics ile
+   çizilen her şey (kartlar, şeritler, kutular) vektör keskinliğinde,
+   yazılar da NETLIK çözünürlüğünde üretiliyor; oyun kodunun tek satırı
+   değişmiyor.
+   ===================================================================== */
+const NETLIK = Math.min(3, Math.max(1, Math.round((window.devicePixelRatio || 1) * 2) / 2));
+
+/* Phaser yazıyı kendi ara tuvaline çiziyor; çözünürlük verilmezse 1x
+   üretilip yakınlaştırmada bulanıklaşır. Bütün yazılara varsayılan
+   olarak NETLIK veriyoruz. */
+(function(){
+  const TS = Phaser.GameObjects.TextStyle.prototype;
+  const eskiSetStyle = TS.setStyle;
+  TS.setStyle = function(style, updateText, setDefaults){
+    if (style && style.resolution === undefined) style.resolution = NETLIK;
+    return eskiSetStyle.call(this, style, updateText, setDefaults);
+  };
+})();
+
+/* Tuval NETLIK katına büyüdüğü için Phaser imleç konumunu da o ölçekte
+   veriyor (0–960). Oyun koordinatına (0–480) çeviren yardımcı: sürükleme
+   olayları zaten dünya koordinatı verdiği için yalnız pointer olaylarında
+   kullanılıyor. */
+function imlec(p){ return { x: p.x / NETLIK, y: p.y / NETLIK }; }
+
+/* Her sahne başlarken kamerayı NETLIK katına yakınlaştırıp fizik
+   dünyasını mantıksal ölçüde tutuyoruz: tuval büyüdü, dünya büyümedi.
+   Sahne örnekleri oyun kurulumundan sonra eşzamansız oluştuğu için
+   kanca Systems.start üzerine takılıyor — yeniden başlatmalarda da
+   kendiliğinden çalışıyor. */
+(function(){
+  const SS = Phaser.Scenes.Systems.prototype;
+  const eskiStart = SS.start;
+  SS.start = function(veri){
+    const sonuc = eskiStart.call(this, veri);
+    const sc = this.scene;
+    try{
+      if (sc.cameras && sc.cameras.main){
+        sc.cameras.main.setZoom(NETLIK);
+        sc.cameras.main.centerOn(EN / 2, BOY / 2);
+      }
+      if (sc.physics && sc.physics.world) sc.physics.world.setBounds(0, 0, EN, BOY);
+    }catch(e){ /* netlik ayarı oyunu engellemesin */ }
+    return sonuc;
+  };
+})();
+
+window.OYUN = new Phaser.Game({
+  type: Phaser.AUTO, parent: 'oyun', width: EN * NETLIK, height: BOY * NETLIK,
+  backgroundColor: '#0c1a24',
+  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+  physics: { default: 'arcade', arcade: { gravity: { y: 720 } } },
+  scene: [BootScene, MenuScene, GameScene, GameOverScene]
+});
+
+</script>
+</body>
+</html>

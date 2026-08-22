@@ -1,0 +1,57 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.maceraakademi.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.maceraakademi.app"
+        minSdk 23
+        targetSdk 34
+        versionCode 20
+        versionName "2.8-test"
+
+        /* Piper sesi yerel kitaplıkla (sherpa-onnx) çalışıyor. Yalnız 64 bit
+           ARM paketleniyor: 2017 sonrası bütün Android telefonlar bu mimaride
+           ve iki mimariyi birlikte koymak APK'yı ~15 MB büyütüyor. */
+        ndk { abiFilters 'arm64-v8a' }
+    }
+
+    packaging {
+        jniLibs {
+            /* JNI kitaplığı yalnız libonnxruntime.so'ya bağlı; c-api ve
+               cxx-api sürümleri kullanılmıyor, 4,9 MB boşuna yer alıyordu. */
+            excludes += ['**/libsherpa-onnx-c-api.so', '**/libsherpa-onnx-cxx-api.so']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    /* Piper/VITS sesletme motoru — GitHub sürümünden alınan yerel AAR */
+    implementation files('libs/sherpa-onnx.aar')
+
+    /* Kotlin 1.8'den itibaren kotlin-stdlib-jdk7/jdk8 içerikleri ana stdlib'e
+       taşındı. androidx bağımlılıkları eski 1.6.21 sürümlerini de çektiği için
+       "Duplicate class" hatası oluşuyor. BOM tüm kotlin parçalarını aynı
+       sürüme sabitleyip çakışmayı kaldırır. */
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.22')
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.activity:activity:1.8.2'
+    // Yerel dosyaları https kaynağı gibi sunmak için (Firebase'in çalışması şart)
+    implementation 'androidx.webkit:webkit:1.10.0'
+}

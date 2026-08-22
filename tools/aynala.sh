@@ -1,0 +1,21 @@
+#!/bin/bash
+# Depodaki web kaynaklarını Android APK varlıklarına kopyalar.
+# svgciz.js'e içerik damgası eklenir: tarayıcı ve WebView bayat kopya tutmasın.
+set -e
+
+BETIK_DIZINI="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+PROJE_KOKU="$(cd "$BETIK_DIZINI/.." && pwd)"
+KAYNAK="$PROJE_KOKU/web"
+SABLONLAR="$KAYNAK/phaser"
+VARLIKLAR="$PROJE_KOKU/app/src/main/assets"
+
+mkdir -p "$VARLIKLAR/phaser"
+DAMGA=$(md5 -q "$SABLONLAR/svgciz.js" | cut -c1-8)
+for f in "$SABLONLAR"/*-phaser.html; do
+  ad=$(basename "$f" -phaser.html)
+  sed -e 's|https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js|phaser.min.js|' \
+      -e "s|src=\"svgciz.js\"|src=\"svgciz.js?s=$DAMGA\"|" "$f" > "$VARLIKLAR/phaser/$ad.html"
+done
+cp "$SABLONLAR/svgciz.js" "$VARLIKLAR/phaser/svgciz.js"
+cp "$KAYNAK/macera-akademi.html" "$VARLIKLAR/macera-akademi.html"
+echo "kopyalandı: $(find "$VARLIKLAR/phaser" -maxdepth 1 -name '*.html' | wc -l | tr -d ' ') şablon · svgciz damgası $DAMGA"

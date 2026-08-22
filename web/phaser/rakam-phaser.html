@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Rakam Atölyesi — Phaser 3</title>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+<style>
+  html, body { margin:0; padding:0; height:100%; background:#0b1420; overflow:hidden;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-tap-highlight-color: transparent; touch-action:none; }
+  #oyun { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+  canvas { display:block; }
+</style>
+</head>
+<body>
+<div id="oyun"></div>
+<script>
+/* =====================================================================
+   RAKAM ATÖLYESİ — Phaser 3   (mekanik: numberTrace + numberWrite · 20 oyun)
+   ---------------------------------------------------------------------
+   Kazanım: Rakamların yazım yönünü kas hafızasına alır; iki basamaklı
+   sayıyı onlar-birler olarak yazar.
+
+   Sahneler : Boot → Menu → Game → GameOver
+   Fizik    : Arcade.
+              · Rakam tamamlanınca sahne ödülü (balon/roket/kaya) ve
+                süs parçaları GERÇEK FİZİKLE fırlar, yerçekimiyle
+                savrulur.
+              · Yoldan sapılınca mürekkep damlaları aşağı damlar.
+   Çizim    : Parmak izi Graphics ile canlı çiziliyor; kontrol noktaları
+              SIRAYLA geçilmek zorunda, atlanamıyor — yazım yönü böylece
+              kas hafızasına giriyor.
+   Görsel   : Bütün dokular çalışma anında üretilir; dışarıdan resim yok.
+   ===================================================================== */
+
+const EN = 480, BOY = 800;
+
+const RENK = {
+  zeminUst : 0x121e2c,
+  zeminAlt : 0x24405c,
+  dogru    : 0x34c47b,
+  yanlis   : 0xf07575,
+  kilavuz  : 0xffffff,
+  vurgu    : 0xffd166
+};
+
+/* ---------------- uygulama köprüsü ----------------
+   Uygulamanın içine iframe olarak gömüldüğünde adres  rakam.html#oyun=s0
+   biçiminde olur. Sayfa uygulamayla AYNI kaynaktan sunulduğu için üst
+   pencereden katalog verisi doğrudan okunabiliyor. Böylece 20 rakam
+   oyununun (numberTrace + numberWrite) hepsi bu tek şablonla oynanıyor.
+   Kazanınca completeGame() çağrılır; XP, altın, kutlama ve sıradaki
+   oyuna geçiş uygulamada kalır.
+   Köprü yoksa (dosya tek başına açıldıysa) örnek içerik oynanır.        */
+const KOPRU = (function(){
+  try{
+    const p = new URLSearchParams(location.hash.slice(1));
+    const id = p.get('oyun');
+    if (id && window.parent && window.parent !== window &&
+        typeof window.parent.getGame === 'function'){
+      const g = window.parent.getGame(id);
+      if (g && g.cfg) return {
+        oyun: g, cfg: g.cfg,
+        bitir(mesaj, puan){ try{ window.parent.completeGame(mesaj || '', puan); }catch(e){} },
+        /* Turun kendi metnini uygulamanın sesiyle okutur (Piper). */
+        oku(metin){ try{ if (window.parent.oku) window.parent.oku(metin); }catch(e){} },
+        /* Kaybetme ekranından: bu oyunu bırak, sıradakine geç. */
+        atla(){ try{ if (window.parent.sonrakiOyunaGec) window.parent.sonrakiOyunaGec(); }catch(e){} }
+      };
+    }
+  }catch(e){ /* çapraz kaynak engeli: tek başına oynanır */ }
+  return null;
+})();
+
+/* HTML varlıklarını çöz: katalogda "Pay &lt; payda" gibi yazımlar var,
+   çözülmezse ekranda "&lt;" olarak görünüyor ve öyle okunuyor. */
+function varlikCoz(m){
+  return String(m)
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
+    .replace(/&hellip;/gi, '…').replace(/&mdash;/gi, '—').replace(/&ndash;/gi, '–')
+    .replace(/&times;/gi, '×').replace(/&divide;/gi, '÷').replace(/&deg;/gi, '°')
+    .replace(/&rarr;/gi, '→').replace(/&larr;/gi, '←')
+    .replace(/&amp;/gi, '&');            /* en sona: çift çözmeyi önler */
+}
+
+function duzMetin(x){
+  return varlikCoz(String(x == null ? '' : x).replace(/<br\s*\/?>/gi,' ')
+    .replace(/<[^>]+>/g,'')).replace(/[“”]/g,'"').replace(/\s+/g,' ').trim();
+}
+
+/* Katalogda renkler '#8fe9ff' biçiminde metin; Phaser sayı istiyor. */
+function renkSayi(m, varsayilan){
+  const s = String(m == null ? '' : m).replace('#','').trim();
+  return /^[0-9a-fA-F]{6}$/.test(s) ? parseInt(s, 16) : varsayilan;
+}
+
+/* ---------------------------------------------------------------------
+   RAKAM ŞABLONLARI (0-9) — normalleştirilmiş kutu: 100 en x 140 boy
+   ---------------------------------------------------------------------
+   numberWrite turlarında katalog nokta dizisi VERMİYOR: yalnızca hedef
+   sayıyı ('14') ve basamak yuvalarını (x, y, ölçek) veriyor. Nokta
+   dizileri bu tablodan üretiliyor. Uygulamada aynı tablo DIGIT_TPL /
+   digitStrokes() adıyla duruyor; üst pencereden okunabiliyorsa ORADAN
+   alınır (katalog tek kaynak kalsın), yoksa bu kopya kullanılır —
+   şablon tek başına da açılabilsin.
+   Nokta sırası yazım yönünü zorunlu kılar.
+   ------------------------------------------------------------------- */
+const RAKAM_TPL = {
+  '0':[{hint:'En üstten başla, sola doğru çember çiz',
+        points:[[50,0],[12,24],[3,70],[12,116],[50,140],[88,116],[97,70],[88,24],[50,0]]}],
+  '1':[{hint:'Sol alttan sağ üste kısa eğik çizgi',
+        points:[[20,34],[35,18],[50,3]]},
+       {hint:'Yukarıdan aşağıya uzun düz çizgi',
+        points:[[50,3],[50,50],[50,96],[50,140]]}],
+  '2':[{hint:'Kavis yap, çapraz aşağı in',
+        points:[[10,30],[40,2],[76,12],[84,46],[50,86],[10,138]]},
+       {hint:'Soldan sağa düz çizgi',
+        points:[[10,138],[52,139],[94,140]]}],
+  '3':[{hint:'İki kavis: sağa, sonra bir daha',
+        points:[[12,14],[52,2],[80,26],[52,62],[28,70],[62,78],[86,106],[56,136],[12,128]]}],
+  '4':[{hint:'Çapraz aşağı in, sonra sağa düz git',
+        points:[[68,2],[32,58],[4,96],[52,96],[96,96]]},
+       {hint:'Yukarıdan aşağıya düz çizgi',
+        points:[[68,2],[68,70],[68,140]]}],
+  '5':[{hint:'Aşağı in, sonra göbek kavisi çiz',
+        points:[[18,6],[14,52],[58,56],[90,84],[80,122],[30,138],[10,124]]},
+       {hint:'Soldan sağa düz çizgi (şapka)',
+        points:[[18,6],[56,4],[94,2]]}],
+  '6':[{hint:'Sağ üstten sola in, sonra çemberi kapat',
+        points:[[80,4],[42,26],[16,64],[10,100],[30,132],[66,138],[88,112],[80,84],[44,74],[18,92]]}],
+  '7':[{hint:'Soldan sağa düz git, sonra çapraz aşağı in',
+        points:[[8,10],[50,8],[92,6],[74,54],[52,98],[32,140]]}],
+  '8':[{hint:'Sağ üstten sola kavis, aşağı in, dönüp yukarı çık',
+        points:[[74,12],[38,4],[22,34],[50,66],[80,92],[66,132],[28,124],[18,92],[50,66],[76,38],[74,12]]}],
+  '9':[{hint:'En üstten sola çember çiz, sonra dümdüz aşağı in',
+        points:[[72,8],[36,4],[18,34],[34,64],[70,66],[80,38],[72,8],[76,58],[76,100],[76,140]]}]
+};
+
+function rakamIzleri(d, ox, oy, sc){
+  sc = (sc === undefined || sc === null) ? 1 : sc;
+  try{
+    if (window.parent && window.parent !== window &&
+        typeof window.parent.digitStrokes === 'function'){
+      const u = window.parent.digitStrokes(d, ox, oy, sc);
+      if (u && u.length) return u;
+    }
+  }catch(e){ /* çapraz kaynak: yerel tabloya düş */ }
+  const tpl = RAKAM_TPL[String(d)];
+  if (!tpl) return [];
+  return tpl.map(st => ({
+    hint: st.hint,
+    points: st.points.map(p => [ +(ox + p[0]*sc).toFixed(1), +(oy + p[1]*sc).toFixed(1) ])
+  }));
+}
+
+/* Şablon tek başına açıldığında oynanan örnek: uygulamadaki n1
+   (iki basamaklı yazma) — köprüsüz de en karmaşık yol denenebilsin. */
+const VARSAYILAN = {
+  instruction:'Kapıyı açmak için <b>on dört</b> yaz! Solda onlar, sağda birler basamağı.',
+  ink:'#5cf0c8', guide:'#7fffd8',
+  rounds:[{ say:'Kapıyı açmak için on dört yaz!', target:'14',
+            slots:[{x:60,y:130,scale:0.95},{x:168,y:130,scale:0.95}] }],
+  finale:{main:'🚪', bits:['⚙️','✨','🛸'], msg:'Şifre doğru! Kapı açıldı 🚪'}
+};
+
+const CFG = KOPRU ? KOPRU.cfg : VARSAYILAN;
+
+const OYUN_ADI = KOPRU ? duzMetin(KOPRU.oyun.title) : 'RAKAM\nATÖLYESİ';
+const OYUN_EMO = KOPRU ? (KOPRU.oyun.emo || '✏️') : '✏️';
+const TALIMAT  = duzMetin(CFG.instruction) || 'Parmağınla yolu takip et';
+const IPUCU    = 'Noktaları sırayla geç — atlarsan iz kopar. Yazım yönü kas hafızasına böyle yerleşir.';
+/* Üst şeride yönergenin tamamı sığmıyor (tek satır, sarmalsız): taşıp
+   kesiliyordu. Şeritte mekaniğin kısa adı, yönerge aşağıda sarmalı. */
+const BASLIK_KISA = (Array.isArray(CFG.rounds) && CFG.rounds.length)
+  ? 'SAYI YAZMA ATÖLYESİ' : 'RAKAM ATÖLYESİ';
+const BASARI   = duzMetin((CFG.finale || {}).msg) ||
+                 'Rakam ustası! Yazım yönlerini doğru öğrendin ✏️';
+
+/* ---------------------------------------------------------------------
+   İÇERİK — katalog verisi turlara çevriliyor
+   ---------------------------------------------------------------------
+   numberTrace : cfg.strokes  → tek rakamın hazır nokta dizileri
+   numberWrite : cfg.rounds   → turda yazılacak SAYI ve basamak yuvaları;
+                 nokta dizileri rakam şablonundan üretiliyor. Turda önce
+                 doğru hedefi seçmek (pick) ve süre sınırı (timeMs)
+                 olabiliyor.
+   ------------------------------------------------------------------- */
+function turlariKur(cfg){
+  const emo   = KOPRU ? (KOPRU.oyun.emo || '✏️') : '✏️';
+  const bas   = KOPRU ? duzMetin(KOPRU.oyun.title) : 'Rakam Atölyesi';
+  const gorev = duzMetin(cfg.instruction);
+  const murekkep = renkSayi(cfg.ink, 0x8fe9ff);
+  const kilavuz  = renkSayi(cfg.guide, 0xffffff);
+  const solgun   = !!cfg.faintGuide;
+  const son      = cfg.finale || {};
+
+  /* numberTrace — nokta dizileri katalogda hazır */
+  if (Array.isArray(cfg.strokes) && cfg.strokes.length){
+    const izler = cfg.strokes.map((s, i) => ({
+      ipucu: duzMetin(s.hint) || ((i + 1) + '. hamle'),
+      noktalar: (s.points || []).filter(n => n && n.length >= 2)
+    })).filter(iz => iz.noktalar.length > 1);
+    if (!izler.length) return [];
+    return [{
+      rakam: String((KOPRU && KOPRU.oyun.digit) || ''),
+      baslik: bas, emoji: emo, gorev: gorev, seslen: duzMetin(cfg.speak) || gorev,
+      murekkep: murekkep, kilavuz: kilavuz, solgun: solgun,
+      izler: izler, sec: null, sure: 0,
+      odul: son.main || '⭐', suslar: son.bits || ['✨','⭐','🎉'],
+      tamam: duzMetin(son.msg) || 'Rakam tamam!'
+    }];
+  }
+
+  /* numberWrite — hedef sayının basamakları şablondan üretiliyor */
+  const turlar = (cfg.rounds || []);
+  return turlar.map((r, ri) => {
+    const hedef   = String(r.target == null ? '' : r.target);
+    const yuvalar = r.slots || [];
+    const izler   = [];
+    hedef.split('').forEach((d, i) => {
+      const y = yuvalar[i] || yuvalar[yuvalar.length - 1] ||
+                { x: 60 + i * 108, y: 130, scale: 0.95 };
+      const basamakAdi = hedef.length > 1
+        ? (i === 0 ? 'Onlar basamağı: ' : 'Birler basamağı: ') : '';
+      rakamIzleri(d, y.x, y.y, y.scale).forEach(st => {
+        const nk = (st.points || []).filter(n => n && n.length >= 2);
+        if (nk.length > 1)
+          izler.push({ ipucu: basamakAdi + (duzMetin(st.hint) || 'çizgiyi takip et'),
+                       noktalar: nk });
+      });
+    });
+    const sonTur = ri === turlar.length - 1;
+    return {
+      rakam: hedef, baslik: bas, emoji: emo,
+      gorev: turlar.length > 1 ? (duzMetin(r.say) || gorev) : gorev,
+      seslen: duzMetin(r.say) || gorev,
+      murekkep: murekkep, kilavuz: kilavuz, solgun: solgun,
+      izler: izler,
+      sec: r.pick ? {
+        soru: duzMetin(r.pick.prompt) || 'Hangisi doğru?',
+        secenekler: (r.pick.options || []).map(o =>
+          ({ etiket: duzMetin(o.label), dogru: !!o.correct }))
+      } : null,
+      sure: (typeof r.timeMs === 'number' && r.timeMs > 0) ? r.timeMs : 0,
+      odul: sonTur ? (son.main || '⭐') : '✨',
+      suslar: sonTur ? (son.bits || ['✨','⭐','🎉']) : ['⭐','✨'],
+      tamam: sonTur ? (duzMetin(son.msg) || 'Sayı tamam!')
+                    : ('Güzel! ' + hedef + ' tamam.')
+    };
+  }).filter(t => t.izler.length);
+}
+
+/* Katalog verisi çizilebilir bir rakam vermezse örnek içeriğe düşülür —
+   çocuk boş ekranla karşılaşmasın. */
+const TURLAR = (function(){
+  const t = turlariKur(CFG);
+  return t.length ? t : turlariKur(VARSAYILAN);
+})();
+
+/* HUD ilerleme birimi: numberTrace tek rakam yazdırır, numberWrite bir
+   SAYI (14, 20) — çok turluysa "tur". */
+const TUR_ADI = !(Array.isArray(CFG.rounds) && CFG.rounds.length) ? 'rakam'
+              : (CFG.rounds.length > 1 ? 'tur' : 'sayı');
+
+const CAN_SAYISI = 3;
+
+/* --- Yerleşim ve tolerans -------------------------------------------- */
+/* Ekranda çizim alanı. Kaynak kutusu artık SABİT DEĞİL: her turun
+   noktalarından ölçülüp oranı korunarak bu alana oturtuluyor. Sabit
+   kutu, tek rakam (dar-uzun) ile iki basamaklı sayıyı (geniş-basık)
+   aynı ölçekle ezip birini alandan taşırıyordu. */
+const HEDEF  = { x0:104, y0:262, en:272, boy:314 };
+const YAKALA  = 36;   /* kontrol noktasına bu mesafede değmiş sayılır */
+const SAPMA   = 74;   /* yoldan bu kadar uzaklaşınca iz kopar */
+
+/* Turun bütün noktalarını çevreleyen kutuyu HEDEF alanına oturtan
+   dönüşüm. Ölçek tek: en/boy oranı korunur, sonra alan içinde ortalanır. */
+function olcekHesapla(izler){
+  let ax = Infinity, ay = Infinity, bx = -Infinity, by = -Infinity;
+  (izler || []).forEach(iz => iz.noktalar.forEach(n => {
+    if (n[0] < ax) ax = n[0];
+    if (n[0] > bx) bx = n[0];
+    if (n[1] < ay) ay = n[1];
+    if (n[1] > by) by = n[1];
+  }));
+  if (!isFinite(ax)) return { k:1, ax:0, ay:0, dx:HEDEF.x0, dy:HEDEF.y0 };
+  const gen = Math.max(1, bx - ax), yuk = Math.max(1, by - ay);
+  const k = Math.min(HEDEF.en / gen, HEDEF.boy / yuk);
+  return {
+    k: k, ax: ax, ay: ay,
+    dx: HEDEF.x0 + (HEDEF.en  - gen * k) / 2,
+    dy: HEDEF.y0 + (HEDEF.boy - yuk * k) / 2
+  };
+}
+
+/* =====================================================================
+   1) BOOT — dokuları üret
+   ===================================================================== */
+class BootScene extends Phaser.Scene {
+  constructor(){ super('Boot'); }
+
+  create(){
+    this.dokuKivilcim();
+    this.dokuDamla();
+    /* Uygulama içinde çocuk oyunu listeden zaten seçti; menüyü atla. */
+    this.scene.start(KOPRU ? 'Game' : 'Menu');
+  }
+
+  dokuKivilcim(){
+    const g = this.make.graphics({ add:false });
+    g.fillStyle(0xffffff, 1);
+    g.fillCircle(8, 8, 8);
+    g.generateTexture('kivilcim', 16, 16);
+    g.destroy();
+  }
+
+  /* Mürekkep damlası */
+  dokuDamla(){
+    const g = this.make.graphics({ add:false });
+    g.fillStyle(0xffffff, 1);
+    g.fillCircle(7, 7, 7);
+    g.generateTexture('damla', 14, 14);
+    g.destroy();
+  }
+}
+
+/* =====================================================================
+   Ortak yardımcılar
+   ===================================================================== */
+function atolyeCiz(sc){
+  const g = sc.add.graphics();
+  g.fillGradientStyle(RENK.zeminUst, RENK.zeminUst, RENK.zeminAlt, RENK.zeminAlt, 1);
+  g.fillRect(0, 0, EN, BOY);
+
+  for (let i = 0; i < 26; i++){
+    const s = sc.add.circle(
+      Phaser.Math.Between(6, EN - 6),
+      Phaser.Math.Between(6, BOY - 6),
+      Phaser.Math.FloatBetween(1.4, 3.2),
+      0xffffff,
+      Phaser.Math.FloatBetween(0.05, 0.16)
+    );
+    sc.tweens.add({
+      targets:s, alpha:0.02,
+      duration:Phaser.Math.Between(1300, 2900),
+      yoyo:true, repeat:-1, delay:Phaser.Math.Between(0, 1900)
+    });
+  }
+  return g;
+}
+
+function dugmeYap(sc, x, y, metin, renk, geriCagri, genislik, yukseklik){
+  const W = genislik || 280, H = yukseklik || 60;
+  const c = sc.add.container(x, y);
+  const g = sc.add.graphics();
+  g.fillStyle(renk, 1);
+  g.fillRoundedRect(-W / 2, -H / 2, W, H, Math.min(H / 2, 26));
+  g.fillStyle(0xffffff, 0.16);
+  g.fillRoundedRect(-W / 2, -H / 2, W, H * 0.4, { tl:Math.min(H / 2, 26), tr:Math.min(H / 2, 26), bl:0, br:0 });
+  const t = sc.add.text(0, 0, metin, {
+    fontFamily:'system-ui, sans-serif', fontSize: H > 52 ? '20px' : '16px',
+    fontStyle:'bold', color:'#ffffff', align:'center'
+  }).setOrigin(0.5);
+  c.add([g, t]);
+  c.setSize(W, H).setInteractive({ useHandCursor:true });
+  c.on('pointerover', () => sc.tweens.add({ targets:c, scale:1.05, duration:110 }));
+  c.on('pointerout',  () => sc.tweens.add({ targets:c, scale:1.00, duration:110 }));
+  c.on('pointerdown', () => sc.tweens.add({
+    targets:c, scale:0.93, duration:90, yoyo:true, onComplete:geriCagri
+  }));
+  return c;
+}
+
+/* =====================================================================
+   2) MENU
+   ===================================================================== */
+class MenuScene extends Phaser.Scene {
+  constructor(){ super('Menu'); }
+
+  create(){
+    atolyeCiz(this);
+
+    this.add.text(EN / 2 - 58, 208, '0', {
+      fontFamily:'system-ui, sans-serif', fontSize:'116px', fontStyle:'bold',
+      color:'#8fe9ff'
+    }).setOrigin(0.5);
+    const bir = this.add.text(EN / 2 + 58, 208, '1', {
+      fontFamily:'system-ui, sans-serif', fontSize:'116px', fontStyle:'bold',
+      color:'#ffd66b'
+    }).setOrigin(0.5);
+    this.tweens.add({
+      targets:bir, y:196, duration:1500, yoyo:true, repeat:-1, ease:'Sine.easeInOut'
+    });
+
+    const baslik = this.add.text(EN / 2, 344, OYUN_ADI, {
+      fontFamily:'system-ui, sans-serif', fontSize:'42px', fontStyle:'bold',
+      color:'#ffffff', align:'center', lineSpacing:5
+    }).setOrigin(0.5);
+    this.tweens.add({
+      targets:baslik, scale:1.04, duration:1400,
+      yoyo:true, repeat:-1, ease:'Sine.easeInOut'
+    });
+
+    this.add.text(EN / 2, 428, TALIMAT, {
+      fontFamily:'system-ui, sans-serif', fontSize:'22px',
+      color:'#cfe6ff', align:'center',
+      wordWrap:{ width:EN - 60 }, lineSpacing:3
+    }).setOrigin(0.5);
+
+    const kart = this.add.graphics();
+    kart.fillStyle(0x0a1220, 0.92);
+    kart.fillRoundedRect(30, 464, EN - 60, 92, 16);
+    kart.lineStyle(2, 0x35607f, 1);
+    kart.strokeRoundedRect(30, 464, EN - 60, 92, 16);
+    this.add.text(EN / 2, 510, IPUCU, {
+      fontFamily:'system-ui, sans-serif', fontSize:'17px', fontStyle:'bold',
+      color:'#ffd166', align:'center', wordWrap:{ width:EN - 90 }, lineSpacing:4
+    }).setOrigin(0.5);
+
+    dugmeYap(this, EN / 2, 624, '▶  BAŞLA', RENK.dogru, () => this.scene.start('Game'));
+
+    this.add.text(EN / 2, 716, `${TURLAR.length} rakam  ·  ${CAN_SAYISI} can`, {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', color:'#8fb8d6'
+    }).setOrigin(0.5);
+  }
+}
+
+/* =====================================================================
+   3) GAME
+   ===================================================================== */
+class GameScene extends Phaser.Scene {
+  constructor(){ super('Game'); }
+
+  create(){
+    this.can   = CAN_SAYISI;
+    this.puan  = 0;
+    this.seri  = 0;
+    this.tur   = 0;
+    this.kilit = true;
+    this.ciziyor = false;
+
+    /* Phaser sahne örneğini yeniden kullanır — TEKRAR OYNA'da eski
+       nesnelere işaret etmesinler. */
+    this.noktaNesne  = null;
+    this.etiketNesne = null;
+    this.odulNesne   = null;
+    this.mesaj       = null;
+    this.secimKap    = null;
+    this.sureOlay   = null;
+    this.olcek      = null;
+
+    atolyeCiz(this);
+
+    this.kivilcimlar = this.add.particles(0, 0, 'kivilcim', {
+      speed:{ min:130, max:350 }, angle:{ min:0, max:360 },
+      scale:{ start:0.85, end:0 }, alpha:{ start:1, end:0 },
+      lifespan:640, gravityY:320, blendMode:'ADD', emitting:false
+    }).setDepth(90);
+
+    this.damlalar = this.add.particles(0, 0, 'damla', {
+      speed:{ min:20, max:80 }, angle:{ min:70, max:110 },
+      scale:{ start:0.9, end:0.2 }, alpha:{ start:0.85, end:0 },
+      lifespan:900, gravityY:520, emitting:false
+    }).setDepth(84);
+
+    /* çizim katmanları */
+    this.kilavuzCizim = this.add.graphics().setDepth(8);
+    this.izCizim      = this.add.graphics().setDepth(14);
+
+    this.oduller = this.physics.add.group();
+
+    this.arayuzKur();
+    this.girisKur();
+    this.turuBaslat();
+  }
+
+  /* kaynak koordinat → ekran koordinatı (dönüşüm her turda ölçülür) */
+  nokta(p){
+    const o = this.olcek || { k:1, ax:0, ay:0, dx:HEDEF.x0, dy:HEDEF.y0 };
+    return { x: o.dx + (p[0] - o.ax) * o.k, y: o.dy + (p[1] - o.ay) * o.k };
+  }
+
+  /* ---------- tur ---------- */
+  turuBaslat(){
+    const t = TURLAR[this.tur];
+    this.aktifTur = t;     /* o anki tur — arayüz ve testler buradan okur */
+    this.kilit   = true;
+    this.izSira  = 0;      /* kaçıncı iz (stroke) */
+    this.noktaSira = 0;    /* o izde kaçıncı kontrol noktası */
+    this.ciziyor = false;
+    this.nesil = (this.nesil || 0) + 1;
+
+    if (this.noktaNesne)  this.noktaNesne.forEach(o => o.destroy());
+    if (this.etiketNesne) this.etiketNesne.forEach(o => o.destroy());
+    if (this.odulNesne)   this.odulNesne.forEach(o => o.destroy());
+    this.noktaNesne  = [];
+    this.etiketNesne = [];
+    this.odulNesne   = [];
+    this.oduller.clear(true, true);
+    this.izCizim.clear();
+    this.tamamIzler = [];   /* biten izlerin ekran noktaları */
+    this.sureyiDurdur();
+    if (this.secimKap){ this.secimKap.destroy(); this.secimKap = null; }
+
+    /* Bu turun noktaları ekrandaki çizim alanına oranı korunarak oturur */
+    this.olcek = olcekHesapla(t.izler);
+
+    this.basligiYaz(t);
+    this.kilavuzuCiz(t);
+    this.noktalariKoy(t);
+    this.arayuzuTazele();
+
+    /* Tur sesli yönerge: ilk turu uygulama zaten okuyor, tekrar okumayalım */
+    if (KOPRU && this.tur > 0 && t.seslen) KOPRU.oku(t.seslen);
+
+    /* Turda önce doğru hedefi seçmek gerekiyorsa (numberWrite · pick) */
+    if (t.sec && t.sec.secenekler.length){ this.secimGoster(t); return; }
+    this.yazmayaBasla(t);
+  }
+
+  /* seçim bittikten sonra (ya da hiç yoksa) çizime izin ver */
+  yazmayaBasla(t){
+    this.time.delayedCall(320, () => { this.kilit = false; });
+    if (t.sure) this.sureyiBaslat(t.sure);
+  }
+
+  /* ---------- turda hedefi seçme (numberWrite · pick) ---------- */
+  secimGoster(t){
+    this.kilit = true;
+    const kap = this.add.container(0, 0).setDepth(120);
+    kap.add(this.add.rectangle(EN / 2, BOY / 2, EN, BOY, 0x050b14, 0.9));
+    kap.add(this.add.text(EN / 2, 268, t.sec.soru, {
+      fontFamily:'system-ui, sans-serif', fontSize:'23px', fontStyle:'bold',
+      color:'#ffffff', align:'center', wordWrap:{ width:EN - 70 }, lineSpacing:4
+    }).setOrigin(0.5));
+    t.sec.secenekler.forEach((s, i) => {
+      kap.add(dugmeYap(this, EN / 2, 352 + i * 78, s.etiket, 0x35607f, () => {
+        if (!this.secimKap) return;              /* çift dokunmayı yut */
+        if (s.dogru){
+          this.secimKap.destroy(); this.secimKap = null;
+          this.kivilcimlar.setParticleTint(RENK.vurgu);
+          this.kivilcimlar.explode(14, EN / 2, 352 + i * 78);
+          this.mesajGoster('Doğru hedef! Şimdi sayıyı yaz.', '#1f6d4a');
+          this.yazmayaBasla(t);
+        } else {
+          this.yanlisSecim();
+        }
+      }, 320, 62));
+    });
+    this.secimKap = kap;
+    if (KOPRU) KOPRU.oku(t.sec.soru);
+  }
+
+  yanlisSecim(){
+    this.seri = 0;
+    this.can--;
+    this.arayuzuTazele();
+    this.cameras.main.shake(180, 0.008);
+    this.cameras.main.flash(150, 220, 90, 90);
+    this.mesajGoster('O değil — yönergeyi bir daha oku.', '#b5453b');
+    if (this.can <= 0){
+      if (this.secimKap){ this.secimKap.destroy(); this.secimKap = null; }
+      this.kilit = true;
+      this.time.delayedCall(900, () => this.bitir(false));
+    }
+  }
+
+  /* ---------- süreli tur (numberWrite · timeMs) ---------- */
+  sureyiBaslat(ms){
+    this.sureKalan = Math.ceil(ms / 1000);
+    this.sureYazi.setVisible(true).setText('⏱️ ' + this.sureKalan);
+    this.sureOlay = this.time.addEvent({
+      delay:1000, repeat:this.sureKalan - 1,
+      callback:() => {
+        this.sureKalan--;
+        this.sureYazi.setText('⏱️ ' + Math.max(0, this.sureKalan));
+        this.sureYazi.setColor(this.sureKalan <= 10 ? '#f07575' : '#8fb8d6');
+        if (this.sureKalan <= 0) this.sureBitti();
+      }
+    });
+  }
+
+  sureyiDurdur(){
+    if (this.sureOlay){ this.sureOlay.remove(false); this.sureOlay = null; }
+    if (this.sureYazi) this.sureYazi.setVisible(false).setColor('#8fb8d6');
+  }
+
+  sureBitti(){
+    this.sureyiDurdur();
+    if (this.kilit && this.tur >= TURLAR.length) return;
+    this.ciziyor = false;
+    this.seri = 0;
+    this.can--;
+    this.izCizim.clear();
+    this.arayuzuTazele();
+    this.cameras.main.shake(200, 0.009);
+    this.mesajGoster('Süre doldu! Baştan deneyelim.', '#b5453b');
+    if (this.can <= 0){ this.kilit = true; this.time.delayedCall(900, () => this.bitir(false)); return; }
+    this.kilit = true;
+    this.time.delayedCall(1100, () => this.turuBaslat());
+  }
+
+  basligiYaz(t){
+    this.rakamYazi.setText(t.rakam);
+    this.rakamYazi.setColor('#' + t.murekkep.toString(16).padStart(6, '0'));
+    this.baslikYazi.setText(t.emoji + '  ' + t.baslik);
+    this.gorevYazi.setText(t.gorev);
+    this.ipucuYazi.setText(t.izler.length ? t.izler[0].ipucu : '');
+    this.tweens.add({
+      targets:this.baslikYazi, scale:{ from:0.88, to:1 }, duration:280, ease:'Back.easeOut'
+    });
+  }
+
+  /* kılavuz: noktalı yol */
+  kilavuzuCiz(t){
+    const g = this.kilavuzCizim;
+    g.clear();
+    t.izler.forEach((iz, i) => {
+      const p = iz.noktalar.map(n => this.nokta(n));
+      /* kesikli kılavuz */
+      /* faintGuide: katalog "kılavuz neredeyse yok" diyorsa daha soluk */
+      const koyu = t.solgun ? 0.07 : 0.16, acik = t.solgun ? 0.03 : 0.07;
+      g.lineStyle(16, t.kilavuz || RENK.kilavuz, i === this.izSira ? koyu : acik);
+      g.beginPath();
+      g.moveTo(p[0].x, p[0].y);
+      p.slice(1).forEach(q => g.lineTo(q.x, q.y));
+      g.strokePath();
+    });
+    /* tamamlanan izler mürekkep rengiyle kalıcı */
+    this.tamamIzler.forEach(p => {
+      g.lineStyle(13, TURLAR[this.tur].murekkep, 1);
+      g.beginPath();
+      g.moveTo(p[0].x, p[0].y);
+      p.slice(1).forEach(q => g.lineTo(q.x, q.y));
+      g.strokePath();
+    });
+  }
+
+  /* kontrol noktaları */
+  noktalariKoy(t){
+    const iz = t.izler[this.izSira];
+    iz.noktalar.forEach((n, i) => {
+      const p = this.nokta(n);
+      const c = this.add.circle(p.x, p.y, i === 0 ? 14 : 10,
+                                i === 0 ? RENK.vurgu : 0xffffff,
+                                i === 0 ? 1 : 0.5).setDepth(12);
+      if (i === 0){
+        /* Başlangıç noktası alanın tepesindeyse etiket yukarıda ipucu
+           satırının üstüne biniyordu; o durumda altına yazılıyor. */
+        const ustBos = p.y - HEDEF.y0 > 30;
+        const et = this.add.text(p.x, p.y + (ustBos ? -26 : 30), 'BAŞLA', {
+          fontFamily:'system-ui, sans-serif', fontSize:'14px', fontStyle:'bold',
+          color:'#ffd166'
+        }).setOrigin(0.5).setDepth(13);
+        this.etiketNesne.push(et);
+        this.tweens.add({ targets:c, scale:1.3, duration:700, yoyo:true, repeat:-1 });
+      }
+      this.noktaNesne.push(c);
+    });
+  }
+
+  /* ---------- parmak girişi ---------- */
+  girisKur(){
+    this.input.on('pointerdown', (p) => {
+      if (this.kilit) return;
+      const im = imlec(p);
+      const t = TURLAR[this.tur];
+      const ilk = this.nokta(t.izler[this.izSira].noktalar[0]);
+      /* çizim yalnız BAŞLA noktasından başlar */
+      if (Phaser.Math.Distance.Between(im.x, im.y, ilk.x, ilk.y) > YAKALA + 12) return;
+      this.ciziyor = true;
+      this.noktaSira = 1;
+      this.izYolu = [{ x:ilk.x, y:ilk.y }];
+      this.noktaIsaretle(0);
+      this.izCizim.clear();
+    });
+
+    this.input.on('pointermove', (p) => {
+      if (!this.ciziyor) return;
+      const im = imlec(p);
+      const t = TURLAR[this.tur];
+      const iz = t.izler[this.izSira];
+      const hepsi = iz.noktalar.map(n => this.nokta(n));
+
+      /* yoldan ne kadar uzakta? */
+      let enAz = Infinity;
+      for (let i = 1; i < hepsi.length; i++){
+        enAz = Math.min(enAz, this.parcayaUzaklik(im, hepsi[i - 1], hepsi[i]));
+      }
+      if (enAz > SAPMA){ this.izKoptu(im); return; }
+
+      this.izYolu.push({ x:im.x, y:im.y });
+      this.iziCiz();
+
+      /* sıradaki kontrol noktasına değdi mi? */
+      const hedef = hepsi[this.noktaSira];
+      if (hedef && Phaser.Math.Distance.Between(im.x, im.y, hedef.x, hedef.y) < YAKALA){
+        this.noktaIsaretle(this.noktaSira);
+        this.noktaSira++;
+        this.kivilcimlar.setParticleTint(TURLAR[this.tur].murekkep);
+        this.kivilcimlar.explode(5, hedef.x, hedef.y);
+        if (this.noktaSira >= hepsi.length) this.iziBitir(hepsi);
+      }
+    });
+
+    const bitir = () => {
+      if (!this.ciziyor) return;
+      this.ciziyor = false;
+      /* iz tamamlanmadıysa temizle, ceza yok */
+      this.izCizim.clear();
+      this.noktalariTazele();
+      this.noktaSira = 0;
+    };
+    this.input.on('pointerup', bitir);
+    this.input.on('pointerupoutside', bitir);
+  }
+
+  /* noktanın [a,b] parçasına uzaklığı */
+  parcayaUzaklik(p, a, b){
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const uzunluk = dx * dx + dy * dy;
+    if (uzunluk === 0) return Phaser.Math.Distance.Between(p.x, p.y, a.x, a.y);
+    let t = ((p.x - a.x) * dx + (p.y - a.y) * dy) / uzunluk;
+    t = Phaser.Math.Clamp(t, 0, 1);
+    return Phaser.Math.Distance.Between(p.x, p.y, a.x + t * dx, a.y + t * dy);
+  }
+
+  noktaIsaretle(i){
+    const c = this.noktaNesne[i];
+    if (!c) return;
+    c.setFillStyle(RENK.dogru, 1);
+    this.tweens.add({ targets:c, scale:1.5, duration:130, yoyo:true, ease:'Back.easeOut' });
+  }
+
+  noktalariTazele(){
+    this.noktaNesne.forEach((c, i) => {
+      c.setFillStyle(i === 0 ? RENK.vurgu : 0xffffff, i === 0 ? 1 : 0.5);
+      c.setScale(1);
+    });
+  }
+
+  iziCiz(){
+    const g = this.izCizim;
+    g.clear();
+    if (this.izYolu.length < 2) return;
+    g.lineStyle(13, TURLAR[this.tur].murekkep, 1);
+    g.beginPath();
+    g.moveTo(this.izYolu[0].x, this.izYolu[0].y);
+    this.izYolu.slice(1).forEach(q => g.lineTo(q.x, q.y));
+    g.strokePath();
+  }
+
+  /* yoldan sapma */
+  izKoptu(p){
+    this.ciziyor = false;
+    this.seri = 0;
+    this.can--;
+    this.arayuzuTazele();
+    this.izCizim.clear();
+    this.noktalariTazele();
+    this.noktaSira = 0;
+
+    /* GERÇEK FİZİK: mürekkep damlaları aşağı damlar */
+    this.damlalar.setParticleTint(TURLAR[this.tur].murekkep);
+    this.damlalar.explode(10, p.x, p.y);
+    this.cameras.main.shake(180, 0.008);
+    this.cameras.main.flash(150, 220, 90, 90);
+    this.tweens.add({
+      targets:this.canYazi, angle:{ from:-12, to:12 },
+      duration:70, yoyo:true, repeat:3,
+      onComplete:() => this.canYazi.setAngle(0)
+    });
+    this.mesajGoster('İz koptu — yolun üstünde kal, baştan dene.', '#b5453b');
+
+    if (this.can <= 0){
+      this.kilit = true;
+      this.time.delayedCall(900, () => this.bitir(false));
+    }
+  }
+
+  /* bir iz (stroke) tamamlandı */
+  iziBitir(ekranNoktalari){
+    this.ciziyor = false;
+    this.tamamIzler.push(ekranNoktalari);
+    this.izCizim.clear();
+
+    const t = TURLAR[this.tur];
+    this.seri++;
+    const kazanc = 120 + (this.seri - 1) * 20;
+    this.puan += kazanc;
+    this.puanYazi.setText('Puan ' + this.puan);
+    this.tweens.add({
+      targets:this.puanYazi, scale:1.4, duration:130, yoyo:true, ease:'Back.easeOut'
+    });
+
+    this.izSira++;
+    if (this.izSira < t.izler.length){
+      /* sıradaki ize geç */
+      this.noktaSira = 0;
+      this.noktaNesne.forEach(o => o.destroy());
+      this.etiketNesne.forEach(o => o.destroy());
+      this.noktaNesne  = [];
+      this.etiketNesne = [];
+      this.kilavuzuCiz(t);
+      this.noktalariKoy(t);
+      this.ipucuYazi.setText(t.izler[this.izSira].ipucu);
+      this.mesajGoster('İyi! Şimdi ikinci hamle.', '#1f6d4a');
+      this.arayuzuTazele();
+      return;
+    }
+
+    /* rakam tamamlandı */
+    this.kilit = true;
+    this.sureyiDurdur();
+    this.kilavuzuCiz(t);
+    this.noktaNesne.forEach(o => o.destroy());
+    this.etiketNesne.forEach(o => o.destroy());
+    this.noktaNesne  = [];
+    this.etiketNesne = [];
+    this.odulPatlat(t);
+  }
+
+  /* GERÇEK FİZİK: ödül ve süsler fırlar */
+  odulPatlat(t){
+    const mx = HEDEF.x0 + HEDEF.en / 2, my = HEDEF.y0 + HEDEF.boy / 2;
+
+    this.kivilcimlar.setParticleTint(RENK.vurgu);
+    this.kivilcimlar.explode(30, mx, my);
+    this.cameras.main.flash(160, 80, 210, 140);
+
+    const ana = this.physics.add.existing(
+      this.add.text(mx, my, t.odul, { fontSize:'65px' }).setOrigin(0.5).setDepth(40)
+    );
+    this.oduller.add(ana);
+    ana.body.setVelocity(Phaser.Math.Between(-40, 40), -560);
+    this.tweens.add({ targets:ana, angle:Phaser.Math.Between(-40, 40), duration:900 });
+    this.odulNesne.push(ana);
+
+    t.suslar.forEach((s, i) => {
+      const o = this.physics.add.existing(
+        this.add.text(mx + Phaser.Math.Between(-50, 50), my,
+                      s, { fontSize:'36px' }).setOrigin(0.5).setDepth(39)
+      );
+      this.oduller.add(o);
+      o.body.setVelocity(Phaser.Math.Between(-220, 220), Phaser.Math.Between(-460, -300));
+      this.tweens.add({ targets:o, angle:Phaser.Math.Between(-200, 200), duration:1100 });
+      this.odulNesne.push(o);
+    });
+
+    this.puan += 150;
+    this.puanYazi.setText('Puan ' + this.puan);
+    this.mesajGoster(t.tamam, '#1f6d4a');
+    this.tur++;
+    this.arayuzuTazele();
+
+    this.time.delayedCall(2400, () => {
+      if (this.tur >= TURLAR.length){ this.bitir(true); return; }
+      this.turuBaslat();
+    });
+  }
+
+  mesajGoster(metin, arka){
+    if (this.mesaj) this.mesaj.destroy();
+    this.mesaj = this.add.text(EN / 2, 620, metin, {
+      fontFamily:'system-ui, sans-serif', fontSize:'19px', fontStyle:'bold',
+      color:'#ffffff', backgroundColor:arka,
+      padding:{ x:12, y:8 }, align:'center', wordWrap:{ width:EN - 60 }, lineSpacing:3
+    }).setOrigin(0.5).setDepth(96).setAlpha(0);
+    const t = this.mesaj;
+    this.tweens.add({ targets:t, alpha:1, duration:150 });
+    this.time.delayedCall(1800, () => {
+      if (!t.active) return;
+      this.tweens.add({
+        targets:t, alpha:0, duration:250,
+        onComplete:() => { if (this.mesaj === t) this.mesaj = null; t.destroy(); }
+      });
+    });
+  }
+
+  /* ---------- arayüz ---------- */
+  arayuzKur(){
+    const serit = this.add.graphics().setDepth(60);
+    serit.fillStyle(0x08111c, 0.97);
+    serit.fillRoundedRect(10, 10, EN - 20, 104, 18);
+
+    this.add.text(EN / 2, 38, OYUN_EMO + '  ' + BASLIK_KISA, {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', fontStyle:'bold',
+      color:'#ffffff'
+    }).setOrigin(0.5).setDepth(61);
+
+    this.puanYazi = this.add.text(30, 80, 'Puan 0', {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', fontStyle:'bold',
+      color:'#ffd166'
+    }).setOrigin(0, 0.5).setDepth(61);
+
+    this.canYazi = this.add.text(EN - 30, 80, '', { fontSize:'20px' })
+      .setOrigin(1, 0.5).setDepth(61);
+
+    this.ilerlemeYazi = this.add.text(EN / 2, 80, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'19px', fontStyle:'bold',
+      color:'#8fb8d6'
+    }).setOrigin(0.5).setDepth(61);
+
+    /* Süreli turlarda (numberWrite · timeMs) geri sayım */
+    this.sureYazi = this.add.text(EN / 2, 106, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'18px', fontStyle:'bold',
+      color:'#8fb8d6'
+    }).setOrigin(0.5).setDepth(62).setVisible(false);
+
+    this.baslikYazi = this.add.text(EN / 2, 138, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'22px', fontStyle:'bold',
+      color:'#ffffff'
+    }).setOrigin(0.5).setDepth(61);
+
+    this.gorevYazi = this.add.text(EN / 2, 174, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'17px',
+      color:'#cfe6ff', align:'center', wordWrap:{ width:EN - 44 }, lineSpacing:3
+    }).setOrigin(0.5).setDepth(61);
+
+    this.ipucuYazi = this.add.text(EN / 2, 214, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'16px', fontStyle:'bold',
+      color:'#ffd166', align:'center', wordWrap:{ width:EN - 44 }
+    }).setOrigin(0.5).setDepth(61);
+
+    /* Hedef rakam/sayı göstergesi — başlık satırının sağ ucunda.
+       Eskiden çizim alanının üstünde büyük ve soluk duruyordu; yönerge ve
+       ipucu satırlarının üstüne biniyor, ekranı karıştırıyordu. */
+    this.rakamYazi = this.add.text(EN - 32, 140, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'34px', fontStyle:'bold',
+      color:'#8fe9ff'
+    }).setOrigin(1, 0.5).setDepth(62).setAlpha(0.62);
+
+    this.arayuzuTazele();
+  }
+
+  arayuzuTazele(){
+    this.canYazi.setText(
+      '❤️'.repeat(Math.max(0, this.can)) +
+      '🖤'.repeat(Math.max(0, CAN_SAYISI - this.can))
+    );
+    const t = TURLAR[Math.min(this.tur, TURLAR.length - 1)];
+    this.ilerlemeYazi.setText(
+      `${this.tur} / ${TURLAR.length} ${TUR_ADI}` +
+      (this.tur < TURLAR.length && t.izler.length
+        ? `  ·  hamle ${Math.min(this.izSira + 1, t.izler.length)}/${t.izler.length}` : '')
+    );
+  }
+
+  bitir(kazandi){
+    this.scene.start('GameOver', {
+      kazandi, puan:this.puan, can:this.can,
+      tur:this.tur, toplam:TURLAR.length
+    });
+  }
+
+  /* ---------- her kare ---------- */
+  update(){
+    if (!this.oduller || !this.oduller.children) return;
+    this.oduller.getChildren().forEach(o => {
+      if (!o.active) return;
+      if (o.y > BOY + 80 || o.x < -80 || o.x > EN + 80) o.destroy();
+    });
+  }
+}
+
+/* =====================================================================
+   4) GAME OVER
+   ===================================================================== */
+class GameOverScene extends Phaser.Scene {
+  constructor(){ super('GameOver'); }
+
+  init(veri){ this.veri = veri; }
+
+  create(){
+    const { kazandi, puan, can, tur, toplam } = this.veri;
+
+    /* Uygulama içindeyken kazanma ekranı uygulamanın kutlamasıdır:
+       XP/altın, kutlama ve sıradaki oyuna geçiş orada. */
+    if (kazandi && KOPRU){ KOPRU.bitir(BASARI, puan); return; }
+
+    atolyeCiz(this);
+
+    const emo = this.add.text(EN / 2, 190, kazandi ? '✏️' : '💪', { fontSize:'97px' })
+      .setOrigin(0.5).setScale(0);
+    this.tweens.add({ targets:emo, scale:1, duration:520, ease:'Back.easeOut' });
+
+    this.add.text(EN / 2, 300, kazandi ? 'RAKAM USTASI!' : 'TEKRAR DENE', {
+      fontFamily:'system-ui, sans-serif', fontSize:'35px', fontStyle:'bold',
+      color: kazandi ? '#7ce0a3' : '#ffd166', align:'center'
+    }).setOrigin(0.5);
+
+    this.add.text(EN / 2, 360,
+      kazandi ? BASARI : `${tur} / ${toplam} rakamı tamamladın — bir daha deneyelim mi?`, {
+      fontFamily:'system-ui, sans-serif', fontSize:'21px', color:'#cfe6ff',
+      align:'center', wordWrap:{ width:EN - 70 }, lineSpacing:5
+    }).setOrigin(0.5);
+
+    const puanYazi = this.add.text(EN / 2, 456, 'Puan 0', {
+      fontFamily:'system-ui, sans-serif', fontSize:'42px', fontStyle:'bold',
+      color:'#ffd166'
+    }).setOrigin(0.5);
+    const sayac = { v:0 };
+    this.tweens.add({
+      targets:sayac, v:puan, duration:900, ease:'Cubic.easeOut',
+      onUpdate:() => puanYazi.setText('Puan ' + Math.round(sayac.v))
+    });
+
+    this.add.text(EN / 2, 506,
+      'Kalan can: ' + (can > 0 ? '❤️'.repeat(can) : '—'), {
+      fontFamily:'system-ui, sans-serif', fontSize:'21px', color:'#8fb8d6'
+    }).setOrigin(0.5);
+
+    if (kazandi){
+      const konfeti = this.add.particles(EN / 2, -20, 'kivilcim', {
+        speed:{ min:90, max:260 }, angle:{ min:60, max:120 },
+        scale:{ start:0.8, end:0 }, alpha:{ start:1, end:0 },
+        lifespan:2000, gravityY:180, quantity:2, frequency:70,
+        tint:[0xffd166, 0x7ce0a3, 0x8fe9ff, 0xffd66b]
+      }).setDepth(5);
+      this.time.delayedCall(2600, () => konfeti.stop());
+    }
+
+    dugmeYap(this, EN / 2, 606, '↻  TEKRAR OYNA', RENK.dogru, () => this.scene.start('Game'));
+    /* Çocuk bir oyunda takılıp kalmasın: uygulama içinde sıradakine geç. */
+    if (KOPRU)  dugmeYap(this, EN / 2, 684, '⏭  SIRADAKİ OYUN', 0x4a679e, () => KOPRU.atla());
+    if (!KOPRU) dugmeYap(this, EN / 2, 684, '☰  MENÜ',          0x35607f, () => this.scene.start('Menu'));
+  }
+}
+
+/* =====================================================================
+   OYUNU BAŞLAT
+   ===================================================================== */
+/* =====================================================================
+   NETLİK — cihazın piksel yoğunluğunda çizim
+   ---------------------------------------------------------------------
+   Oyun 480x800 mantıksal tuvalde çiziliyordu; telefon bunu 1080 piksele
+   büyütünce yazılar ve kenarlar bulanıklaşıyordu. Çözüm: tuvali cihazın
+   gerçek piksel sayısında açmak, dünyayı ise kamerayı NETLIK katına
+   yakınlaştırarak yine 480x800 koordinatta tutmak. Böylece Graphics ile
+   çizilen her şey (kartlar, şeritler, kutular) vektör keskinliğinde,
+   yazılar da NETLIK çözünürlüğünde üretiliyor; oyun kodunun tek satırı
+   değişmiyor.
+   ===================================================================== */
+const NETLIK = Math.min(3, Math.max(1, Math.round((window.devicePixelRatio || 1) * 2) / 2));
+
+/* Phaser yazıyı kendi ara tuvaline çiziyor; çözünürlük verilmezse 1x
+   üretilip yakınlaştırmada bulanıklaşır. Bütün yazılara varsayılan
+   olarak NETLIK veriyoruz. */
+(function(){
+  const TS = Phaser.GameObjects.TextStyle.prototype;
+  const eskiSetStyle = TS.setStyle;
+  TS.setStyle = function(style, updateText, setDefaults){
+    if (style && style.resolution === undefined) style.resolution = NETLIK;
+    return eskiSetStyle.call(this, style, updateText, setDefaults);
+  };
+})();
+
+/* Tuval NETLIK katına büyüdüğü için Phaser imleç konumunu da o ölçekte
+   veriyor (0–960). Oyun koordinatına (0–480) çeviren yardımcı: sürükleme
+   olayları zaten dünya koordinatı verdiği için yalnız pointer olaylarında
+   kullanılıyor. */
+function imlec(p){ return { x: p.x / NETLIK, y: p.y / NETLIK }; }
+
+/* Her sahne başlarken kamerayı NETLIK katına yakınlaştırıp fizik
+   dünyasını mantıksal ölçüde tutuyoruz: tuval büyüdü, dünya büyümedi.
+   Sahne örnekleri oyun kurulumundan sonra eşzamansız oluştuğu için
+   kanca Systems.start üzerine takılıyor — yeniden başlatmalarda da
+   kendiliğinden çalışıyor. */
+(function(){
+  const SS = Phaser.Scenes.Systems.prototype;
+  const eskiStart = SS.start;
+  SS.start = function(veri){
+    const sonuc = eskiStart.call(this, veri);
+    const sc = this.scene;
+    try{
+      if (sc.cameras && sc.cameras.main){
+        sc.cameras.main.setZoom(NETLIK);
+        sc.cameras.main.centerOn(EN / 2, BOY / 2);
+      }
+      if (sc.physics && sc.physics.world) sc.physics.world.setBounds(0, 0, EN, BOY);
+    }catch(e){ /* netlik ayarı oyunu engellemesin */ }
+    return sonuc;
+  };
+})();
+
+window.OYUN = new Phaser.Game({
+  type: Phaser.AUTO,
+  parent: 'oyun',
+  width: EN * NETLIK,
+  height: BOY * NETLIK,
+  backgroundColor: '#0b1420',
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 820 } }
+  },
+  scene: [BootScene, MenuScene, GameScene, GameOverScene]
+});
+
+</script>
+</body>
+</html>

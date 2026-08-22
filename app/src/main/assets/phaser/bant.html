@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Tek-Çift Laboratuvarı — Phaser 3</title>
+<script src="phaser.min.js"></script>
+<script src="svgciz.js?s=11790b0a"></script>
+<style>
+  html, body { margin:0; padding:0; height:100%; background:#0e1524; overflow:hidden;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-tap-highlight-color: transparent; touch-action:none; }
+  #oyun { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+  canvas { display:block; }
+</style>
+</head>
+<body>
+<div id="oyun"></div>
+<script>
+/* =====================================================================
+   TEK-ÇİFT LABORATUVARI — Phaser 3   (mekanik: beltSort · 65 oyun)
+   ---------------------------------------------------------------------
+   Kazanım: MAT.3.1.6 — Tek ve çift sayıların toplamlarının tek ya da
+   çift olduğunu belirler.
+
+   Sahneler : Boot → Menu → Game → GameOver
+   Fizik    : Arcade.
+              · Tüpler konveyör bandında yerçekimsiz olarak akar.
+              · Oyuncu bırakınca yerçekimi açılır, tüp gerçekten düşer.
+              · Yanlış kazan tüpü geri tükürür (yukarı hız + takla).
+              · Kaçan tüp yere çarpar, tozu kalkar, banda geri döner.
+   Görsel   : Bütün dokular Graphics ile çalışma anında üretilir —
+              uygulama çevrimdışı kabukta (APK / iOS) çalışacağı için
+              dışarıdan resim çekilmiyor.
+   ===================================================================== */
+
+const EN = 480, BOY = 800;
+
+const RENK = {
+  zeminUst : 0x16213c,
+  zeminAlt : 0x2c3f66,
+  dogru    : 0x34c47b,
+  yanlis   : 0xf07575,
+  tup      : 0xfdfdff,
+  tupKenar : 0xd6e0f2,
+  metin    : '#17323b',
+  vurgu    : 0xffd166
+};
+
+/* ---------------------------------------------------------------------
+   İÇERİK — uygulamadaki w06 oyununun birebir aynısı.
+   Başka bir beltSort oyununa geçmek için yalnızca bu blok değişir.
+   ------------------------------------------------------------------- */
+/* ---------------- uygulama köprüsü ----------------
+   Uygulamanın içine iframe olarak gömüldüğünde adres  bant.html#oyun=w06
+   biçiminde olur. Sayfa uygulamayla AYNI kaynaktan sunulduğu için üst
+   pencereden katalog verisi doğrudan okunabiliyor. Böylece 65 beltSort
+   oyununun hepsi bu tek şablonla oynanıyor. Kazanınca completeGame()
+   çağrılır; XP, altın, kutlama ve sıradaki oyuna geçiş uygulamada kalır.
+   Köprü yoksa (dosya tek başına açıldıysa) örnek içerik oynanır.        */
+const KOPRU = (function(){
+  try{
+    const p = new URLSearchParams(location.hash.slice(1));
+    const id = p.get('oyun');
+    if (id && window.parent && window.parent !== window &&
+        typeof window.parent.getGame === 'function'){
+      const g = window.parent.getGame(id);
+      if (g && g.cfg) return {
+        oyun: g, cfg: g.cfg,
+        bitir(mesaj, puan){ try{ window.parent.completeGame(mesaj || '', puan); }catch(e){} },
+        /* Turun kendi metnini uygulamanın sesiyle okutur (Piper). */
+        oku(metin){ try{ if (window.parent.oku) window.parent.oku(metin); }catch(e){} },
+        /* Kaybetme ekranından: bu oyunu bırak, sıradakine geç. */
+        atla(){ try{ if (window.parent.sonrakiOyunaGec) window.parent.sonrakiOyunaGec(); }catch(e){} }
+      };
+    }
+  }catch(e){ /* çapraz kaynak engeli: tek başına oynanır */ }
+  return null;
+})();
+
+/* HTML varlıklarını çöz: katalogda "Pay &lt; payda" gibi yazımlar var,
+   çözülmezse ekranda "&lt;" olarak görünüyor ve öyle okunuyor. */
+function varlikCoz(m){
+  return String(m)
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
+    .replace(/&hellip;/gi, '…').replace(/&mdash;/gi, '—').replace(/&ndash;/gi, '–')
+    .replace(/&times;/gi, '×').replace(/&divide;/gi, '÷').replace(/&deg;/gi, '°')
+    .replace(/&rarr;/gi, '→').replace(/&larr;/gi, '←')
+    .replace(/&amp;/gi, '&');            /* en sona: çift çözmeyi önler */
+}
+
+function duzMetin(x){
+  return varlikCoz(String(x == null ? '' : x).replace(/<br\s*\/?>/gi,' ')
+    .replace(/<[^>]+>/g,'')).replace(/[“”]/g,'"').replace(/\s+/g,' ').trim();
+}
+
+const VARSAYILAN = {
+  instruction:'Tüpü doğru kazana sürükle',
+  tip:'TEK+TEK = ÇİFT · ÇİFT+ÇİFT = ÇİFT · TEK+ÇİFT = TEK',
+  missMsg:'Tüp kaçtı! Bantta tekrar geliyor ⚗️',
+  successMsg:'Simya ustası oldun! Tek ve çift sayıların toplamlarının kuralını keşfettin ⚗️',
+  speed:0.32,
+  bins:[ {id:'tek', label:'TEK', emoji:'🟠'}, {id:'cift', label:'ÇİFT', emoji:'🟣'} ],
+  items:[
+    {label:'7 + 5', emoji:'🧪', bin:'cift', wrongHint:'7 + 5 = 12 · İki TEK sayının toplamı ÇİFT olur!'},
+    {label:'8 + 6', emoji:'🧪', bin:'cift', wrongHint:'8 + 6 = 14 · İki ÇİFT sayının toplamı ÇİFT olur!'},
+    {label:'9 + 4', emoji:'🧫', bin:'tek',  wrongHint:'9 + 4 = 13 · TEK + ÇİFT = TEK!'},
+    {label:'3 + 3', emoji:'🧪', bin:'cift', wrongHint:'3 + 3 = 6 · İki TEK sayının toplamı ÇİFT!'},
+    {label:'5 + 2', emoji:'🧫', bin:'tek',  wrongHint:'5 + 2 = 7 · TEK + ÇİFT = TEK!'},
+    {label:'6 + 6', emoji:'🧪', bin:'cift', wrongHint:'6 + 6 = 12 · ÇİFT + ÇİFT = ÇİFT!'},
+    {label:'9 + 9', emoji:'🧪', bin:'cift', wrongHint:'9 + 9 = 18 · TEK + TEK = ÇİFT!'},
+    {label:'4 + 7', emoji:'🧫', bin:'tek',  wrongHint:'4 + 7 = 11 · ÇİFT + TEK = TEK!'} ]
+};
+
+const CFG = KOPRU ? KOPRU.cfg : VARSAYILAN;
+
+/* Katalogda kazanın rengi yok; sırayla bu paletten veriliyor. */
+const KAZAN_PALET = [0xe08a3c, 0x8c6fd0, 0x3fa9a0, 0xd4587e, 0x6f8fd0];
+
+const OYUN_ADI  = KOPRU ? duzMetin(KOPRU.oyun.title) : 'TEK-ÇİFT LABORATUVARI';
+const OYUN_EMO  = KOPRU ? (KOPRU.oyun.emo || '⚗️') : '⚗️';
+const TALIMAT   = duzMetin(CFG.instruction) || 'Nesneyi doğru kazana sürükle';
+const IPUCU     = duzMetin(CFG.tip);
+const KACIS_MSJ = duzMetin(CFG.missMsg) || 'Kaçtı! Bantta tekrar geliyor';
+const BASARI    = duzMetin(CFG.successMsg) || 'Hepsini doğru ayırdın!';
+
+/* Katalogdaki geometri/kesir/simetri oyunlarında görsel, satır içi SVG olarak
+   duruyor (şeklin gerçek koordinatları). Metne çevirince ekranda "?" kalıyordu;
+   burada SVG'yi ayırıp Phaser ile gerçekten çizdiriyoruz. */
+/* Görsel alanı katalogda "svg", "emoji" ya da "label" olabiliyor. */
+function svgAl(o){
+  if (!o || !window.SVGCIZ) return null;
+  const alanlar = ['svg', 'emoji', 'label', 'b', 'prompt'];
+  for (let i = 0; i < alanlar.length; i++)
+    if (SVGCIZ.svgMi(o[alanlar[i]])) return o[alanlar[i]];
+  return null;
+}
+
+const cizimMi = (v) => window.SVGCIZ && SVGCIZ.svgMi(v);
+
+const KAZANLAR = (CFG.bins || []).map((b,i) => ({
+  id: b.id,
+  etiket: duzMetin(b.label),
+  cizim: svgAl(b),
+  emoji: svgAl(b) ? '' : (b.emoji || '📦'),
+  renk: KAZAN_PALET[i % KAZAN_PALET.length]
+}));
+
+const NESNELER = (CFG.items || []).map(n => {
+  const cizim = svgAl(n);
+  let etiket = duzMetin(n.label);
+  /* şeklin kendisi soru olduğunda etiket "?" yazıyor — çizim varken gizle */
+  if (cizim && (etiket === '?' || etiket === '')) etiket = '';
+  return {
+    seslen: duzMetin(n.say),
+    etiket: etiket,
+    cizim: cizim,
+    emoji: cizim ? '' : (n.emoji || '📦'),
+    kazan: n.bin,
+    ipucu: duzMetin(n.wrongHint)
+  };
+});
+
+const CAN_SAYISI = 3;
+
+/* --- Tempo -----------------------------------------------------------
+   BANT_HIZI : tüpün bant üzerindeki hızı (px/sn). Ekranı geçmesi
+               ≈ 480 / BANT_HIZI saniye sürer — çocuğun okuyup karar
+               vermesine yetecek kadar yavaş tutuldu.
+   ARALIK    : iki tüpün banda bırakılması arasındaki süre (ms).
+   AZAMI_TUP : aynı anda bantta bulunabilecek tüp sayısı.            */
+/* Uygulamanın DOM sürümünde speed 0.24–0.36 aralığında; oradaki
+   tempo farkını koruyup kendi test ettiğimiz 52 px/sn'yi merkez alıyoruz.
+   Bant Phaser'da daha yavaş: çocuğun uzun etiketi okuyup karar vermesi
+   gerekiyor, sınıflandırma hız yarışı değil. */
+const BANT_HIZI = Phaser.Math.Clamp(52 * ((CFG.speed || 0.32) / 0.32), 38, 64);
+const ARALIK    = 2600;
+const AZAMI_TUP = 3;
+
+const BANT_Y  = 272;   /* bandın üst yüzeyi */
+const KAZAN_Y = 604;   /* kazanların merkez yüksekliği */
+
+/* =====================================================================
+   1) BOOT — dokuları üret
+   ===================================================================== */
+class BootScene extends Phaser.Scene {
+  constructor(){ super('Boot'); }
+
+  create(){
+    this.dokuKivilcim();
+    this.dokuToz();
+    this.dokuBant();
+    this.dokuMakara();
+    /* Uygulama içinde çocuk oyunu listeden zaten seçti; menüyü atla. */
+    this.scene.start(KOPRU ? 'Game' : 'Menu');
+  }
+
+  /* Küçük parlak nokta — doğru cevap patlaması */
+  dokuKivilcim(){
+    const g = this.make.graphics({ add:false });
+    g.fillStyle(0xffffff, 1);
+    g.fillCircle(8, 8, 8);
+    g.generateTexture('kivilcim', 16, 16);
+    g.destroy();
+  }
+
+  /* Yumuşak yuvarlak — toz/duman */
+  dokuToz(){
+    const g = this.make.graphics({ add:false });
+    for (let r = 14; r > 0; r--){
+      g.fillStyle(0xffffff, 0.06);
+      g.fillCircle(14, 14, r);
+    }
+    g.generateTexture('toz', 28, 28);
+    g.destroy();
+  }
+
+  /* Konveyör bandı segmenti — tileSprite olarak yan yana döşenip
+     tilePositionX kaydırılınca bant akıyormuş gibi görünür. */
+  dokuBant(){
+    const W = 48, H = 30;
+    const g = this.make.graphics({ add:false });
+
+    g.fillStyle(0x243050, 1);
+    g.fillRect(0, 0, W, H);
+
+    /* eğik tutucu çizgiler */
+    g.fillStyle(0x3c5182, 1);
+    g.beginPath();
+    g.moveTo(6, 0); g.lineTo(16, 0); g.lineTo(10, H); g.lineTo(0, H);
+    g.closePath(); g.fillPath();
+    g.beginPath();
+    g.moveTo(30, 0); g.lineTo(40, 0); g.lineTo(34, H); g.lineTo(24, H);
+    g.closePath(); g.fillPath();
+
+    /* üst kenar parlaması */
+    g.fillStyle(0x6f8ec4, 0.65);
+    g.fillRect(0, 0, W, 3);
+
+    g.generateTexture('bant', W, H);
+    g.destroy();
+  }
+
+  /* Bandın iki ucundaki makara */
+  dokuMakara(){
+    const R = 22;
+    const g = this.make.graphics({ add:false });
+    g.fillStyle(0x37507f, 1); g.fillCircle(R, R, R);
+    g.fillStyle(0x22314f, 1); g.fillCircle(R, R, R - 6);
+    g.fillStyle(0x6f8ec4, 1); g.fillCircle(R, R, 4);
+    /* jant çubukları */
+    g.lineStyle(3, 0x4a679e, 1);
+    for (let i = 0; i < 4; i++){
+      const a = Phaser.Math.DegToRad(i * 45);
+      g.beginPath();
+      g.moveTo(R - Math.cos(a) * (R - 7), R - Math.sin(a) * (R - 7));
+      g.lineTo(R + Math.cos(a) * (R - 7), R + Math.sin(a) * (R - 7));
+      g.strokePath();
+    }
+    g.generateTexture('makara', R * 2, R * 2);
+    g.destroy();
+  }
+}
+
+/* =====================================================================
+   Ortak yardımcılar
+   ===================================================================== */
+function arkaPlanCiz(sc){
+  const g = sc.add.graphics();
+  g.fillGradientStyle(RENK.zeminUst, RENK.zeminUst, RENK.zeminAlt, RENK.zeminAlt, 1);
+  g.fillRect(0, 0, EN, BOY);
+
+  /* laboratuvar duvarındaki soluk kabarcıklar */
+  for (let i = 0; i < 26; i++){
+    const b = sc.add.circle(
+      Phaser.Math.Between(10, EN - 10),
+      Phaser.Math.Between(10, BOY - 60),
+      Phaser.Math.FloatBetween(2, 5),
+      0xffffff,
+      Phaser.Math.FloatBetween(0.05, 0.16)
+    );
+    sc.tweens.add({
+      targets: b,
+      y: b.y - Phaser.Math.Between(40, 120),
+      alpha: 0,
+      duration: Phaser.Math.Between(2600, 5200),
+      repeat: -1,
+      delay: Phaser.Math.Between(0, 3000)
+    });
+  }
+  return g;
+}
+
+function dugmeYap(sc, x, y, metin, renk, geriCagri){
+  const c = sc.add.container(x, y);
+  const g = sc.add.graphics();
+  g.fillStyle(renk, 1);
+  g.fillRoundedRect(-140, -30, 280, 60, 30);
+  g.fillStyle(0xffffff, 0.16);
+  g.fillRoundedRect(-140, -30, 280, 24, { tl:30, tr:30, bl:0, br:0 });
+  const t = sc.add.text(0, 0, metin, {
+    fontFamily:'system-ui, sans-serif', fontSize:'25px',
+    fontStyle:'bold', color:'#ffffff'
+  }).setOrigin(0.5);
+  c.add([g, t]);
+  c.setSize(280, 60).setInteractive({ useHandCursor:true });
+  c.on('pointerover', () => sc.tweens.add({ targets:c, scale:1.05, duration:110 }));
+  c.on('pointerout',  () => sc.tweens.add({ targets:c, scale:1.00, duration:110 }));
+  c.on('pointerdown', () => sc.tweens.add({
+    targets:c, scale:0.93, duration:90, yoyo:true, onComplete:geriCagri
+  }));
+  return c;
+}
+
+/* =====================================================================
+   2) MENU
+   ===================================================================== */
+class MenuScene extends Phaser.Scene {
+  constructor(){ super('Menu'); }
+
+  create(){
+    arkaPlanCiz(this);
+
+    this.add.text(EN / 2, 170, OYUN_EMO, { fontSize:'92px' }).setOrigin(0.5);
+
+    const baslik = this.add.text(EN / 2, 288, OYUN_ADI, {
+      fontFamily:'system-ui, sans-serif', fontSize:'42px', fontStyle:'bold',
+      color:'#ffffff', align:'center', lineSpacing:6
+    }).setOrigin(0.5);
+    this.tweens.add({
+      targets: baslik, scale:1.04, duration:1400,
+      yoyo:true, repeat:-1, ease:'Sine.easeInOut'
+    });
+
+    this.add.text(EN / 2, 396, TALIMAT, {
+      fontFamily:'system-ui, sans-serif', fontSize:'24px',
+      color:'#cfe0ff', align:'center'
+    }).setOrigin(0.5);
+
+    /* kural kartı */
+    const kart = this.add.graphics();
+    kart.fillStyle(0x0f1c33, 0.9);
+    kart.fillRoundedRect(34, 436, EN - 68, 74, 16);
+    kart.lineStyle(2, 0x3c5182, 1);
+    kart.strokeRoundedRect(34, 436, EN - 68, 74, 16);
+    this.add.text(EN / 2, 473, IPUCU, {
+      fontFamily:'system-ui, sans-serif', fontSize:'19px', fontStyle:'bold',
+      color:'#ffd166', align:'center', wordWrap:{ width:EN - 100 }, lineSpacing:4
+    }).setOrigin(0.5);
+
+    dugmeYap(this, EN / 2, 580, '▶  BAŞLA', RENK.dogru, () => this.scene.start('Game'));
+
+    this.add.text(EN / 2, 706, `${NESNELER.length} tüp  ·  ${CAN_SAYISI} can`, {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', color:'#9fc2e6'
+    }).setOrigin(0.5);
+  }
+}
+
+/* =====================================================================
+   3) GAME
+   ===================================================================== */
+class GameScene extends Phaser.Scene {
+  constructor(){ super('Game'); }
+
+  create(){
+    this.can       = CAN_SAYISI;
+    this.puan      = 0;
+    this.seri      = 0;
+    this.tamamlanan = 0;
+    this.kilit     = false;
+
+    /* Henüz sınıflandırılmamış tüpler — kaçan tüp buranın sonuna döner */
+    this.kuyruk = NESNELER.map((n, i) => ({ ...n, sira:i }));
+    Phaser.Utils.Array.Shuffle(this.kuyruk);
+
+    arkaPlanCiz(this);
+
+    /* --- parçacık yayıcılar --- */
+    this.kivilcimlar = this.add.particles(0, 0, 'kivilcim', {
+      speed:{ min:140, max:380 }, angle:{ min:0, max:360 },
+      scale:{ start:0.9, end:0 }, alpha:{ start:1, end:0 },
+      lifespan:650, gravityY:420, blendMode:'ADD', emitting:false
+    }).setDepth(90);
+
+    this.tozlar = this.add.particles(0, 0, 'toz', {
+      speed:{ min:40, max:150 }, angle:{ min:200, max:340 },
+      scale:{ start:1.1, end:2.3 }, alpha:{ start:0.5, end:0 },
+      lifespan:700, emitting:false
+    }).setDepth(80);
+
+    this.zeminKur();
+    this.bantKur();
+    this.kazanlariKur();
+    this.arayuzKur();
+    this.surukleKur();
+
+    /* tüpleri aralıklı olarak banda bırak */
+    this.dusurucu = this.time.addEvent({
+      delay: ARALIK, loop: true, callback: () => this.tupGonder()
+    });
+    this.time.delayedCall(600, () => this.tupGonder());
+  }
+
+  /* ---------- zemin (kaçan tüp buraya çarpar) ---------- */
+  zeminKur(){
+    this.add.rectangle(EN / 2, BOY - 5, EN, 10, 0x101b30, 1).setDepth(4);
+    /* NOT: Phaser'da collider/overlap(grup, TEK nesne) çağrılırsa
+       callback'e parametreler TERS gelir — (tekNesne, grupElemani).
+       Zemin bu yüzden staticGroup içinde tutuluyor: grup-vs-grup
+       kullanınca sıra (obj1Elemani, obj2Elemani) olarak korunuyor. */
+    this.zemin = this.physics.add.staticGroup();
+    this.zemin.add(this.add.rectangle(EN / 2, BOY - 5, EN, 10, 0x000000, 0));
+  }
+
+  /* ---------- konveyör bandı ---------- */
+  bantKur(){
+    /* taşıyıcı gövde */
+    const govde = this.add.graphics().setDepth(6);
+    govde.fillStyle(0x1a2540, 1);
+    govde.fillRoundedRect(-6, BANT_Y + 26, EN + 12, 26, 10);
+
+    this.bant = this.add.tileSprite(EN / 2, BANT_Y + 15, EN + 40, 30, 'bant').setDepth(7);
+
+    this.makaraSol  = this.add.image(20,      BANT_Y + 15, 'makara').setDepth(8);
+    this.makaraSag  = this.add.image(EN - 20, BANT_Y + 15, 'makara').setDepth(8);
+
+    /* bandın altındaki destek ayakları */
+    const ayak = this.add.graphics().setDepth(5);
+    ayak.fillStyle(0x1a2540, 1);
+    ayak.fillRect(52, BANT_Y + 46, 14, 52);
+    ayak.fillRect(EN - 66, BANT_Y + 46, 14, 52);
+    ayak.fillStyle(0x141d33, 1);
+    ayak.fillRoundedRect(40, BANT_Y + 94, 38, 10, 4);
+    ayak.fillRoundedRect(EN - 78, BANT_Y + 94, 38, 10, 4);
+  }
+
+  /* kazanların üstünde durduğu tezgah */
+  tezgahCiz(){
+    const g = this.add.graphics().setDepth(10);
+    g.fillStyle(0x1a2540, 1);
+    g.fillRoundedRect(14, KAZAN_Y + 52, EN - 28, 18, 8);
+    g.fillStyle(0x2c3f66, 0.8);
+    g.fillRoundedRect(14, KAZAN_Y + 52, EN - 28, 6, { tl:8, tr:8, bl:0, br:0 });
+  }
+
+  /* ---------- kazanlar ---------- */
+  kazanlariKur(){
+    this.tezgahCiz();
+
+    this.kazanlar = [];
+    this.agizlar  = this.physics.add.staticGroup();
+
+    const n = KAZANLAR.length;
+    /* Kazan çizimi 124 px genişliğinde tasarlandı. 5 kazanda paya 96 px
+       düştüğü için tüm kazan (ağız algılayıcısı dahil) ölçekleniyor. */
+    const olcek = Phaser.Math.Clamp((EN / n - 10) / 124, 0.6, 1);
+    this.kazanOlcek = olcek;
+
+    KAZANLAR.forEach((k, i) => {
+      const x = EN * (i + 0.5) / n;
+      const c = this.add.container(x, KAZAN_Y).setDepth(12);
+
+      const g = this.add.graphics();
+      this.kazanCiz(g, k.renk, false);
+
+      const emo = k.cizim
+        ? SVGCIZ.ciz(this, k.cizim, 0, -10, 40)
+        : this.add.text(0, -8, k.emoji, { fontSize:'31px' }).setOrigin(0.5);
+      /* Etiket kazanın gövdesinin içinde — altındaki tezgahla çakışmasın.
+         Katalogda 28 karaktere kadar etiket var, uzunlukla küçülüyor. */
+      const uz = k.etiket.length;
+      const et  = this.add.text(0, 20, k.etiket, {
+        fontFamily:'system-ui, sans-serif',
+        fontSize: (uz > 20 ? '14px' : (uz > 12 ? '16px' : (uz > 7 ? '19px' : '22px'))),
+        fontStyle:'bold', color:'#ffffff', align:'center',
+        wordWrap:{ width:112 }, lineSpacing:1
+      }).setOrigin(0.5);
+
+      c.add([g, emo, et]);
+      c.setScale(olcek);
+      c.setData('zemin', g);
+      c.setData('id', k.id);
+      c.setData('renk', k.renk);
+      this.kazanlar.push(c);
+
+      /* ağız algılayıcısı: tüp buraya girerse sınıflandırılmış sayılır */
+      const agiz = this.add.rectangle(x, KAZAN_Y - 34 * olcek, 112 * olcek, 26, 0x000000, 0);
+      this.agizlar.add(agiz);
+      agiz.setData('id', k.id);
+      agiz.setData('kazan', c);
+    });
+  }
+
+  kazanCiz(g, renk, acik){
+    g.clear();
+    /* ağız halkası */
+    g.fillStyle(acik ? RENK.vurgu : renk, 1);
+    g.fillRoundedRect(-62, -44, 124, 20, 10);
+    /* gövde (trapez) */
+    g.fillStyle(renk, acik ? 1 : 0.86);
+    g.beginPath();
+    g.moveTo(-56, -26); g.lineTo(56, -26); g.lineTo(40, 40); g.lineTo(-40, 40);
+    g.closePath(); g.fillPath();
+    /* iç gölge */
+    g.fillStyle(0x000000, 0.22);
+    g.beginPath();
+    g.moveTo(-56, -26); g.lineTo(-30, -26); g.lineTo(-22, 40); g.lineTo(-40, 40);
+    g.closePath(); g.fillPath();
+    /* ayak */
+    g.fillStyle(0x22314f, 1);
+    g.fillRoundedRect(-46, 40, 92, 14, 6);
+    if (acik){
+      g.lineStyle(3, RENK.vurgu, 1);
+      g.strokeRoundedRect(-62, -44, 124, 100, 12);
+    }
+  }
+
+  kazanVurgula(kazan, acik){
+    this.kazanCiz(kazan.getData('zemin'), kazan.getData('renk'), acik);
+  }
+
+  /* ---------- tüp üretimi ---------- */
+  tupGonder(){
+    if (this.kilit) return;
+    if (this.kuyruk.length === 0) return;
+    if (this.tupler.countActive(true) >= AZAMI_TUP) return;
+
+    /* Uzun etiketli tüp 216 px genişliğe çıkabiliyor; sabit aralıkla
+       gönderilince bantta üst üste biniyordu. Yenisini ancak bantta duran
+       en soldaki tüp kendi genişliği kadar ilerlemişse bırakıyoruz. */
+    let enSol = Infinity;
+    this.tupler.getChildren().forEach(tp => {
+      if (!tp.getData('bantta')) return;
+      enSol = Math.min(enSol, tp.x - tp.width / 2);
+    });
+    if (enSol !== Infinity && enSol < 26) return;
+
+    const veri = this.kuyruk.shift();
+    this.tupYap(veri);
+    /* banda gelen nesnenin kendi cümlesini okut */
+    if (KOPRU && veri.seslen) KOPRU.oku(veri.seslen);
+  }
+
+  tupYap(veri){
+    /* Katalogda 52 karaktere kadar etiket var (iki cümlelik ifadeler).
+       Yazı sarılıyor, kart da yazının gerçek ölçüsüne göre büyüyor. */
+    const uz = veri.etiket.length;
+    const yazi = this.add.text(0, 8, veri.etiket, {
+      fontFamily:'system-ui, sans-serif',
+      fontSize: (uz > 34 ? '16px' : (uz > 18 ? '19px' : '22px')),
+      fontStyle:'bold', color: RENK.metin, align:'center',
+      wordWrap:{ width:186 }, lineSpacing:2
+    }).setOrigin(0.5);
+
+    /* Şekil çizimi varsa emoji yerine onu koy: kart, şeklin rahat
+       görünebileceği kadar büyür (çocuk kenar sayacak / açıya bakacak). */
+    const CIZIM_BOY = 96;   /* şekli çocuk rahat inceleyebilsin */
+    const cizim = veri.cizim
+      ? SVGCIZ.ciz(this, veri.cizim, 0, 0, CIZIM_BOY, { metin: !veri.etiket })
+      : null;
+    const emo = cizim ? null
+      : this.add.text(0, -18, veri.emoji, { fontSize:'24px' }).setOrigin(0.5);
+
+    const yaziBoy = veri.etiket ? yazi.height : 0;
+    const W = cizim
+      ? Phaser.Math.Clamp(Math.max(CIZIM_BOY + 26, yazi.width + 30), 100, 216)
+      : Phaser.Math.Clamp(yazi.width + 30, 92, 216);
+    const H = cizim
+      ? CIZIM_BOY + yaziBoy + (veri.etiket ? 26 : 18)
+      : Math.max(62, yazi.height + 46);
+
+    if (cizim) {
+      cizim.setY(-H / 2 + CIZIM_BOY / 2 + 9);
+      yazi.setY(H / 2 - yaziBoy / 2 - 8);
+    } else {
+      emo.setY(-H / 2 + 17);
+      yazi.setY(H / 2 - yazi.height / 2 - 10);
+    }
+
+    const g = this.add.graphics();
+    g.fillStyle(RENK.tup, 1);
+    g.fillRoundedRect(-W / 2, -H / 2, W, H, 14);
+    g.lineStyle(3, RENK.tupKenar, 1);
+    g.strokeRoundedRect(-W / 2, -H / 2, W, H, 14);
+
+    /* tüpün merkezi, bandın üstünde duracak şekilde konumlanır */
+    const c = this.add.container(-W, BANT_Y - H / 2,
+      [g, cizim || emo, yazi].filter(Boolean)).setDepth(20);
+    c.setSize(W, H);
+
+    /* Arcade gövdesi — gruba ÖNCE ekle: Arcade Group, add() sırasında
+       kendi varsayılanlarını gövdeye basıyor, sonra ayar yapmak gerek.
+       Container gövdesi zaten container orijininde merkezlenir, bu yüzden
+       ayrıca setOffset verilmez (verilirse gövde ikinci kez kayar). */
+    this.tupler.add(c);
+    c.body.setSize(W, H);
+    c.body.setAllowGravity(false);
+    c.body.setVelocity(BANT_HIZI, 0);
+    c.body.setBounce(0.4, 0.35);
+    c.body.setDragX(0);
+
+    c.setData('veri', veri);
+    c.setData('bantta', true);
+    c.setData('islendi', false);
+
+    /* Dokunma alanını Phaser'a bırakıyoruz: Container'a elle
+       Rectangle(-W/2,-H/2,…) verilince kaydırma bir kez daha uygulanıyor ve
+       alan sola-yukarı kayıyor — nesneyi tutmak için sol üstüne basmak
+       gerekiyordu. setSize + argümansız setInteractive() alanı ortalıyor.
+       Alan görselden bir miktar geniş: parmak payı. */
+    c.setSize(W + 28, H + 28);
+    c.setInteractive();
+    this.input.setDraggable(c);
+
+    /* bantta hafifçe sallansın */
+    this.tweens.add({
+      targets:c, angle:Phaser.Math.Between(-4, 4),
+      duration:Phaser.Math.Between(900, 1400), yoyo:true, repeat:-1,
+      ease:'Sine.easeInOut'
+    });
+    return c;
+  }
+
+  /* ---------- sürükleme ---------- */
+  surukleKur(){
+    this.tupler = this.physics.add.group();
+
+    this.physics.add.overlap(this.tupler, this.agizlar, this.kazanaDustu, null, this);
+    this.physics.add.collider(this.tupler, this.zemin, this.yereDustu, null, this);
+
+    this.input.on('dragstart', (p, tup) => {
+      if (this.kilit || tup.getData('islendi')) return;
+      this.suruklenen = tup;
+      tup.setDepth(70);
+      tup.body.setAllowGravity(false);
+      tup.body.setVelocity(0, 0);
+      tup.setData('bantta', false);
+      this.tweens.killTweensOf(tup);
+      tup.setAngle(0);
+      this.tweens.add({ targets:tup, scale:1.14, duration:130, ease:'Back.easeOut' });
+      this.kazanlar.forEach(k => this.kazanVurgula(k, true));
+    });
+
+    this.input.on('drag', (p, tup, x, y) => {
+      if (this.kilit || tup.getData('islendi')) return;
+      tup.x = Phaser.Math.Clamp(x, 50, EN - 50);
+      tup.y = Phaser.Math.Clamp(y, 150, BOY - 60);
+    });
+
+    this.input.on('dragend', (p, tup) => {
+      if (this.kilit || tup.getData('islendi')) return;
+      this.suruklenen = null;
+      this.kazanlar.forEach(k => this.kazanVurgula(k, false));
+      this.tweens.add({ targets:tup, scale:1, duration:130 });
+
+      /* bırakıldı: artık gerçekten düşsün */
+      tup.body.setAllowGravity(true);
+      tup.body.setVelocity(Phaser.Math.Between(-30, 30), 40);
+    });
+  }
+
+  /* ---------- sonuçlar ---------- */
+  kazanaDustu(tup, agiz){
+    /* Örtüşme her karede yeniden tetiklenir; tüp başına tek sonuç. */
+    if (this.kilit || tup.getData('islendi')) return;
+    if (tup.getData('bantta')) return;          /* bant üstündeyken sayma */
+
+    /* Uzun etiketli tüpün gövdesi 216 px'e kadar genişliyor; 5 kazanlı
+       oyunlarda ağızlar 96 px aralıkta olduğu için gövde birden çok ağızla
+       örtüşüyor ve hangisinin tetiklendiği rastgele kalıyor. Bu yüzden
+       kararı örtüşen ağza değil, tüpün MERKEZİNE en yakın kazana veriyoruz. */
+    const kazan = this.enYakinKazan(tup.x);
+    if (!kazan) return;                         /* kazanların dışında: yere in */
+    tup.setData('islendi', true);
+
+    const veri = tup.getData('veri');
+    if (kazan.getData('id') === veri.kazan) this.dogru(tup, kazan);
+    else                                    this.yanlis(tup, kazan, veri);
+  }
+
+  /* Tüpün merkezine en yakın kazan. Kendi payının dışına düşen tüp
+     hiçbir kazana yazılmaz; zemine iner ve banda geri gönderilir. */
+  enYakinKazan(x){
+    let iyi = null, enAz = Infinity;
+    this.kazanlar.forEach(c => {
+      const d = Math.abs(c.x - x);
+      if (d < enAz){ enAz = d; iyi = c; }
+    });
+    const pay = EN / Math.max(1, this.kazanlar.length);
+    return enAz <= pay / 2 + 8 ? iyi : null;
+  }
+
+  dogru(tup, kazan){
+    const x = tup.x, y = tup.y;
+
+    this.seri++;
+    const kazanc = 100 + (this.seri - 1) * 25;
+    this.puan += kazanc;
+    this.tamamlanan++;
+
+    /* tüp kazanın içine emilsin */
+    tup.body.enable = false;
+    tup.disableInteractive();
+    this.tweens.add({
+      targets: tup,
+      y: kazan.y + 10, x: kazan.x,
+      scale: 0.2, alpha: 0.2, angle: 0,
+      duration: 260, ease:'Quad.easeIn',
+      onComplete: () => {
+        this.kivilcimlar.setParticleTint(RENK.dogru);
+        this.kivilcimlar.explode(30, kazan.x, kazan.y - 34);
+        tup.destroy();
+      }
+    });
+
+    /* kazan zıplasın */
+    this.tweens.add({
+      targets: kazan, scaleX:1.12, scaleY:0.88,
+      duration:120, yoyo:true, ease:'Quad.easeOut'
+    });
+
+    /* skor yazısı büyüyüp küçülsün */
+    this.puanYazi.setText('Puan ' + this.puan);
+    this.tweens.add({
+      targets:this.puanYazi, scale:1.55, duration:140, yoyo:true, ease:'Back.easeOut'
+    });
+
+    const ucan = this.add.text(x, y - 10, '+' + kazanc, {
+      fontFamily:'system-ui, sans-serif', fontSize:'31px', fontStyle:'bold',
+      color:'#7ce0a3'
+    }).setOrigin(0.5).setDepth(95);
+    this.tweens.add({
+      targets:ucan, y:ucan.y - 70, alpha:0, scale:1.25,
+      duration:700, ease:'Cubic.easeOut', onComplete:() => ucan.destroy()
+    });
+
+    if (this.seri >= 2) this.seriGoster();
+
+    this.cameras.main.flash(140, 80, 210, 140);
+    this.arayuzuTazele();
+
+    if (this.tamamlanan >= NESNELER.length){
+      this.kilit = true;
+      this.time.delayedCall(700, () => this.bitir(true));
+    } else {
+      this.time.delayedCall(200, () => this.tupGonder());
+    }
+  }
+
+  yanlis(tup, kazan, veri){
+    this.seri = 0;
+    this.can--;
+    this.arayuzuTazele();
+
+    /* GERÇEK FİZİK: kazan tüpü geri tükürsün */
+    tup.body.setVelocityY(-430);
+    tup.body.setVelocityX(Phaser.Math.Between(-190, 190));
+    this.tweens.add({ targets:tup, angle:Phaser.Math.Between(-260, 260), duration:750 });
+
+    this.tozlar.explode(16, tup.x, tup.y);
+    this.cameras.main.shake(230, 0.012);
+    this.cameras.main.flash(180, 220, 90, 90);
+
+    /* kazan kırmızı yanıp sönsün */
+    const g = kazan.getData('zemin');
+    this.kazanCiz(g, RENK.yanlis, false);
+    this.time.delayedCall(420, () => this.kazanCiz(g, kazan.getData('renk'), false));
+
+    this.tweens.add({
+      targets:this.canYazi, angle:{ from:-12, to:12 },
+      duration:70, yoyo:true, repeat:3,
+      onComplete:() => this.canYazi.setAngle(0)
+    });
+
+    this.mesajGoster(veri.ipucu, '#b5453b');
+
+    /* tüp yeniden denenebilsin: banda geri dönsün */
+    this.time.delayedCall(900, () => {
+      if (!tup.active) return;
+      tup.setData('islendi', false);
+      this.bandaGeriGonder(tup);
+    });
+
+    if (this.can <= 0){
+      this.kilit = true;
+      this.time.delayedCall(800, () => this.bitir(false));
+    }
+  }
+
+  /* Tüp yere düştü: tozu kalksın, banda geri dönsün */
+  yereDustu(tup, zemin){
+    if (tup.getData('yerde')) return;
+    tup.setData('yerde', true);
+    this.tozlar.explode(10, tup.x, tup.y + 12);
+    this.time.delayedCall(500, () => {
+      if (!tup.active) return;
+      tup.setData('yerde', false);
+      if (!tup.getData('islendi')) this.bandaGeriGonder(tup);
+    });
+  }
+
+  bandaGeriGonder(tup){
+    if (this.kilit || !tup.active) return;
+    this.tweens.killTweensOf(tup);
+    tup.setDepth(20);
+    tup.setAngle(0);
+    tup.setScale(1);
+    tup.setAlpha(1);
+    tup.body.setAllowGravity(false);
+    tup.body.setVelocity(0, 0);
+    tup.x = -tup.width;
+    tup.y = BANT_Y - tup.height / 2;
+    tup.setData('bantta', true);
+    tup.setData('yerde', false);
+    tup.body.setVelocity(BANT_HIZI, 0);
+    this.tweens.add({
+      targets:tup, angle:Phaser.Math.Between(-4, 4),
+      duration:Phaser.Math.Between(900, 1400), yoyo:true, repeat:-1,
+      ease:'Sine.easeInOut'
+    });
+  }
+
+  seriGoster(){
+    this.seriYazi.setText('🔥 ' + this.seri + ' SERİ!').setAlpha(1).setScale(0.6);
+    this.tweens.add({ targets:this.seriYazi, scale:1, duration:220, ease:'Back.easeOut' });
+    this.tweens.add({ targets:this.seriYazi, alpha:0, delay:900, duration:400 });
+  }
+
+  mesajGoster(metin, arka){
+    const t = this.add.text(EN / 2, BOY / 2 - 40, metin, {
+      fontFamily:'system-ui, sans-serif', fontSize:'21px', fontStyle:'bold',
+      color:'#ffffff', backgroundColor:arka,
+      padding:{ x:14, y:10 }, align:'center', wordWrap:{ width:EN - 80 }
+    }).setOrigin(0.5).setDepth(96).setAlpha(0);
+    this.tweens.add({ targets:t, alpha:1, duration:150 });
+    this.time.delayedCall(1500, () => {
+      this.tweens.add({
+        targets:t, alpha:0, duration:250, onComplete:() => t.destroy()
+      });
+    });
+  }
+
+  /* ---------- arayüz ---------- */
+  arayuzKur(){
+    /* Katalogdaki yönergeler tek satıra sığmıyor (120 karaktere kadar
+       çıkıyor); yazı sarılıyor ve şerit metnin gerçek yüksekliğine göre
+       çiziliyor — sabit yükseklik yazıyı iki yandan kesiyordu. */
+    const yon = this.add.text(EN / 2, 0, OYUN_EMO + '  ' + TALIMAT, {
+      fontFamily:'system-ui, sans-serif',
+      fontSize: (TALIMAT.length > 92 ? '16px' : (TALIMAT.length > 54 ? '17px' : '20px')),
+      fontStyle:'bold', color:'#ffffff', align:'center',
+      wordWrap:{ width: EN - 52 }, lineSpacing:3
+    }).setOrigin(0.5, 0).setDepth(61);
+
+    const yonBoy = yon.height;
+    const seritBoy = Math.max(104, yonBoy + 66);
+    yon.setY(24);
+
+    const serit = this.add.graphics().setDepth(60);
+    serit.fillStyle(0x0c1524, 0.97);
+    serit.fillRoundedRect(10, 10, EN - 20, seritBoy, 18);
+    yon.setDepth(61);
+
+    const satirY = 10 + seritBoy - 24;
+    this.puanYazi = this.add.text(30, satirY, 'Puan 0', {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', fontStyle:'bold',
+      color:'#ffd166'
+    }).setOrigin(0, 0.5).setDepth(61);
+
+    this.canYazi = this.add.text(EN - 30, satirY, '', { fontSize:'20px' })
+      .setOrigin(1, 0.5).setDepth(61);
+
+    this.ilerlemeYazi = this.add.text(EN / 2, satirY, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'19px', fontStyle:'bold',
+      color:'#8fb6d8'
+    }).setOrigin(0.5).setDepth(61);
+
+    this.seriYazi = this.add.text(EN / 2, 150, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'29px', fontStyle:'bold',
+      color:'#ffd166'
+    }).setOrigin(0.5).setDepth(62).setAlpha(0);
+
+    this.arayuzuTazele();
+  }
+
+  arayuzuTazele(){
+    this.canYazi.setText(
+      '❤️'.repeat(Math.max(0, this.can)) +
+      '🖤'.repeat(Math.max(0, CAN_SAYISI - this.can))
+    );
+    this.ilerlemeYazi.setText(`${this.tamamlanan} / ${NESNELER.length}`);
+  }
+
+  bitir(kazandi){
+    /* Uygulama içindeyken kazanma ekranını uygulama gösteriyor: XP, altın,
+       kutlama ve sıradaki oyuna otomatik geçiş onun akışında. */
+    if (kazandi && KOPRU){ KOPRU.bitir(BASARI, this.puan); return; }
+    this.scene.start('GameOver', {
+      kazandi, puan:this.puan, can:this.can,
+      tamamlanan:this.tamamlanan, toplam:NESNELER.length
+    });
+  }
+
+  /* ---------- her kare ---------- */
+  update(time, delta){
+    /* bant dokusu aksın */
+    this.bant.tilePositionX += BANT_HIZI * delta / 1000;
+    const donus = BANT_HIZI * delta / 1000 * 0.05;
+    this.makaraSol.rotation += donus;
+    this.makaraSag.rotation += donus;
+
+    if (this.kilit) return;
+
+    /* bandın sağ ucundan kaçan tüpler */
+    this.tupler.getChildren().slice().forEach(t => {
+      if (!t.active || t.getData('islendi')) return;
+      if (t.getData('bantta') && t.x > EN + t.width){
+        this.mesajGoster(KACIS_MSJ, '#3c5182');
+        this.bandaGeriGonder(t);
+      }
+      /* yandan çıkanları da geri al */
+      if (!t.getData('bantta') && (t.x < -80 || t.x > EN + 80)){
+        this.bandaGeriGonder(t);
+      }
+    });
+  }
+}
+
+/* =====================================================================
+   4) GAME OVER
+   ===================================================================== */
+class GameOverScene extends Phaser.Scene {
+  constructor(){ super('GameOver'); }
+
+  init(veri){ this.veri = veri; }
+
+  create(){
+    const { kazandi, puan, can, tamamlanan, toplam } = this.veri;
+    arkaPlanCiz(this);
+
+    const emo = this.add.text(EN / 2, 190, kazandi ? '🏆' : '💪', { fontSize:'101px' })
+      .setOrigin(0.5).setScale(0);
+    this.tweens.add({ targets:emo, scale:1, duration:520, ease:'Back.easeOut' });
+
+    this.add.text(EN / 2, 300, kazandi ? 'LABORATUVAR TAMAM!' : 'TEKRAR DENE', {
+      fontFamily:'system-ui, sans-serif', fontSize:'36px', fontStyle:'bold',
+      color: kazandi ? '#7ce0a3' : '#ffd166', align:'center'
+    }).setOrigin(0.5);
+
+    this.add.text(EN / 2, 360,
+      kazandi ? BASARI : `${tamamlanan} / ${toplam} tüpü ayırdın — bir daha deneyelim mi?`, {
+      fontFamily:'system-ui, sans-serif', fontSize:'21px', color:'#cfe0ff',
+      align:'center', wordWrap:{ width:EN - 70 }, lineSpacing:5
+    }).setOrigin(0.5);
+
+    /* puan sayacı yukarı doğru saysın */
+    const puanYazi = this.add.text(EN / 2, 452, 'Puan 0', {
+      fontFamily:'system-ui, sans-serif', fontSize:'42px', fontStyle:'bold',
+      color:'#ffd166'
+    }).setOrigin(0.5);
+    const sayac = { v:0 };
+    this.tweens.add({
+      targets: sayac, v: puan, duration: 900, ease:'Cubic.easeOut',
+      onUpdate: () => puanYazi.setText('Puan ' + Math.round(sayac.v))
+    });
+
+    this.add.text(EN / 2, 502,
+      'Kalan can: ' + (can > 0 ? '❤️'.repeat(can) : '—'), {
+      fontFamily:'system-ui, sans-serif', fontSize:'21px', color:'#9fc2e6'
+    }).setOrigin(0.5);
+
+    if (kazandi){
+      const konfeti = this.add.particles(EN / 2, -20, 'kivilcim', {
+        speed:{ min:90, max:260 }, angle:{ min:60, max:120 },
+        scale:{ start:0.8, end:0 }, alpha:{ start:1, end:0 },
+        lifespan:2000, gravityY:180, quantity:2, frequency:70,
+        tint:[0xffd166, 0x7ce0a3, 0x7fb2f0, 0xf07575]
+      }).setDepth(5);
+      this.time.delayedCall(2600, () => konfeti.stop());
+    }
+
+    dugmeYap(this, EN / 2, 600, '↻  TEKRAR OYNA', RENK.dogru, () => this.scene.start('Game'));
+
+    /* Uygulama içinde: bu oyunda takılan çocuk sıradakine geçebilsin. */
+
+    if (KOPRU) dugmeYap(this, EN / 2, 674, '⏭  SIRADAKİ OYUN', 0x4a679e, () => KOPRU.atla());
+    if (!KOPRU) dugmeYap(this, EN / 2, 678, '☰  MENÜ', 0x4a679e, () => this.scene.start('Menu'));
+  }
+}
+
+/* =====================================================================
+   OYUNU BAŞLAT
+   ===================================================================== */
+/* =====================================================================
+   NETLİK — cihazın piksel yoğunluğunda çizim
+   ---------------------------------------------------------------------
+   Oyun 480x800 mantıksal tuvalde çiziliyordu; telefon bunu 1080 piksele
+   büyütünce yazılar ve kenarlar bulanıklaşıyordu. Çözüm: tuvali cihazın
+   gerçek piksel sayısında açmak, dünyayı ise kamerayı NETLIK katına
+   yakınlaştırarak yine 480x800 koordinatta tutmak. Böylece Graphics ile
+   çizilen her şey (kartlar, şeritler, kutular) vektör keskinliğinde,
+   yazılar da NETLIK çözünürlüğünde üretiliyor; oyun kodunun tek satırı
+   değişmiyor.
+   ===================================================================== */
+const NETLIK = Math.min(3, Math.max(1, Math.round((window.devicePixelRatio || 1) * 2) / 2));
+
+/* Phaser yazıyı kendi ara tuvaline çiziyor; çözünürlük verilmezse 1x
+   üretilip yakınlaştırmada bulanıklaşır. Bütün yazılara varsayılan
+   olarak NETLIK veriyoruz. */
+(function(){
+  const TS = Phaser.GameObjects.TextStyle.prototype;
+  const eskiSetStyle = TS.setStyle;
+  TS.setStyle = function(style, updateText, setDefaults){
+    if (style && style.resolution === undefined) style.resolution = NETLIK;
+    return eskiSetStyle.call(this, style, updateText, setDefaults);
+  };
+})();
+
+/* Tuval NETLIK katına büyüdüğü için Phaser imleç konumunu da o ölçekte
+   veriyor (0–960). Oyun koordinatına (0–480) çeviren yardımcı: sürükleme
+   olayları zaten dünya koordinatı verdiği için yalnız pointer olaylarında
+   kullanılıyor. */
+function imlec(p){ return { x: p.x / NETLIK, y: p.y / NETLIK }; }
+
+/* Her sahne başlarken kamerayı NETLIK katına yakınlaştırıp fizik
+   dünyasını mantıksal ölçüde tutuyoruz: tuval büyüdü, dünya büyümedi.
+   Sahne örnekleri oyun kurulumundan sonra eşzamansız oluştuğu için
+   kanca Systems.start üzerine takılıyor — yeniden başlatmalarda da
+   kendiliğinden çalışıyor. */
+(function(){
+  const SS = Phaser.Scenes.Systems.prototype;
+  const eskiStart = SS.start;
+  SS.start = function(veri){
+    const sonuc = eskiStart.call(this, veri);
+    const sc = this.scene;
+    try{
+      if (sc.cameras && sc.cameras.main){
+        sc.cameras.main.setZoom(NETLIK);
+        sc.cameras.main.centerOn(EN / 2, BOY / 2);
+      }
+      if (sc.physics && sc.physics.world) sc.physics.world.setBounds(0, 0, EN, BOY);
+    }catch(e){ /* netlik ayarı oyunu engellemesin */ }
+    return sonuc;
+  };
+})();
+
+window.OYUN = new Phaser.Game({
+  type: Phaser.AUTO,
+  parent: 'oyun',
+  width: EN * NETLIK,
+  height: BOY * NETLIK,
+  backgroundColor: '#0e1524',
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 620 } }
+  },
+  scene: [BootScene, MenuScene, GameScene, GameOverScene]
+});
+
+</script>
+</body>
+</html>

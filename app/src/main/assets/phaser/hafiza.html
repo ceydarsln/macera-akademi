@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Zıt Anlam Aynası — Phaser 3</title>
+<script src="phaser.min.js"></script>
+<script src="svgciz.js?s=11790b0a"></script>
+<style>
+  html, body { margin:0; padding:0; height:100%; background:#161029; overflow:hidden;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-tap-highlight-color: transparent; touch-action:none; }
+  #oyun { width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+  canvas { display:block; }
+</style>
+</head>
+<body>
+<div id="oyun"></div>
+<script>
+/* =====================================================================
+   ZIT ANLAM AYNASI — Phaser 3    (mekanik: memoryPairs · 32 oyun)
+   ---------------------------------------------------------------------
+   Kazanım: T.O.3.2.h — Okuduğu metindeki zıt ve eş anlamlı sözcükleri
+   bulur.
+
+   Sahneler : Boot → Menu → Game → GameOver
+   Fizik    : Arcade.
+              · Oyun başında kartlar desteden YERÇEKİMİYLE düşüp
+                masadaki yuvalarına oturur (sekerek yerleşir).
+              · Eşleşen iki kart havaya fırlar, parabolik uçar,
+                havada birbirine kavuşup patlar.
+              · Eşleşmeyen kartlar yerinde zıplar, sonra kapanır.
+   Görsel   : Bütün dokular Graphics ile çalışma anında üretilir —
+              uygulama çevrimdışı kabukta (APK / iOS) çalışacağı için
+              dışarıdan resim çekilmiyor.
+   ===================================================================== */
+
+const EN = 480, BOY = 800;
+
+const RENK = {
+  masaUst : 0x201839,
+  masaAlt : 0x36275c,
+  dogru   : 0x34c47b,
+  yanlis  : 0xf07575,
+  kartOn  : 0xfdfbff,
+  kartKnr : 0xd9d2ea,
+  kartArka: 0x5b4a9c,
+  metin   : '#2a2140',
+  vurgu   : 0xffd166
+};
+
+/* ---------------------------------------------------------------------
+   İÇERİK — uygulamadaki y10 oyununun birebir aynısı.
+   Başka bir memoryPairs oyununa geçmek için yalnızca bu blok değişir.
+   Her çift iki kart üretir: a (emojili sözcük) ve b (karşıtı).
+   ------------------------------------------------------------------- */
+/* ---------------- uygulama köprüsü ----------------
+   Adres  hafiza.html#oyun=y03  biçiminde; katalog verisi üst pencereden
+   okunuyor. Kazanınca completeGame() çağrılır; XP, altın, kutlama ve
+   sıradaki oyuna geçiş uygulamanın kendi akışında kalır.               */
+const KOPRU = (function(){
+  try{
+    const p = new URLSearchParams(location.hash.slice(1));
+    const id = p.get('oyun');
+    if (id && window.parent && window.parent !== window &&
+        typeof window.parent.getGame === 'function'){
+      const g = window.parent.getGame(id);
+      if (g && g.cfg) return {
+        oyun: g, cfg: g.cfg,
+        bitir(mesaj, puan){ try{ window.parent.completeGame(mesaj || '', puan); }catch(e){} },
+        /* Turun kendi metnini uygulamanın sesiyle okutur (Piper). */
+        oku(metin){ try{ if (window.parent.oku) window.parent.oku(metin); }catch(e){} },
+        /* Kaybetme ekranından: bu oyunu bırak, sıradakine geç. */
+        atla(){ try{ if (window.parent.sonrakiOyunaGec) window.parent.sonrakiOyunaGec(); }catch(e){} }
+      };
+    }
+  }catch(e){ /* çapraz kaynak engeli: tek başına oynanır */ }
+  return null;
+})();
+
+/* HTML varlıklarını çöz: katalogda "Pay &lt; payda" gibi yazımlar var,
+   çözülmezse ekranda "&lt;" olarak görünüyor ve öyle okunuyor. */
+function varlikCoz(m){
+  return String(m)
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'")
+    .replace(/&hellip;/gi, '…').replace(/&mdash;/gi, '—').replace(/&ndash;/gi, '–')
+    .replace(/&times;/gi, '×').replace(/&divide;/gi, '÷').replace(/&deg;/gi, '°')
+    .replace(/&rarr;/gi, '→').replace(/&larr;/gi, '←')
+    .replace(/&amp;/gi, '&');            /* en sona: çift çözmeyi önler */
+}
+
+function duzMetin(x){
+  return varlikCoz(String(x == null ? '' : x).replace(/<br\s*\/?>/gi,' ')
+    .replace(/<[^>]+>/g,'')).replace(/[“”]/g,'"').replace(/\s+/g,' ').trim();
+}
+
+const VARSAYILAN = {
+  instruction:'Kartları çevir, zıt anlamlıları eşleştir',
+  tip:'Zıt anlamlı sözcükler birbirinin karşıtı anlamı taşır.',
+  pairs:[
+    { a:'🦁 cesur', b:'korkak',  name:'cesur — korkak' },
+    { a:'💪 güçlü', b:'güçsüz',  name:'güçlü — güçsüz' },
+    { a:'🏆 zafer', b:'yenilgi', name:'zafer — yenilgi' },
+    { a:'➡️ ileri', b:'geri',    name:'ileri — geri' },
+    { a:'🕊️ barış', b:'savaş',   name:'barış — savaş' },
+    { a:'🤝 birlik', b:'ayrılık', name:'birlik — ayrılık' } ]
+};
+
+const CFG = KOPRU ? KOPRU.cfg : VARSAYILAN;
+
+/* Kart yüzü satır içi SVG olabilir (ör. simetri/şekil eşleştirme).
+   Metne çevirince kart boş kalıyordu; SVG'yi ayırıp Phaser çiziyor. */
+const cizimMi = (v) => window.SVGCIZ && SVGCIZ.svgMi(v);
+
+const CIFTLER = (CFG.pairs || []).map(p => ({
+  ad: duzMetin(p.name) || (duzMetin(p.a) + ' — ' + duzMetin(p.b)),
+  a:  duzMetin(p.a),
+  b:  duzMetin(p.b),
+  aCizim: cizimMi(p.a) ? p.a : null,
+  bCizim: cizimMi(p.b) ? p.b : null
+}));
+
+const OYUN_ADI = KOPRU ? duzMetin(KOPRU.oyun.title) : 'ZIT ANLAM AYNASI';
+const OYUN_EMO = KOPRU ? (KOPRU.oyun.emo || '🪞') : '🪞';
+const TALIMAT  = duzMetin(CFG.instruction) || 'Kartları çevir, eşleri bul';
+const IPUCU    = duzMetin(CFG.tip);
+const BASARI   = duzMetin(CFG.successMsg) || 'Bütün eşleri buldun!';
+
+/* Hafıza oyununda ilk açılışlar zorunlu olarak ıskalanır — bu yüzden
+   can sayısı diğer oyunlardan cömert tutuldu. */
+const CAN_SAYISI = 6;
+
+/* --- Izgara --------------------------------------------------------- */
+const SUTUN   = 4;
+const KART_EN = 100;
+const KART_BOY = 124;
+const IZGARA_UST = 236;
+const SATIR_ARA  = 138;
+
+/* =====================================================================
+   1) BOOT — dokuları üret
+   ===================================================================== */
+class BootScene extends Phaser.Scene {
+  constructor(){ super('Boot'); }
+
+  create(){
+    this.dokuKivilcim();
+    this.dokuToz();
+    this.dokuKartArka();
+    /* Uygulama içinde çocuk oyunu listeden zaten seçti; menüyü atla. */
+    this.scene.start(KOPRU ? 'Game' : 'Menu');
+  }
+
+  dokuKivilcim(){
+    const g = this.make.graphics({ add:false });
+    g.fillStyle(0xffffff, 1);
+    g.fillCircle(8, 8, 8);
+    g.generateTexture('kivilcim', 16, 16);
+    g.destroy();
+  }
+
+  dokuToz(){
+    const g = this.make.graphics({ add:false });
+    for (let r = 14; r > 0; r--){
+      g.fillStyle(0xffffff, 0.06);
+      g.fillCircle(14, 14, r);
+    }
+    g.generateTexture('toz', 28, 28);
+    g.destroy();
+  }
+
+  /* Kartın kapalı yüzü — ayna deseni */
+  dokuKartArka(){
+    const W = KART_EN, H = KART_BOY;
+    const g = this.make.graphics({ add:false });
+
+    g.fillStyle(RENK.kartArka, 1);
+    g.fillRoundedRect(0, 0, W, H, 14);
+    g.fillStyle(0x715ec0, 1);
+    g.fillRoundedRect(6, 6, W - 12, H - 12, 10);
+
+    /* ayna çerçevesi */
+    g.lineStyle(3, 0xbfaeff, 0.85);
+    g.strokeEllipse(W / 2, H / 2, 52, 76);
+    g.lineStyle(2, 0xe6dcff, 0.5);
+    g.strokeEllipse(W / 2, H / 2, 38, 60);
+
+    /* parlama */
+    g.fillStyle(0xffffff, 0.22);
+    g.beginPath();
+    g.moveTo(W / 2 - 16, H / 2 - 26);
+    g.lineTo(W / 2 - 4,  H / 2 - 30);
+    g.lineTo(W / 2 + 4,  H / 2 + 22);
+    g.lineTo(W / 2 - 8,  H / 2 + 26);
+    g.closePath(); g.fillPath();
+
+    g.generateTexture('kartArka', W, H);
+    g.destroy();
+  }
+}
+
+/* =====================================================================
+   Ortak yardımcılar
+   ===================================================================== */
+function masaCiz(sc){
+  const g = sc.add.graphics();
+  g.fillGradientStyle(RENK.masaUst, RENK.masaUst, RENK.masaAlt, RENK.masaAlt, 1);
+  g.fillRect(0, 0, EN, BOY);
+
+  /* parıldayan tozlar */
+  for (let i = 0; i < 30; i++){
+    const s = sc.add.circle(
+      Phaser.Math.Between(6, EN - 6),
+      Phaser.Math.Between(6, BOY - 6),
+      Phaser.Math.FloatBetween(1, 2.4),
+      0xffffff,
+      Phaser.Math.FloatBetween(0.15, 0.6)
+    );
+    sc.tweens.add({
+      targets:s, alpha:0.05,
+      duration:Phaser.Math.Between(1000, 2600),
+      yoyo:true, repeat:-1, delay:Phaser.Math.Between(0, 2000)
+    });
+  }
+  return g;
+}
+
+function dugmeYap(sc, x, y, metin, renk, geriCagri){
+  const c = sc.add.container(x, y);
+  const g = sc.add.graphics();
+  g.fillStyle(renk, 1);
+  g.fillRoundedRect(-140, -30, 280, 60, 30);
+  g.fillStyle(0xffffff, 0.16);
+  g.fillRoundedRect(-140, -30, 280, 24, { tl:30, tr:30, bl:0, br:0 });
+  const t = sc.add.text(0, 0, metin, {
+    fontFamily:'system-ui, sans-serif', fontSize:'25px',
+    fontStyle:'bold', color:'#ffffff'
+  }).setOrigin(0.5);
+  c.add([g, t]);
+  c.setSize(280, 60).setInteractive({ useHandCursor:true });
+  c.on('pointerover', () => sc.tweens.add({ targets:c, scale:1.05, duration:110 }));
+  c.on('pointerout',  () => sc.tweens.add({ targets:c, scale:1.00, duration:110 }));
+  c.on('pointerdown', () => sc.tweens.add({
+    targets:c, scale:0.93, duration:90, yoyo:true, onComplete:geriCagri
+  }));
+  return c;
+}
+
+/* =====================================================================
+   2) MENU
+   ===================================================================== */
+class MenuScene extends Phaser.Scene {
+  constructor(){ super('Menu'); }
+
+  create(){
+    masaCiz(this);
+
+    /* iki kart yan yana sallansın */
+    const k1 = this.add.image(EN / 2 - 58, 190, 'kartArka').setAngle(-9);
+    const k2 = this.add.image(EN / 2 + 58, 190, 'kartArka').setAngle(9);
+    this.tweens.add({ targets:k1, angle:-2, y:180, duration:1600, yoyo:true, repeat:-1, ease:'Sine.easeInOut' });
+    this.tweens.add({ targets:k2, angle:2,  y:200, duration:1600, yoyo:true, repeat:-1, ease:'Sine.easeInOut' });
+
+    const baslik = this.add.text(EN / 2, 330, OYUN_ADI, {
+      fontFamily:'system-ui, sans-serif', fontSize:'44px', fontStyle:'bold',
+      color:'#ffffff', align:'center', lineSpacing:5
+    }).setOrigin(0.5);
+    this.tweens.add({
+      targets:baslik, scale:1.04, duration:1400,
+      yoyo:true, repeat:-1, ease:'Sine.easeInOut'
+    });
+
+    this.add.text(EN / 2, 424, TALIMAT, {
+      fontFamily:'system-ui, sans-serif', fontSize:'22px',
+      color:'#ded4ff', align:'center'
+    }).setOrigin(0.5);
+
+    const kart = this.add.graphics();
+    kart.fillStyle(0x1a1330, 0.92);
+    kart.fillRoundedRect(32, 462, EN - 64, 70, 16);
+    kart.lineStyle(2, 0x5b4a9c, 1);
+    kart.strokeRoundedRect(32, 462, EN - 64, 70, 16);
+    this.add.text(EN / 2, 497, IPUCU, {
+      fontFamily:'system-ui, sans-serif', fontSize:'19px', fontStyle:'bold',
+      color:'#ffd166', align:'center', wordWrap:{ width:EN - 96 }, lineSpacing:4
+    }).setOrigin(0.5);
+
+    dugmeYap(this, EN / 2, 606, '▶  BAŞLA', RENK.dogru, () => this.scene.start('Game'));
+
+    this.add.text(EN / 2, 712, `${CIFTLER.length} çift  ·  ${CAN_SAYISI} can`, {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', color:'#b3a6dd'
+    }).setOrigin(0.5);
+  }
+}
+
+/* =====================================================================
+   3) GAME
+   ===================================================================== */
+class GameScene extends Phaser.Scene {
+  constructor(){ super('Game'); }
+
+  create(){
+    this.can      = CAN_SAYISI;
+    this.puan     = 0;
+    this.seri     = 0;
+    this.eslesen  = 0;
+    this.kilit    = true;          /* dağıtım bitene kadar kapalı */
+    this.acikKart = null;
+    this.bekleyen = 0;
+    this.mesgul   = false;
+
+    masaCiz(this);
+
+    this.kivilcimlar = this.add.particles(0, 0, 'kivilcim', {
+      speed:{ min:140, max:390 }, angle:{ min:0, max:360 },
+      scale:{ start:0.9, end:0 }, alpha:{ start:1, end:0 },
+      lifespan:650, gravityY:320, blendMode:'ADD', emitting:false
+    }).setDepth(90);
+
+    this.tozlar = this.add.particles(0, 0, 'toz', {
+      speed:{ min:40, max:150 }, angle:{ min:200, max:340 },
+      scale:{ start:1.1, end:2.3 }, alpha:{ start:0.5, end:0 },
+      lifespan:700, emitting:false
+    }).setDepth(80);
+
+    this.arayuzKur();
+    this.kartlariDagit();
+  }
+
+  /* ---------- kartları desteden dağıt ---------- */
+  kartlariDagit(){
+    /* her çift iki kart verir; hepsi karıştırılır */
+    const deste = [];
+    CIFTLER.forEach((c, i) => {
+      deste.push({ cift:i, metin:c.a, cizim:c.aCizim });
+      deste.push({ cift:i, metin:c.b, cizim:c.bCizim });
+    });
+    Phaser.Utils.Array.Shuffle(deste);
+
+    this.yuvalar = this.physics.add.staticGroup();
+    this.kartlar = this.physics.add.group();
+
+    const satirSayisi = Math.ceil(deste.length / SUTUN);
+    const bosluk = EN / SUTUN;
+
+    deste.forEach((v, i) => {
+      const sut = i % SUTUN;
+      const sat = Math.floor(i / SUTUN);
+      const hx = bosluk * (sut + 0.5);
+      const hy = IZGARA_UST + sat * SATIR_ARA;
+
+      /* Kartın altındaki görünmez yuva — kart buna çarpıp oturur.
+         NOT: Phaser'da collider(grup, TEK nesne) callback'e parametreleri
+         ters veriyor; bu yüzden yuvalar bir staticGroup içinde. */
+      this.yuvalar.add(
+        this.add.rectangle(hx, hy + KART_BOY / 2 + 7, KART_EN + 8, 14, 0, 0)
+      );
+
+      this.kartYap(v, hx, hy, i);
+    });
+
+    this.physics.add.collider(this.kartlar, this.yuvalar, this.yuvayaOturdu, null, this);
+
+    /* dağıtım bitince oyun açılır */
+    this.time.delayedCall(300 + deste.length * 90 + 700, () => {
+      this.kilit = false;
+      this.mesajGoster('Başla! Kartları çevir 🪞', '#2f5d8a');
+    });
+  }
+
+  kartYap(v, hx, hy, i){
+    const c = this.add.container(hx, -140 - i * 46).setDepth(20 + i);
+
+    /* kapalı yüz */
+    const arka = this.add.image(0, 0, 'kartArka');
+
+    /* açık yüz — başta gizli */
+    const on = this.add.graphics();
+    on.fillStyle(RENK.kartOn, 1);
+    on.fillRoundedRect(-KART_EN / 2, -KART_BOY / 2, KART_EN, KART_BOY, 14);
+    on.lineStyle(3, RENK.kartKnr, 1);
+    on.strokeRoundedRect(-KART_EN / 2, -KART_BOY / 2, KART_EN, KART_BOY, 14);
+    on.setVisible(false);
+
+    /* Container'da setOrigin yok; çizim ve yazı ayrı kuruluyor. */
+    let yazi;
+    if (v.cizim) {
+      yazi = SVGCIZ.ciz(this, v.cizim, 0, 0, KART_EN - 20).setVisible(false);
+    } else {
+      yazi = this.add.text(0, 0, v.metin, {
+        fontFamily:'system-ui, sans-serif', fontSize:'21px', fontStyle:'bold',
+        color: RENK.metin, align:'center',
+        wordWrap:{ width:KART_EN - 18 }, lineSpacing:3
+      }).setOrigin(0.5).setVisible(false);
+    }
+
+    c.add([arka, on, yazi]);
+    c.setSize(KART_EN, KART_BOY);
+
+    /* Arcade gövdesi — gruba ÖNCE ekle: Arcade Group add() sırasında
+       kendi varsayılanlarını gövdeye basıyor. Container gövdesi zaten
+       container orijininde merkezlenir; setOffset verilmez. */
+    this.kartlar.add(c);
+    c.body.setSize(KART_EN, KART_BOY);
+    c.body.setBounce(0.22, 0.22);
+    c.body.setDragX(90);
+    c.body.setAllowGravity(true);        /* desteden düşerken */
+
+    c.setData('cift', v.cift);
+    c.setData('metin', v.metin);
+    c.setData('acik', false);
+    c.setData('eslesti', false);
+    c.setData('oturdu', false);
+    c.setData('hedef', { x:hx, y:hy });
+    c.setData('parcalar', { arka, on, yazi });
+
+    /* Dokunma alanını Phaser'a bırakıyoruz: Container'a elle
+       Rectangle(-W/2,-H/2,…) verilince kaydırma bir kez daha uygulanıyor ve
+       alan sola-yukarı kayıyor — nesneyi tutmak için sol üstüne basmak
+       gerekiyordu. setSize + argümansız setInteractive() alanı ortalıyor.
+       Alan görselden bir miktar geniş: parmak payı. */
+    c.setSize(KART_EN + 20, KART_BOY + 20);
+    c.setInteractive();
+    c.on('pointerdown', () => this.kartaDokun(c));
+    return c;
+  }
+
+  /* Kart yuvasına çarptı: sekmeyi bitirip yerine kilitlensin */
+  yuvayaOturdu(kart, yuva){
+    if (kart.getData('oturdu')) return;
+    if (Math.abs(kart.body.velocity.y) > 40) return;   /* hâlâ sekiyor */
+
+    kart.setData('oturdu', true);
+    const h = kart.getData('hedef');
+    kart.body.setAllowGravity(false);
+    kart.body.setVelocity(0, 0);
+    this.tozlar.explode(5, kart.x, kart.y + KART_BOY / 2);
+
+    /* Konumu GÖVDE üzerinden kilitle. x/y'yi tween'lersek gövde bir
+       sonraki karede kartı eski yerine geri çekiyor — kartlar ızgaraya
+       oturmuyordu. body.reset() hem gövdeyi hem kartı taşır.
+       Yerleşme hissini scale tween'i veriyor (gövdeyi etkilemez). */
+    kart.body.reset(h.x, h.y);
+    kart.setAngle(Phaser.Math.Between(-3, 3));
+    this.tweens.add({
+      targets:kart, scaleX:1.06, scaleY:0.94,
+      duration:110, yoyo:true, ease:'Quad.easeOut'
+    });
+  }
+
+  /* ---------- kart çevirme ---------- */
+  kartaDokun(kart){
+    if (this.kilit || this.mesgul) return;
+    if (kart.getData('acik') || kart.getData('eslesti')) return;
+    if (kart.getData('aciliyor')) return;
+    if (!kart.getData('oturdu')) return;
+    /* Çevirme animasyonu 280 ms sürüyor; çocuk bu sırada üçüncü karta
+       dokunabiliyordu ve aynı anda üç kart açık kalıyordu. Açılmakta
+       olanları da sayarak en fazla ikiye izin veriyoruz. */
+    if (this.bekleyen >= 2) return;
+    this.bekleyen = (this.bekleyen || 0) + 1;
+    kart.setData('aciliyor', true);
+
+    this.kartiCevir(kart, true, () => {
+      kart.setData('aciliyor', false);
+      if (!this.acikKart){
+        this.acikKart = kart;
+        return;
+      }
+      /* ikinci kart açıldı — değerlendir */
+      const ilk = this.acikKart;
+      this.acikKart = null;
+      this.bekleyen = 0;
+      this.mesgul = true;
+
+      if (ilk.getData('cift') === kart.getData('cift')) this.dogru(ilk, kart);
+      else                                              this.yanlis(ilk, kart);
+    });
+  }
+
+  /* scaleX ile çevirme: yarıda içerik değişir */
+  kartiCevir(kart, ac, bitince){
+    const p = kart.getData('parcalar');
+    this.tweens.add({
+      targets:kart, scaleX:0, duration:130, ease:'Quad.easeIn',
+      onComplete:() => {
+        p.arka.setVisible(!ac);
+        p.on.setVisible(ac);
+        p.yazi.setVisible(ac);
+        kart.setData('acik', ac);
+        this.tweens.add({
+          targets:kart, scaleX:1, duration:150, ease:'Quad.easeOut',
+          onComplete:bitince
+        });
+      }
+    });
+  }
+
+  /* ---------- sonuçlar ---------- */
+  dogru(a, b){
+    this.seri++;
+    const kazanc = 100 + (this.seri - 1) * 25;
+    this.puan += kazanc;
+    this.eslesen++;
+
+    [a, b].forEach(k => {
+      k.setData('eslesti', true);
+      k.disableInteractive();
+    });
+
+    /* GERÇEK FİZİK: iki kart havaya fırlar, parabolik uçup
+       havada birbirine kavuşur */
+    const ortaX = (a.x + b.x) / 2;
+    [a, b].forEach(k => {
+      k.setDepth(70);
+      k.body.setAllowGravity(true);
+      k.body.setVelocityY(-420);
+      k.body.setVelocityX((ortaX - k.x) * 1.9);
+      this.tweens.add({
+        targets:k, angle:Phaser.Math.Between(-200, 200), duration:620
+      });
+    });
+
+    this.time.delayedCall(560, () => {
+      this.kivilcimlar.setParticleTint(RENK.dogru);
+      this.kivilcimlar.explode(30, ortaX, (a.y + b.y) / 2);
+      [a, b].forEach(k => { if (k.active) k.destroy(); });
+      this.mesgul = false;
+
+      if (this.eslesen >= CIFTLER.length){
+        this.kilit = true;
+        this.time.delayedCall(600, () => this.bitir(true));
+      }
+    });
+
+    this.puanYazi.setText('Puan ' + this.puan);
+    this.tweens.add({
+      targets:this.puanYazi, scale:1.55, duration:140, yoyo:true, ease:'Back.easeOut'
+    });
+
+    const ucan = this.add.text(ortaX, (a.y + b.y) / 2 - 20, '+' + kazanc, {
+      fontFamily:'system-ui, sans-serif', fontSize:'31px', fontStyle:'bold',
+      color:'#7ce0a3'
+    }).setOrigin(0.5).setDepth(95);
+    this.tweens.add({
+      targets:ucan, y:ucan.y - 70, alpha:0, scale:1.25,
+      duration:750, ease:'Cubic.easeOut', onComplete:() => ucan.destroy()
+    });
+
+    if (this.seri >= 2) this.seriGoster();
+    this.mesajGoster(CIFTLER[a.getData('cift')].ad + ' ✓', '#1f6d4a');
+    this.cameras.main.flash(140, 80, 210, 140);
+    this.arayuzuTazele();
+  }
+
+  yanlis(a, b){
+    this.seri = 0;
+    this.can--;
+    this.arayuzuTazele();
+
+    /* GERÇEK FİZİK: kartlar yerinde zıplayıp yuvasına geri düşer */
+    [a, b].forEach(k => {
+      k.setData('oturdu', false);
+      k.body.setAllowGravity(true);
+      k.body.setVelocityY(-210);
+      k.body.setVelocityX(Phaser.Math.Between(-40, 40));
+    });
+
+    this.tozlar.explode(10, (a.x + b.x) / 2, (a.y + b.y) / 2);
+    this.cameras.main.shake(200, 0.010);
+    this.cameras.main.flash(170, 220, 90, 90);
+
+    this.tweens.add({
+      targets:this.canYazi, angle:{ from:-12, to:12 },
+      duration:70, yoyo:true, repeat:3,
+      onComplete:() => this.canYazi.setAngle(0)
+    });
+
+    /* kısa süre açık kalsın ki oyuncu ezberleyebilsin */
+    this.time.delayedCall(850, () => {
+      let kalan = 2;
+      [a, b].forEach(k => {
+        if (!k.active){ kalan--; return; }
+        this.kartiCevir(k, false, () => { if (--kalan <= 0) this.mesgul = false; });
+      });
+      if (kalan <= 0) this.mesgul = false;
+    });
+
+    if (this.can <= 0){
+      this.kilit = true;
+      this.time.delayedCall(1400, () => this.bitir(false));
+    }
+  }
+
+  seriGoster(){
+    this.seriYazi.setText('🔥 ' + this.seri + ' SERİ!').setAlpha(1).setScale(0.6);
+    this.tweens.add({ targets:this.seriYazi, scale:1, duration:220, ease:'Back.easeOut' });
+    this.tweens.add({ targets:this.seriYazi, alpha:0, delay:900, duration:400 });
+  }
+
+  mesajGoster(metin, arka){
+    if (this.mesaj) this.mesaj.destroy();
+    this.mesaj = this.add.text(EN / 2, 186, metin, {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', fontStyle:'bold',
+      color:'#ffffff', backgroundColor:arka,
+      padding:{ x:14, y:8 }, align:'center', wordWrap:{ width:EN - 70 }
+    }).setOrigin(0.5).setDepth(96).setAlpha(0);
+    const t = this.mesaj;
+    this.tweens.add({ targets:t, alpha:1, duration:150 });
+    this.time.delayedCall(1400, () => {
+      if (!t.active) return;
+      this.tweens.add({
+        targets:t, alpha:0, duration:250,
+        onComplete:() => { if (this.mesaj === t) this.mesaj = null; t.destroy(); }
+      });
+    });
+  }
+
+  /* ---------- arayüz ---------- */
+  arayuzKur(){
+    /* Katalogda yönerge 120 karaktere çıkıyor; sabit yükseklikli şerit
+       yazıyı iki yandan kesiyordu. Şerit metnin gerçek boyuna göre. */
+    const yon = this.add.text(EN / 2, 22, OYUN_EMO + '  ' + TALIMAT, {
+      fontFamily:'system-ui, sans-serif',
+      fontSize: (TALIMAT.length > 92 ? '16px' : (TALIMAT.length > 54 ? '17px' : '20px')),
+      fontStyle:'bold', color:'#ffffff', align:'center',
+      wordWrap:{ width:EN - 52 }, lineSpacing:3
+    }).setOrigin(0.5, 0).setDepth(61);
+
+    const seritBoy = Math.max(104, yon.height + 62);
+    const serit = this.add.graphics().setDepth(60);
+    serit.fillStyle(0x120d24, 0.97);
+    serit.fillRoundedRect(10, 10, EN - 20, seritBoy, 18);
+    yon.setDepth(61);
+    const satirY = 10 + seritBoy - 22;
+    this.seritAlt = 10 + seritBoy;
+
+    this.puanYazi = this.add.text(30, satirY, 'Puan 0', {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', fontStyle:'bold',
+      color:'#ffd166'
+    }).setOrigin(0, 0.5).setDepth(61);
+
+    this.canYazi = this.add.text(EN - 30, satirY, '', { fontSize:'19px' })
+      .setOrigin(1, 0.5).setDepth(61);
+
+    this.ilerlemeYazi = this.add.text(EN / 2, satirY, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'19px', fontStyle:'bold',
+      color:'#b3a6dd'
+    }).setOrigin(0.5).setDepth(61);
+
+    this.seriYazi = this.add.text(EN / 2, this.seritAlt + 26, '', {
+      fontFamily:'system-ui, sans-serif', fontSize:'26px', fontStyle:'bold',
+      color:'#ffd166'
+    }).setOrigin(0.5).setDepth(62).setAlpha(0);
+
+    this.arayuzuTazele();
+  }
+
+  arayuzuTazele(){
+    this.canYazi.setText(
+      '❤️'.repeat(Math.max(0, this.can)) +
+      '🖤'.repeat(Math.max(0, CAN_SAYISI - this.can))
+    );
+    this.ilerlemeYazi.setText(`${this.eslesen} / ${CIFTLER.length} çift`);
+  }
+
+  bitir(kazandi){
+    /* Uygulama içindeyken kazanma ekranını uygulama gösteriyor. */
+    if (kazandi && KOPRU){ KOPRU.bitir(BASARI, this.puan); return; }
+    this.scene.start('GameOver', {
+      kazandi, puan:this.puan, can:this.can,
+      eslesen:this.eslesen, toplam:CIFTLER.length
+    });
+  }
+}
+
+/* =====================================================================
+   4) GAME OVER
+   ===================================================================== */
+class GameOverScene extends Phaser.Scene {
+  constructor(){ super('GameOver'); }
+
+  init(veri){ this.veri = veri; }
+
+  create(){
+    const { kazandi, puan, can, eslesen, toplam } = this.veri;
+    masaCiz(this);
+
+    const emo = this.add.text(EN / 2, 190, kazandi ? '🪞' : '💪', { fontSize:'97px' })
+      .setOrigin(0.5).setScale(0);
+    this.tweens.add({ targets:emo, scale:1, duration:520, ease:'Back.easeOut' });
+
+    this.add.text(EN / 2, 300, kazandi ? 'AYNA PARLADI!' : 'TEKRAR DENE', {
+      fontFamily:'system-ui, sans-serif', fontSize:'35px', fontStyle:'bold',
+      color: kazandi ? '#7ce0a3' : '#ffd166', align:'center'
+    }).setOrigin(0.5);
+
+    this.add.text(EN / 2, 360,
+      kazandi ? BASARI : `${eslesen} / ${toplam} çift buldun — bir daha deneyelim mi?`, {
+      fontFamily:'system-ui, sans-serif', fontSize:'21px', color:'#ded4ff',
+      align:'center', wordWrap:{ width:EN - 70 }, lineSpacing:5
+    }).setOrigin(0.5);
+
+    const puanYazi = this.add.text(EN / 2, 456, 'Puan 0', {
+      fontFamily:'system-ui, sans-serif', fontSize:'42px', fontStyle:'bold',
+      color:'#ffd166'
+    }).setOrigin(0.5);
+    const sayac = { v:0 };
+    this.tweens.add({
+      targets:sayac, v:puan, duration:900, ease:'Cubic.easeOut',
+      onUpdate:() => puanYazi.setText('Puan ' + Math.round(sayac.v))
+    });
+
+    this.add.text(EN / 2, 506,
+      'Kalan can: ' + (can > 0 ? '❤️'.repeat(can) : '—'), {
+      fontFamily:'system-ui, sans-serif', fontSize:'20px', color:'#b3a6dd'
+    }).setOrigin(0.5);
+
+    if (kazandi){
+      const konfeti = this.add.particles(EN / 2, -20, 'kivilcim', {
+        speed:{ min:90, max:260 }, angle:{ min:60, max:120 },
+        scale:{ start:0.8, end:0 }, alpha:{ start:1, end:0 },
+        lifespan:2000, gravityY:180, quantity:2, frequency:70,
+        tint:[0xffd166, 0x7ce0a3, 0xbfaeff, 0xf07575]
+      }).setDepth(5);
+      this.time.delayedCall(2600, () => konfeti.stop());
+    }
+
+    dugmeYap(this, EN / 2, 606, '↻  TEKRAR OYNA', RENK.dogru, () => this.scene.start('Game'));
+
+    /* Uygulama içinde: bu oyunda takılan çocuk sıradakine geçebilsin. */
+
+    if (KOPRU) dugmeYap(this, EN / 2, 680, '⏭  SIRADAKİ OYUN', 0x4a679e, () => KOPRU.atla());
+    if (!KOPRU) dugmeYap(this, EN / 2, 684, '☰  MENÜ',        0x5b4a9c, () => this.scene.start('Menu'));
+  }
+}
+
+/* =====================================================================
+   OYUNU BAŞLAT
+   ===================================================================== */
+/* =====================================================================
+   NETLİK — cihazın piksel yoğunluğunda çizim
+   ---------------------------------------------------------------------
+   Oyun 480x800 mantıksal tuvalde çiziliyordu; telefon bunu 1080 piksele
+   büyütünce yazılar ve kenarlar bulanıklaşıyordu. Çözüm: tuvali cihazın
+   gerçek piksel sayısında açmak, dünyayı ise kamerayı NETLIK katına
+   yakınlaştırarak yine 480x800 koordinatta tutmak. Böylece Graphics ile
+   çizilen her şey (kartlar, şeritler, kutular) vektör keskinliğinde,
+   yazılar da NETLIK çözünürlüğünde üretiliyor; oyun kodunun tek satırı
+   değişmiyor.
+   ===================================================================== */
+const NETLIK = Math.min(3, Math.max(1, Math.round((window.devicePixelRatio || 1) * 2) / 2));
+
+/* Phaser yazıyı kendi ara tuvaline çiziyor; çözünürlük verilmezse 1x
+   üretilip yakınlaştırmada bulanıklaşır. Bütün yazılara varsayılan
+   olarak NETLIK veriyoruz. */
+(function(){
+  const TS = Phaser.GameObjects.TextStyle.prototype;
+  const eskiSetStyle = TS.setStyle;
+  TS.setStyle = function(style, updateText, setDefaults){
+    if (style && style.resolution === undefined) style.resolution = NETLIK;
+    return eskiSetStyle.call(this, style, updateText, setDefaults);
+  };
+})();
+
+/* Tuval NETLIK katına büyüdüğü için Phaser imleç konumunu da o ölçekte
+   veriyor (0–960). Oyun koordinatına (0–480) çeviren yardımcı: sürükleme
+   olayları zaten dünya koordinatı verdiği için yalnız pointer olaylarında
+   kullanılıyor. */
+function imlec(p){ return { x: p.x / NETLIK, y: p.y / NETLIK }; }
+
+/* Her sahne başlarken kamerayı NETLIK katına yakınlaştırıp fizik
+   dünyasını mantıksal ölçüde tutuyoruz: tuval büyüdü, dünya büyümedi.
+   Sahne örnekleri oyun kurulumundan sonra eşzamansız oluştuğu için
+   kanca Systems.start üzerine takılıyor — yeniden başlatmalarda da
+   kendiliğinden çalışıyor. */
+(function(){
+  const SS = Phaser.Scenes.Systems.prototype;
+  const eskiStart = SS.start;
+  SS.start = function(veri){
+    const sonuc = eskiStart.call(this, veri);
+    const sc = this.scene;
+    try{
+      if (sc.cameras && sc.cameras.main){
+        sc.cameras.main.setZoom(NETLIK);
+        sc.cameras.main.centerOn(EN / 2, BOY / 2);
+      }
+      if (sc.physics && sc.physics.world) sc.physics.world.setBounds(0, 0, EN, BOY);
+    }catch(e){ /* netlik ayarı oyunu engellemesin */ }
+    return sonuc;
+  };
+})();
+
+window.OYUN = new Phaser.Game({
+  type: Phaser.AUTO,
+  parent: 'oyun',
+  width: EN * NETLIK,
+  height: BOY * NETLIK,
+  backgroundColor: '#161029',
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 900 } }
+  },
+  scene: [BootScene, MenuScene, GameScene, GameOverScene]
+});
+
+</script>
+</body>
+</html>
