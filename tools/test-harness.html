@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="tr">
+<meta charset="utf-8">
+<title>Macera Akademi Test Koşusu</title>
+<style>
+  body{font:15px/1.45 system-ui,sans-serif;margin:24px;background:#101827;color:#eaf2ff}
+  #status{padding:12px 16px;border-radius:10px;background:#1d2b43;margin-bottom:16px}
+  #app{position:fixed;left:-10000px;top:0;width:480px;height:800px;border:0}
+  pre{white-space:pre-wrap;word-break:break-word;background:#0a1020;padding:16px;border-radius:10px}
+</style>
+<div id="status">Hazırlanıyor…</div>
+<pre id="result"></pre>
+<iframe id="app" src="/app/src/main/assets/macera-akademi.html"></iframe>
+<script>
+(function(){
+  'use strict';
+  const durum = document.getElementById('status');
+  const cikti = document.getElementById('result');
+  const cerceve = document.getElementById('app');
+  const q = new URLSearchParams(location.search);
+  const idler = (q.get('ids') || '').split(',').map(x => x.trim()).filter(Boolean);
+  const sinif = q.get('grade') ? Number(q.get('grade')) : null;
+  const dosya = q.get('file') || ('harness-' + Date.now() + '.json');
+  const anlam = q.get('anlam') === '1';
+
+  function yaz(v){ cikti.textContent = typeof v === 'string' ? v : JSON.stringify(v, null, 2); }
+  function bekle(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+  cerceve.addEventListener('load', async () => {
+    try{
+      durum.textContent = 'Test araçları yükleniyor…';
+      const w = cerceve.contentWindow;
+      await bekle(300);
+      const kod = await (await fetch('/tools/macera_test.js?v=' + Date.now(), {cache:'no-store'})).text();
+      w.eval(kod);
+      for (let i=0; i<200 && (!w.MACERA_TEST || w.MACERA_TEST.durum().hal === 'yükleniyor'); i++) await bekle(50);
+      const secenekler = { anlam, dosya };
+      if (idler.length) secenekler.idler = idler;
+      if (sinif) secenekler.sinif = sinif;
+      durum.textContent = (idler.length ? idler.length + ' oyun' : sinif + '. sınıf') + ' oynanıyor…';
+      await w.MACERA_TEST.baslat(secenekler);
+      const rapor = await w.MACERA_TEST.bekle();
+      durum.textContent = 'BİTTİ · ' + w.MACERA_TEST.ozet(rapor).replace(/\n/g, ' · ');
+      yaz(rapor);
+      document.title = 'BİTTİ · Macera Test';
+    }catch(e){
+      durum.textContent = 'HATA';
+      yaz(String(e && e.stack || e));
+      document.title = 'HATA · Macera Test';
+    }
+  });
+})();
+</script>
+</html>

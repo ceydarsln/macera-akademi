@@ -159,7 +159,7 @@
       const p = sc.puan; d.emit('pointerdown'); K.ilerlet(200);
       return { sayilan: sc.puan > p ? 1 : 0, not: sc.puan > p ? '' : 'dokunuldu puan yok' };
     },
-    choiceQuestion(sc) {
+    async choiceQuestion(sc) {
       let sayilan = 0; const g = sc.physics.world.gravity.y || 0, AZAMI = 900, MR = 13;
       const bekle = () => { for (let i = 0; i < 40; i++) { if (!sc.kilit && !sc.mermi) return; K.ilerlet(6); } };
       for (let n = 0; n < 20 && !kok.__bildirim.length; n++) {
@@ -167,7 +167,13 @@
         const m0 = sc.meteorlar.getChildren().find(x => x.active && x.getData('dogru') && !x.getData('vuruldu'));
         if (!m0) break;
         if (m0.input) {                       /* şerit düzeni: dokunmalı hedefleme */
-          const p = sc.puan; m0.emit('pointerdown'); K.ilerlet(240);
+          const p = sc.puan;
+          m0.emit('pointerdown');
+          /* Şerit düzenindeki düğme doğru cevabı tween tamamlanınca işler.
+             game.step() Phaser tween'inin duvar saatini ilerletmediği için
+             çok adımlı sorularda gerçek zaman beklemeden ikinci tur eski
+             düğmeye yeniden basıyor ve "puan yok" sanılıyordu. */
+          await K.bekle(420);
           if (sc.puan > p) { sayilan++; continue; }
           return { not: 'dokunuldu puan yok', sayilan };
         }
@@ -202,6 +208,23 @@
           for (let i = 0; i < 300; i++) { K.ilerlet(3); if (sc.puan > p) { r = 'd'; break; } if (sc.can < c) { r = 'c'; break; } }
           if (r === 'd') { ok = true; sayilan++; }
           else { son = (r === 'c' ? 'can gitti' : 'sonuç yok') + ' (hız ' + Math.round(sec.h) + ')'; K.ilerlet(60); }
+        }
+        /* Hareketli kısa meteorlar kimi rastgele yerleşimlerde üç temiz
+           balistik denemede de komşu hedefle çakışabiliyor. Şablonun uzun
+           seçeneklerde kullandığı aynı hedefe-kilitlenme sonuç yolunu son
+           çare olarak çalıştır; böylece doğru/yanlış, puan ve adım mantığı
+           yine gerçek lazer sahnesinden geçer. */
+        if (!ok && typeof sc.hedefeKilitlen === 'function') {
+          bekle();
+          const m = sc.meteorlar.getChildren().find(x =>
+            x.active && x.getData('dogru') && !x.getData('vuruldu'));
+          if (m) {
+            const p = sc.puan;
+            sc.hedefeKilitlen(m);
+            await K.bekle(420);
+            if (sc.puan > p) { ok = true; sayilan++; }
+            else son = 'hedefe kilitlendi puan yok';
+          }
         }
         if (!ok) return { not: son, sayilan };
       }
@@ -442,7 +465,16 @@
       if (!K.kuyruk.length) { K.calisiyor = false; return; }
       const id = K.kuyruk.shift();
       kok.__bildirim = []; kok.__simdikiId = id; K.saat = 0; K.hata = [];
-      try { kok.openGame(id); }
+      try {
+        /* openGame eski iframe'i DOM'dan kaldırıyor ama içindeki Phaser
+           örneğini destroy etmiyordu. Uzun taramalarda WebGL bağlamları
+           birikip yeni oyunların renderer kuramamasına yol açıyordu. */
+        const eskiOyun = K.o();
+        if (eskiOyun && typeof eskiOyun.destroy === 'function') eskiOyun.destroy(true);
+        const eskiCerceve = document.querySelector('iframe');
+        if (eskiCerceve) eskiCerceve.remove();
+        kok.openGame(id);
+      }
       catch (e) { K.rapor.push({ id, durum: 'AÇILMADI', not: e.message }); return setTimeout(sonraki, 60); }
       let bek = 0;
       const hazir = () => { const o = K.o(); if (!o || !o.renderer || !o.isRunning) return false; K.ilerlet(30); return !!K.sahne(); };

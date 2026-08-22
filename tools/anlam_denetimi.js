@@ -99,11 +99,16 @@
   /* ---- KURAL 3: karşılaştırılacak görsel yok -----------------------
      Yönerge bir ÖLÇÜTE atıfta bulunuyor ("izde 4 çizgi var", "soldaki
      şekil", "yukarıdaki örüntü") ama o ölçüt ekranda çizilmiyor. */
-  const OLCUT_KALIP = /(izde|izdeki|soldaki|sağdaki|yukarıdaki|aşağıdaki|ekrandaki|resimdeki|şekildeki|örnekteki|kutudaki|tabaktaki)\s/i;
+  /* Sözcük sınırı önemli: "elimizdeki" içindeki "izdeki" ölçüt atfı
+     değildir. Önceki kalıp v28 ve p36'yı bu yüzden yanlış işaretliyordu. */
+  const OLCUT_KALIP = /(?:^|\s)(izde|izdeki|soldaki|sağdaki|yukarıdaki|aşağıdaki|ekrandaki|resimdeki|şekildeki|örnekteki|kutudaki|tabaktaki)\s/i;
   function k3_olcutGorseliYok(g) {
     const c = g.cfg || {};
     const yon = dz(c.instruction);
     if (!OLCUT_KALIP.test(yon)) return null;
+    /* Bu mekanikler ölçütü katalog alanı olarak değil, şablonun kendi
+       sahnesinde üretir (ör. clockSet dijital hedef ekranı). */
+    if (['clockSet'].indexOf(g.type) >= 0) return null;
     /* ölçüt görseli sayılabilecek alanlar */
     const olcutAlan = c.reference || c.model || c.target || c.pattern || c.actualDisplay || c.prompt;
     if (olcutAlan) return null;
@@ -160,7 +165,11 @@
      Elle incelenip uygun bulunanlar burada gerekçesiyle kayıtlı; tekrar
      rapor edilmiyorlar. */
   const KABUL = {
-    'v01|cevap-etikette': 'görev, 45 sayısının farklı gösterimlerini (kırk beş, 40+5, 4 onluk 5 birlik) tanımak — sayının yazılı olması görevin kendisi'
+    'v01|cevap-etikette': 'görev, 45 sayısının farklı gösterimlerini (kırk beş, 40+5, 4 onluk 5 birlik) tanımak — sayının yazılı olması görevin kendisi',
+    'm06|cevap-etikette': 'özel uzamsal Phaser sahnesi anahtarları gerçekten döndürerek çizer; katalog parantezleri sahnede gösterilmez',
+    'm07|cevap-etikette': 'özel uzamsal Phaser sahnesi iz ve ayakkabı taban çizgilerini çizer; katalog parantezleri sahnede gösterilmez',
+    'm16|cevap-etikette': 'özel yarış sahnesi hayvanları konumlarıyla gösterir; sıra etiketi sahnede cevap olarak yazılmaz',
+    'm19|cevap-etikette': 'özel yol sahnesi durakları konumlarıyla gösterir; durak sıra etiketi sahnede cevap olarak yazılmaz'
   };
 
   const KURALLAR = [

@@ -19,7 +19,7 @@
 (async function (kok) {
   'use strict';
 
-  const SURUM = '1.0.0';
+  const SURUM = '1.1.0';
   if (kok.MACERA_TEST && kok.MACERA_TEST.surum === SURUM) {
     await kok.MACERA_TEST.hazirla();
     return kok.MACERA_TEST;
@@ -46,8 +46,26 @@
     moneyBuild: 'oynaValueBuild',
     placeValueLoad: 'oynaValueBuild',
     drawSegments: 'oynaDrawSegments',
-    solidScan: 'oynaSolidScan'
+    solidScan: 'oynaSolidScan',
+    numberTrace: 'oynaRakam',
+    numberWrite: 'oynaRakam',
+    tallyChart: 'oynaCetele',
+    surveyChart: 'oynaCetele',
+    holdFill: 'oynaHoldFill',
+    mirrorGrid: 'oynaSimetri',
+    foldMirror: 'oynaSimetri',
+    tiltBalance: 'oynaTerazi',
+    balanceScale: 'oynaTerazi',
+    patternFill: 'oynaOruntu',
+    countToTarget: 'oynaOruntu',
+    groupMultiply: 'oynaPaketleme',
+    shareDivide: 'oynaPaketleme',
+    typeWord: 'oynaTypeWord'
   };
+
+  /* v40 grafiği katalogdaki HTML çizimini kullandığı için bilerek DOM'da
+     kalıyor. Phaser şartına takılmadan kendi oyuncusuna yönlendir. */
+  const DOM_OYUNCULAR = { v40: 'oynaDomChoiceQuestion' };
 
   const GENEL_TIPLER = new Set([
     'beltSort', 'dragMatch', 'tapSelect', 'choiceQuestion',
@@ -131,6 +149,7 @@
   }
 
   function motor(g) {
+    if (DOM_OYUNCULAR[g.id]) return { ad: 'sinama', oyuncu: DOM_OYUNCULAR[g.id] };
     let phaser = false;
     try { phaser = !!kok.phaserOyunuMu(g); } catch (e) {}
     if (!phaser) return { ad: 'yok', neden: 'DOM oyunu için otomatik oyuncu yok' };
@@ -196,7 +215,8 @@
       durum.aktifOyun = g.id;
       let ham;
       try {
-        ham = await kok.SINAMA[OZEL_OYUNCULAR[g.type]](g.id);
+        const oyuncu = DOM_OYUNCULAR[g.id] || OZEL_OYUNCULAR[g.type];
+        ham = await kok.SINAMA[oyuncu](g.id);
       } catch (e) {
         ham = { id: g.id, sonuc: 'ÇÖKTÜ', hata: [String(e && e.stack || e)] };
       }

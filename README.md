@@ -8,7 +8,7 @@ Macera Akademi, 1–4. sınıf düzeyleri için 658 müfredat oyunu içeren bir 
 - Toplam oyun: 658
 - Phaser motorunda çalışan: 657
 - DOM motorunda çalışan: 1 (`v40`)
-- Otomatik oynanabilen mekanik kapsamı: 578 / 658
+- Otomatik oynanabilen mekanik kapsamı: 658 / 658
 - Android minimum sürüm: API 23
 - Ses sırası: hazır Chatterbox kaydı → Piper → sistem TTS
 
@@ -64,20 +64,27 @@ await MACERA_TEST.bekle()
 MACERA_TEST.ozet()
 ```
 
-`macera_test.js`, genel mekanikler için `kosum.js`, on beş özel mekanik için `ucuncu_sinama.js` ve içerik denetimi için `anlam_denetimi.js` araçlarını tek API altında yönlendirir. Raporlar varsayılan olarak `test-results/macera-test-*.json` altında saklanır. Otomatik oyuncusu olmayan oyunlar sessizce atlanmaz; raporda `DESTEKLENMİYOR` olarak görünür.
+`macera_test.js`, genel mekanikler için `kosum.js`, özel Phaser ve DOM mekanikleri için `ucuncu_sinama.js` ve içerik denetimi için `anlam_denetimi.js` araçlarını tek API altında yönlendirir. Raporlar varsayılan olarak `test-results/macera-test-*.json` altında saklanır. Otomatik oyuncusu olmayan oyunlar sessizce atlanmaz; raporda `DESTEKLENMİYOR` olarak görünür.
+
+Tarayıcı konsolu açmadan seçili oyunları veya bir sınıfı çalıştırmak için yerel test sunucusunda `tools/test-harness.html` kullanılabilir:
+
+```text
+http://127.0.0.1:8871/tools/test-harness.html?grade=2&anlam=1
+http://127.0.0.1:8871/tools/test-harness.html?ids=m06,u03,v40&anlam=1
+```
 
 ## Son doğrulama — 22 Ağustos 2026
 
 - `fractionCut`, `clockSet`, `moneyBuild`, `placeValueLoad`, `drawSegments` ve `solidScan` kullanan 16 oyun canlı Phaser köprüsünde baştan sona oynandı: **16 / 16 TAMAM**.
-- 658 oyunluk katalog dört sınıf grubunda tarandı. Otomatik oyuncusu bulunan 578 mekanik sonuç, tam tarama ve sorunlu kayıtların sakin tek-oturum yeniden koşuları birlikte değerlendirildiğinde tamamlandı; otomatik oyuncusu olmayan 80 kayıt açıkça `DESTEKLENMİYOR` olarak raporlandı.
+- Önceden desteklenmeyen 80 oyun için 14 Phaser mekanik ailesine ve `v40` DOM grafiğine otomatik oyuncular eklendi; bu grup baştan sona **80 / 80 TAMAM** sonuç verdi.
 - Paylaşılan `orderSequence` yolu son sürümde yeniden tarandı: toplu turdaki 59 oyun ve özel `m03` yeniden koşusu birlikte **60 / 60 TAMAM**.
+- Dört sınıfın 658 oyunluk mekanik ve anlam regresyonu tamamlandı. Uzun oturum raporları ile kaynak sınırına takılan kayıtların küçük-grup yeniden koşuları birlikte **658 / 658 TAMAM · 0 desteklenmeyen · 0 anlam bulgusu** verdi.
+- Test koşucusu her oyun geçişinde eski Phaser/WebGL örneğini kapatacak şekilde düzeltildi; yüzlerce oyunluk taramalarda renderer bağlamı birikmiyor.
 - Android `assembleDebug` derlemesi başarıyla tamamlandı.
-- Anlam denetiminde 20 içerik uyarısı kaldı; bunlar mekanik çökme değil, içerik derinliği/görsel ölçüt inceleme kuyruğudur.
+- Anlam denetimindeki 20 kayıt tek tek incelendi: 12 tek-soruluk Türkçe oyunu üçer soruya çıkarıldı, görsel sahnelerden kaynaklanan yanlış pozitif kurallar düzeltildi ve yeniden koşuda **20 / 20 TAMAM · 0 anlam bulgusu** alındı.
 
 ## Bilinen açıklar
 
-- 80 katalog oyunu için henüz otomatik oyuncu yoktur; birleşik raporda `DESTEKLENMİYOR` görünürler.
-- Anlam denetiminin işaretlediği 20 içerik kaydı insan incelemesi beklemektedir.
 - `v40` HTML tabanlı özel grafiği nedeniyle bilinçli olarak DOM motorundadır.
 - Chatterbox kayıt üretimi tamamlanmadan Piper kaldırılmamalıdır.
 - İmzalı AAB, gizlilik politikası ve Play Store varlıkları henüz hazırlanmamıştır.

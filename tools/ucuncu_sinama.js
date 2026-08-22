@@ -35,7 +35,17 @@ function cerceve(){ return document.querySelector('iframe.phaser-cerceve'); }
 async function ac(id){
   KAYIT.bitti = null; KAYIT.mesaj = null; KAYIT.puan = null; KAYIT.hatalar = [];
   const eskiCerceve = cerceve();
-  if (eskiCerceve) eskiCerceve.remove();
+  if (eskiCerceve){
+    /* Yalnız iframe'i kaldırmak Phaser/WebGL bağlamını serbest bırakmıyor.
+       Yüzlerce oyunluk koşuda bağlam sınırı dolunca yeni oyun OYUN
+       nesnesini kuramıyordu; önce motoru bilinçli olarak kapat. */
+    try{
+      const eskiOyun = eskiCerceve.contentWindow &&
+        (eskiCerceve.contentWindow.OYUN || eskiCerceve.contentWindow.game);
+      if (eskiOyun && typeof eskiOyun.destroy === 'function') eskiOyun.destroy(true);
+    }catch(e){}
+    eskiCerceve.remove();
+  }
   openGame(id);
   let f = null;
   for (let i=0;i<60;i++){ f = cerceve(); if (f && f.contentWindow) break; await bekle(50); }
@@ -930,6 +940,230 @@ S.oynaSolidScan = async function(id){
   const r = rapor(id, sc, { taranan, not });
   if (!r.bitti && not) r.sonuc = not;
   return r;
+};
+
+/* ---------------------------------------------------------------------
+   İlk katalogdan beri Phaser karşılığı bulunan, ancak birleşik koşucuda
+   oyuncusu olmayan mekanikler. Oyuncular doğru hamleleri şablonun kendi
+   işlevleri üzerinden yapar; kilitleri ve gecikmeleri Phaser saatiyle
+   ilerletir.
+   ------------------------------------------------------------------- */
+function nesneMetni(o){
+  let s = o && typeof o.text === 'string' ? o.text : '';
+  (o && o.list || []).forEach(x => { s += ' ' + nesneMetni(x); });
+  return s.replace(/\s+/g, ' ').trim();
+}
+
+function dugmeBas(kokNesne, etiket){
+  const hedef = String(etiket || '').replace(/\s+/g, ' ').trim();
+  const kokler = kokNesne && kokNesne.children && kokNesne.children.list
+    ? kokNesne.children.list : (kokNesne && kokNesne.list || []);
+  let bulunan = null;
+  function ara(o){
+    if (!o || bulunan) return;
+    if (o.input && nesneMetni(o) === hedef){ bulunan = o; return; }
+    (o.list || []).forEach(ara);
+  }
+  kokler.forEach(ara);
+  if (!bulunan) return false;
+  bulunan.emit('pointerdown');
+  return true;
+}
+
+S.oynaRakam = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let iz = 0, secim = 0, not = '';
+  for (let d = 0; d < 1800 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    const t = sc.aktifTur;
+    if (sc.secimKap && t && t.sec){
+      const dogru = t.sec.secenekler.find(x => x.dogru);
+      if (dogru && dugmeBas(sc.secimKap, dogru.etiket)){ secim++; S.ilerlet(w, 12, 20); continue; }
+    }
+    if (sc.kilit){ S.ilerlet(w, 12, 20); continue; }
+    const yol = t && t.izler && t.izler[sc.izSira];
+    if (!yol){ S.ilerlet(w, 12, 20); continue; }
+    sc.iziBitir(yol.noktalar.map(n => sc.nokta(n))); iz++;
+    S.ilerlet(w, 12, 20);
+  }
+  const r = rapor(id, sc, { iz, secim, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaCetele = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  const cevaplar = w.eval('CEVAPLAR'), sutunlar = w.eval('SUTUNLAR');
+  const sonuc = w.eval('SONUC');
+  let islenen = 0, karar = 0, not = '';
+  for (let d = 0; d < 1800 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 20); continue; }
+    if (sc.asama === 'cetele'){
+      const c = cevaplar[sc.sira];
+      if (!c){ S.ilerlet(w, 12, 20); continue; }
+      const i = sutunlar.findIndex(x => x.id === c.sutun);
+      if (i < 0){ not = 'cevabın sütunu bulunamadı'; break; }
+      sc.sutunaIsle(i); islenen++;
+    } else if (sc.asama === 'karar' && sonuc){
+      const dogru = sonuc.secenekler.find(x => x.dogru);
+      if (!dogru){ not = 'doğru karar seçeneği yok'; break; }
+      sc.kararVer(dogru); karar++;
+    }
+    S.ilerlet(w, 16, 20);
+  }
+  const r = rapor(id, sc, { islenen, karar, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaHoldFill = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let olcum = 0, not = '';
+  for (let d = 0; d < 1200 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 20); continue; }
+    const t = w.eval('TURLAR[' + sc.tur + ']');
+    if (!t){ S.ilerlet(w, 12, 20); continue; }
+    sc.olcum = t.hedef; sc.olc(); olcum++;
+    S.ilerlet(w, 16, 20);
+  }
+  const r = rapor(id, sc, { olcum, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaSimetri = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let hucre = 0, katlama = 0, not = '';
+  for (let d = 0; d < 1800 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 20); continue; }
+    const t = sc.aktifTur;
+    if (!t){ not = 'aktif tur yok'; break; }
+    if (t.tip === 'izgara'){
+      const h = sc.kalan && sc.kalan[0];
+      if (!h){ S.ilerlet(w, 12, 20); continue; }
+      sc.secilenRenk = h.ri; sc.kareyeDokun(t, h.c, h.r); hucre++;
+    } else {
+      const dogru = t.secenekler.find(x => x.dogru);
+      if (!dogru){ not = 'doğru katlama seçeneği yok'; break; }
+      sc.katlamaSec(t, dogru); katlama++;
+    }
+    S.ilerlet(w, 14, 20);
+  }
+  const r = rapor(id, sc, { hucre, katlama, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+function kalanCozulur(kalan, bloklar, derinlik){
+  if (kalan === 0) return true;
+  if (kalan < 0 || derinlik > 30) return false;
+  return bloklar.some(b => b.deger <= kalan && kalanCozulur(kalan - b.deger, bloklar, derinlik + 1));
+}
+
+S.oynaTerazi = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let blok = 0, soru = 0, not = '';
+  for (let d = 0; d < 1800 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    const t = sc.aktifTur;
+    if (sc.soruKap && t && t.soru){
+      const dogru = t.soru.secenekler.find(x => x.dogru);
+      if (dogru && dugmeBas(sc.soruKap, dogru.etiket)){ soru++; S.ilerlet(w, 12, 20); continue; }
+    }
+    if (sc.kilit){ S.ilerlet(w, 12, 20); continue; }
+    const kalan = t.solDeger - sc.sagDeger;
+    const adaylar = (sc.blokNesne || []).filter(b => b.visible && b.getData('deger') <= kalan);
+    const degerler = adaylar.map(b => ({ deger:b.getData('deger') }));
+    const b = adaylar.find(x => kalanCozulur(kalan - x.getData('deger'), degerler, 0));
+    if (!b){ not = 'dengeyi kuracak blok bulunamadı: kalan ' + kalan; break; }
+    sc.kefeyeKoy(b); blok++;
+    S.ilerlet(w, 16, 20);
+  }
+  const r = rapor(id, sc, { blok, soru, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaOruntu = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let hamle = 0, not = '';
+  for (let d = 0; d < 1200 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit){ S.ilerlet(w, 12, 20); continue; }
+    const t = sc.aktifTur;
+    if (t.tip === 'oruntu') sc.oruntuSec(t, t.dogru);
+    else sc.sayiDegistir(t, t.yon);
+    hamle++; S.ilerlet(w, 14, 20);
+  }
+  const r = rapor(id, sc, { hamle, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaPaketleme = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let eklenen = 0, saglama = 0, not = '';
+  for (let d = 0; d < 1800 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    const t = sc.aktifTur;
+    if (t && t.saglama && sc.saglamaBitti && dugmeBas(sc, t.saglamaEtiketi)){
+      saglama++; S.ilerlet(w, 14, 20); continue;
+    }
+    if (sc.kilit){ S.ilerlet(w, 12, 20); continue; }
+    let i = -1;
+    if (t.tip === 'carpma') i = sc.dolu.findIndex(n => n < sc.hedefBirim);
+    else {
+      const enAz = Math.min.apply(null, sc.dolu);
+      i = sc.dolu.indexOf(enAz);
+    }
+    if (i < 0){ S.ilerlet(w, 12, 20); continue; }
+    sc.kutuyaKoy(t, i); eklenen++;
+    S.ilerlet(w, 8, 20);
+  }
+  const r = rapor(id, sc, { eklenen, saglama, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+S.oynaTypeWord = async function(id){
+  const { w, sc } = await oyunHazir(id);
+  let harf = 0, not = '';
+  for (let d = 0; d < 2400 && !S.KAYIT.bitti; d++){
+    if (!sc.sys.isActive()){ not = 'Game sahnesi kapandı'; break; }
+    if (sc.kilit || (sc.ucanlar && sc.ucanlar.getLength())){ S.ilerlet(w, 10, 16); continue; }
+    const k = sc.O.kelimeler[sc.kelimeNo];
+    const beklenen = k && k.hedef[sc.beklenen];
+    if (!beklenen){ S.ilerlet(w, 10, 16); continue; }
+    const tus = sc.tuslar.find(x => x.harf === beklenen);
+    if (!tus){ not = 'beklenen harfin tuşu yok: ' + beklenen; break; }
+    sc.harfBas(beklenen, tus.gorsel.x, tus.gorsel.y, tus.gorsel); harf++;
+    S.ilerlet(w, 16, 16);
+  }
+  const r = rapor(id, sc, { harf, not });
+  if (!r.bitti && not) r.sonuc = not;
+  return r;
+};
+
+/* v40, içindeki gerçek HTML şekil grafiği nedeniyle DOM'da kalan tek
+   oyundur. Dört soruyu sırayla doğru seçeneklerle çözer. */
+S.oynaDomChoiceQuestion = async function(id){
+  S.KAYIT.bitti = null; S.KAYIT.mesaj = null; S.KAYIT.puan = null; S.KAYIT.hatalar = [];
+  const eski = S.cerceve(); if (eski) eski.remove();
+  openGame(id);
+  const g = getGame(id), adimlar = (g.cfg && g.cfg.steps) || [];
+  let cevap = 0, not = '';
+  for (let i = 0; i < adimlar.length && !S.KAYIT.bitti; i++){
+    const j = adimlar[i].options.findIndex(x => x.correct);
+    if (j < 0){ not = (i + 1) + '. adımda doğru seçenek yok'; break; }
+    cqChoose(i, j); cevap++;
+    await S.bekle(0);
+  }
+  return { id, bitti:!!S.KAYIT.bitti, puan:S.KAYIT.puan,
+    hata:S.KAYIT.hatalar.slice(), cevap, not,
+    sonuc:S.KAYIT.bitti ? 'TAMAM' : (not || 'bitmedi') };
 };
 })(window);
 
