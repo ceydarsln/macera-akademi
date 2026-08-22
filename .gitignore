@@ -14,8 +14,11 @@ local.properties
 *.jks
 *.keystore
 *.log
+*.pyc
+__pycache__/
 .env
 .env.*
 .tools/
+test-results/
 tools/audio/ses/
 tools/audio/gunluk/

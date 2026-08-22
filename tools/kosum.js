@@ -42,10 +42,24 @@
         '#oyun=' + g.id + '" style="width:100%;height:100%;border:0;display:block;background:#101c2b"></iframe>';
     };
     kok.__bildirim = [];
-    if (!kok.__cgAsil) {
-      kok.__cgAsil = kok.completeGame;
-      kok.completeGame = function (m, p) { kok.__bildirim.push({ mesaj: String(m), puan: p }); };
-    }
+    /* KOSUM ve SINAMA aynı sayfada birlikte yüklenebilir. İki koşucu da
+       completeGame'i ayrı ayrı sararsa son yüklenen ötekinin bitiş kaydını
+       görünmez kılıyordu. Ortak sarmalayıcı iki kayıt kanalını da besler. */
+    if (!kok.__maceraTestCompleteAsil)
+      kok.__maceraTestCompleteAsil = kok.__eskiCompleteGame || kok.completeGame;
+    kok.__cgAsil = kok.__maceraTestCompleteAsil;
+    kok.completeGame = function (m, p) {
+      const bildirim = { mesaj: String(m), puan: p };
+      if (!Array.isArray(kok.__bildirim)) kok.__bildirim = [];
+      kok.__bildirim.push(bildirim);
+      const kayit = kok.SINAMA && kok.SINAMA.KAYIT;
+      if (kayit) {
+        kayit.bitti = true;
+        kayit.mesaj = m;
+        kayit.puan = p;
+      }
+      return undefined;
+    };
     kok.addEventListener('error', e => K.hata.push(String(e.message)));
     return 'koşum kuruldu';
   };

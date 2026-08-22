@@ -16,11 +16,15 @@ kok.phaserCerceve = function(g){
    tutuyor, yeniden eval'de yeni bir nesne yaratılırsa bitiş kaydı eskisine
    yazılır ve "bitmedi" görünür (gerçek bir yanılgıydı). */
 const KAYIT = kok.__KAYIT || (kok.__KAYIT = { bitti:null, mesaj:null, puan:null, hatalar:[] });
-/* Her eval'de yeniden sarıyoruz; özgün işlevi bir kez saklıyoruz. */
-if (!kok.__eskiCompleteGame) kok.__eskiCompleteGame = kok.completeGame;
+/* Her eval'de yeniden sarıyoruz; özgün işlevi bir kez saklıyoruz. KOSUM
+   da aynı sayfada yüklüyse iki kayıt kanalını birlikte besliyoruz. */
+if (!kok.__maceraTestCompleteAsil) kok.__maceraTestCompleteAsil = kok.completeGame;
+if (!kok.__eskiCompleteGame) kok.__eskiCompleteGame = kok.__maceraTestCompleteAsil;
 kok.completeGame = function(mesaj, puan){
   const K = kok.__KAYIT;
   K.bitti = true; K.mesaj = mesaj; K.puan = puan;
+  if (!Array.isArray(kok.__bildirim)) kok.__bildirim = [];
+  kok.__bildirim.push({ mesaj:String(mesaj), puan });
   return undefined;                         /* uygulamanın akışını çalıştırmıyoruz */
 };
 

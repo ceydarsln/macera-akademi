@@ -38,15 +38,32 @@ JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" ./gradle
 
 Çıktı `app/build/outputs/apk/debug/app-debug.apk` altında oluşur.
 
-## Test ölçütü
+## Birleşik test koşucusu
 
-Bir oyunun yalnızca açılması başarı sayılmaz. Oyun doğru girdilerle baştan sona oynanmalı ve üst uygulamadaki `completeGame` çağrısı gözlenmelidir. Mevcut koşucular:
+Bir oyunun yalnızca açılması başarı sayılmaz. Oyun doğru girdilerle baştan sona oynanmalı ve üst uygulamadaki `completeGame` çağrısı gözlenmelidir.
 
-- `tools/kosum.js`
-- `tools/ucuncu_sinama.js`
-- `tools/anlam_denetimi.js`
+Yerel sunucuyu başlat:
 
-Koşucuların tek çatı altında birleştirilmesi ve sonuçların JSON olarak saklanması devam eden ilk altyapı işidir.
+```bash
+python3 tools/test_server.py
+```
+
+Sunucunun yazdırdığı uygulama adresini aç. Tarayıcı geliştirici konsolunda birleşik koşucuyu yükle:
+
+```js
+await (0,eval)(await (await fetch('/tools/macera_test.js')).text())
+```
+
+Tüm katalogdaki mekanik ve anlam denetimlerini başlat:
+
+```js
+await MACERA_TEST.baslat()
+MACERA_TEST.durum()
+await MACERA_TEST.bekle()
+MACERA_TEST.ozet()
+```
+
+`macera_test.js`, genel mekanikler için `kosum.js`, dokuz özel mekanik için `ucuncu_sinama.js` ve içerik denetimi için `anlam_denetimi.js` araçlarını tek API altında yönlendirir. Raporlar varsayılan olarak `test-results/macera-test-*.json` altında saklanır. Otomatik oyuncusu olmayan oyunlar sessizce atlanmaz; raporda `DESTEKLENMİYOR` olarak görünür.
 
 ## Bilinen açıklar
 

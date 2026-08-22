@@ -32,19 +32,38 @@ app/build/outputs/apk/debug/app-debug.apk
 
 ## Yerel web testi
 
-Depo kökünde basit bir HTTP sunucusu başlat:
+Depo kökünde birleşik test sunucusunu başlat:
 
 ```bash
-python3 -m http.server 8870
+python3 tools/test_server.py
 ```
 
 Ardından tarayıcıda şu adresi aç:
 
 ```text
-http://localhost:8870/app/src/main/assets/macera-akademi.html
+http://127.0.0.1:8870/app/src/main/assets/macera-akademi.html
 ```
 
-Otomatik testler oyunu yalnız açmakla yetinmez; doğru girdilerle baştan sona oynayıp `completeGame` çağrısını doğrular. Test araçları `tools/` altındadır.
+Geliştirici konsolunda test araçlarını tek giriş noktasından yükle:
+
+```js
+await (0,eval)(await (await fetch('/tools/macera_test.js')).text())
+```
+
+Yaygın komutlar:
+
+```js
+await MACERA_TEST.baslat()                              // mekanik + anlam, tüm katalog
+await MACERA_TEST.baslat({ sinif:1, ders:'math' })      // filtreli koşu
+await MACERA_TEST.baslat({ idler:['m01','u04'] })       // seçili oyunlar
+await MACERA_TEST.baslat({ kip:'anlam' })               // yalnız anlam denetimi
+MACERA_TEST.durum()                                     // ilerleme
+await MACERA_TEST.bekle()                               // tamamlanmış JSON nesnesi
+MACERA_TEST.ozet()                                      // kısa metin özeti
+MACERA_TEST.durdur()                                    // güvenli iptal isteği
+```
+
+Koşucu oyunu yalnız açmakla yetinmez; doğru girdilerle baştan sona oynayıp `completeGame` çağrısını doğrular. Sonuçlar `test-results/` altında tek JSON raporunda saklanır. Bu klasör Git tarafından izlenmez.
 
 ## Ses üretimi
 
