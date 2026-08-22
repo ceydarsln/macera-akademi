@@ -16,5 +16,6 @@ local.properties
 *.log
 .env
 .env.*
+.tools/
 tools/audio/ses/
 tools/audio/gunluk/
