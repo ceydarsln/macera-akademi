@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Macera Akademi</title>
 <!-- Android/iOS: ana ekrana eklenince tam ekran uygulama gibi açılır -->
 <meta name="mobile-web-app-capable" content="yes">
@@ -36,23 +36,25 @@
     --radius-lg:28px; --radius-md:20px; --radius-sm:14px;
     --font-head:'Baloo 2','Comic Sans MS',system-ui,sans-serif;
     --font-body:'Nunito','Segoe UI',system-ui,sans-serif;
+    --phone-max:600px;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  html,body{margin:0;padding:0; width:100%; min-height:100%;}
   body{
-    min-height:100vh;
+    min-height:100vh; min-height:100dvh;
     background:#241a3d;
     font-family:var(--font-body);
     display:flex;
     justify-content:center;
+    align-items:flex-start;
     -webkit-tap-highlight-color:transparent;
   }
   button,input,select{font-family:var(--font-body);}
   .app-shell{
-    width:100%; max-width:480px; min-height:100vh;
+    width:100%; max-width:var(--phone-max); min-height:100vh; min-height:100dvh;
     position:relative; overflow-x:hidden;
     background:linear-gradient(180deg,#ffd7ea 0%, #f2cdf1 16%, #d3c0f5 34%, #b9cdf5 55%, #a2d6f0 75%, #86dcec 100%);
-    padding-bottom:12px;
+    padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px));
   }
   .sky-decor{position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0;}
   .cloud-shape{position:absolute; width:110px; height:34px; background:#fff; border-radius:50px; opacity:.5;}
@@ -132,9 +134,9 @@
 
   .bottomnav{
     position:fixed; bottom:0; left:50%; transform:translateX(-50%);
-    width:100%; max-width:480px;
+    width:100%; max-width:var(--phone-max);
     background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    display:flex; justify-content:space-around; padding:9px 6px 12px;
+    display:flex; justify-content:space-around; padding:9px 6px calc(12px + env(safe-area-inset-bottom, 0px));
     border-top:2px solid rgba(255,255,255,.75); z-index:5;
   }
   .nav-btn{background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:2px; font-family:var(--font-head); font-size:14px; font-weight:700; color:var(--ink-soft); cursor:pointer; padding:2px 4px;}
@@ -385,7 +387,7 @@
   /* ===================================================== */
   .immersive-stage{
     position:fixed; top:0; left:50%; transform:translateX(-50%);
-    width:100%; max-width:480px; height:100vh; height:100dvh;
+    width:100%; max-width:var(--phone-max); height:100vh; height:100dvh;
     overflow:hidden; z-index:40;
   }
   .imm-scene{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
@@ -706,6 +708,84 @@
   .sw-free{ font-size:12px; font-weight:800; color:var(--ink-soft); }
   .sw-lock{ font-size:12px; font-weight:800; color:#a08ac0; }
   .sw-price{ font-size:13px; font-weight:800; color:#c98b00; }
+
+  /* Kişiselleştirme akışı: adımlar görünür, bitirme düğmesi kaçırılmaz. */
+  .cust-help{
+    margin:0 16px 10px; padding:10px 13px; border-radius:16px;
+    background:rgba(255,255,255,.72); border:2px solid rgba(255,255,255,.9);
+    color:var(--ink-soft); font-size:13px; font-weight:800; line-height:1.55;
+  }
+  .cust-help b{ color:var(--ink); }
+  .cust-done{
+    display:block; width:calc(100% - 32px); margin:8px 16px 12px;
+    border:3px solid rgba(255,255,255,.95); border-radius:20px; cursor:pointer;
+    padding:15px 16px; color:#fff; font-family:var(--font-head); font-size:22px; font-weight:900;
+    background:linear-gradient(180deg,#65dc91,#25a861);
+    box-shadow:0 6px 0 #187e48, 0 10px 20px rgba(24,126,72,.25);
+  }
+  .cust-done:active{ transform:translateY(4px); box-shadow:0 2px 0 #187e48; }
+  .cust-section-head{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    margin-bottom:10px; color:var(--ink); font-family:var(--font-head); font-size:17px; font-weight:900;
+  }
+  .cust-coin{ flex:0 0 auto; padding:5px 10px; border-radius:999px; background:#fff5c8; color:#8b6500; font-size:14px; }
+
+  /* Satın alma, yanlış dokunmayla gerçekleşmez: büyük görselli onay kartı. */
+  .buy-modal{ max-width:360px; border:3px solid #fff; }
+  .buy-title{ font-family:var(--font-head); font-size:25px; font-weight:900; color:var(--ink); }
+  .buy-preview{
+    width:176px; height:176px; margin:12px auto; border-radius:28px;
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    background:linear-gradient(180deg,#fff9df,#e8f7ff); border:3px solid #fff;
+    box-shadow:0 8px 22px rgba(60,40,90,.18);
+  }
+  .buy-preview .look-svg{ width:155px; height:170px; }
+  .buy-preview .sw-color{ width:112px; height:112px; }
+  .buy-preview .sw-emo{ font-size:92px; }
+  .buy-name{ font-family:var(--font-head); color:var(--ink); font-size:21px; font-weight:900; }
+  .buy-price{ margin:7px 0 2px; font-family:var(--font-head); color:#9a7000; font-size:22px; font-weight:900; }
+  .buy-balance{ color:var(--ink-soft); font-size:13px; font-weight:800; }
+
+  /* Phaser iframe'lerinde de soru, tilkinin konuşma balonunda görünür. */
+  .phaser-prompt-row{
+    position:absolute; z-index:7; top:58px; left:12px; right:12px;
+    pointer-events:none; margin:0;
+  }
+  .phaser-prompt-row .mascot{ font-size:38px; }
+  .phaser-prompt-row .speech-bubble{
+    padding:9px 45px 9px 12px; min-height:52px; display:flex; align-items:center;
+    font-size:15px; line-height:1.25; box-shadow:0 6px 18px rgba(0,0,0,.24);
+  }
+  .phaser-prompt-row .speak-btn{
+    pointer-events:auto; position:absolute; right:7px; top:50%; transform:translateY(-50%);
+    width:32px; height:32px; margin:0; font-size:16px;
+  }
+
+  /* Küçük ve büyük telefonlarda boşluklar/karolar taşmadan akışkan kalır. */
+  @media (max-width:360px){
+    .panel{ padding:14px; }
+    .game-stage{ margin-left:8px; margin-right:8px; padding:12px 12px 48px; }
+    .game-header,.list-header{ padding-left:10px; padding-right:10px; }
+    .profile-card,.cust-preview{ margin-left:10px; margin-right:10px; }
+    .ctab-row,.preset-row{ padding-left:10px; padding-right:10px; }
+    .sw-grid{ gap:6px; }
+    .sw-card{ padding-left:3px; padding-right:3px; }
+    .nav-btn{ font-size:12px; }
+    .nav-btn .nav-ic{ font-size:22px; padding-left:8px; padding-right:8px; }
+    .phaser-prompt-row{ left:7px; right:7px; }
+    .phaser-prompt-row .mascot{ font-size:30px; }
+    .phaser-prompt-row .speech-bubble{ font-size:13.5px; padding-top:7px; padding-bottom:7px; }
+    .phaser-content{ padding-top:130px !important; }
+    .imm-hud{ gap:6px; padding-left:7px; padding-right:7px; }
+    .hud-title .t1{ font-size:15px; }
+    .hud-title .t2{ font-size:12px; }
+    .hud-chip{ font-size:12px; padding:4px 6px; }
+  }
+  @media (orientation:landscape) and (max-height:520px){
+    :root{ --phone-max:760px; }
+    .imm-content{ justify-content:flex-start; }
+    .phaser-prompt-row{ top:52px; }
+  }
 
   /* --- ilerleme --- */
   .ring-wrap{ display:flex; align-items:center; gap:14px; margin-top:8px; }
@@ -1662,6 +1742,7 @@ let state = {
   friendSearch:{query:'', result:null, searching:false, error:'', existing:null, existingKind:null},
   msgs:{loaded:false, loading:false, error:'', list:[]},
   confirmDelete:false,
+  purchaseConfirm:null,
   currentSubject:null,
   currentGameId:null,
   friendModal:null,
@@ -2400,8 +2481,8 @@ function speakAgain(){
   const g = getGame(state.currentGameId);
   let metin = '';
   if(g){
-    if(gs.celebrating) metin = gs.celebrateMsg || 'Harika iş, tebrikler!';
-    else metin = getCurrentPrompt(g);
+    if(gs.celebrating) metin = gs.successVoice || 'Harikasın!';
+    else metin = phaserOyunuMu(g) ? (gs.foxPrompt || getCurrentPrompt(g)) : getCurrentPrompt(g);
   }
   if(!metin){
     const bubble = document.querySelector('.speech-bubble');
@@ -2463,7 +2544,7 @@ function renderSkyDecor(){
 const MATH_GAMES = [
 {id:'m01',grp:'1. Hafta • Uzamsal İlişkiler (9-13 Eylül)',title:'Trafik Polisi',sub:'Kavşak Yönetimi',emo:'🚦',kaz:'Yönleri içeren yönergeleri çözümler.',type:'dragMatch',cfg:{instruction:'Kırmızı arabaları SAĞ, mavi arabaları SOL kutuya gönder!',sources:[{id:'r1',label:'🚗'},{id:'r2',label:'🚗'},{id:'b1',label:'🚙'},{id:'b2',label:'🚙'}].map((s,i)=>({...s,match:i<2?'sag':'sol'})),targets:[{id:'sag',label:'SAĞ ➡️',need:2},{id:'sol',label:'⬅️ SOL',need:2}]}},
 
-{id:'m02',grp:'1. Hafta • Uzamsal İlişkiler (9-13 Eylül)',title:'Pusula Korsanı',sub:'Sesli Yönergeler',emo:'🧭',kaz:'Mesafe ve yön içeren yönergeyi çözer.',type:'tapSelect',cfg:{instruction:'Papağan: "Hazine tam 2 adım sağda, 1 adım aşağıda!" Doğru kareye dokun.',mode:'single',items:[{id:'c0',label:'🟦'},{id:'c1',label:'🟦'},{id:'c2',label:'🟦'},{id:'c3',label:'🟦'},{id:'c4',label:'🟦'},{id:'c5',label:'💰'},{id:'c6',label:'🟦'},{id:'c7',label:'🟦'},{id:'c8',label:'🟦'}],correct:['c5']}},
+{id:'m02',grp:'1. Hafta • Uzamsal İlişkiler (9-13 Eylül)',title:'Pusula Korsanı',sub:'Sesli Yönergeler',emo:'🧭',kaz:'Mesafe ve yön içeren yönergeyi çözer.',type:'tapSelect',cfg:{instruction:'Hazine tam 2 adım sağda ve 1 adım yukarıda. Adımları say ve doğru kareye dokun.',mode:'single',items:[{id:'c0',label:'🟦'},{id:'c1',label:'🟦'},{id:'c2',label:'🟦'},{id:'c3',label:'🟦'},{id:'c4',label:'🟦'},{id:'c5',label:'💰'},{id:'c6',label:'🟦'},{id:'c7',label:'🟦'},{id:'c8',label:'🟦'}],correct:['c5']}},
 
 {id:'m03',grp:'1. Hafta • Uzamsal İlişkiler (9-13 Eylül)',title:'Dağcı Keçi',sub:'Yukarı/Aşağı ve Yükseklik',emo:'🐐',kaz:'Yatay ve dikey uzamsal düzlemi kavrar.',type:'orderSequence',cfg:{instruction:'Keçiyi zirveye çıkar! Sırayla doğru butona bas.',mode:'stepChoice',sequence:['ileri','yukari','ileri','yukari','yukari'],choices:[{key:'ileri',label:'➡️ İleri'},{key:'yukari',label:'⬆️ Yukarı'}]}},
 
@@ -2480,7 +2561,7 @@ const MATH_GAMES = [
 
 {id:'m09',grp:'Nesnelerin Geometrisi • Eşlik Değerlendirme',title:'Çarkıfelek Dişlileri',sub:'Geometrik Eşlik',emo:'⚙️',kaz:'Dişli sayısını sayarak eşleştirir.',type:'dragMatch',cfg:{instruction:'Her yuvaya kendi dişli sayısına sahip çarkı tak!',sources:[{id:'g6',label:'⚙️ 6 dişli',match:'y6'},{id:'g8',label:'⚙️ 8 dişli',match:'y8'},{id:'g7',label:'⚙️ 7 dişli',match:null}],targets:[{id:'y6',label:'Yuva: 6 dişli',need:1},{id:'y8',label:'Yuva: 8 dişli',need:1}]}},
 
-{id:'m10',grp:'Sayılar ve Nicelikler • Nicelik Temsili',title:'Parmak Canavarları',sub:'El/Parmak Temsilleri',emo:'🖐️',kaz:'Niceliğin farklı temsillerini tanır.',type:'choiceQuestion',cfg:{instruction:'Canavarın açık parmaklarını say!',
+{id:'m10',grp:'Sayılar ve Nicelikler • Nicelik Temsili',title:'Parmak Canavarları',sub:'El/Parmak Temsilleri',emo:'🖐️',kaz:'Niceliğin farklı temsillerini tanır.',type:'choiceQuestion',cfg:{instruction:'Canavarın açık parmaklarını say!',staticChoices:true,
   /* Eski soru "toplam 7 parmak açık" diyordu: cevap sorunun içindeydi.
      Artık eller tarif ediliyor, sayıyı çocuk buluyor. Tek turluk oyun
      üç tura çıkarıldı. */
@@ -2499,9 +2580,9 @@ const MATH_GAMES = [
 
 {id:'m13',grp:'Sayılar ve Nicelikler • Parça-Bütün',title:'Kement Atma',sub:'Lasso Grouping',emo:'🐑',kaz:'Dağınık bütünü parçalara ayırır.',type:'tapSelect',cfg:{instruction:'Dağınık koyunlar arasından 4\u2019lü bir grup yakala! (4 koyuna dokun)',mode:'multi',items:[{id:'k1',label:'🐑'},{id:'k2',label:'🐑'},{id:'k3',label:'🐑'},{id:'k4',label:'🐑'},{id:'k5',label:'🐑'},{id:'k6',label:'🐑'},{id:'k7',label:'🐑'},{id:'k8',label:'🐑'}],correct:['k1','k2','k3','k4'], anyOf:4   /* koyunlar özdeş: HERHANGİ 4 koyun geçerli */}},
 
-{id:'m14',grp:'Sayılar ve Nicelikler • Parça-Bütün',title:'Sihirli Büyüteç',sub:'Gizli Alt Gruplar',emo:'🐠',kaz:'Dağınık ögeleri seçici dikkatle sayar.',type:'tapSelect',cfg:{instruction:'Deniz altında 3 kırmızı ve 2 mavi balığı bul!',mode:'multi',items:[{id:'f1',label:'🐠'},{id:'f2',label:'🐟'},{id:'f3',label:'🐠'},{id:'f4',label:'🌿'},{id:'f5',label:'🐠'},{id:'f6',label:'🐟'},{id:'f7',label:'🌊'}],correct:['f1','f2','f3','f5','f6']}},
+{id:'m14',grp:'Sayılar ve Nicelikler • Parça-Bütün',title:'Sihirli Olta',sub:'Renkli Balık Grupları',emo:'🎣',kaz:'Dağınık ögeleri seçici dikkatle sayar.',type:'tapSelect',cfg:{instruction:'Oltayı kullanarak 3 kırmızı ve 2 mavi balığı yakala!',mode:'multi',items:[{id:'f1',label:'🐠'},{id:'f2',label:'🐟'},{id:'f3',label:'🐠'},{id:'f4',label:'🌿'},{id:'f5',label:'🐠'},{id:'f6',label:'🐟'},{id:'f7',label:'🌊'}],correct:['f1','f2','f3','f5','f6']}},
 
-{id:'m15',grp:'Sayılar ve Nicelikler • Parça-Bütün',title:'Şipşak Hafıza',sub:'Subitizing Match',emo:'🍏',kaz:'Grupları bütün olarak algılar (subitizing).',type:'choiceQuestion',cfg:{instruction:'Ekranı iyi izle, hemen kapanacak!',steps:[
+{id:'m15',grp:'Sayılar ve Nicelikler • Parça-Bütün',title:'Şipşak Hafıza',sub:'Subitizing Match',emo:'🍏',kaz:'Grupları bütün olarak algılar (subitizing).',type:'choiceQuestion',cfg:{instruction:'Nesnelere 10 saniye dikkatle bak; perde kapanınca hatırla!',staticChoices:true,steps:[
   {flashMs:1600,flashContent:'🍎 🍎 🍎 &nbsp;&nbsp;&nbsp; 🍐 🍐',prompt:'Toplam kaç meyve gördün?',options:[{label:'4',correct:false},{label:'5',correct:true},{label:'6',correct:false}]},
   {prompt:'Parçalar nasıldı?',options:[{label:'2 ve 3',correct:false},{label:'3 ve 2',correct:true},{label:'1 ve 4',correct:false}]}
 ]}},
@@ -2510,7 +2591,7 @@ const MATH_GAMES = [
 
 {id:'m17',grp:'Sayılar ve Nicelikler • Sıra Sayısı',title:'Uzaylı Apartmanı',sub:'Dikey Sıra Sayısı',emo:'🛗',kaz:'Sıra sayısını aşağıdan yukarıya kullanır.',type:'dragMatch',cfg:{instruction:'Kargoyu 4. kattaki uzaylıya teslim et!',sources:[{id:'kargo',label:'📦',match:'kat4'}],targets:[{id:'kat1',label:'1. Kat',need:0},{id:'kat2',label:'2. Kat',need:0},{id:'kat3',label:'3. Kat',need:0},{id:'kat4',label:'4. Kat',need:1},{id:'kat5',label:'5. Kat',need:0}]}},
 
-{id:'m18',grp:'Sayılar ve Nicelikler • Sıra Sayısı',title:'Dondurma Kulesi',sub:'Yönergeyle Sıra Oluşturma',emo:'🍨',kaz:'Sıra sayısının işlem basamağı olduğunu kavrar.',type:'dragMatch',cfg:{instruction:'Sipariş: 1. top çilekli, 2. top vanilyalı, 3. top çikolatalı!',sources:[{id:'cilek',label:'🍓',match:'p1'},{id:'vanilya',label:'🍦',match:'p2'},{id:'cikolata',label:'🍫',match:'p3'}],targets:[{id:'p1',label:'1. Top',need:1},{id:'p2',label:'2. Top',need:1},{id:'p3',label:'3. Top',need:1}]}},
+{id:'m18',grp:'Sayılar ve Nicelikler • Sıra Sayısı',title:'Dondurma Kulesi',sub:'Yönergeyle Sıra Oluşturma',emo:'🍨',kaz:'Sıra sayısının işlem basamağı olduğunu kavrar.',type:'dragMatch',cfg:{instruction:'Külahı aşağıdan yukarı kur: 1. top çilekli, 2. top vanilyalı, 3. top çikolatalı!',sources:[{id:'cilek',label:'🍓',match:'p1'},{id:'vanilya',label:'🍦',match:'p2'},{id:'cikolata',label:'🍫',match:'p3'}],targets:[{id:'p1',label:'1. Top',need:1},{id:'p2',label:'2. Top',need:1},{id:'p3',label:'3. Top',need:1}]}},
 
 {id:'m19',grp:'Sayılar ve Nicelikler • Sıra Sayısı',title:'Otobüs Durakları',sub:'Zaman ve Olay Sırası',emo:'🚌',kaz:'Sıra sayısını ardışık olaylarda kullanır.',type:'tapSelect',cfg:{instruction:'Otobüs 2. durakta kimi alacak?',mode:'single',siraTur:'yol',siraNo:2,items:[{id:'c1',label:'🧒 (1. durak)'},{id:'c2',label:'👧 (2. durak)'},{id:'c3',label:'🧑 (3. durak)'}],correct:['c2']}},
 
@@ -2518,7 +2599,7 @@ const MATH_GAMES = [
 
 {id:'m21',grp:'Sayılar ve Nicelikler • Sıra Sayısı',title:'Vagon Ekspresi',sub:'Yatay Düzlemde Sıra',emo:'🚂',kaz:'Soldan sağa sıra bulma becerisini pekiştirir.',type:'dragMatch',cfg:{instruction:'Zürafayı baştan 3. vagona bindir!',sources:[{id:'zurafa',label:'🦒',match:'v3'}],targets:[{id:'v1',label:'Vagon 1',need:0},{id:'v2',label:'Vagon 2',need:0},{id:'v3',label:'Vagon 3',need:1},{id:'v4',label:'Vagon 4',need:0}]}},
 
-{id:'m22',grp:'Sayılar ve Nicelikler • Sıra Sayısı',title:'Gökyüzü Asansörü',sub:'Dikey Düzlemde Sıra',emo:'🏙️',kaz:'Aşağıdan yukarıya sıra bildirimini öğrenir.',type:'countToTarget',cfg:{instruction:'"Bu paketi 4. kata teslim etmeliyiz." Yukarı butonuna bas!',start:0,target:4,direction:'up',visual:'tower',unitEmoji:'📦'}},
+{id:'m22',grp:'Sayılar ve Nicelikler • Sıra Sayısı',title:'Gökyüzü Asansörü',sub:'Dikey Düzlemde Sıra',emo:'🏙️',kaz:'Aşağıdan yukarıya sıra bildirimini öğrenir.',type:'countToTarget',cfg:{instruction:'Paket 4. kata gidecek. Asansörü her dokunuşta bir kat YUKARI çıkar!',start:0,target:4,direction:'up',visual:'tower',unitEmoji:'📦',forwardLabel:'⬆️  YUKARI',backLabel:'⬇️  AŞAĞI'}},
 
 {id:'m23',grp:'Sayılar ve Nicelikler • Karşılaştırma',title:'Obur Canavarın Tabakları',sub:'"Daha Çok" ve "Daha Az"',emo:'👹',kaz:'İki niceliği gözle tartar.',type:'tapSelect',cfg:{instruction:'Canavar: "Ben DAHA ÇOK çilek istiyorum!" Doğru tabağa dokun.',mode:'single',
   /* Etiketlerde "(3)" "(7)" yazıyordu: çocuk çilek saymadan sayıyı okuyordu.
@@ -2529,13 +2610,13 @@ const MATH_GAMES = [
 
 {id:'m25',grp:'Sayılar ve Nicelikler • Karşılaştırma',title:'İkiz Kardeşlerin Sepetleri',sub:'Benzerlikleri Listeleme',emo:'🧺',kaz:'İki grup arasındaki benzerlikleri bulur.',type:'tapSelect',cfg:{instruction:'İki sepette de 4\u2019er kırmızı elma var. Doğru benzerlik etiketlerine dokun (yanlışa dokunma!)',mode:'multi',items:[{id:'l1',label:'Meyveler Aynı'},{id:'l2',label:'Renkler Aynı'},{id:'l3',label:'Sayılar EŞİT'},{id:'l4',label:'Biri DAHA ÇOK'}],correct:['l1','l2','l3']}},
 
-{id:'m26',grp:'Sayılar ve Nicelikler • Ritmik Sayma',title:'Uzay Üssü Geri Sayımı',sub:'20\u2019den Geriye Sayma',emo:'🚀',kaz:'20\u2019den geriye 1\u2019er sayma ritmini kurar.',type:'orderSequence',cfg:{instruction:'Roketi fırlatmak için 20\u2019den 1\u2019e geri say!',mode:'tapInOrder',items:[{id:'n20',label:'20'},{id:'n15',label:'15'},{id:'n10',label:'10'},{id:'n19',label:'19'},{id:'n5',label:'5'},{id:'n18',label:'18'},{id:'n1',label:'1'},{id:'n17',label:'17'},{id:'n16',label:'16'}],order:['n20','n19','n18','n17','n16']}},
+{id:'m26',grp:'Sayılar ve Nicelikler • Ritmik Sayma',title:'Uzay Üssü Geri Sayımı',sub:'20\u2019den Geriye Sayma',emo:'🚀',kaz:'20\u2019den geriye 1\u2019er sayma ritmini kurar.',type:'countToTarget',cfg:{instruction:'Roketi fırlatmak için 20\u2019den başlayıp birer birer 1\u2019e kadar geri say!',start:20,target:1,direction:'down',visual:'countdown',unitEmoji:'🚀',forwardLabel:'⏬  GERİ SAY',backLabel:'↩️  GERİ AL',successMsg:'20\u2019den 1\u2019e eksiksiz saydın. Roket fırlatmaya hazır! 🚀'}},
 
 {id:'m27',grp:'Sayılar ve Nicelikler • Ritmik Sayma',title:'Zıpzıp Kurbağa',sub:'İleriye Ritmik Sayma',emo:'🐸',kaz:'5\u2019er 5\u2019er ileriye sayma örüntüsünü kurar.',type:'orderSequence',cfg:{instruction:'Kurbağa 5\u2019er 5\u2019er zıplıyor. Sıradaki taşı seç!',mode:'stepChoice',sequence:['5','10','15','20'],choices:[{key:'5',label:'5'},{key:'10',label:'10'},{key:'12',label:'12'},{key:'15',label:'15'},{key:'20',label:'20'}]}},
 
-{id:'m28',grp:'Sayılar ve Nicelikler • Ritmik Sayma',title:'Yeraltı Madencisi',sub:'Derinlere İniş - Geriye Sayma',emo:'⛏️',kaz:'Geriye saymayı uzamsal inişle somutlaştırır.',type:'countToTarget',cfg:{instruction:'"Mücevherler 1. katta, asansörü aşağı indir!" 20. kattan başla.',start:20,target:1,direction:'down',visual:'tower',unitEmoji:'⛏️'}},
+{id:'m28',grp:'Sayılar ve Nicelikler • Ritmik Sayma',title:'Yeraltı Madencisi',sub:'Derinlere İniş - Geriye Sayma',emo:'⛏️',kaz:'Geriye saymayı uzamsal inişle somutlaştırır.',type:'countToTarget',cfg:{instruction:'Mücevherler 1. katta. 20. kattan başlayıp asansörü birer kat AŞAĞI indir!',start:20,target:1,direction:'down',visual:'tower',unitEmoji:'⛏️',forwardLabel:'⬇️  AŞAĞI',backLabel:'⬆️  YUKARI'}},
 
-{id:'m29',grp:'Sayılar ve Nicelikler • Örüntüler',title:'Büyülü Orman Yolu',sub:'Şekil Örüntüsü - Artan',emo:'🔺',kaz:'Şekil örüntüsünün ardışık ögelerini belirler.',type:'patternFill',cfg:{instruction:'Yol nasıl ilerliyor? Sıradaki taşı bul!',sequence:['🔺 (3)','⬜ (4)','⬠ (5)','❓'],options:['⬠ (5)','⬡ (6)','⭐'],correct:'⬡ (6)',ruleMsg:'Kural: Kenar sayısı 1 artıyor! ➕1'}},
+{id:'m29',grp:'Sayılar ve Nicelikler • Örüntüler',title:'Büyülü Orman Yolu',sub:'Şekil Örüntüsü - Artan',emo:'🔺',kaz:'Şekil örüntüsünün ardışık ögelerini belirler.',type:'patternFill',cfg:{instruction:'Üçgen, kare, beşgen… Kenarları gözünle takip et; sıradaki taşı bul!',sequence:['🔺','⬜','⬠','❓'],options:['⬠','⬡','⭐'],correct:'⬡',ruleMsg:'Kural: Her yeni şeklin bir kenarı daha var! ➕1'}},
 
 {id:'m30',grp:'Sayılar ve Nicelikler • Örüntüler',title:'Uzaylı Merdiveni',sub:'Sayı Örüntüsü - Artan',emo:'👽',kaz:'Sayılar arasındaki artış ilişkisini kurar.',type:'patternFill',cfg:{instruction:'Uzaylı basamakları tırmanıyor. Boş basamağı bul!',sequence:['2','4','6','❓'],options:['7','8','9'],correct:'8',ruleMsg:'Kural: +2 artıyor! 🚀'}},
 
@@ -2547,11 +2628,11 @@ const MATH_GAMES = [
 
 {id:'m34',grp:'14. Hafta • Tahmin ve Örüntü (16-20 Aralık)',title:'Hızlı Tahminci Karınca',sub:'5\u2019ten Az mı Çok mu?',emo:'🐜',kaz:'Grubu 5 ile karşılaştırarak tahmin eder.',type:'estimateReveal',cfg:{instruction:'Karınca "5 yaprak taşıyabilirim" diyor. Yapraklar 5\u2019ten az mı çok mu?',estimateOptions:[{label:'5\u2019ten Az',value:3},{label:'Tam 5',value:5},{label:'5\u2019ten Çok',value:8}],actualValue:7,actualDisplay:'🍃 x 7'}},
 
-{id:'m35',grp:'Nicelikler (Uzunluk-Kütle) • Ölçme',title:'Dev ve Cüce Ayakları',sub:'Uzunluk Tahmini',emo:'👣',kaz:'Ölçme aracı seçiminin sonucu etkilediğini deneyimler.',type:'estimateReveal',cfg:{instruction:'Odayı cüce adımıyla ölçersek kaç adım tutar dersin?',estimateOptions:[{label:'4',value:4},{label:'9',value:9},{label:'15',value:15}],actualValue:9,actualDisplay:'👣 x 9 (cüce ile) — Dev ile sadece 4 adım sürer!'}},
+{id:'m35',grp:'Nicelikler (Uzunluk-Kütle) • Ölçme',title:'Cüce Adımı',sub:'Uzunluk Tahmini',emo:'👣',kaz:'Ölçme aracı seçiminin sonucu etkilediğini deneyimler.',type:'estimateReveal',cfg:{instruction:'Odayı cüce adımıyla ölçersek kaç adım tutar dersin?',estimateOptions:[{label:'4',value:4},{label:'9',value:9},{label:'15',value:15}],actualValue:9,actualDisplay:'👣 x 9'}},
 
 {id:'m36',grp:'Nicelikler (Uzunluk-Kütle) • Ölçme',title:'Kırtasiye Düzenleyici',sub:'Ataş ile Uzunluk',emo:'📎',kaz:'Standart olmayan araçla uzunluğu tahmin eder.',type:'estimateReveal',cfg:{instruction:'Kalem kaç ataş boyunda dersin?',estimateOptions:[{label:'5',value:5},{label:'8',value:8},{label:'12',value:12}],actualValue:8,actualDisplay:'📎 x 8'}},
 
-{id:'m37',grp:'Nicelikler (Uzunluk-Kütle) • Ölçme',title:'Küçük İcatlar Pazarı',sub:'Kütle Tahmini',emo:'⚖️',kaz:'Standart olmayan araçla kütleyi tahmin eder.',type:'estimateReveal',cfg:{instruction:'Elma kaç bilye ağırlığında dersin?',estimateOptions:[{label:'4',value:4},{label:'6',value:6},{label:'9',value:9}],actualValue:8,actualDisplay:'🔮 x 8 bilye'}},
+{id:'m37',grp:'Nicelikler (Uzunluk-Kütle) • Ölçme',title:'Küçük İcatlar Pazarı',sub:'Kütle Tahmini',emo:'⚖️',kaz:'Standart olmayan araçla kütleyi tahmin eder.',type:'estimateReveal',cfg:{instruction:'Elmanın ağırlığını tahmin et: sence kaç bilye gelir? Sonra birlikte sayalım.',estimateOptions:[{label:'5',value:5},{label:'8',value:8},{label:'11',value:11}],actualValue:8,actualDisplay:'🔮 x 8 bilye'}},
 
 {id:'m38',grp:'İşlemlerden Cebirsel Düşünmeye',title:'Market Arabası Dedektifi',sub:'Günlük Toplama-Çıkarma',emo:'🛒',kaz:'Durumu matematiksel işleme dönüştürür.',type:'choiceQuestion',cfg:{instruction:'Sepette 5 elma vardı, rafından 3 elma daha aldın.',steps:[
   {prompt:'Sepetteki elmalar arttı mı, azaldı mı?',options:[{label:'Arttı',correct:true},{label:'Azaldı',correct:false}]},
@@ -2593,13 +2674,13 @@ const MATH_GAMES = [
    options:[{label:'Sol Kazanır',correct:true},{label:'Sağ Kazanır',correct:false},{label:'Eşit, Berabere!',correct:false}]}
 ]}},
 
-{id:'m48',grp:'Eşit İşaretinin Anlamı',title:'Sihirli Ayna',sub:'İşlem Yansıtma',emo:'🪞',kaz:'Farklı ama denk bir işlem kurar.',type:'choiceQuestion',cfg:{instruction:'Aynanın iki yanı denk olmalı! Boşluğa ne gelmeli?',steps:[
-  {prompt:'Solda 6+2 var. 10 ▢ = 8 olması için ▢ yerine ne gelmeli?',
-   options:[{label:'−1',correct:false},{label:'−2',correct:true},{label:'−3',correct:false}]},
-  {prompt:'Solda 4+5 var. 12 ▢ = 9 olması için ▢ yerine ne gelmeli?',
-   options:[{label:'−2',correct:false},{label:'−3',correct:true},{label:'−4',correct:false}]},
-  {prompt:'Solda 7+3 var. 6 ▢ = 10 olması için ▢ yerine ne gelmeli?',
-   options:[{label:'+4',correct:true},{label:'+3',correct:false},{label:'−4',correct:false}]}
+{id:'m48',grp:'Eşit İşaretinin Anlamı',title:'Sihirli Ayna',sub:'İşlem Yansıtma',emo:'🪞',kaz:'Farklı ama denk bir işlem kurar.',type:'choiceQuestion',cfg:{instruction:'Aynanın iki yanı denk olmalı! Boşluğa ne gelmeli?',staticChoices:true,steps:[
+  {prompt:'6 + 2 = 8. Aynadaki 10\u2019dan kaç çıkarırsak yine 8 kalır?',
+   options:[{label:'1',correct:false},{label:'2',correct:true},{label:'3',correct:false}]},
+  {prompt:'4 + 5 = 9. Aynadaki 12\u2019den kaç çıkarırsak yine 9 kalır?',
+   options:[{label:'2',correct:false},{label:'3',correct:true},{label:'4',correct:false}]},
+  {prompt:'7 + 3 = 10. Aynadaki 6\u2019ya kaç eklersek yine 10 olur?',
+   options:[{label:'4',correct:true},{label:'3',correct:false},{label:'5',correct:false}]}
 ]}},
 
 {id:'m49',grp:'Eşit İşaretinin Anlamı',title:'İksir Laboratuvarı',sub:'Sıvı Seviyesi Denkliği',emo:'🧫',kaz:'İki farklı işlemin sonucunun eşitliğini onaylar.',type:'choiceQuestion',cfg:{instruction:'İki tüpün seviyesi eşit mi? Hesapla ve karar ver!',steps:[
@@ -2667,7 +2748,7 @@ MATH_GAMES.forEach(g => g.subj = 'math');
 
 /* ===================== TÜRKÇE (OKUMA-YAZMA) OYUNLARI ===================== */
 const TURKISH_GAMES = [
-{id:'t01',grp:'Harf (Ses) Grubu Oyunları',title:'Gökyüzü Çizeri',sub:'Motor Becerileri ve Yazım',emo:'✈️',kaz:'Harfin yazılış yönünü kas hafızasına alır.',type:'orderSequence',cfg:{instruction:'Uçağı bulutların üzerinden sırayla uçur ve "A" harfini çiz!',mode:'tapInOrder',visual:'path',viewBox:'0 0 150 210',items:[{id:'p1',label:'1',x:28,y:185},{id:'p2',label:'2',x:75,y:25},{id:'p3',label:'3',x:122,y:185},{id:'p4',label:'4',x:50,y:115},{id:'p5',label:'5',x:100,y:115}],order:['p1','p2','p3','p4','p5']}},
+{id:'t01',grp:'Harf (Ses) Grubu Oyunları',title:'Gökyüzü Çizeri',sub:'Motor Becerileri ve Yazım',emo:'✈️',kaz:'Harfin yazılış yönünü kas hafızasına alır.',type:'numberTrace',cfg:{instruction:'Uçağı parmağınla bulutlu yol boyunca sürükle ve büyük A harfini çiz!',speak:'Büyük A harfini üç çizgiyle yaz. Noktaları sırayla takip et.',ink:'#8fe9ff',guide:'#ffffff',strokes:[{hint:'Sol alttan tepeye doğru uç',points:[[70,306],[86,252],[104,190],[124,122],[150,58]]},{hint:'Tepeden sağ alta doğru uç',points:[[150,58],[176,122],[196,190],[214,252],[230,306]]},{hint:'Soldan sağa orta çizgiyi tamamla',points:[[103,205],[126,205],[150,205],[174,205],[197,205]]}],finale:{main:'✈️',bits:['☁️','✨','☁️'],msg:'Harika! Uçağın gökyüzüne büyük A harfini çizdi!'}}},
 
 {id:'t02',grp:'Harf (Ses) Grubu Oyunları',title:'Sesli Sepet',sub:'İşitsel Tanıma',emo:'🧺',kaz:'Harfi kelime içindeki bir ses olarak fark eder.',type:'tapSelect',cfg:{instruction:'"Aaaa" sesini duyuyorsun. Sadece isminde A sesi geçenleri sepete yakala!',mode:'multi',items:[{id:'elma',label:'🍎 Elma'},{id:'armut',label:'🍐 Armut'},{id:'ayi',label:'🐻 Ayı'},{id:'top',label:'⚽ Top'},{id:'kedi',label:'🐱 Kedi'},{id:'kus',label:'🐦 Kuş'}],correct:['elma','armut','ayi']}},
 
@@ -16887,6 +16968,20 @@ function instr(text){
       <button class="speak-btn" onclick="speakAgain()" title="Tekrar dinle" aria-label="Tekrar dinle">🔊</button>
     </div></div>`;
 }
+function renderPhaserPrompt(game){
+  const text = gs.foxPrompt || ((game && game.cfg && (game.cfg.speak || game.cfg.instruction)) || '');
+  if(!text) return '';
+  return `<div class="mascot-row phaser-prompt-row" id="foxPrompt">
+    <div class="mascot" aria-hidden="true">🦊</div>
+    <div class="speech-bubble"><span class="fox-prompt-text">${text}</span>
+      <button class="speak-btn" onclick="replayPrompt()" title="Tekrar dinle" aria-label="Soruyu tekrar dinle">🔊</button>
+    </div></div>`;
+}
+function setFoxPrompt(text){
+  if(text) gs.foxPrompt = String(text);
+  const el = document.querySelector('.fox-prompt-text');
+  if(el && text) el.innerHTML = String(text);
+}
 function renderSceneLayer(game){
   const def = SCENE_DEFS[game.scene] || SCENE_DEFS.sky;
   const d = def.decor;
@@ -17270,7 +17365,7 @@ function paraSesi(){
    oyuna geçiyor. Sayaç görünür ve iptal edilebilir; ekran değişirse
    (geri tuşu, listeye dön) zamanlayıcı kendini kapatıyor. */
 let otoGecisSayac = null;
-const OTO_GECIS_SN = 4;
+const OTO_GECIS_SN = 5;
 
 function sonrakiOyun(){
   const g = getGame(state.currentGameId);
@@ -17327,9 +17422,13 @@ function completeGame(msg, oyunPuani){
   const g = getGame(state.currentGameId);
   gs.celebrating = true;
   gs.celebrateMsg = msg || '';
+  gs.successVoice = 'Harikasın!';
   gs.oyunPuani = (typeof oyunPuani === 'number' && oyunPuani > 0) ? Math.round(oyunPuani) : 0;
   paraSesi();
-  speak(msg ? msg : 'Harika iş, tebrikler!');
+  /* Kutlama ekranı görünür görünmez kısa ve net başarı sözü duyulur.
+     Uzun sonuç cümlesi beş saniyelik geçiş süresini doldurup sonraki
+     oyunun yönergesiyle çakışmasın. */
+  speak(gs.successVoice);
   if(!state.completed[g.id]){
     state.completed[g.id] = true;
     state.hero.xp += 15;
@@ -20614,7 +20713,17 @@ function autoSpeak(game){
      okunmak için yazılmış doğal cümle (cfg.speak) varsa onu okuyoruz;
      turların kendi metnini oyun sayfası oku() köprüsüyle söyletiyor. */
   let text;
-  if (phaserOyunuMu(game)) text = game.cfg.speak || game.cfg.instruction;
+  /* Dikte sahnesi sözcüğü kendi turu hazır olduğunda okur. Burada hedef
+     sözcüğü önceden okuyup spokenKey'e yazarsak sahnenin DINLE çağrısı
+     "aynı metin" diye yutuluyordu ve oyun tamamen sessiz kalıyordu. */
+  if (game.type === 'typeWord') text = '';
+  /* PDF düzeltmeleri için yazılan üç turlu özel matematik sahnesi kendi
+     etkin tur yönergesini hazır olur olmaz oku() köprüsüyle seslendirir.
+     Burada katalogdaki eski tek-tur metnini önce okumak iki sesin üst üste
+     binmesine ve ilk turun yanlış anlatılmasına yol açıyordu. */
+  else if (PHASER_OYUNLAR[game.id] === 'matematik-pdf' ||
+           PHASER_OYUNLAR[game.id] === 'matematik2-pdf') text = '';
+  else if (phaserOyunuMu(game)) text = game.cfg.speak || game.cfg.instruction;
   else text = getCurrentPrompt(game);
   if(text && text !== gs.spokenKey){
     gs.spokenKey = text;
@@ -20623,14 +20732,17 @@ function autoSpeak(game){
 }
 
 /* Phaser oyun sayfalarının kendi tur metnini okutması için köprü.
-   Aynı metni üst üste okumaz; ses kapalıysa sessiz kalır. */
-function oku(metin){
-  if(!metin) return;
-  if(!state.settings.sound) return;
+   Kullanıcının bastığı DINLE düğmesi aynı metni bilerek yeniden
+   okutabilsin. Dönüş değeri sayesinde alt oyun, gerçekten bir ses
+   motoru yoksa adil görsel ipucuna düşebilir. */
+function oku(metin, tekrar){
+  if(!metin) return false;
+  setFoxPrompt(metin);
+  if(!state.settings.sound) return false;
   const t = String(metin);
-  if(t === gs.spokenKey) return;
+  if(!tekrar && t === gs.spokenKey) return true;
   gs.spokenKey = t;
-  speakNow(t);
+  return speakNow(t);
 }
 function replayPrompt(){ speakAgain(); }
 
@@ -20868,12 +20980,13 @@ function estFinish(){ completeGame(); }
 
 /* ---------- 6) balanceScale ---------- */
 function renderBalanceScale(game, c){
-  let html = `${instr(c.instruction)}`;
+  let html = '';
   if(gs.phase === 'compare'){
     const cmp = c.compare;
+    html += instr(c.instruction + ' ' + cmp.question);
     const tilt = cmp.leftCount > cmp.rightCount ? 'tilt-left' : (cmp.leftCount < cmp.rightCount ? 'tilt-right' : 'tilt-flat');
     html += `<div class="scale-visual ${tilt}"><div class="pan">${cmp.emoji.repeat(cmp.leftCount)}</div><div class="pan">${cmp.emoji.repeat(cmp.rightCount)}</div></div>`;
-    html += `<div class="game-question">${cmp.question}</div><div class="tile-wrap">`;
+    html += `<div class="tile-wrap">`;
     cmp.options.forEach(o=>{
       const isWrong = gs.wrongId === o;
       html += `<button class="tile ${isWrong?'wrong':''}" onclick="balCompare('${qa(o)}')">${o}</button>`;
@@ -20881,6 +20994,7 @@ function renderBalanceScale(game, c){
     html += '</div>';
   } else {
     const eq = c.equalize;
+    html += instr('Şimdi kefeleri eşitle!');
     const tilt = eq.leftVal > gs.rightVal ? 'tilt-left' : (eq.leftVal < gs.rightVal ? 'tilt-right' : 'tilt-flat');
     html += `<div class="scale-visual ${tilt}"><div class="pan">${eq.unitLabel.repeat(eq.leftVal)}</div><div class="pan">${eq.unitLabel.repeat(gs.rightVal)}</div></div>`;
     html += `<button class="btn btn-teal" onclick="balAdd()">➕ 1 ${eq.unitLabel} Ekle</button>`;
@@ -20909,8 +21023,9 @@ function renderChoiceQuestion(game, c){
   const idx = gs.stepIndex;
   if(idx >= c.steps.length) return '';
   const step = c.steps[idx];
-  let html = `${instr(c.instruction)}`;
+  let html = '';
   if(step.flashMs && !gs.flashRevealed[idx]){
+    html += instr(c.instruction);
     html += `<div class="flash-box">${step.flashContent}</div>`;
     if(!gs._flashTimerStarted){
       gs._flashTimerStarted = true;
@@ -20925,7 +21040,7 @@ function renderChoiceQuestion(game, c){
     }
     return html;
   }
-  html += `<div class="game-question">${step.prompt}</div><div class="tile-wrap">`;
+  html += `${instr(step.prompt)}<div class="tile-wrap">`;
   step.options.forEach((o,oi)=>{
     const isWrong = gs.wrongId === ('o_'+idx+'_'+oi);
     html += `<button class="tile ${labelClass(o.label)} ${isWrong?'wrong':''}" onclick="cqChoose(${idx},${oi})">${labelInner(o.label)}</button>`;
@@ -20974,7 +21089,7 @@ function countBump(){
 
 /* ---------- 9) surveyChart ---------- */
 function renderSurveyChart(game, c){
-  let html = `${instr(c.instruction)}<div class="chart-row">`;
+  let html = `${instr(gs.phase === 'survey' ? c.instruction : c.finalPrompt)}<div class="chart-row">`;
   c.options.forEach(o=>{
     const n = gs.tally[o.id] || 0;
     html += `<div class="chart-col"><div class="chart-bar" style="height:${14+n*16}px">${o.emoji.repeat(Math.min(n,6))}</div><div class="chart-label">${o.label}<br>(${n})</div></div>`;
@@ -20983,7 +21098,7 @@ function renderSurveyChart(game, c){
   if(gs.phase === 'survey'){
     html += `<button class="btn btn-teal" onclick="surveyNext()">👉 Sıradaki (${gs.revealed}/${c.responses.length})</button>`;
   } else {
-    html += `<div class="game-question">${c.finalPrompt}</div><div class="tile-wrap">`;
+    html += `<div class="tile-wrap">`;
     c.finalOptions.forEach((o,oi)=>{
       const isWrong = gs.wrongId === ('f_'+oi);
       html += `<button class="tile ${labelClass(o.label)} ${isWrong?'wrong':''}" onclick="surveyChoose(${oi})">${labelInner(o.label)}</button>`;
@@ -21100,15 +21215,55 @@ function twReplay(){
 /* Katalog verisi jenerik şablona yetmediği için kendi sahnesi yazılan
    oyunlar. Hepsi uzamsal.html içinde; sahne eşlemesi orada SAHNELER'de. */
 const PHASER_OYUNLAR = {
-  m02: 'uzamsal',   /* Pusula Korsanı — 3x3 ızgara, sayarak hazineyi bulma */
-  m03: 'uzamsal',   /* Dağcı Keçi — komut dizisinden gerçek patika üretiliyor */
+  /* 2. sınıf matematik PDF'sindeki 42 oyunun tamamı. Genel uzay,
+     kepçe veya boş-pano motorlarına düşmez; her biri kendi hikâyesindeki
+     nesnelerle matematik yaptıran üç turlu özel sahneye gider. */
+  v01:'matematik2-pdf', v02:'matematik2-pdf', v03:'matematik2-pdf',
+  v04:'matematik2-pdf', v05:'matematik2-pdf', v06:'matematik2-pdf',
+  v07:'matematik2-pdf', v08:'matematik2-pdf', v09:'matematik2-pdf',
+  v10:'matematik2-pdf', v11:'matematik2-pdf', v12:'matematik2-pdf',
+  v13:'matematik2-pdf', v14:'matematik2-pdf', v15:'matematik2-pdf',
+  v16:'matematik2-pdf', v17:'matematik2-pdf', v18:'matematik2-pdf',
+  v19:'matematik2-pdf', v20:'matematik2-pdf', v21:'matematik2-pdf',
+  v22:'matematik2-pdf', v23:'matematik2-pdf', v24:'matematik2-pdf',
+  v25:'matematik2-pdf', v26:'matematik2-pdf', v27:'matematik2-pdf',
+  v28:'matematik2-pdf', v29:'matematik2-pdf', v30:'matematik2-pdf',
+  v31:'matematik2-pdf', v32:'matematik2-pdf', v33:'matematik2-pdf',
+  v34:'matematik2-pdf', v35:'matematik2-pdf', v36:'matematik2-pdf',
+  v37:'matematik2-pdf', v38:'matematik2-pdf', v39:'matematik2-pdf',
+  v40:'matematik2-pdf', v41:'matematik2-pdf', v42:'matematik2-pdf',
+
+  /* İki kullanıcı PDF'inde ayrıntılandırılan 49 matematik oyunu.
+     Her biri üç turlu, hikâyeye özel sahneye gider; genel uzay/kepçe
+     şablonlarına düşmez. */
+  m01:'matematik-pdf', m02:'matematik-pdf', m03:'matematik-pdf',
   m04: 'uzamsal',   /* Gölge Avcıları — elmalar siluetle boy kıyaslıyor */
-  m05: 'uzamsal',   /* Çorap Eşleştirmece — uzunluk/renk gerçekten çiziliyor */
+  m05:'matematik-pdf',
   m06: 'uzamsal',   /* Anahtar ve Kilit — açı etiketle değil çizimle veriliyor */
   m07: 'uzamsal',   /* Dedektif Büyüteci — iz ve tabanlardaki çizgiler çiziliyor,
                        eskiden "(4 çizgi)" yazıyordu ve çocuk sayıyı okuyordu */
+  m08: 'uzamsal',   /* Meyve Suyu Şişeleri — kaçan yüzde kartları yerine
+                       gerçek sıvı seviyelerini yan yana karşılaştırma */
+  m09:'matematik-pdf', m10:'matematik-pdf', m11:'matematik-pdf', m12:'matematik-pdf',
+  m13: 'uzamsal',   /* Kement Atma — su altında kaçan koyun/kepçe yerine
+                       çayırdaki koyunlara dokunup gerçek 4'lü grup kurma */
+  m14:'matematik-pdf', m15:'matematik-pdf',
   m16: 'uzamsal',   /* Orman Maratonu — sıra pistte görünüyor, "(1.)" yazmıyor */
-  m19: 'uzamsal'    /* Otobüs Durakları — duraklar hat boyunca sıralı */
+  m17:'matematik-pdf', m18:'matematik-pdf',
+  m19: 'uzamsal',   /* Otobüs Durakları — duraklar hat boyunca sıralı */
+  m20:'matematik-pdf',
+  m21: 'uzamsal',   /* Vagon Ekspresi — dikey metin satırları yerine
+                       lokomotifin arkasında yatay dört gerçek vagon */
+  m22:'matematik-pdf', m23:'matematik-pdf', m24:'matematik-pdf', m25:'matematik-pdf',
+  m26:'matematik-pdf', m28:'matematik-pdf',
+  m31:'matematik-pdf', m32:'matematik-pdf', m33:'matematik-pdf', m34:'matematik-pdf',
+  m35:'matematik-pdf', m36:'matematik-pdf', m37:'matematik-pdf', m38:'matematik-pdf',
+  m39:'matematik-pdf', m41:'matematik-pdf', m42:'matematik-pdf', m43:'matematik-pdf',
+  m44:'matematik-pdf', m45:'matematik-pdf', m46:'matematik-pdf', m47:'matematik-pdf',
+  m48:'matematik-pdf', m49:'matematik-pdf', m50:'matematik-pdf', m51:'matematik-pdf',
+  m52:'matematik-pdf', m53:'matematik-pdf', m54:'matematik-pdf', m55:'matematik-pdf',
+  m56:'matematik-pdf', m57:'matematik-pdf', m58:'matematik-pdf', m59:'matematik-pdf',
+  m60:'matematik-pdf', m61:'matematik-pdf'
 };
 
 const PHASER_TIPLER = {
@@ -21236,7 +21391,8 @@ function renderPhaserScreen(g){
         <div class="t2" style="color:#9fc3e0">${g.sub}</div></div>
       <div class="hud-chip">SV ${state.hero.level} · 🪙 ${state.hero.coins}</div>
     </div>
-    <div class="imm-content" id="gameBody" style="padding:52px 0 0; display:block; overflow:hidden;">
+    ${gs.celebrating ? '' : renderPhaserPrompt(g)}
+    <div class="imm-content phaser-content" id="gameBody" style="padding:52px 0 0; display:block; overflow:hidden;">
       ${gs.celebrating ? renderCelebration(g) : phaserCerceve(g)}
     </div>
   </div>`;
@@ -21274,6 +21430,9 @@ function renderGameBody(){
     /* Kazanınca iframe'i kutlama ekranıyla değiştir; tekrar oynanırsa
        oyun sayfası baştan yüklenir. */
     el.innerHTML = gs.celebrating ? renderCelebration(g) : phaserCerceve(g);
+    const eski = document.getElementById('foxPrompt');
+    if(gs.celebrating && eski) eski.remove();
+    else if(!gs.celebrating && !eski) el.insertAdjacentHTML('beforebegin', renderPhaserPrompt(g));
     return;
   }
   const imm = isImmersive(g);
@@ -23409,13 +23568,58 @@ async function buyLook(catKey, id){
   }
   if(heroLevel() < (thing.lv||1)){ toast('Bu ' + thing.lv + '. seviyede açılıyor 🔒'); return; }
   if((Number(state.hero.coins)||0) < thing.price){ toast('Yeterli altının yok — biraz daha oyun oyna 🪙'); return; }
+  /* Para burada düşmez. Çocuk önce büyük görseli, adı ve fiyatı görüp
+     onaylar; yanlış dokunmayla alışveriş yapılmaz. */
+  state.purchaseConfirm = {catKey:catKey, id:id};
+  renderAll();
+}
+
+function closeBuyConfirm(){
+  state.purchaseConfirm = null;
+  renderAll();
+}
+
+async function confirmBuyLook(){
+  const p = state.purchaseConfirm;
+  if(!p) return;
+  const cat = catByKey(p.catKey);
+  const thing = cat ? findIn(cat.list(), p.id) : null;
+  state.purchaseConfirm = null;
+  if(!cat || !thing || isOwned(p.id)){ renderAll(); return; }
+  if(heroLevel() < (thing.lv||1)){ renderAll(); toast('Bu ' + thing.lv + '. seviyede açılıyor 🔒'); return; }
+  if((Number(state.hero.coins)||0) < thing.price){ renderAll(); toast('Yeterli altının yok — biraz daha oyun oyna 🪙'); return; }
   state.hero.coins -= thing.price;
-  ownedList().push(id);
-  lookGet()[catKey] = id;
+  ownedList().push(p.id);
+  lookGet()[p.catKey] = p.id;
   await saveState();
   checkBadges();
   toast(thing.name + ' alındı ve giydirildi! ✨');
   renderAll();
+}
+
+function renderBuyConfirm(){
+  const p = state.purchaseConfirm;
+  if(!p) return '';
+  const cat = catByKey(p.catKey), thing = cat ? findIn(cat.list(), p.id) : null;
+  if(!cat || !thing) return '';
+  const deneme = Object.assign({}, lookGet()); deneme[p.catKey] = p.id;
+  let onizleme;
+  if(cat.type === 'color')      onizleme = `<div class="sw-color" style="background:${thing.c}"></div>`;
+  else if(cat.type === 'frame') onizleme = `<div class="sw-color" style="background:${thing.css}"></div>`;
+  else if(cat.type === 'emoji') onizleme = `<div class="sw-emo">${thing.emo}</div>`;
+  else                          onizleme = renderLookSvg(deneme);
+  const kalan = Math.max(0, (Number(state.hero.coins)||0) - (Number(thing.price)||0));
+  return `<div class="overlay-bg" style="z-index:100" onclick="closeBuyConfirm()">
+    <div class="modal-card buy-modal" onclick="event.stopPropagation()">
+      <div class="buy-title">EMİN MİSİN?</div>
+      <div class="buy-preview">${onizleme}</div>
+      <div class="buy-name">${thing.name}</div>
+      <div class="buy-price">🪙 ${thing.price} altın</div>
+      <div class="buy-balance">Şu an: ${state.hero.coins} · Satın alınca: ${kalan} altın</div>
+      <button class="btn btn-teal" style="background:linear-gradient(180deg,#65dc91,#25a861)" onclick="confirmBuyLook()">EVET, SATIN AL</button>
+      <button class="btn btn-outline" onclick="closeBuyConfirm()">VAZGEÇ</button>
+    </div>
+  </div>`;
 }
 async function pickLook(catKey, id){
   const cat = catByKey(catKey); if(!cat) return;
@@ -23666,6 +23870,9 @@ function renderCustomize(){
   return `<div class="list-header"><button class="back-btn" onclick="go('character')">←</button>
     <div class="title-hero" style="font-size:18px; text-align:left;">✨ KİŞİSELLEŞTİR</div></div>
 
+  <div class="cust-help"><b>1.</b> Aşağıdan bir kategori seç. &nbsp; <b>2.</b> Beğendiğin parçaya dokun.
+    &nbsp; <b>3.</b> Hazır olunca büyük yeşil <b>BİTTİ</b> düğmesine bas.</div>
+
   <div class="cust-preview">
     ${renderCharVisual(134)}
     <div style="display:flex; flex-direction:column; gap:6px;">
@@ -23673,14 +23880,16 @@ function renderCustomize(){
       <button class="mini-btn" onclick="randomLook()">🎲 Rastgele</button>
       <button class="mini-btn mini-ghost" onclick="toggleLashes()">${look.lashes?'Kirpik ✓':'Kirpik ✗'}</button>
       ${cat.clearable ? `<button class="mini-btn mini-ghost" onclick="clearLook('${cat.key}')">Çıkar</button>` : ''}
-      <button class="mini-btn mini-ghost" onclick="go('character')">Bitti</button>
     </div>
   </div>
+
+  <button class="cust-done" onclick="go('character')">✓ BİTTİ</button>
 
   <div class="preset-row">${hazir}</div>
   <div class="ctab-row">${sekmeler}</div>
 
   <div class="panel" style="margin:10px 16px 16px;">
+    <div class="cust-section-head"><span>${cat.icon} Şimdi: ${cat.label}</span><span class="cust-coin">🪙 ${state.hero.coins}</span></div>
     ${cat.filter ? `<div class="hfilter">
       <button class="hf ${filtre==='all'?'on':''}" onclick="setHairFilter('all')">Hepsi</button>
       <button class="hf ${filtre==='k'?'on':''}" onclick="setHairFilter('k')">Uzun / Kız</button>
@@ -24735,6 +24944,7 @@ async function runDiagnostics(){
 function go(screen){
   /* ekran değişince eski form hatası ekranda kalmasın */
   if(screen !== state.screen) state.formError = '';
+  if(screen !== 'customize' && screen !== 'inventory') state.purchaseConfirm = null;
   if(screen !== 'gamePlayer'){
     if(typeof nwStopTimer === 'function') nwStopTimer();
     if(typeof cdStop === 'function') cdStop();
@@ -24779,6 +24989,7 @@ function renderAll(){
   app.innerHTML = html;
   if(state.friendModal){ app.innerHTML += renderFriendModal(state.friendModal); }
   if(state.confirmDelete){ app.innerHTML += renderDeleteConfirm(); }
+  if(state.purchaseConfirm){ app.innerHTML += renderBuyConfirm(); }
 }
 
 /* ===================== BAŞLANGIÇ (INIT) ===================== */

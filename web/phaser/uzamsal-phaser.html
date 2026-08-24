@@ -973,7 +973,887 @@ class IzScene extends Temel {
 
 
 /* =====================================================================
-   SiraScene — m16 "Orman Maratonu", m19 "Otobüs Durakları"
+   7) MEYVE SUYU ŞİŞELERİ (m08) — sıvı seviyesini görsel karşılaştırma
+   ---------------------------------------------------------------------
+   Jenerik tapSelect sahnesi seçenekleri su altında kaçan kartlara
+   dönüştürüyordu. Bu oyunun kazanımı refleks değil, iki sıvı çizgisinin
+   aynı yükseklikte olduğunu görmektir. Yüzdeler seçeneklerde yazılmaz;
+   çocuk şişelerin doluluk seviyelerini gerçekten karşılaştırır.
+   ===================================================================== */
+class SiviScene extends Temel {
+  constructor(){ super('Sivi'); }
+
+  oranCikar(etiket){
+    const m = duzMetin(etiket).match(/%(\d+)/);
+    return m ? Phaser.Math.Clamp(Number(m[1]) / 100, 0.05, 0.95) : 0.5;
+  }
+
+  siseCiz(g, x, y, en, boy, oran, renk){
+    const govdeY = y - boy / 2 + 24;
+    const govdeH = boy - 24;
+    const icX = x - en / 2 + 7;
+    const icY = govdeY + 7;
+    const icW = en - 14;
+    const icH = govdeH - 14;
+    const doluH = icH * oran;
+
+    g.fillStyle(0xffffff, 0.92);
+    g.fillRoundedRect(x - en / 2, govdeY, en, govdeH, 18);
+    g.fillStyle(renk, 0.92);
+    g.fillRoundedRect(icX, icY + icH - doluH, icW, doluH, 9);
+    /* Sıvı çizgisi özellikle belirgin: karşılaştırılan ölçüt bu. */
+    g.lineStyle(4, 0xf0a52b, 1);
+    g.lineBetween(icX + 3, icY + icH - doluH, icX + icW - 3, icY + icH - doluH);
+
+    g.lineStyle(4, 0x7e93a8, 1);
+    g.strokeRoundedRect(x - en / 2, govdeY, en, govdeH, 18);
+    g.fillStyle(0xffffff, 0.96);
+    g.fillRoundedRect(x - en * 0.23, y - boy / 2, en * 0.46, 30, 7);
+    g.lineStyle(4, 0x7e93a8, 1);
+    g.strokeRoundedRect(x - en * 0.23, y - boy / 2, en * 0.46, 30, 7);
+    g.fillStyle(0x69c9d0, 0.45);
+    g.fillRoundedRect(x - en / 2 + 9, govdeY + 9, 12, govdeH - 18, 6);
+  }
+
+  create(){
+    const c = CFG;
+    const dogrular = new Set((c.correct || []).map(String));
+    const ogeler = (c.items || []).map(i => ({
+      id:String(i.id), oran:this.oranCikar(i.label)
+    }));
+
+    const arka = this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0xfff6df,0xfff6df,0xe6f7fb,0xe6f7fb,1);
+    arka.fillRect(0,0,EN,BOY);
+    this.arayuzKur(duzMetin(c.instruction) || 'İlk şişeyle aynı seviyede dolu şişeyi bul!');
+    this.basariMesaji = 'Sıvı çizgilerini karşılaştırdın; aynı seviyeyi buldun 🧃';
+
+    const ornekY = this.seritAlt + 130;
+    this.add.text(EN/2, ornekY - 104, 'ÖRNEK ŞİŞE', {
+      fontFamily:'system-ui, sans-serif', fontSize:'16px', fontStyle:'bold', color:'#53677b'
+    }).setOrigin(0.5).setDepth(6);
+    const ornek = this.add.graphics().setDepth(5);
+    this.siseCiz(ornek, EN/2, ornekY, 86, 164, 0.5, 0xf6b84f);
+    this.add.text(EN/2 + 76, ornekY + 8, '← sıvı çizgisi', {
+      fontFamily:'system-ui, sans-serif', fontSize:'13px', fontStyle:'bold', color:'#bd7420'
+    }).setOrigin(0,0.5).setDepth(6);
+
+    this.add.text(EN/2, ornekY + 112, 'Hangisinin sıvı çizgisi aynı yükseklikte?', {
+      fontFamily:'system-ui, sans-serif', fontSize:'17px', fontStyle:'bold', color:'#40576a'
+    }).setOrigin(0.5).setDepth(6);
+
+    const secimY = Math.min(ornekY + 280, BOY - 145);
+    ogeler.forEach((o, i) => {
+      const x = EN * (i + 0.5) / Math.max(1, ogeler.length);
+      const kap = this.add.container(x, secimY).setDepth(12);
+      const kart = this.add.graphics();
+      kart.fillStyle(0xffffff, 0.88);
+      kart.fillRoundedRect(-64,-105,128,210,18);
+      kart.lineStyle(3,0xb9cad6,1);
+      kart.strokeRoundedRect(-64,-105,128,210,18);
+      const sise = this.add.graphics();
+      this.siseCiz(sise, 0, 2, 66, 142, o.oran, 0xf6b84f);
+      const harf = this.add.text(0, 84, String.fromCharCode(65+i), {
+        fontFamily:'system-ui, sans-serif', fontSize:'18px', fontStyle:'bold', color:'#53677b'
+      }).setOrigin(0.5);
+      kap.add([kart,sise,harf]);
+      kap.setSize(140,220).setInteractive({useHandCursor:true});
+      kap.setData('dogru', dogrular.has(o.id) || Math.abs(o.oran - 0.5) < 0.01);
+      kap.on('pointerdown', () => {
+        if (this.kilit) return;
+        if (kap.getData('dogru')){
+          this.kilit = true;
+          this.odul(300,x,secimY);
+          this.tweens.add({targets:kap,scale:1.1,duration:180,yoyo:true,
+            onComplete:()=>this.time.delayedCall(500,()=>this.bitir(true))});
+        } else {
+          const yon = o.oran < 0.5 ? 'daha az' : 'daha çok';
+          this.tweens.add({targets:kap,angle:{from:-6,to:6},duration:75,yoyo:true,repeat:2,
+            onComplete:()=>kap.setAngle(0)});
+          this.hata('Bu şişe ' + yon + ' dolu. Sıvı çizgilerini yeniden karşılaştır!');
+        }
+      });
+    });
+    this.durumYazi.setText('Sıvı çizgilerini karşılaştır');
+  }
+}
+
+
+/* =====================================================================
+   8) ÇARKIFELEK DİŞLİLERİ (m09) — dişleri sayıp yuvaya takma
+   ---------------------------------------------------------------------
+   Eski sahne kaynak kartına "6 dişli" yazdığı için çocuk diş saymadan
+   aynı yazıyı hedefte buluyordu. Burada kaynak çarklarda yalnız gerçek
+   diş geometrisi var; hedef sayıyı okuyup çarkın dişlerini saymak gerekir.
+   ===================================================================== */
+class DisliScene extends Temel {
+  constructor(){ super('Disli'); }
+
+  sayiCikar(etiket){
+    const m = duzMetin(etiket).match(/(\d+)/);
+    return m ? Number(m[1]) : 0;
+  }
+
+  disliCiz(g, x, y, r, adet, renk){
+    const ic = r * 0.72, dis = r * 1.12;
+    g.fillStyle(0xc77f16,1);
+    for (let i=0; i<adet; i++){
+      const a = -Math.PI/2 + i * Math.PI*2/adet;
+      const yarim = Math.PI/adet * 0.36;
+      const noktalar = [
+        {x:x+Math.cos(a-yarim)*ic,  y:y+Math.sin(a-yarim)*ic},
+        {x:x+Math.cos(a-yarim)*dis, y:y+Math.sin(a-yarim)*dis},
+        {x:x+Math.cos(a+yarim)*dis, y:y+Math.sin(a+yarim)*dis},
+        {x:x+Math.cos(a+yarim)*ic,  y:y+Math.sin(a+yarim)*ic}
+      ];
+      g.fillPoints(noktalar,true);
+      g.fillCircle(x+Math.cos(a)*dis,y+Math.sin(a)*dis,3.5);
+    }
+    g.fillStyle(renk,1);
+    g.fillCircle(x,y,r,1);
+    g.lineStyle(3,0x6c7785,1); g.strokeCircle(x,y,r);
+    g.fillStyle(0xf7fbff,1); g.fillCircle(x,y,r*0.28);
+    g.lineStyle(3,0x6c7785,1); g.strokeCircle(x,y,r*0.28);
+  }
+
+  create(){
+    const c = CFG;
+    const kaynaklar = Phaser.Utils.Array.Shuffle((c.sources || []).map(s=>({
+      id:String(s.id), adet:this.sayiCikar(s.label), match:s.match == null ? null : String(s.match)
+    })));
+    const hedefler = (c.targets || []).map(t=>({
+      id:String(t.id), adet:this.sayiCikar(t.label), dolu:false
+    }));
+
+    const arka = this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0xeaf1f5,0xeaf1f5,0xdce7ed,0xdce7ed,1); arka.fillRect(0,0,EN,BOY);
+    this.arayuzKur(duzMetin(c.instruction) || 'Dişleri say ve çarkları doğru yuvalara tak!');
+    this.basariMesaji = 'Dişli ustası! Çarkların dişlerini sayıp doğru yuvalara taktın ⚙️';
+    this.tamamlanan = 0;
+
+    const hedefY = this.seritAlt + 160;
+    this.add.text(EN/2, hedefY-108, 'ÇARK YUVALARI', {
+      fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#526978'
+    }).setOrigin(0.5).setDepth(6);
+    this.hedefler = hedefler.map((h,i)=>{
+      const x = EN * (i+0.5) / hedefler.length;
+      const kap = this.add.container(x,hedefY).setDepth(8);
+      const g = this.add.graphics();
+      g.fillStyle(0xb7c5ce,0.42); g.fillCircle(0,0,70);
+      g.lineStyle(4,0x8295a3,1); g.strokeCircle(0,0,70);
+      g.lineStyle(2,0x9cabb5,0.8); g.strokeCircle(0,0,45);
+      const yazi = this.add.text(0,92,h.adet+' DİŞ',{
+        fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#40576a'
+      }).setOrigin(0.5);
+      kap.add([g,yazi]);
+      return { ...h, x, y:hedefY, kap };
+    });
+
+    const kaynakY = Math.min(hedefY+300, BOY-150);
+    this.add.text(EN/2,kaynakY-112,'DİŞLERİ SAY — doğru yuvaya sürükle',{
+      fontFamily:'system-ui, sans-serif',fontSize:'16px',fontStyle:'bold',color:'#526978'
+    }).setOrigin(0.5).setDepth(6);
+
+    kaynaklar.forEach((o,i)=>{
+      const x = EN * (i+0.5) / kaynaklar.length;
+      const kap = this.add.container(x,kaynakY).setDepth(20);
+      const kart = this.add.graphics();
+      kart.fillStyle(0xffffff,0.9); kart.fillRoundedRect(-64,-72,128,144,18);
+      kart.lineStyle(3,0xb9c8d1,1); kart.strokeRoundedRect(-64,-72,128,144,18);
+      const disli = this.add.graphics();
+      this.disliCiz(disli,0,-3,37,o.adet,0xe0a82f);
+      kap.add([kart,disli]);
+      kap.setSize(140,154).setInteractive({useHandCursor:true,draggable:true});
+      kap.setData('match',o.match); kap.setData('adet',o.adet);
+      kap.setData('basX',x); kap.setData('basY',kaynakY);
+      this.input.setDraggable(kap);
+    });
+
+    this.input.on('dragstart',(p,o)=>{ if(!this.kilit && o.getData('match')!==undefined) o.setDepth(40); });
+    this.input.on('drag',(p,o,x,y)=>{
+      if(this.kilit || o.getData('match')===undefined) return;
+      o.setPosition(x,y);
+    });
+    this.input.on('dragend',(p,o)=>{
+      if(this.kilit || o.getData('match')===undefined) return;
+      let enYakin=null, uzak=Number.MAX_VALUE;
+      this.hedefler.forEach(h=>{
+        const d=Phaser.Math.Distance.Between(o.x,o.y,h.x,h.y);
+        if(d<uzak){uzak=d;enYakin=h;}
+      });
+      if(enYakin && uzak<105){
+        if(o.getData('match')===enYakin.id && !enYakin.dolu){
+          enYakin.dolu=true; this.tamamlanan++;
+          o.disableInteractive().setPosition(enYakin.x,enYakin.y).setScale(0.92).setDepth(18);
+          this.odul(220,enYakin.x,enYakin.y);
+          this.durumYazi.setText(this.tamamlanan+' / '+this.hedefler.length+' çark');
+          this.mesaj(enYakin.adet+' dişli çark doğru yuvada!','#2f8f5b');
+          if(this.tamamlanan>=this.hedefler.length){
+            this.kilit=true; this.time.delayedCall(900,()=>this.bitir(true));
+          }
+          return;
+        }
+        this.hata(o.getData('adet')+' diş saydın; bu yuva '+enYakin.adet+' dişli çark istiyor.');
+      }
+      this.tweens.add({targets:o,x:o.getData('basX'),y:o.getData('basY'),duration:260,ease:'Back.easeOut'});
+    });
+    this.durumYazi.setText('0 / '+hedefler.length+' çark');
+  }
+}
+
+
+/* =====================================================================
+   9) SİHİRLİ BÜYÜTEÇ (m14) — renkli alt grupları doğrudan seçme
+   ---------------------------------------------------------------------
+   Emoji 🐠 bazı cihazlarda sarı göründüğü hâlde yönerge ona "kırmızı"
+   diyordu. Üstelik jenerik kepçede hedefler kaçıyor, doğru balığa giderken
+   yanlış öge yakalanabiliyordu. Burada renkler gerçek geometriyle çizilir;
+   balıklar sabittir ve doğrudan dokunularak seçilir.
+   ===================================================================== */
+class BalikSayScene extends Temel {
+  constructor(){ super('BalikSay'); }
+
+  balikCiz(g, renk){
+    g.fillStyle(renk,1);
+    g.fillEllipse(0,0,62,38);
+    g.fillTriangle(-28,0,-52,-22,-52,22);
+    g.fillStyle(0xffffff,1); g.fillCircle(18,-6,6);
+    g.fillStyle(0x26384a,1); g.fillCircle(20,-6,2.5);
+    g.lineStyle(3,0xffffff,0.75);
+    g.lineBetween(-8,-16,-8,16); g.lineBetween(5,-17,5,17);
+  }
+
+  create(){
+    const yon = duzMetin(CFG.instruction) || 'Üç kırmızı ve iki mavi balığı bul!';
+    const arka = this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0x91dcf2,0x91dcf2,0x176e9e,0x176e9e,1);
+    arka.fillRect(0,0,EN,BOY);
+    for(let i=0;i<15;i++){
+      arka.lineStyle(2,0xffffff,0.22);
+      arka.strokeCircle(34+(i*83)%430,180+(i*67)%430,5+(i%3)*3);
+    }
+
+    this.arayuzKur(yon);
+    this.basariMesaji = 'Renkleri dikkatle ayırdın: üç kırmızı ve iki mavi balığı buldun 🐠';
+    this.kirmizi=0; this.mavi=0; this.toplam=0;
+    this.durumYazi.setText('🔴 0 / 3   •   🔵 0 / 2');
+
+    const dogrular = new Set((CFG.correct || []).map(String));
+    const ogeler = CFG.items || [];
+    const konumlar = [
+      [78,this.seritAlt+105],[220,this.seritAlt+84],[372,this.seritAlt+116],
+      [132,this.seritAlt+225],[306,this.seritAlt+224],
+      [72,this.seritAlt+350],[238,this.seritAlt+342],[390,this.seritAlt+350]
+    ];
+
+    ogeler.forEach((o,i)=>{
+      const ham=duzMetin(o.label), p=konumlar[i%konumlar.length];
+      const kirmizi=ham.includes('🐠'), mavi=ham.includes('🐟');
+      const kap=this.add.container(p[0],p[1]).setDepth(12);
+      const halo=this.add.graphics();
+      halo.fillStyle(0xffffff,0.18); halo.fillCircle(0,0,48);
+      halo.lineStyle(2,0xffffff,0.45); halo.strokeCircle(0,0,48);
+      kap.add(halo);
+      if(kirmizi || mavi){
+        const bg=this.add.graphics(); this.balikCiz(bg,kirmizi?0xe5484d:0x3186d3); kap.add(bg);
+      }else{
+        kap.add(this.add.text(0,0,ham.includes('🌿')?'🌿':'🌊',{fontSize:'52px'}).setOrigin(0.5));
+      }
+      kap.setSize(104,96).setInteractive({useHandCursor:true});
+      kap.setData('dogru',dogrular.has(String(o.id)));
+      kap.on('pointerdown',()=>{
+        if(this.kilit || kap.getData('secildi')) return;
+        if(!kap.getData('dogru')){
+          this.tweens.add({targets:kap,angle:{from:-7,to:7},duration:75,yoyo:true,repeat:2,
+            onComplete:()=>kap.setAngle(0)});
+          this.hata('Bu bir balık değil. Yalnız kırmızı ve mavi balıklara dokun!');
+          return;
+        }
+        kap.setData('secildi',true).disableInteractive();
+        if(kirmizi) this.kirmizi++; else this.mavi++;
+        this.toplam++;
+        this.durumYazi.setText('🔴 '+this.kirmizi+' / 3   •   🔵 '+this.mavi+' / 2');
+        this.odul(100,p[0],p[1]);
+        const tik=this.add.text(30,-30,'✅',{fontSize:'24px'}).setOrigin(0.5); kap.add(tik);
+        this.tweens.add({targets:kap,scale:1.12,duration:150,yoyo:true});
+        if(this.toplam>=5){ this.kilit=true; this.time.delayedCall(900,()=>this.bitir(true)); }
+      });
+    });
+
+    this.add.text(EN/2,BOY-94,'🔍 Balıkları renklerine göre dikkatle incele',{
+      fontFamily:'system-ui, sans-serif',fontSize:'16px',fontStyle:'bold',color:'#e8f8ff'
+    }).setOrigin(0.5).setDepth(6);
+  }
+}
+
+
+/* =====================================================================
+   10) KEMENT ATMA (m13) — herhangi dört koyundan görünür grup kurma
+   ---------------------------------------------------------------------
+   Jenerik tapSelect sahnesi koyunları su altında yüzdürüp çocuğun
+   dokunuşunu bir kepçeyi hareket ettirmek için kullanıyordu. Yönerge ise
+   doğrudan koyuna dokun diyordu. Burada koyunlar çayırda sabittir; seçilen
+   her koyun ağıla gider ve dört koyun gerçek bir grup oluşturur.
+   ===================================================================== */
+class KementScene extends Temel {
+  constructor(){ super('Kement'); }
+
+  create(){
+    const yon = duzMetin(CFG.instruction) || 'Dağınık koyunlardan herhangi dört tanesine dokun!';
+    const arka = this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0xaee1ff,0xaee1ff,0x8fd06f,0x8fd06f,1);
+    arka.fillRect(0,0,EN,BOY);
+    arka.fillStyle(0xffffff,0.8);
+    arka.fillEllipse(90,150,120,42); arka.fillEllipse(370,190,150,48);
+    arka.fillStyle(0x79bd5f,1); arka.fillRect(0,250,EN,BOY-250);
+
+    this.arayuzKur(yon);
+    this.basariMesaji = 'Harika! Herhangi dört koyundan bir grup oluşturdun 🐑';
+    this.secilen = 0;
+    this.durumYazi.setText('0 / 4 koyun');
+
+    const ust = this.seritAlt + 112;
+    const konumlar = [
+      [70,ust],[180,ust+22],[292,ust-8],[404,ust+18],
+      [92,ust+148],[202,ust+132],[316,ust+156],[408,ust+126]
+    ];
+
+    /* Alt tarafta seçilen dört koyunun yan yana geldiği görünür ağıl. */
+    const agY = BOY - 92;
+    const ag = this.add.graphics().setDepth(4);
+    ag.fillStyle(0xf2d49a,0.9); ag.fillRoundedRect(46,agY-72,EN-92,116,18);
+    ag.lineStyle(6,0x9a6a36,1);
+    for(let x=54;x<=EN-54;x+=62) ag.lineBetween(x,agY-68,x,agY+40);
+    ag.lineBetween(48,agY-42,EN-48,agY-42);
+    ag.lineBetween(48,agY+12,EN-48,agY+12);
+    this.add.text(EN/2,agY-90,"4'LÜ GRUP AĞILI",{
+      fontFamily:'system-ui, sans-serif',fontSize:'16px',fontStyle:'bold',color:'#6f4b28'
+    }).setOrigin(0.5).setDepth(6);
+
+    const ogeler = (CFG.items || Array.from({length:8},(_,i)=>({id:'k'+(i+1),label:'🐑'})));
+    ogeler.forEach((o,i)=>{
+      const p = konumlar[i % konumlar.length];
+      const kap = this.add.container(p[0],p[1]).setDepth(12);
+      const halka = this.add.graphics();
+      halka.fillStyle(0xffffff,0.34); halka.fillCircle(0,2,41);
+      halka.lineStyle(3,0xffffff,0.7); halka.strokeCircle(0,2,41);
+      const koyun = this.add.text(0,0,'🐑',{fontSize:'54px'}).setOrigin(0.5);
+      kap.add([halka,koyun]);
+      kap.setSize(88,88).setInteractive({useHandCursor:true});
+      kap.on('pointerdown',()=>{
+        if(this.kilit || kap.getData('secildi')) return;
+        kap.setData('secildi',true).disableInteractive();
+        const sira = this.secilen++;
+        this.durumYazi.setText(this.secilen+' / 4 koyun');
+        this.odul(100,p[0],p[1]);
+        this.tweens.add({
+          targets:kap,
+          x:126+sira*76, y:agY-12, scale:0.72,
+          duration:480, ease:'Cubic.easeInOut'
+        });
+        this.mesaj(this.secilen+'. koyun gruba katıldı.','#2f8f5b');
+        if(this.secilen>=4){
+          this.kilit=true;
+          this.time.delayedCall(1000,()=>this.bitir(true));
+        }
+      });
+    });
+  }
+}
+
+
+/* =====================================================================
+   11) UZAYLI APARTMANI (m17) — katları aşağıdan yukarı sıralama
+   ---------------------------------------------------------------------
+   Jenerik eşleştirme satırları katları yukarıdan aşağı 1,2,3,4,5 diye
+   diziyordu ve ortada bina/uzaylı yoktu. Burada 1. kat zemine, 5. kat
+   tepeye yerleşir; kargo gerçek kat penceresine sürüklenir.
+   ===================================================================== */
+class ApartmanScene extends Temel {
+  constructor(){ super('Apartman'); }
+
+  create(){
+    const yon=duzMetin(CFG.instruction)||'Kargoyu 4. kattaki uzaylıya teslim et!';
+    const arka=this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0x18254b,0x18254b,0x5967a8,0x5967a8,1); arka.fillRect(0,0,EN,BOY);
+    for(let i=0;i<35;i++){ arka.fillStyle(0xffffff,0.55); arka.fillCircle((i*83)%EN,(i*47)%BOY,1.5); }
+    this.arayuzKur(yon);
+    this.basariMesaji='Teslimat tamam! Katları aşağıdan yukarı doğru saydın 👾';
+
+    const hedefKayit=(CFG.targets||[]).find(t=>Number(t.need)>0);
+    const hm=duzMetin(hedefKayit&&hedefKayit.label).match(/(\d+)/);
+    this.hedefKat=hm?Number(hm[1]):4;
+
+    const binaX=EN/2, ust=this.seritAlt+42, katH=82, alt=ust+5*katH;
+    const b=this.add.graphics().setDepth(4);
+    b.fillStyle(0xc6cadc,1); b.fillRoundedRect(binaX-132,ust-18,264,5*katH+36,18);
+    b.lineStyle(4,0x7783a6,1); b.strokeRoundedRect(binaX-132,ust-18,264,5*katH+36,18);
+
+    const renkler=[0x8fd3ff,0xb6e38a,0xffd47f,0xeaa0c6,0xaec3ff];
+    this.katlar=[];
+    for(let kat=1;kat<=5;kat++){
+      const y=alt-(kat-0.5)*katH;
+      b.fillStyle(kat===this.hedefKat?0xffe28a:0xe9edf7,1);
+      b.fillRoundedRect(binaX-112,y-katH/2+7,224,katH-14,12);
+      b.lineStyle(3,kat===this.hedefKat?0xd69625:0x929db8,1);
+      b.strokeRoundedRect(binaX-112,y-katH/2+7,224,katH-14,12);
+      b.fillStyle(renkler[kat-1],1); b.fillRoundedRect(binaX-40,y-27,80,54,10);
+      b.lineStyle(3,0x60739b,1); b.strokeRoundedRect(binaX-40,y-27,80,54,10);
+      this.add.text(binaX-82,y,kat+'. KAT',{
+        fontFamily:'system-ui, sans-serif',fontSize:'16px',fontStyle:'bold',color:'#40506e'
+      }).setOrigin(0.5).setDepth(7);
+      this.add.text(binaX+2,y,'👾',{fontSize:'34px'}).setOrigin(0.5).setDepth(7);
+      this.katlar.push({kat,y});
+    }
+    this.add.text(binaX,ust-32,'UZAYLI APARTMANI',{
+      fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#f2f5ff'
+    }).setOrigin(0.5).setDepth(7);
+
+    const basY=Math.min(alt+64,BOY-82);
+    const paket=this.add.container(binaX,basY).setDepth(20);
+    const pg=this.add.graphics();
+    pg.fillStyle(0xfff7dc,1); pg.fillRoundedRect(-52,-36,104,72,16);
+    pg.lineStyle(3,0xd3a84f,1); pg.strokeRoundedRect(-52,-36,104,72,16);
+    const pe=this.add.text(0,-3,'📦',{fontSize:'42px'}).setOrigin(0.5);
+    const py=this.add.text(0,26,'SÜRÜKLE',{fontFamily:'system-ui, sans-serif',fontSize:'12px',fontStyle:'bold',color:'#785b27'}).setOrigin(0.5);
+    paket.add([pg,pe,py]);
+    paket.setSize(116,82).setInteractive({useHandCursor:true,draggable:true});
+    paket.setData('basX',binaX); paket.setData('basY',basY);
+    this.input.setDraggable(paket);
+    this.input.on('drag',(p,o,x,y)=>{ if(!this.kilit&&o===paket) o.setPosition(x,y); });
+    this.input.on('dragend',(p,o)=>{
+      if(this.kilit||o!==paket) return;
+      let yakin=this.katlar[0],uzak=Number.MAX_VALUE;
+      this.katlar.forEach(k=>{const d=Math.abs(o.y-k.y);if(d<uzak){uzak=d;yakin=k;}});
+      const binaIcinde=o.x>binaX-145&&o.x<binaX+145&&uzak<55;
+      if(binaIcinde&&yakin.kat===this.hedefKat){
+        this.kilit=true; o.disableInteractive();
+        this.odul(300,binaX,yakin.y); this.durumYazi.setText(this.hedefKat+'. kata teslim edildi');
+        this.tweens.add({targets:o,x:binaX+62,y:yakin.y,scale:0.62,duration:380,ease:'Back.easeOut',
+          onComplete:()=>this.time.delayedCall(650,()=>this.bitir(true))});
+        return;
+      }
+      if(binaIcinde) this.hata('Bu '+yakin.kat+'. kat. Zeminden başlayıp '+this.hedefKat+'. kata kadar say!');
+      this.tweens.add({targets:o,x:o.getData('basX'),y:o.getData('basY'),duration:300,ease:'Back.easeOut'});
+    });
+    this.durumYazi.setText('Zeminden yukarı say');
+  }
+}
+
+
+/* =====================================================================
+   12) DONDURMA KULESİ (m18) — aşağıdan yukarı işlem sırası
+   ---------------------------------------------------------------------
+   Jenerik eşleştirme üç metin satırı gösteriyor, ne külahı ne de üst üste
+   dizilme ilişkisini kuruyordu. Burada 1. top kulaha en yakın, 3. top en
+   üsttedir ve toplar yönergedeki sırayla yerleştirilir.
+   ===================================================================== */
+class DondurmaScene extends Temel {
+  constructor(){ super('Dondurma'); }
+
+  topCiz(g,renk,tur){
+    g.fillStyle(renk,1); g.fillCircle(0,0,43);
+    g.fillCircle(-25,17,24); g.fillCircle(25,17,24);
+    if(tur==='cilek'){
+      g.fillStyle(0xffffff,0.8);
+      [[-18,-12],[8,-18],[22,5],[-4,12]].forEach(p=>g.fillEllipse(p[0],p[1],4,7));
+    }else if(tur==='cikolata'){
+      g.fillStyle(0x4b261b,0.9);
+      [[-18,-12],[10,-18],[22,7],[-4,14]].forEach(p=>g.fillCircle(p[0],p[1],4));
+    }else{
+      g.fillStyle(0xfff7cf,0.9); g.fillCircle(-14,-13,5); g.fillCircle(13,5,4);
+    }
+    g.lineStyle(3,0xffffff,0.72); g.strokeCircle(0,0,43);
+  }
+
+  create(){
+    const yon=duzMetin(CFG.instruction)||'Külahı aşağıdan yukarı doğru kur!';
+    const arka=this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0xffe8f0,0xffe8f0,0xfff5d7,0xfff5d7,1); arka.fillRect(0,0,EN,BOY);
+    this.arayuzKur(yon);
+    /* Alt sıradaki aroma kartlarıyla çakışmasın; bu sahnede geri bildirim
+       yönerge paneli ile dondurma kulesi arasındaki boşlukta görünür. */
+    this.mesajYazi.setY(this.seritAlt+48);
+    this.basariMesaji='Sipariş hazır! Topları aşağıdan yukarı doğru sıraladın 🍨';
+    this.sira=1;
+
+    const cx=EN/2, ilkY=this.seritAlt+330;
+    const cg=this.add.graphics().setDepth(5);
+    /* külah */
+    cg.fillStyle(0xd9a25f,1); cg.fillTriangle(cx-58,ilkY+52,cx+58,ilkY+52,cx,ilkY+210);
+    cg.lineStyle(3,0x9b6b35,0.9);
+    for(let y=ilkY+76;y<ilkY+184;y+=26) cg.lineBetween(cx-42+(y-ilkY)*0.16,y,cx+42-(y-ilkY)*0.16,y);
+    cg.lineBetween(cx-48,ilkY+62,cx+18,ilkY+186);
+    cg.lineBetween(cx+48,ilkY+62,cx-18,ilkY+186);
+
+    this.yuvalar=[1,2,3].map(s=>{
+      const y=ilkY-(s-1)*78;
+      cg.fillStyle(0xffffff,0.58); cg.fillCircle(cx,y,50);
+      cg.lineStyle(3,0xbc91a5,0.95); cg.strokeCircle(cx,y,50);
+      this.add.text(cx-82,y,s+'. TOP',{
+        fontFamily:'system-ui, sans-serif',fontSize:'15px',fontStyle:'bold',color:'#8b5870'
+      }).setOrigin(1,0.5).setDepth(7);
+      return {sira:s,x:cx,y,dolu:false};
+    });
+
+    const bilgiler={
+      cilek:{ad:'ÇİLEK',renk:0xec6380},
+      vanilya:{ad:'VANİLYA',renk:0xf5d98c},
+      cikolata:{ad:'ÇİKOLATA',renk:0x8b5038}
+    };
+    const kaynaklar=(CFG.sources||[]).map(s=>({id:String(s.id),match:String(s.match)}));
+    const kaynakY=BOY-82;
+    kaynaklar.forEach((o,i)=>{
+      const bilgi=bilgiler[o.id]||{ad:o.id.toUpperCase(),renk:0xd9a4bf};
+      const x=EN*(i+0.5)/kaynaklar.length;
+      const kap=this.add.container(x,kaynakY).setDepth(20);
+      const kart=this.add.graphics();
+      kart.fillStyle(0xffffff,0.92); kart.fillRoundedRect(-68,-62,136,124,18);
+      kart.lineStyle(3,0xe0b7c8,1); kart.strokeRoundedRect(-68,-62,136,124,18);
+      const top=this.add.graphics(); this.topCiz(top,bilgi.renk,o.id); top.setScale(0.72).setY(-12);
+      const ad=this.add.text(0,43,bilgi.ad,{fontFamily:'system-ui, sans-serif',fontSize:'13px',fontStyle:'bold',color:'#74465b'}).setOrigin(0.5);
+      kap.add([kart,top,ad]);
+      kap.setSize(148,134).setInteractive({useHandCursor:true,draggable:true});
+      kap.setData('match',o.match); kap.setData('ad',bilgi.ad); kap.setData('basX',x); kap.setData('basY',kaynakY);
+      kap.setData('kart',kart); kap.setData('topCizim',top); kap.setData('adYazi',ad);
+      this.input.setDraggable(kap);
+    });
+
+    this.input.on('drag',(p,o,x,y)=>{ if(!this.kilit&&o.getData('match')) o.setPosition(x,y); });
+    this.input.on('dragend',(p,o)=>{
+      if(this.kilit||!o.getData('match')) return;
+      let yakin=this.yuvalar[0],uzak=Number.MAX_VALUE;
+      this.yuvalar.forEach(h=>{const d=Phaser.Math.Distance.Between(o.x,o.y,h.x,h.y);if(d<uzak){uzak=d;yakin=h;}});
+      const beklenen='p'+this.sira;
+      if(uzak<82&&yakin.sira===this.sira&&o.getData('match')===beklenen){
+        yakin.dolu=true;
+        o.disableInteractive().setData('match',null).setDepth(18);
+        /* Kaynak kartı tezgâhta kalır; kuleye yalnız dondurma topunun
+           kendisi yerleşir. Kart/etiket taşınırsa külah beyaz kutulardan
+           oluşuyor ve üst üste top ilişkisi görünmüyordu. */
+        o.getData('kart').setVisible(false);
+        o.getData('adYazi').setVisible(false);
+        o.getData('topCizim').setScale(1).setY(0);
+        this.odul(160,yakin.x,yakin.y);
+        this.tweens.add({targets:o,x:yakin.x,y:yakin.y,scale:1,duration:350,ease:'Back.easeOut'});
+        this.mesaj(this.sira+'. top yerinde!','#2f8f5b');
+        this.sira++;
+        this.durumYazi.setText(this.sira<=3?this.sira+'. topu yerleştir':'3 / 3 top');
+        if(this.sira>3){this.kilit=true;this.time.delayedCall(950,()=>this.bitir(true));}
+        return;
+      }
+      if(uzak<82&&yakin.sira!==this.sira) this.hata('Önce '+this.sira+'. topu yerleştir. Külahın üstünden sırayla ilerle!');
+      else if(uzak<82) this.hata(this.sira+'. top için doğru aromayı yönergede yeniden bul!');
+      this.tweens.add({targets:o,x:o.getData('basX'),y:o.getData('basY'),duration:300,ease:'Back.easeOut'});
+    });
+    this.durumYazi.setText('1. topu yerleştir');
+  }
+}
+
+
+/* =====================================================================
+   13) ŞAMPİYONLAR KÜRSÜSÜ (m20) — dereceyi yükseklikle somutlaştırma
+   ---------------------------------------------------------------------
+   Jenerik eşleştirme 1,2,3'ü aynı biçimli satırlar hâlinde gösteriyordu.
+   Burada geleneksel kürsü görünür: 1. ortada/en yüksek, 2. solda, 3. sağda.
+   ===================================================================== */
+class KursuScene extends Temel {
+  constructor(){ super('Kursu'); }
+
+  create(){
+    const yon=duzMetin(CFG.instruction)||'Hayvanları derecelerine göre kürsüye yerleştir!';
+    const arka=this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0x9bd8ff,0x9bd8ff,0xeaf6ff,0xeaf6ff,1); arka.fillRect(0,0,EN,BOY);
+    arka.fillStyle(0x77bd68,1); arka.fillRect(0,560,EN,240);
+    this.arayuzKur(yon);
+    /* Kaynak sporcular alt kenarda; uyarı metni onların üstüne binmesin. */
+    this.mesajYazi.setY(this.seritAlt+118);
+    this.basariMesaji='Kürsü tamam! Birinci, ikinci ve üçüncüyü doğru yerleştirdin 🏆';
+    this.tamam=0;
+
+    const g=this.add.graphics().setDepth(5);
+    /* stadyum şeritleri */
+    g.fillStyle(0xffffff,0.65); g.fillRoundedRect(28,150,424,70,18);
+    for(let i=0;i<9;i++){
+      g.fillStyle(i%2?0xf05c67:0x5c82d8,1); g.fillTriangle(42+i*48,155,76+i*48,155,59+i*48,194);
+    }
+    this.add.text(EN/2,184,'🏁  FİNİŞ KÜRSÜSÜ  🏁',{
+      fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#364c76'
+    }).setOrigin(0.5).setDepth(7);
+
+    const bloklar=[
+      {id:'b2',derece:2,x:120,top:382,h:178,renk:0xb9c3cf},
+      {id:'b1',derece:1,x:240,top:310,h:250,renk:0xf0c94d},
+      {id:'b3',derece:3,x:360,top:424,h:136,renk:0xc8905a}
+    ];
+    this.hedefler=bloklar.map(b=>{
+      g.fillStyle(b.renk,1); g.fillRoundedRect(b.x-58,b.top,116,b.h,10);
+      g.lineStyle(4,0xffffff,0.8); g.strokeRoundedRect(b.x-58,b.top,116,b.h,10);
+      this.add.text(b.x,b.top+52,b.derece+'.',{
+        fontFamily:'system-ui, sans-serif',fontSize:'42px',fontStyle:'bold',color:'#ffffff',
+        stroke:'#5e6472',strokeThickness:4
+      }).setOrigin(0.5).setDepth(7);
+      return {...b,y:b.top-42,dolu:false};
+    });
+
+    const kaynaklar=Phaser.Utils.Array.Shuffle((CFG.sources||[]).map(s=>({
+      id:String(s.id),match:String(s.match),emo:duzMetin(s.label)
+    })));
+    const kaynakY=BOY-76;
+    kaynaklar.forEach((o,i)=>{
+      const x=EN*(i+0.5)/kaynaklar.length;
+      const kap=this.add.container(x,kaynakY).setDepth(20);
+      const kart=this.add.graphics(); kart.fillStyle(0xffffff,0.94); kart.fillCircle(0,0,54);
+      kart.lineStyle(3,0x7ba6c7,1); kart.strokeCircle(0,0,54);
+      const hayvan=this.add.text(0,0,o.emo,{fontSize:'54px'}).setOrigin(0.5);
+      kap.add([kart,hayvan]);
+      kap.setSize(118,118).setInteractive({useHandCursor:true,draggable:true});
+      kap.setData('match',o.match); kap.setData('kart',kart); kap.setData('basX',x); kap.setData('basY',kaynakY);
+      this.input.setDraggable(kap);
+    });
+
+    this.input.on('drag',(p,o,x,y)=>{if(!this.kilit&&o.getData('match'))o.setPosition(x,y);});
+    this.input.on('dragend',(p,o)=>{
+      if(this.kilit||!o.getData('match'))return;
+      let yakin=this.hedefler[0],uzak=Number.MAX_VALUE;
+      this.hedefler.forEach(h=>{const d=Phaser.Math.Distance.Between(o.x,o.y,h.x,h.y);if(d<uzak){uzak=d;yakin=h;}});
+      if(uzak<105&&o.getData('match')===yakin.id&&!yakin.dolu){
+        yakin.dolu=true;this.tamam++;
+        o.disableInteractive().setData('match',null).setDepth(18);
+        o.getData('kart').setVisible(false);
+        this.odul(180,yakin.x,yakin.y);
+        this.tweens.add({targets:o,x:yakin.x,y:yakin.y,scale:0.88,duration:360,ease:'Back.easeOut'});
+        this.durumYazi.setText(this.tamam+' / 3 sporcu');
+        this.mesaj(yakin.derece+'. sporcu doğru basamakta!','#2f8f5b');
+        if(this.tamam>=3){this.kilit=true;this.time.delayedCall(950,()=>this.bitir(true));}
+        return;
+      }
+      if(uzak<105) this.hata('Bu sporcu '+yakin.derece+'. olmadı. Yarış sonucunu yeniden oku!');
+      this.tweens.add({targets:o,x:o.getData('basX'),y:o.getData('basY'),duration:300,ease:'Back.easeOut'});
+    });
+    this.durumYazi.setText('0 / 3 sporcu');
+  }
+}
+
+
+/* =====================================================================
+   14) VAGON EKSPRESİ (m21) — yatay düzlemde baştan sıra
+   ---------------------------------------------------------------------
+   Jenerik eşleştirme vagonları dikey satırlara çeviriyordu. Burada trenin
+   başı lokomotifle görünür; dört vagon onun arkasında soldan sağa dizilir.
+   ===================================================================== */
+class VagonScene extends Temel {
+  constructor(){ super('Vagon'); }
+
+  create(){
+    const yon=duzMetin(CFG.instruction)||'Zürafayı baştan 3. vagona bindir!';
+    const arka=this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0xbce7ff,0xbce7ff,0xeaf7ff,0xeaf7ff,1); arka.fillRect(0,0,EN,BOY);
+    arka.fillStyle(0x77be68,1); arka.fillRect(0,500,EN,300);
+    this.arayuzKur(yon);
+    this.mesajYazi.setY(this.seritAlt+70);
+    this.basariMesaji='Doğru vagon! Tren başından sayarak üçüncü vagonu buldun 🚂';
+
+    const g=this.add.graphics().setDepth(5);
+    /* ray */
+    g.fillStyle(0x5e6570,1); g.fillRect(10,477,460,10); g.fillRect(10,514,460,10);
+    g.fillStyle(0x8b6847,1); for(let x=18;x<470;x+=34)g.fillRect(x,466,10,70);
+    /* lokomotif */
+    g.fillStyle(0x315f9e,1); g.fillRoundedRect(10,362,82,96,12);
+    g.fillStyle(0x243b68,1); g.fillRect(24,328,44,38);
+    g.fillStyle(0xe65b50,1); g.fillRect(2,446,104,25);
+    g.fillStyle(0xffd05c,1); g.fillCircle(76,380,11);
+    g.fillStyle(0x202b3a,1); g.fillCircle(26,476,18); g.fillCircle(78,476,18);
+    this.add.text(50,405,'🚂',{fontSize:'46px'}).setOrigin(0.5).setDepth(7);
+    this.add.text(52,304,'BAŞ →',{
+      fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#294d78'
+    }).setOrigin(0.5).setDepth(7);
+
+    const xs=[133,231,329,427];
+    this.vagonlar=xs.map((x,i)=>{
+      const renk=[0xe78a79,0xf0c95e,0x70b9a4,0x9b88cf][i];
+      g.fillStyle(renk,1); g.fillRoundedRect(x-42,372,84,92,12);
+      g.lineStyle(4,0xffffff,0.75); g.strokeRoundedRect(x-42,372,84,92,12);
+      g.fillStyle(0xeef7ff,0.9); g.fillRoundedRect(x-28,386,56,43,8);
+      g.fillStyle(0x202b3a,1); g.fillCircle(x-25,476,15); g.fillCircle(x+25,476,15);
+      this.add.text(x,447,(i+1)+'.',{fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5).setDepth(7);
+      return {id:'v'+(i+1),sira:i+1,x,y:407};
+    });
+
+    const kaynak=(CFG.sources||[])[0]||{label:'🦒',match:'v3'};
+    const kap=this.add.container(EN/2,BOY-104).setDepth(20);
+    const kart=this.add.graphics(); kart.fillStyle(0xffffff,0.94); kart.fillRoundedRect(-74,-64,148,128,20);
+    kart.lineStyle(3,0x6fa1c5,1); kart.strokeRoundedRect(-74,-64,148,128,20);
+    const zurafa=this.add.text(0,-5,duzMetin(kaynak.label)||'🦒',{fontSize:'62px'}).setOrigin(0.5);
+    const yazi=this.add.text(0,48,'VAGONA SÜRÜKLE',{fontFamily:'system-ui, sans-serif',fontSize:'12px',fontStyle:'bold',color:'#3d6687'}).setOrigin(0.5);
+    kap.add([kart,zurafa,yazi]);
+    kap.setSize(160,140).setInteractive({useHandCursor:true,draggable:true});
+    kap.setData('match',String(kaynak.match)); kap.setData('kart',kart); kap.setData('yazi',yazi);
+    kap.setData('basX',EN/2); kap.setData('basY',BOY-104);
+    this.input.setDraggable(kap);
+    this.input.on('drag',(p,o,x,y)=>{if(!this.kilit&&o===kap)o.setPosition(x,y);});
+    this.input.on('dragend',(p,o)=>{
+      if(this.kilit||o!==kap)return;
+      let yakin=this.vagonlar[0],uzak=Number.MAX_VALUE;
+      this.vagonlar.forEach(v=>{const d=Phaser.Math.Distance.Between(o.x,o.y,v.x,v.y);if(d<uzak){uzak=d;yakin=v;}});
+      if(uzak<90&&o.getData('match')===yakin.id){
+        this.kilit=true;o.disableInteractive();o.getData('kart').setVisible(false);o.getData('yazi').setVisible(false);
+        this.odul(300,yakin.x,yakin.y);this.durumYazi.setText('3. vagonda');
+        this.tweens.add({targets:o,x:yakin.x,y:yakin.y-2,scale:0.62,duration:380,ease:'Back.easeOut',
+          onComplete:()=>this.time.delayedCall(650,()=>this.bitir(true))});
+        return;
+      }
+      if(uzak<90)this.hata('Bu '+yakin.sira+'. vagon. Lokomotiften başlayıp üçüncü vagona kadar say!');
+      this.tweens.add({targets:o,x:o.getData('basX'),y:o.getData('basY'),duration:300,ease:'Back.easeOut'});
+    });
+    this.durumYazi.setText('Lokomotiften say');
+  }
+}
+
+
+/* =====================================================================
+   15) OBUR CANAVARIN TABAKLARI (m23) — gruplanmış nicelik karşılaştırma
+   ---------------------------------------------------------------------
+   Jenerik seçim sahnesi tüm çilekleri ayrı ayrı suya dağıtıyor, hangi
+   çileğin hangi tabağa ait olduğunu yok ediyordu. Burada 3, 7 ve 5
+   çilek kendi tabaklarında sabit kalır; sayı etiketi gösterilmez.
+   ===================================================================== */
+class TabakScene extends Temel {
+  constructor(){ super('Tabak'); }
+
+  create(){
+    const yon=duzMetin(CFG.instruction)||'Daha çok çilek olan tabağa dokun!';
+    const arka=this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0xffe4c2,0xffe4c2,0xfff8e9,0xfff8e9,1); arka.fillRect(0,0,EN,BOY);
+    this.arayuzKur(yon);
+    this.mesajYazi.setY(this.seritAlt+42);
+    this.basariMesaji='Doğru tabak! Yedi çilek, diğer tabaklardan daha çok 🍓';
+
+    this.add.text(EN/2,this.seritAlt+135,'👹',{fontSize:'86px'}).setOrigin(0.5).setDepth(7);
+    this.add.text(EN/2,this.seritAlt+200,'“En çok çilek hangi tabakta?”',{
+      fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#7b3f35'
+    }).setOrigin(0.5).setDepth(7);
+
+    const dogrular=new Set((CFG.correct||[]).map(String));
+    const ogeler=(CFG.items||[]).map((o,i)=>({
+      id:String(o.id),adet:(duzMetin(o.label).match(/🍓/g)||[]).length,harf:String.fromCharCode(65+i)
+    }));
+    const y=this.seritAlt+335;
+    ogeler.forEach((o,i)=>{
+      const x=EN*(i+0.5)/ogeler.length;
+      const kap=this.add.container(x,y).setDepth(12);
+      const kart=this.add.graphics();
+      kart.fillStyle(0xffffff,0.9); kart.fillRoundedRect(-70,-100,140,210,20);
+      kart.lineStyle(3,0xe1b18e,1); kart.strokeRoundedRect(-70,-100,140,210,20);
+      kart.fillStyle(0xe8edf2,1); kart.fillEllipse(0,10,116,82);
+      kart.lineStyle(5,0xb9c4cf,1); kart.strokeEllipse(0,10,116,82);
+      kart.fillStyle(0xffffff,0.95); kart.fillEllipse(0,6,88,56);
+      kap.add(kart);
+      const sutun=3, aralik=30;
+      for(let k=0;k<o.adet;k++){
+        const sat=Math.floor(k/sutun), col=k%sutun;
+        const satAdet=Math.min(sutun,o.adet-sat*sutun);
+        const sx=(col-(satAdet-1)/2)*aralik;
+        const sy=-10+(sat-(Math.ceil(o.adet/sutun)-1)/2)*31;
+        kap.add(this.add.text(sx,sy,'🍓',{fontSize:'27px'}).setOrigin(0.5));
+      }
+      kap.add(this.add.text(0,82,'TABAK '+o.harf,{
+        fontFamily:'system-ui, sans-serif',fontSize:'16px',fontStyle:'bold',color:'#765548'
+      }).setOrigin(0.5));
+      kap.setSize(154,224).setInteractive({useHandCursor:true});
+      kap.setData('dogru',dogrular.has(o.id));
+      kap.on('pointerdown',()=>{
+        if(this.kilit)return;
+        if(kap.getData('dogru')){
+          this.kilit=true;this.odul(300,x,y);
+          this.tweens.add({targets:kap,scale:1.1,duration:180,yoyo:true,
+            onComplete:()=>this.time.delayedCall(600,()=>this.bitir(true))});
+        }else{
+          this.tweens.add({targets:kap,angle:{from:-6,to:6},duration:75,yoyo:true,repeat:2,onComplete:()=>kap.setAngle(0)});
+          this.hata('Bu tabakta daha az çilek var. Tabakları yeniden karşılaştır!');
+        }
+      });
+    });
+    this.durumYazi.setText('Tabakları karşılaştır');
+  }
+}
+
+
+/* =====================================================================
+   16) İKİZ KARDEŞLERİN SEPETLERİ (m25) — benzerlikleri görünür veriden çıkarma
+   ---------------------------------------------------------------------
+   Jenerik sahnede sepetler yoktu; yalnız kaçan etiketler kepçeleniyordu.
+   Burada iki sepetteki dörder kırmızı elma görünür, ifadeler sabit karttır.
+   ===================================================================== */
+class SepetScene extends Temel {
+  constructor(){ super('Sepet'); }
+
+  sepetCiz(g,x,y){
+    g.fillStyle(0xb9783f,1); g.fillRoundedRect(x-82,y-18,164,84,18);
+    g.lineStyle(5,0x7a4b2b,1); g.strokeRoundedRect(x-82,y-18,164,84,18);
+    for(let k=-60;k<=60;k+=30)g.lineBetween(x+k,y-12,x+k+10,y+60);
+    g.lineStyle(9,0x8d5a32,1); g.beginPath();g.arc(x,y-18,62,Math.PI,0);g.strokePath();
+    [[-42,-26],[0,-34],[42,-26],[-20,2]].forEach(p=>{
+      g.fillStyle(0xd94143,1);g.fillCircle(x+p[0],y+p[1],20);
+      g.fillStyle(0x4c9b45,1);g.fillEllipse(x+p[0]+8,y+p[1]-17,13,7);
+    });
+  }
+
+  create(){
+    const yon=duzMetin(CFG.instruction)||'İki sepetin benzerliklerini bul!';
+    const arka=this.add.graphics().setDepth(0);
+    arka.fillGradientStyle(0xffefd3,0xffefd3,0xf8d9b0,0xf8d9b0,1);arka.fillRect(0,0,EN,BOY);
+    this.arayuzKur(yon);
+    // Yanlış seçim uyarısını sepet adlarının ve açıklama metninin üstüne bindirme.
+    this.mesajYazi.setY(this.seritAlt+68);
+    this.basariMesaji='İki sepetin meyvesi, rengi ve elma sayısı aynı 🧺';
+    this.secim=0;
+
+    const g=this.add.graphics().setDepth(5);
+    const sepetY=this.seritAlt+165;
+    this.sepetCiz(g,140,sepetY);this.sepetCiz(g,340,sepetY);
+    this.add.text(140,sepetY+90,'1. SEPET',{fontFamily:'system-ui, sans-serif',fontSize:'15px',fontStyle:'bold',color:'#71482d'}).setOrigin(0.5).setDepth(7);
+    this.add.text(340,sepetY+90,'2. SEPET',{fontFamily:'system-ui, sans-serif',fontSize:'15px',fontStyle:'bold',color:'#71482d'}).setOrigin(0.5).setDepth(7);
+    this.add.text(EN/2,sepetY+125,'İki sepete de dikkatle bak. Neleri aynı?',{
+      fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#71482d'
+    }).setOrigin(0.5).setDepth(7);
+
+    const dogrular=new Set((CFG.correct||[]).map(String));
+    const ogeler=CFG.items||[];
+    const basY=this.seritAlt+390;
+    ogeler.forEach((o,i)=>{
+      const col=i%2,row=Math.floor(i/2),x=132+col*216,y=basY+row*90;
+      const kap=this.add.container(x,y).setDepth(12);
+      const kart=this.add.graphics();
+      kart.fillStyle(0xffffff,0.94);kart.fillRoundedRect(-94,-34,188,68,16);
+      kart.lineStyle(3,0xd8a97d,1);kart.strokeRoundedRect(-94,-34,188,68,16);
+      const yazi=this.add.text(0,0,duzMetin(o.label),{
+        fontFamily:'system-ui, sans-serif',fontSize:'16px',fontStyle:'bold',color:'#6a4733',align:'center',wordWrap:{width:168}
+      }).setOrigin(0.5);
+      kap.add([kart,yazi]);kap.setSize(202,80).setInteractive({useHandCursor:true});
+      kap.setData('dogru',dogrular.has(String(o.id)));
+      kap.on('pointerdown',()=>{
+        if(this.kilit||kap.getData('secildi'))return;
+        if(kap.getData('dogru')){
+          kap.setData('secildi',true).disableInteractive();this.secim++;
+          kart.clear();kart.fillStyle(0xd9f3df,1);kart.fillRoundedRect(-94,-34,188,68,16);
+          kart.lineStyle(3,0x54a86d,1);kart.strokeRoundedRect(-94,-34,188,68,16);
+          kap.add(this.add.text(82,-24,'✅',{fontSize:'18px'}).setOrigin(0.5));
+          this.odul(120,x,y);this.durumYazi.setText(this.secim+' / 3 benzerlik');
+          if(this.secim>=3){this.kilit=true;this.time.delayedCall(900,()=>this.bitir(true));}
+        }else{
+          this.tweens.add({targets:kap,angle:{from:-6,to:6},duration:75,yoyo:true,repeat:2,onComplete:()=>kap.setAngle(0)});
+          this.hata('Biri daha çok değil; iki sepetteki elmaları yeniden say!');
+        }
+      });
+    });
+    this.durumYazi.setText('0 / 3 benzerlik');
+  }
+}
+
+
+/* =====================================================================
+   17) SiraScene — m16 "Orman Maratonu", m19 "Otobüs Durakları"
    Katalogda sıra bilgisi etikete YAZILIYDI ("🦊 (1.)"), yani çocuk
    sıralamıyor, sayıyı okuyordu. Burada sıra GÖRÜNÜR: yarışta hayvanlar
    bitiş çizgisine göre dizili, otobüs hattında duraklar yol boyunca
@@ -1083,8 +1963,8 @@ class SiraScene extends Temel {
   }
 }
 
-const SAHNELER = { m03:'Keci', m04:'Golge', m05:'Corap', m06:'Anahtar', m02:'Pusula', m07:'Iz',
-                   m16:'Sira', m19:'Sira' };
+const SAHNELER = { m03:'Keci', m04:'Golge', m05:'Corap', m06:'Anahtar', m02:'Pusula', m07:'Iz', m08:'Sivi', m09:'Disli', m13:'Kement', m14:'BalikSay',
+                   m16:'Sira', m17:'Apartman', m18:'Dondurma', m19:'Sira', m20:'Kursu', m21:'Vagon', m23:'Tabak', m25:'Sepet' };
 const SAHNE_ADI = SAHNELER[OYUN_ID] || 'Keci';
 
 window.OYUN = new Phaser.Game({
@@ -1094,7 +1974,7 @@ window.OYUN = new Phaser.Game({
   backgroundColor: '#dff0fb',
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   physics: { default:'arcade', arcade:{ gravity:{ y:0 }, debug:false } },
-  scene: [BootScene, KeciScene, GolgeScene, CorapScene, AnahtarScene, PusulaScene, IzScene, SiraScene, SonucScene]
+  scene: [BootScene, KeciScene, GolgeScene, CorapScene, AnahtarScene, PusulaScene, IzScene, SiviScene, DisliScene, KementScene, BalikSayScene, ApartmanScene, DondurmaScene, KursuScene, VagonScene, TabakScene, SepetScene, SiraScene, SonucScene]
 });
 </script>
 </body>

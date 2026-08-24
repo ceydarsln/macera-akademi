@@ -593,18 +593,26 @@ class GameScene extends Phaser.Scene {
         if (!this.soruKap) return;                  /* çift dokunmayı yut */
         if (sec.dogru){
           this.soruKap.destroy(); this.soruKap = null;
+          this.soruUyari = null;
           this.kivilcimlar.setParticleTint(RENK.dogru);
           this.kivilcimlar.explode(14, EN / 2, 330 + i * 76);
           this.puanEkle(120, EN / 2, 300);
-          this.mesajGoster('Doğru! Şimdi kefeleri eşitle ⚖️', '#1f6d4a');
+          this.mesajGoster('Doğru! Elma kartını sağ kefeye sürükleyerek eşitle ⚖️', '#1f6d4a');
           this.time.delayedCall(340, () => { this.kilit = false; });
         } else {
           this.seri = 0; this.can--; this.arayuzuTazele();
           this.cameras.main.shake(200, 0.01);
           this.cameras.main.flash(160, 220, 90, 90);
-          this.mesajGoster('Kefelere bir daha bak — hangisi daha çok?', '#b5453b');
+          if (this.soruUyari && this.soruUyari.active) this.soruUyari.destroy();
+          this.soruUyari = this.add.text(EN / 2, 556,
+            'Kefelere bir daha bak — hangisi daha çok?', {
+              fontFamily:'system-ui, sans-serif', fontSize:'17px', fontStyle:'bold',
+              color:'#ffffff', backgroundColor:'#b5453b', padding:{x:12,y:7},
+              align:'center', wordWrap:{width:EN-70}
+            }).setOrigin(0.5).setDepth(130);
+          kap.add(this.soruUyari);
           if (this.can <= 0){
-            if (this.soruKap){ this.soruKap.destroy(); this.soruKap = null; }
+            if (this.soruKap){ this.soruKap.destroy(); this.soruKap = null; this.soruUyari = null; }
             this.time.delayedCall(900, () => this.bitir(false));
           }
         }
@@ -765,7 +773,9 @@ class GameScene extends Phaser.Scene {
     this.cameras.main.flash(160, 80, 210, 140);
     this.puanEkle(200, DIREK_X, KOL_Y - 60);
 
-    this.mesajGoster(t.aciklama ? (t.tamam + '  ·  ' + t.aciklama) : t.tamam, '#1f6d4a');
+    const sonucMetni = t.aciklama && t.aciklama !== t.tamam
+      ? (t.tamam + '  ·  ' + t.aciklama) : t.tamam;
+    this.mesajGoster(sonucMetni, '#1f6d4a');
     if (KOPRU && t.okuAciklama) KOPRU.oku(t.okuAciklama);
     this.tur++;
     this.arayuzuTazele();

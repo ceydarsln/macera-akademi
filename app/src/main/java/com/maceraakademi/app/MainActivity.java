@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 web.evaluateJavascript(
                     "(function(){try{" +
                     "  if(typeof state==='undefined') return 'exit';" +
+                    "  if(state.purchaseConfirm){ closeBuyConfirm(); return 'handled'; }" +
                     "  if(state.confirmDelete){ state.confirmDelete=false; renderAll(); return 'handled'; }" +
                     "  if(state.friendModal){ closeFriendModal(); return 'handled'; }" +
                     "  if(state.screen==='gamePlayer'){ go('subjectList'); return 'handled'; }" +

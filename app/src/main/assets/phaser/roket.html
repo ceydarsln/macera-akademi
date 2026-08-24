@@ -106,6 +106,7 @@ const VARSAYILAN = {
 };
 
 const CFG = KOPRU ? KOPRU.cfg : VARSAYILAN;
+const OZEL_KURBAGA = !!(KOPRU && KOPRU.oyun && KOPRU.oyun.id === 'm27');
 
 /* İKİ MOD, TEK MODEL
    tapInOrder : items[] parçalar, order[] gereken sıra — her parça bir kez.
@@ -149,7 +150,7 @@ class BootScene extends Phaser.Scene {
     this.dokuToz();
     this.dokuRoket();
     /* Uygulama içinde çocuk oyunu listeden zaten seçti; menüyü atla. */
-    this.scene.start(KOPRU ? 'Game' : 'Menu');
+    this.scene.start(OZEL_KURBAGA ? 'Kurbaga' : (KOPRU ? 'Game' : 'Menu'));
   }
 
   /* Küçük parlak nokta — kıvılcım ve konfeti */
@@ -869,6 +870,75 @@ class GameScene extends Phaser.Scene {
 /* =====================================================================
    4) GAME OVER
    ===================================================================== */
+/* =====================================================================
+   ZIPZIP KURBAĞA — m27 için kazanıma özgü ritmik sayma sahnesi
+   Roket/huni şablonu 5'er saymayı anlatmadığı için dört nilüfer taşı
+   gerçek bir yol oluşturur; kurbağa her doğru sayıda bir taş ilerler.
+   ===================================================================== */
+class KurbagaScene extends Phaser.Scene {
+  constructor(){ super('Kurbaga'); }
+
+  create(){
+    this.adim=0; this.can=3; this.puan=0; this.kilit=false;
+    const g=this.add.graphics();
+    g.fillGradientStyle(0x8ee0ef,0x8ee0ef,0x176d87,0x176d87,1);g.fillRect(0,0,EN,BOY);
+    g.fillStyle(0xffffff,0.14);
+    [[46,245,34],[405,205,48],[76,505,28],[424,560,32],[240,690,44]].forEach(d=>g.fillCircle(d[0],d[1],d[2]));
+    g.fillStyle(0x183b45,0.92);g.fillRoundedRect(14,14,452,126,18);
+    this.add.text(EN/2,36,'🐸  ZIPZIP KURBAĞA',{fontFamily:'system-ui, sans-serif',fontSize:'25px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
+    this.add.text(EN/2,76,'Kurbağa 5’er 5’er zıplıyor.\nSıradaki doğru taşı seç!',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#e9fff6',align:'center',lineSpacing:4}).setOrigin(0.5);
+    this.puanYazi=this.add.text(30,121,'Puan 0',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#ffd166'}).setOrigin(0,0.5);
+    this.adimYazi=this.add.text(EN/2,121,'0 / 4 taş',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#d8f5ff'}).setOrigin(0.5);
+    this.canYazi=this.add.text(448,121,'❤️❤️❤️',{fontFamily:'system-ui, sans-serif',fontSize:'18px'}).setOrigin(1,0.5);
+    this.mesaj=this.add.text(EN/2,164,'Önce 5 yazan taştan başla.',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#fff7d1',align:'center',wordWrap:{width:430}}).setOrigin(0.5);
+
+    const yol=[{id:'5',x:95,y:610},{id:'10',x:185,y:500},{id:'15',x:285,y:390},{id:'20',x:385,y:275}];
+    this.taslar=new Map();
+    yol.forEach((v,i)=>{
+      const tas=this.add.container(v.x,v.y).setDepth(8);
+      const c=this.add.graphics();
+      c.fillStyle(0x72c56b,1);c.fillEllipse(0,0,116,70);
+      c.lineStyle(5,0x287c55,1);c.strokeEllipse(0,0,116,70);
+      c.fillStyle(0x8ddd78,1);c.slice(0,0,55,Phaser.Math.DegToRad(-27),Phaser.Math.DegToRad(27),false);c.fillPath();
+      const t=this.add.text(0,0,v.id,{fontFamily:'system-ui, sans-serif',fontSize:'28px',fontStyle:'bold',color:'#173f36'}).setOrigin(0.5);
+      tas.add([c,t]);tas.setSize(126,82).setInteractive({useHandCursor:true});tas.setData('id',v.id);tas.setData('cizim',c);
+      tas.on('pointerdown',()=>this.tasSec(tas));this.taslar.set(v.id,tas);
+      if(i<yol.length-1){
+        const n=yol[i+1];g.lineStyle(6,0xd9fff1,0.42);g.lineBetween(v.x+35,v.y-34,n.x-35,n.y+34);
+      }
+    });
+    const yanlis=this.add.container(390,625).setDepth(8);
+    const yc=this.add.graphics();yc.fillStyle(0xbfc9c8,1);yc.fillEllipse(0,0,108,66);yc.lineStyle(4,0x697c7c,1);yc.strokeEllipse(0,0,108,66);
+    yanlis.add([yc,this.add.text(0,0,'12',{fontFamily:'system-ui, sans-serif',fontSize:'26px',fontStyle:'bold',color:'#374848'}).setOrigin(0.5)]);
+    yanlis.setSize(120,78).setInteractive({useHandCursor:true}).setData('id','12');yanlis.setData('cizim',yc);yanlis.on('pointerdown',()=>this.tasSec(yanlis));
+
+    this.kurbaga=this.add.text(55,708,'🐸',{fontSize:'55px'}).setOrigin(0.5).setDepth(15);
+    this.add.text(55,758,'BAŞLANGIÇ',{fontFamily:'system-ui, sans-serif',fontSize:'13px',fontStyle:'bold',color:'#eafff7'}).setOrigin(0.5);
+  }
+
+  tasSec(tas){
+    if(this.kilit||tas.getData('tamam'))return;
+    const beklenen=['5','10','15','20'][this.adim],secim=tas.getData('id');
+    if(secim!==beklenen){
+      this.can--;this.canYazi.setText('❤️'.repeat(this.can)+'🖤'.repeat(3-this.can));
+      this.mesaj.setText(secim+' değil. 5’er artır: sıradaki sayı '+beklenen+'.').setColor('#ffe2e2');
+      this.cameras.main.shake(180,0.012);
+      this.tweens.add({targets:tas,angle:{from:-7,to:7},duration:70,yoyo:true,repeat:2,onComplete:()=>tas.setAngle(0)});
+      if(this.can<=0){this.kilit=true;this.time.delayedCall(850,()=>this.scene.restart());}
+      return;
+    }
+    tas.setData('tamam',true).disableInteractive();this.adim++;this.puan+=100;
+    this.puanYazi.setText('Puan '+this.puan);this.adimYazi.setText(this.adim+' / 4 taş');
+    this.mesaj.setText(secim+' doğru! '+(this.adim<4?'Şimdi 5 daha ekle.':'5, 10, 15, 20!')).setColor('#efffd7');
+    this.tweens.add({targets:this.kurbaga,x:tas.x,y:tas.y-34,duration:420,ease:'Back.easeOut'});
+    this.tweens.add({targets:tas,scale:1.12,duration:130,yoyo:true});
+    if(this.adim===4){
+      this.kilit=true;
+      this.time.delayedCall(650,()=>KOPRU.bitir('Kurbağayı 5’er sayarak 20’ye ulaştırdın! 🐸',this.puan));
+    }
+  }
+}
+
 class GameOverScene extends Phaser.Scene {
   constructor(){ super('GameOver'); }
 
@@ -997,7 +1067,7 @@ window.OYUN = new Phaser.Game({
     default: 'arcade',
     arcade: { gravity: { y: 640 } }
   },
-  scene: [BootScene, MenuScene, GameScene, GameOverScene]
+  scene: [BootScene, MenuScene, GameScene, KurbagaScene, GameOverScene]
 });
 
 </script>

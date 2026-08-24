@@ -106,6 +106,8 @@ const VARSAYILAN = {   /* şablon tek başına açıldığında: uygulamadaki m2
 };
 
 const CFG = KOPRU ? KOPRU.cfg : VARSAYILAN;
+const OZEL_COKGEN = !!(KOPRU && KOPRU.oyun && KOPRU.oyun.id === 'm29');
+const OZEL_MERDIVEN = !!(KOPRU && KOPRU.oyun && KOPRU.oyun.id === 'm30');
 
 /* ---------------------------------------------------------------------
    İÇERİK — katalogdaki patternFill oyunu
@@ -152,7 +154,9 @@ const TURLAR = (function(){
       yaziEtiket: duzMetin(CFG.wordLabel),
       hataMsj: duzMetin(CFG.wrongMsg) ||
         (asagi ? 'Hedefin altına indin! Geri al.' : 'Hedefi geçtin! Fazla ögeyi geri al.'),
-      tamam: duzMetin(CFG.successMsg) || (hedef + ' tamam!')
+      tamam: duzMetin(CFG.successMsg) || (hedef + ' tamam!'),
+      ileriEtiket: duzMetin(CFG.forwardLabel),
+      geriEtiket: duzMetin(CFG.backLabel)
     }];
   }
 
@@ -205,7 +209,7 @@ class BootScene extends Phaser.Scene {
     for (let r = 14; r > 0; r--){ g.fillStyle(0xffffff, 0.06); g.fillCircle(14, 14, r); }
     g.generateTexture('toz', 28, 28); g.destroy();
     /* Uygulama içinde çocuk oyunu listeden zaten seçti; menüyü atla. */
-    this.scene.start(KOPRU ? 'Game' : 'Menu');
+    this.scene.start(OZEL_COKGEN ? 'Cokgen' : (OZEL_MERDIVEN ? 'Merdiven' : (KOPRU ? 'Game' : 'Menu')));
   }
 }
 
@@ -449,8 +453,8 @@ class GameScene extends Phaser.Scene {
 
     /* Ana düğme hedefe DOĞRU gider: yukarı sayarken ekler, geriye
        sayarken çıkarır. İkinci düğme her zaman geri almadır. */
-    const ileri = t.yon > 0 ? '➕  AL' : '➖  İNDİR';
-    const geri  = t.yon > 0 ? '➖  GERİ AL' : '➕  GERİ AL';
+    const ileri = t.ileriEtiket || (t.yon > 0 ? '➕  EKLE' : '➖  AZALT');
+    const geri  = t.geriEtiket || '↩️  GERİ AL';
     this.tusNesne = [];
     this.tusNesne.push(dugmeYap(this, EN / 2 - 92, SECIM_Y + 232, geri, 0x6b4a8a,
       () => this.sayiDegistir(t, -t.yon), 160, 54).setDepth(14));
@@ -480,6 +484,10 @@ class GameScene extends Phaser.Scene {
   kuleyiCiz(t){
     const g = this.cerceveCizim;
     g.clear();
+    if (this.katEtiketleri){
+      this.katEtiketleri.forEach(o => o.destroy());
+      this.katEtiketleri = [];
+    }
     const enUst = Math.max(t.baslangic, t.hedef, 1);
     const ust = CER_UST - 6, alt = CER_UST + 246;
     const adim = (alt - ust) / enUst;
@@ -495,9 +503,18 @@ class GameScene extends Phaser.Scene {
       const vurgu = (k === t.hedef);
       g.lineStyle(vurgu ? 3 : 1, vurgu ? RENK.vurgu : 0x3f7a53, vurgu ? 1 : 0.6);
       g.lineBetween(x - 56, y, x + 56, y);
+      if (k > 0){
+        const katY = alt - (k - 0.5) * adim;
+        const etiket = this.add.text(x - 74, katY, k + '.', {
+          fontFamily:'system-ui, sans-serif', fontSize: enUst > 10 ? '11px' : '15px',
+          fontStyle:'bold', color: vurgu ? '#ffd166' : '#a5d6b7'
+        }).setOrigin(0.5).setDepth(12);
+        this.katEtiketleri = this.katEtiketleri || [];
+        this.katEtiketleri.push(etiket);
+      }
     }
     /* asansör kabini */
-    const ky = alt - this.sayi * adim - adim / 2;
+    const ky = this.sayi > 0 ? alt - (this.sayi - 0.5) * adim : alt + 25;
     g.fillStyle(this.sayi === t.hedef ? RENK.dogru : RENK.tas, 0.95);
     g.fillRoundedRect(x - 44, ky - Math.min(18, adim / 2 - 1),
                       88, Math.min(36, adim - 2), 6);
@@ -679,6 +696,117 @@ class GameScene extends Phaser.Scene {
 /* =====================================================================
    GAME OVER
    ===================================================================== */
+/* =====================================================================
+   BÜYÜLÜ ORMAN YOLU — m29 için gerçek çokgenlerle örüntü
+   Unicode beşgen/altıgen işaretleri yazı tipinde çok küçük kaldığından
+   çocuk kenarları sayamıyordu. Şekiller burada Graphics ile çizilir.
+   ===================================================================== */
+class CokgenScene extends Phaser.Scene {
+  constructor(){ super('Cokgen'); }
+
+  cokgen(g,x,y,kenar,r,renk){
+    const noktalar=[];
+    for(let i=0;i<kenar;i++){
+      const a=-Math.PI/2+i*Math.PI*2/kenar;noktalar.push(new Phaser.Geom.Point(x+Math.cos(a)*r,y+Math.sin(a)*r));
+    }
+    g.fillStyle(renk,1);g.fillPoints(noktalar,true);g.lineStyle(4,0x244f3b,1);g.strokePoints(noktalar,true,true);
+  }
+
+  create(){
+    this.can=3;this.kilit=false;
+    const g=this.add.graphics();
+    g.fillGradientStyle(0x79c982,0x79c982,0x173f32,0x173f32,1);g.fillRect(0,0,EN,BOY);
+    g.fillStyle(0x163b2f,0.94);g.fillRoundedRect(14,14,452,130,18);
+    this.add.text(EN/2,40,'🔺  BÜYÜLÜ ORMAN YOLU',{fontFamily:'system-ui, sans-serif',fontSize:'23px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
+    this.add.text(EN/2,82,'Üçgen, kare, beşgen…\nHer adımda kaç kenar ekleniyor?',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#edfff0',align:'center',lineSpacing:5}).setOrigin(0.5);
+    this.canYazi=this.add.text(EN-30,122,'❤️❤️❤️',{fontSize:'18px'}).setOrigin(1,0.5);
+    this.mesaj=this.add.text(EN/2,171,'Şekillerin kenarlarını say; boş taşı tamamla.',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#fff6c9',align:'center',wordWrap:{width:430}}).setOrigin(0.5);
+
+    const xs=[68,182,296,410];
+    xs.forEach((x,i)=>{
+      g.fillStyle(i===3?0x254e3a:0xf8f1dd,1);g.fillRoundedRect(x-47,238,94,108,16);
+      g.lineStyle(i===3?4:2,i===3?0xffd166:0xcbbf9e,1);g.strokeRoundedRect(x-47,238,94,108,16);
+      if(i<3)this.cokgen(g,x,292,i+3,31,[0xef6b54,0xf0c85a,0x71b9e6][i]);
+      else this.add.text(x,292,'?',{fontFamily:'system-ui, sans-serif',fontSize:'38px',fontStyle:'bold',color:'#ffd166'}).setOrigin(0.5);
+    });
+
+    this.add.text(EN/2,416,'Sıradaki şekli seç:',{fontFamily:'system-ui, sans-serif',fontSize:'20px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
+    [{x:90,n:5},{x:240,n:6},{x:390,n:0}].forEach(o=>{
+      const c=this.add.container(o.x,515).setDepth(10);
+      const cg=this.add.graphics();cg.fillStyle(0xf6f0dc,1);cg.fillRoundedRect(-61,-58,122,116,18);cg.lineStyle(3,0xcbbf9e,1);cg.strokeRoundedRect(-61,-58,122,116,18);
+      if(o.n)this.cokgen(cg,0,0,o.n,36,o.n===6?0x77d59a:0x71b9e6);
+      else{
+        const pts=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?17:39;pts.push(new Phaser.Geom.Point(Math.cos(a)*r,Math.sin(a)*r));}
+        cg.fillStyle(0xf4c84a,1);cg.fillPoints(pts,true);cg.lineStyle(4,0x8e7424,1);cg.strokePoints(pts,true,true);
+      }
+      c.add(cg);c.setSize(136,130).setInteractive({useHandCursor:true});c.setData('kenar',o.n);c.on('pointerdown',()=>this.sec(c));
+    });
+    this.add.text(EN/2,630,'Kuralı resimlerden bul; seçeneklerde cevap sayısı yazmıyor.',{fontFamily:'system-ui, sans-serif',fontSize:'15px',color:'#d8f5df',align:'center',wordWrap:{width:420}}).setOrigin(0.5);
+  }
+
+  sec(c){
+    if(this.kilit)return;
+    if(c.getData('kenar')!==6){
+      this.can--;this.canYazi.setText('❤️'.repeat(this.can)+'🖤'.repeat(3-this.can));
+      this.mesaj.setText('Bu şekil değil. 3, 4, 5… sıradaki şeklin 6 kenarı olmalı.').setColor('#ffe0df');
+      this.tweens.add({targets:c,angle:{from:-7,to:7},duration:70,yoyo:true,repeat:2,onComplete:()=>c.setAngle(0)});
+      if(this.can<=0){this.kilit=true;this.time.delayedCall(850,()=>this.scene.restart());}
+      return;
+    }
+    this.kilit=true;this.mesaj.setText('Doğru! Her yeni şekle bir kenar ekleniyor.').setColor('#efffd2');
+    const tamam=this.add.graphics().setDepth(15);this.cokgen(tamam,410,292,6,31,0x77d59a);
+    this.tweens.add({targets:c,scale:1.14,duration:140,yoyo:true});
+    this.time.delayedCall(700,()=>KOPRU.bitir('Üçgen, kare, beşgen, altıgen: her adımda bir kenar arttı! 🔺',300));
+  }
+}
+
+/* m30 — sayı örüntüsünü gerçek yükselen basamaklarla somutlaştırır. */
+class MerdivenScene extends Phaser.Scene {
+  constructor(){ super('Merdiven'); }
+
+  create(){
+    this.can=3;this.kilit=false;
+    const g=this.add.graphics();
+    g.fillGradientStyle(0x111b45,0x111b45,0x34235a,0x34235a,1);g.fillRect(0,0,EN,BOY);
+    g.fillStyle(0xffffff,0.65);[[40,205],[130,185],[232,225],[350,175],[438,240],[65,650],[420,610]].forEach(p=>g.fillCircle(p[0],p[1],2));
+    g.fillStyle(0x171d40,0.96);g.fillRoundedRect(14,14,452,132,18);
+    this.add.text(EN/2,40,'👽  UZAYLI MERDİVENİ',{fontFamily:'system-ui, sans-serif',fontSize:'24px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
+    this.add.text(EN/2,82,'Uzaylı her basamakta 2 sayı ilerliyor.\nBoş basamağa hangi sayı gelmeli?',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#e9eeff',align:'center',lineSpacing:5}).setOrigin(0.5);
+    this.canYazi=this.add.text(EN-30,123,'❤️❤️❤️',{fontSize:'18px'}).setOrigin(1,0.5);
+    this.mesaj=this.add.text(EN/2,172,'2, 4, 6… İkişer say.',{fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#ffe99a'}).setOrigin(0.5);
+
+    const bas=[{x:42,y:620,w:98,h:88,n:'2'},{x:140,y:536,w:98,h:172,n:'4'},{x:238,y:452,w:98,h:256,n:'6'},{x:336,y:368,w:102,h:340,n:'?'}];
+    bas.forEach((b,i)=>{
+      g.fillStyle([0x7257c7,0x6074d8,0x4e91dc,0x42b3cf][i],1);g.fillRoundedRect(b.x,b.y,b.w,b.h,12);
+      g.lineStyle(4,0xd8e6ff,0.8);g.strokeRoundedRect(b.x,b.y,b.w,b.h,12);
+      this.add.text(b.x+b.w/2,b.y+39,b.n,{fontFamily:'system-ui, sans-serif',fontSize:'34px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
+    });
+    this.uzayli=this.add.text(85,570,'👽',{fontSize:'52px'}).setOrigin(0.5).setDepth(10);
+
+    [{x:115,n:7},{x:240,n:8},{x:365,n:9}].forEach(o=>{
+      const c=this.add.container(o.x,735).setDepth(12);const cg=this.add.graphics();
+      cg.fillStyle(0xf7f4ff,1);cg.fillRoundedRect(-50,-36,100,72,16);cg.lineStyle(3,0x8d79d4,1);cg.strokeRoundedRect(-50,-36,100,72,16);
+      c.add([cg,this.add.text(0,0,String(o.n),{fontFamily:'system-ui, sans-serif',fontSize:'28px',fontStyle:'bold',color:'#34235a'}).setOrigin(0.5)]);
+      c.setSize(112,82).setInteractive({useHandCursor:true}).setData('sayi',o.n);c.on('pointerdown',()=>this.sec(c));
+    });
+  }
+
+  sec(c){
+    if(this.kilit)return;
+    if(c.getData('sayi')!==8){
+      this.can--;this.canYazi.setText('❤️'.repeat(this.can)+'🖤'.repeat(3-this.can));
+      this.mesaj.setText(c.getData('sayi')+' değil. 6’dan sonra 2 daha say.').setColor('#ffd9dd');
+      this.tweens.add({targets:c,angle:{from:-7,to:7},duration:70,yoyo:true,repeat:2,onComplete:()=>c.setAngle(0)});
+      if(this.can<=0){this.kilit=true;this.time.delayedCall(850,()=>this.scene.restart());}
+      return;
+    }
+    this.kilit=true;this.mesaj.setText('Doğru: 2, 4, 6, 8!').setColor('#eaffc9');
+    this.add.text(387,407,'8',{fontFamily:'system-ui, sans-serif',fontSize:'34px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5).setDepth(8);
+    this.tweens.add({targets:this.uzayli,x:387,y:330,duration:750,ease:'Sine.easeInOut'});
+    this.time.delayedCall(900,()=>KOPRU.bitir('2, 4, 6, 8: uzaylı ikişer sayarak merdiveni çıktı! 👽',300));
+  }
+}
+
 class GameOverScene extends Phaser.Scene {
   constructor(){ super('GameOver'); }
   init(veri){ this.veri = veri; }
@@ -777,7 +905,7 @@ window.OYUN = new Phaser.Game({
   backgroundColor: '#0f1c14',
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   physics: { default: 'arcade', arcade: { gravity: { y: 700 } } },
-  scene: [BootScene, MenuScene, GameScene, GameOverScene]
+  scene: [BootScene, MenuScene, GameScene, CokgenScene, MerdivenScene, GameOverScene]
 });
 
 </script>

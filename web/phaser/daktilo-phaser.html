@@ -60,7 +60,10 @@ const KOPRU = (function(){
         oyun: g, cfg: g.cfg,
         bitir(mesaj, puan){ try{ window.parent.completeGame(mesaj || '', puan); }catch(e){} },
         /* Turun kendi metnini uygulamanın sesiyle okutur (Piper). */
-        oku(metin){ try{ if (window.parent.oku) window.parent.oku(metin); }catch(e){} },
+        oku(metin){
+          try{ return !!(window.parent.oku && window.parent.oku(metin, true)); }
+          catch(e){ return false; }
+        },
         /* Kaybetme ekranından: bu oyunu bırak, sıradakine geç. */
         atla(){ try{ if (window.parent.sonrakiOyunaGec) window.parent.sonrakiOyunaGec(); }catch(e){} }
       };
@@ -381,7 +384,7 @@ class GameScene extends Phaser.Scene {
     let konustu = false;
     /* Uygulama içindeyken okuma uygulamanın sesiyle yapılır (Piper);
        şablonun kendi TTS'i yalnız tek başına açıldığında devrede. */
-    if (KOPRU){ KOPRU.oku(k.seslen); konustu = true; }
+    if (KOPRU) konustu = KOPRU.oku(k.seslen);
     try {
       if (konustu) throw 0;
       /* Android WebView'in kendi speechSynthesis'i sessiz kalıyor; uygulama

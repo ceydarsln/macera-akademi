@@ -375,7 +375,9 @@ class GameScene extends Phaser.Scene {
 
     if (!devrik){
       /* ön: buzlu cam — içi sayılamaz */
-      o.fillStyle(0xffffff, 0.30);
+      /* Tahminden önce gerçek adet seçilemesin. Önceki yarı saydam camda
+         özellikle sekiz bilye tek tek sayılabiliyor, cevap açığa çıkıyordu. */
+      o.fillStyle(0xeaf7ff, 1);
       o.fillRoundedRect(x + 3, y + 3, w - 6, h - 6, 14);
       o.fillStyle(0xffffff, 0.16);
       o.fillRoundedRect(x + 14, y + 12, 26, h - 30, 12);
