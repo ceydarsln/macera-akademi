@@ -206,6 +206,95 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .tekler{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;max-width:290px}
 .tekler span{font-size:15px;line-height:1}
 .sayac-kart{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.kup-svg{touch-action:none;background:#0e1b2e;border:4px solid #3d5a7d;border-radius:14px}
+.acinim{display:grid;grid-template-columns:repeat(4,34px);grid-template-rows:repeat(3,34px);gap:3px;justify-content:center}
+.acinim i{border:3px solid #7b8ea1;border-radius:5px;background:#f1f4f7;font-style:normal;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#5b7185}
+.acinim i.acik{background:#ffd873;border-color:#c9922a;color:#6b4a10}
+.sekil-svg{touch-action:manipulation}
+.kapi{display:flex;flex-direction:column;align-items:center;gap:1px;background:#fff;border:3px solid #cbd5e1;border-radius:11px;padding:5px 7px;cursor:pointer;min-width:74px}
+.kapi b{font-size:13px;font-weight:950;color:#1f3b52}
+.kapi small{font-size:10px;font-weight:800;color:#5b7185}
+.grid-dot{fill:#8fa8bd}
+.grid-dot.secili{fill:#e95e77}
+.olcum-kart{background:#fff;border:3px solid #cbd5e1;border-radius:10px;padding:4px 8px;font-size:12px;font-weight:900;color:#1f3b52}
+.cetvel{position:relative;height:34px;background:#f7e6b8;border:3px solid #b9945c;border-radius:6px;display:flex;align-items:flex-end;overflow:hidden}
+.cetvel i{flex:1;border-left:2px solid #8a5725;height:11px;position:relative}
+.cetvel i:nth-child(5n+1){height:20px}
+.cetvel i b{position:absolute;top:-13px;left:2px;font-size:8px;font-weight:900;color:#6b4a22}
+.ip-cizgi{stroke:#e05555;stroke-width:5;fill:none;stroke-linecap:round}
+.surahi{position:relative;border:5px solid #7b8ea1;border-top:0;border-radius:0 0 14px 14px;background:rgba(255,255,255,.6);overflow:hidden}
+.su{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#7fc6e8,#3f92c4);transition:height .18s}
+.derece{position:absolute;left:0;right:0;border-top:2px dashed #6b7a8f;font-size:9px;font-weight:900;color:#42586d;text-align:right;padding-right:3px}
+.tahmin-cizgi{position:absolute;left:-4px;right:-4px;border-top:4px dashed #e08b2a;cursor:grab}
+.litre-kap{width:34px;height:44px;border:3px solid #7b8ea1;border-top:0;border-radius:0 0 8px 8px;background:#eef6fb;display:flex;align-items:flex-end}
+.litre-kap i{display:block;width:100%;height:0;background:#3f92c4;transition:height .2s}
+.mozaik-svg{touch-action:manipulation;background:repeating-linear-gradient(0deg,#f6f1e7 0 27px,#eee7d8 27px 28px),repeating-linear-gradient(90deg,#f6f1e7 0 27px,#eee7d8 27px 28px);border:4px solid #c9a86a;border-radius:12px}
+.parca-btn{background:#fff;border:3px solid #cbd5e1;border-radius:11px;padding:5px 9px;font-weight:900;font-size:13px;color:#1f3b52;cursor:pointer}
+.parca-btn.secili{background:#fdf0d0;border-color:#d9b25e}
+.parca-btn.bitti{opacity:.4}
+.kilim{display:grid;gap:2px;background:#8a5725;padding:4px;border-radius:8px;position:relative}
+.kilim .huc{width:30px;height:30px;border-radius:3px;background:#f6ede0;cursor:pointer;position:relative}
+.kilim .huc.eksen{box-shadow:inset -2px 0 0 #e05aa0}
+.kilim .huc.hayalet{outline:3px dashed #e05aa0;outline-offset:-3px}
+.kilim .huc.kaynak{box-shadow:inset 0 0 0 3px #33526b}
+.kilim-katla{transform:scaleX(-1);transition:transform .8s}
+.palet{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.palet button{width:36px;height:36px;border-radius:9px;border:3px solid #cbd5e1;cursor:pointer}
+.palet button.secili{border-color:#33526b;transform:scale(1.1)}
+.tahta{display:grid;grid-template-columns:18px repeat(8,32px);gap:1px}
+.tahta .kare{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer}
+.tahta .kare.acik{background:#f0e0c0}.tahta .kare.koyu{background:#b98b5e}
+.tahta .kare.eksen-d{box-shadow:inset -2px 0 0 #e05aa0}
+.tahta .kare.eksen-y{box-shadow:inset 0 -2px 0 #e05aa0}
+.tahta .etiket{width:18px;height:32px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#5b7185}
+.tahta .ust{width:32px;height:16px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#5b7185}
+.secenek-kart{background:#fff;border:3px solid #cbd5e1;border-radius:12px;padding:4px;cursor:pointer}
+.secenek-kart.secili{border-color:#e08b2a;background:#fdf6e9}
+.kod-izgara{display:grid;gap:2px;background:#8a9aa8;padding:3px;border-radius:8px}
+.kod-izgara .kh{width:30px;height:30px;border-radius:4px;background:#eef3f7;display:flex;align-items:center;justify-content:center;font-size:16px}
+.kod-izgara .kh.eks-d{box-shadow:inset -2px 0 0 #e05aa0}
+.kod-izgara .kh.eks-y{box-shadow:inset 0 -2px 0 #e05aa0}
+.kod-izgara .kh.engel{background:#7b8ea1}
+.kod-izgara .kh.iz{background:#cfe9d8}
+.kod-izgara .kh.refiz{background:#fbe3c8}
+.kod-izgara .kh.hedef{background:#ffe08a}
+.kod-blok{background:#e3f1fb;border:3px solid #7fb6de;border-radius:8px;padding:3px 8px;font-weight:950;font-size:15px;color:#1f3b52;cursor:pointer}
+.kod-blok.ref{background:#fbe3c8;border-color:#e0a55a;cursor:default}
+.kod-blok.aktif{background:#ffd873;border-color:#c9922a}
+.kod-blok.hata{background:#fde8e8;border-color:#e05555}
+.harf-kart{background:#fff;border:4px solid #cbd5e1;border-radius:14px;padding:6px}
+.soru-kart{background:#fff;border:4px solid #7fb6de;border-radius:14px;padding:9px 12px;max-width:298px;text-align:center;font-weight:900;font-size:15px;color:#1f3b52}
+.kutu-iki{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.kutu-iki button{flex:1 1 130px;background:#fff;border:3px solid #cbd5e1;border-radius:12px;padding:7px 6px;font-weight:900;font-size:12px;color:#1f3b52;cursor:pointer;line-height:1.15}
+.anket-sutun{display:flex;flex-direction:column;align-items:center;gap:3px;background:#fff;border:3px solid #cbd5e1;border-radius:11px;padding:5px 6px;min-width:88px;cursor:pointer}
+.anket-sutun.vurgu{border-color:#2f9e5e;background:#e7f7ec}
+.anket-sutun small{font-size:11px;font-weight:900;color:#5b7185}
+.cetele-satir{display:flex;align-items:center;gap:7px;background:#fff;border:3px solid #cbd5e1;border-radius:11px;padding:4px 7px;width:min(300px,96%)}
+.cetele-satir b{font-size:12px;min-width:64px;color:#1f3b52}
+.cetele-satir .yer{min-width:38px;height:32px;border:2px dashed #b7cfe4;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:950;font-size:17px;color:#1f3b52}
+.cetele-satir .yer.dolu{border-style:solid;border-color:#2f9e5e;background:#e7f7ec}
+.nokta-graf{display:flex;align-items:flex-end;justify-content:center;gap:10px;border-left:4px solid #536878;border-bottom:4px solid #536878;padding:5px 8px;min-height:150px}
+.nokta-sutun{display:flex;flex-direction:column-reverse;align-items:center;gap:2px;cursor:pointer;min-width:52px}
+.nokta-sutun .nk{width:17px;height:17px;border-radius:50%;background:#3f87b7}
+.nokta-sutun .nk.fazla{background:#e05555}
+.nokta-sutun small{font-size:11px;font-weight:900;color:#5b7185;margin-top:3px}
+.anahtar{background:#eaf2fb;border:3px solid #b7cfe4;border-radius:9px;padding:3px 8px;font-size:12px;font-weight:900;color:#25506f}
+.graf-ro{display:flex;align-items:flex-end;justify-content:center;gap:12px;border-left:3px solid #536878;border-bottom:3px solid #536878;padding:4px 7px;min-height:118px}
+.graf-ro .st{display:flex;flex-direction:column-reverse;align-items:center;gap:2px}
+.graf-ro .st span{width:14px;height:14px;border-radius:50%;background:#3f87b7}
+.graf-ro .st span.esles{background:#cbd5e1}
+.graf-ro .st span.fazla{background:#e08b2a;box-shadow:0 0 0 2px #8a5725}
+.graf-ro .st small{font-size:10px;font-weight:900;color:#5b7185;margin-top:3px}
+.tus{display:grid;grid-template-columns:repeat(3,58px);gap:5px;justify-content:center}
+.tus button{min-height:44px;border-radius:10px;border:3px solid #cbd5e1;background:#fff;font-weight:950;font-size:19px;color:#1f3b52;cursor:pointer}
+.ekran{background:#152f3e;color:#8df0b6;border-radius:10px;padding:5px 14px;font-size:26px;font-weight:950;letter-spacing:2px;min-width:110px;text-align:center}
+.iki-panel{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+.panel-kart{background:#fff;border:3px solid #cbd5e1;border-radius:11px;padding:5px 7px}
+.panel-kart h4{margin:0 0 3px;font-size:12px;color:#5b7185}
+.asama{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.asama span{font-size:11px;font-weight:900;padding:2px 6px;border-radius:7px;background:#eef3f7;color:#5b7185}
+.asama span.aktif{background:#ffd873;color:#6b4a10}
+.asama span.bitti{background:#e7f7ec;color:#1f7a45}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -240,7 +329,7 @@ function P(id,html,target){return{id,html,target}}
 function T(id,html,need=1){return{id,html,need}}
 function Q(prompt,scene,choices,result,hint,extra={}){return{kind:'choice',prompt,scene,choices,result,hint,...extra}}
 function D(prompt,scene,pieces,targets,result,hint,extra={}){return{kind:'drag',prompt,scene,pieces,targets,result,hint,...extra}}
-function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare,bar:renderBar,lift:renderLift,timing:renderTiming,station:renderStation,para:renderPara,arena:renderArena,tersi:renderTers,kargo:renderKargo,seker:renderSeker,robot:renderRobot,problem:renderProblem,terazi:renderTerazi,firin:renderFirin}[r.kind];(fn||renderChoice)(r)}
+function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare,bar:renderBar,lift:renderLift,timing:renderTiming,station:renderStation,para:renderPara,arena:renderArena,tersi:renderTers,kargo:renderKargo,seker:renderSeker,robot:renderRobot,problem:renderProblem,terazi:renderTerazi,firin:renderFirin,kup:renderKup,sekil:renderSekil,kosegen:renderKosegen,studyo:renderStudyo,cevre:renderCevre,ip:renderIp,sivi:renderSivi,mozaik:renderMozaik,katla:renderKatla,ayna:renderAyna,kilim:renderKilim,satranc:renderSatranc,kod:renderKod,harf:renderHarf,dortlu:renderDortlu,arastirma:renderArastirma,anket:renderAnket,siklik:renderSiklik,nokta:renderNokta,terazig:renderTeraziG,kapsul:renderKapsul,olcek:renderOlcek,proje:renderProje}[r.kind];(fn||renderChoice)(r)}
 function renderChoice(r){$('#task').innerHTML=`<div class="choices">${r.choices.map((c,i)=>`<button class="choice" data-choice="${i}">${c.html||esc(c.label)}</button>`).join('')}</div>`;$$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.choices[+b.dataset.choice];if(c.correct)good(c.message);else wrong(c.hint||r.hint)})}
 /* Ritmik sayma: aynı seçenek listesinden sırayla doğru sayılar seçilir.
    Her doğru seçimde sahnedeki dal/adım büyür (state.step), böylece rota
@@ -415,7 +504,7 @@ function bindBar(r){const m=$('#barModel');if(!m)return;const g=barGeom();let ba
   if(at<=0||at>=1)return wrong('Çizgi tabletin içinden geçmeli.');
   if((state.cuts||[]).some(c=>c.axis===(dikey?'v':'h')&&Math.abs(c.at-at)<1e-6))return wrong('Orada zaten bir çizgi var.');
   addCut(dikey?'v':'h',at)}}
-function pickPart(i){const s=(state.sec||[]).slice(),k=s.indexOf(i);
+function pickPart(i){if(state.gecis)return;const s=(state.sec||[]).slice(),k=s.indexOf(i);
  if(k>=0)s.splice(k,1);else s.push(i);state.sec=s;barCiz(round())}
 function addCut(axis,at){state.cuts=(state.cuts||[]).concat({axis,at});barCiz(round())}
 function removeCut(i){(state.cuts||[]).splice(i,1);barCiz(round())}
@@ -424,11 +513,11 @@ function checkBar(r){const p=barParcalar();
  if(p.adet!==r.parts)return wrong(`Tabletin şu an ${p.adet} parçası var; kaç eş parça istendiğini yeniden düşün.`);
  if(!r.selections||!r.selections.length)return good();
  state.faz=1;state.sec=[];state.etiket='';feedback('Parçalar eş!');barCiz(r)}
-function checkParts(r){const sc=r.selections[state.faz-1],adet=barParcalar().adet,n=(state.sec||[]).length;
+function checkParts(r){if(state.gecis||state.faz<1||state.faz>r.selections.length)return;const sc=r.selections[state.faz-1],adet=barParcalar().adet,n=(state.sec||[]).length;
  if(n!==sc.count)return wrong(`Şu an ${n} parça seçili. İstenen parça sayısını yeniden oku.`);
  state.etiket=sc.count+'/'+adet;
  if(state.faz>=r.selections.length){barCiz(r);good()}
- else{feedback('Seçtiğin kadarı '+state.etiket);speak(sc.count+' bölü '+adet);state.faz++;state.sec=[];state.etiket='';ertele(()=>barCiz(r),FAST?30:760)}}
+ else{feedback('Seçtiğin kadarı '+state.etiket);speak(sc.count+' bölü '+adet);state.faz++;state.sec=[];state.etiket='';gecisBasla(()=>barCiz(r),FAST?30:760)}}
 
 /* ===== w11: kesir asansörü (pay / payda) =====
    Gerçek dikey kuyu, 0 ile 1 bütün arasında on eş aralık. Tren/tünel yok. */
@@ -510,7 +599,7 @@ function renderStation(r){state.i=0;state.faz=0;state.rapor=[];stationCiz(r)}
 function stationOzet(r){$('#stage').innerHTML=`<div class="stack"><div class="caption">İstasyon raporu</div>
  ${r.items.map((it,i)=>`<div class="report"><div><b>${it.emoji}</b><small>${esc(it.ad)}</small></div><div><b>${esc(it.birim)}</b><small>${esc(AILE_AD[it.tur])}</small></div><div><b>${esc(it.yaklasik)}</b><small>yaklaşık</small></div></div>`).join('')}</div>`;
  $('#task').innerHTML=''}
-function stationCiz(r){const it=r.items[state.i];
+function stationCiz(r){if(state.i>=r.items.length)return;const it=r.items[state.i];
  $('#stage').innerHTML=`<div class="stack"><div class="object-card"><div class="obj-emoji">${it.emoji}</div><div class="obj-name">${esc(it.ad)}</div></div>
   <div class="task-card">${esc(it.soru)}</div>
   ${state.rapor.length?`<div class="unit-strip">${state.rapor.map(x=>`<span class="unit-chip">${esc(x)}</span>`).join('')}</div>`:''}
@@ -518,6 +607,7 @@ function stationCiz(r){const it=r.items[state.i];
  if(state.faz===0){
   $('#task').innerHTML='<div class="choices"><button class="choice fam-len" data-tur="uzunluk">📏 Uzunluk</button><button class="choice fam-mass" data-tur="kutle">⚖️ Kütle</button></div>';
   $$('[data-tur]').forEach(b=>b.onclick=()=>{
+   if(state.gecis)return;
    if(b.dataset.tur!==it.tur)return wrong('Soruyu yeniden oku: bu soru neyin ölçüsünü istiyor, uzunluk mu kütle mi?');
    state.faz=1;stationCiz(r)});
  }else{
@@ -526,11 +616,12 @@ function stationCiz(r){const it=r.items[state.i];
    <div class="actions"><button class="action" id="aileGeri">↩ Nicelik seçimine dön</button></div>`;
   $('#aileGeri').onclick=()=>{state.faz=0;stationCiz(r)};
   $$('[data-birim]').forEach(b=>b.onclick=()=>{
+   if(state.gecis)return;
    if(b.dataset.birim!==it.birim)return wrong(it.ipucu);
    state.rapor.push(it.ad+' ≈ '+it.yaklasik);
    state.i++;state.faz=0;
    if(state.i>=r.items.length){stationOzet(r);good()}
-   else{feedback(it.ad+' ≈ '+it.yaklasik);speak(it.ad+' yaklaşık '+it.yaklasik);ertele(()=>stationCiz(r),FAST?30:820)}});
+   else{feedback(it.ad+' ≈ '+it.yaklasik);speak(it.ad+' yaklaşık '+it.yaklasik);gecisBasla(()=>stationCiz(r),FAST?30:820)}});
  }}
 
 /* ===== w16: banka gişesi (para eşdeğerliği) ===== */
@@ -554,7 +645,7 @@ function paraCiz(r){const h=hedefSimdi(r),toplam=state.tepsi.reduce((a,b)=>a+b,0
   <div class="actions"><button class="action" id="geriAl">↩ Son parayı geri al</button></div>`;
  $$('[data-para]').forEach(b=>b.onclick=()=>paraKoy(r,+b.dataset.para));
  $('#geriAl').onclick=()=>{if(state.tepsi.length){state.tepsi.pop();paraCiz(r)}}}
-function paraKoy(r,k){const h=hedefSimdi(r);
+function paraKoy(r,k){if(state.gecis||state.hedefIx>=r.hedefler.length)return;const h=hedefSimdi(r);
  if(h.izin.indexOf(k)<0){feedback(h.kilit,true);speak(h.kilit);return}
  state.tepsi.push(k);const t=state.tepsi.reduce((a,b)=>a+b,0);
  if(t!==h.tutar)return paraCiz(r);
@@ -564,7 +655,7 @@ function paraKoy(r,k){const h=hedefSimdi(r);
  state.gecmis.push(imza);state.hedefIx++;
  if(state.hedefIx>=r.hedefler.length){paraCiz2(r);good();return}
  feedback('Doğru ödeme: '+kurusYaz(h.tutar));speak(h.onay||('Tam '+kurusYaz(h.tutar)));
- state.tepsi=[];ertele(()=>paraCiz(r),FAST?30:900)}
+ state.tepsi=[];gecisBasla(()=>paraCiz(r),FAST?30:900)}
 function paraCiz2(r){const h=r.hedefler[r.hedefler.length-1];
  $('#stage').innerHTML=`<div class="stack">${tepsiPara(state.tepsi)}<div class="lift-info">${kurusYaz(h.tutar)}</div></div>`}
 
@@ -646,13 +737,13 @@ function renderTers(r){state.ix=0;state.izler=[];state.yazi=[];state.deger=r.cif
  $('#task').innerHTML=`<div class="actions"><button class="action" data-ters="-${r.adim}">▼ ${r.adim}</button><button class="action" data-ters="${r.adim}">▲ ${r.adim}</button><button class="action" id="tersOk">Katı Onayla</button></div><div class="caption">Kabini parmağınla sürükleyebilir ya da düğmelerle taşıyabilirsin.</div>`;
  $$('[data-ters]').forEach(b=>b.onclick=()=>setTers(state.deger+(+b.dataset.ters)));
  $('#tersOk').onclick=()=>checkTers(r)}
-function checkTers(r){if(state.ix>=r.cift.length)return;const c=r.cift[state.ix];
+function checkTers(r){if(state.gecis||state.ix>=r.cift.length)return;const c=r.cift[state.ix];
  if(state.deger!==c.hedef)return wrong(`${c.bas} katından ${c.islem==='+'?'yukarı':'aşağı'} ${c.mik} birim gitmelisin. Şu an ${c.bas} ile ${state.deger} arasında ${Math.abs(state.deger-c.bas)} birim var.`);
  state.izler=(state.izler||[]).concat({a:c.bas,b:c.hedef,yon:c.islem==='+'?'up':'down'});
  state.yazi=(state.yazi||[]).concat(`${c.bas} ${c.islem} ${c.mik} = ${c.hedef}`);
  state.ix++;
  if(state.ix>=r.cift.length){tersCiz(r);good();return}
- state.deger=r.cift[state.ix].bas;feedback('Kabin yerinde!');ertele(()=>tersCiz(r),FAST?30:760)}
+ state.deger=r.cift[state.ix].bas;feedback('Kabin yerinde!');gecisBasla(()=>tersCiz(r),FAST?30:760)}
 
 /* ===== w19: uzay kargo bandı (10 ve 100 ile çarpma-bölme) ===== */
 const PV_AD=['on binler','binler','yüzler','onlar','birler'];
@@ -789,9 +880,10 @@ function problemCiz(r){$('#stage').innerHTML=problemSahne(r);
    <div class="actions"><button class="action" id="cumleSil">↩ Cümleyi sil</button></div>`;
   $$('[data-kelime]').forEach(b=>b.onclick=()=>{const i=+b.dataset.kelime;
    if(state.cumle.indexOf(i)>=0)return;
+   if(state.gecis)return;
    if(r.kelimeler[i].sira!==state.cumle.length)return wrong('Bu kelime cümlenin bu yerine uymuyor. Soru nasıl başlar, nasıl biter?');
    state.cumle.push(i);problemCiz(r);
-   if(state.cumle.length===r.kelimeler.filter(k=>k.sira!=null).length){state.faz=2;feedback('Soru cümlesi hazır');speak(state.cumle.map(j=>r.kelimeler[j].label).join(' '));ertele(()=>problemCiz(r),FAST?30:820)}});
+   if(state.cumle.length===r.kelimeler.filter(k=>k.sira!=null).length){state.faz=2;feedback('Soru cümlesi hazır');speak(state.cumle.map(j=>r.kelimeler[j].label).join(' '));gecisBasla(()=>problemCiz(r),FAST?30:820)}});
   $('#cumleSil').onclick=()=>{state.cumle=[];problemCiz(r)};
  }else{
   const liste=state.faz===2?r.cozum:r.kontrol;
@@ -818,7 +910,7 @@ function teraziCiz(r){const a=r.asamalar[state.ix];
  $('#stage').innerHTML=teraziSahne(r);
  $('#task').innerHTML=`<div class="actions">${a.kartlar.map((k,i)=>`<button class="kart-islem${state.bulunan.indexOf(i)>=0?' dogru':''}${state.eleme.indexOf(i)>=0?' yanlis':''}" data-kart="${i}">${esc(k.label)}</button>`).join('')}</div>`;
  $$('[data-kart]').forEach(b=>b.onclick=()=>teraziSec(r,+b.dataset.kart))}
-function teraziSec(r,i){const a=r.asamalar[state.ix],k=a.kartlar[i];
+function teraziSec(r,i){if(state.gecis||state.ix>=r.asamalar.length)return;const a=r.asamalar[state.ix],k=a.kartlar[i];if(!k)return;
  if(state.bulunan.indexOf(i)>=0||state.eleme.indexOf(i)>=0)return;
  state.onizleme=k.deger;
  const toplam=(a.sabit||0)+k.deger;
@@ -830,7 +922,7 @@ function teraziSec(r,i){const a=r.asamalar[state.ix],k=a.kartlar[i];
   state.ix++;
   if(state.ix>=r.asamalar.length){state.ix--;state.onizleme=k.deger;teraziCiz(r);good();return}
   state.bulunan=[];state.eleme=[];state.onizleme=null;
-  feedback('Bu kefe dengede!');ertele(()=>teraziCiz(r),FAST?30:860);
+  feedback('Bu kefe dengede!');gecisBasla(()=>teraziCiz(r),FAST?30:860);
  }else feedback('Doğru, devam et')}
 function renderTerazi(r){state.ix=0;state.bulunan=[];state.eleme=[];state.onizleme=null;teraziCiz(r)}
 
@@ -867,6 +959,924 @@ function firinOzet(r){$('#stage').innerHTML=firinSahne(r)+
  $('#task').innerHTML=''}
 function renderFirin(r){state.tepsiSay=0;state.tekSay=0;state.dokunma=0;state.ipucu=0;state.kabul=false;firinCiz(r)}
 
+/* ===== w25: 3B küp tarayıcısı ===== */
+const KUP_KOSE=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+const KUP_AYRIT=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+const KUP_YUZ=[{k:[0,1,2,3],n:[0,0,-1],ad:'ön'},{k:[4,5,6,7],n:[0,0,1],ad:'arka'},
+ {k:[0,1,5,4],n:[0,-1,0],ad:'alt'},{k:[2,3,7,6],n:[0,1,0],ad:'üst'},
+ {k:[1,2,6,5],n:[1,0,0],ad:'sağ'},{k:[0,3,7,4],n:[-1,0,0],ad:'sol'}];
+const ACINIM_YER=[5,4,0,1,9,2];  /* 3×4 ızgarada yüzlerin yeri */
+function kupDon(p){const a=(state.yaw||0)*Math.PI/180,b=(state.pitch||0)*Math.PI/180;
+ const x=p[0],y=p[1],z=p[2];
+ const x1=x*Math.cos(a)+z*Math.sin(a), z1=-x*Math.sin(a)+z*Math.cos(a);
+ const y2=y*Math.cos(b)-z1*Math.sin(b), z2=y*Math.sin(b)+z1*Math.cos(b);
+ return [x1,y2,z2]}
+function kupNokta(p){const d=kupDon(p);return [100+d[0]*38,100-d[1]*38,d[2]]}
+function erisilir(tip,i){
+ if(tip==='kose')return kupNokta(KUP_KOSE[i])[2]>0.15;
+ if(tip==='ayrit'){const a=kupDon(KUP_KOSE[KUP_AYRIT[i][0]]),b=kupDon(KUP_KOSE[KUP_AYRIT[i][1]]);return (a[2]+b[2])/2>0.1}
+ return kupDon(KUP_YUZ[i].n)[2]>0.28}
+function erisilebilirler(){const r=round(),liste=[];
+ for(let i=0;i<r.toplam;i++)if(erisilir(r.mod,i)&&state.isaretli.indexOf(i)<0)liste.push(i);
+ return liste}
+function kupSvg(r){const P=KUP_KOSE.map(kupNokta);let ic='';
+ if(r.mod==='yuz')KUP_YUZ.forEach((f,i)=>{const g=kupDon(f.n)[2];
+  if(g<=0)return;const pts=f.k.map(k=>P[k][0].toFixed(1)+','+P[k][1].toFixed(1)).join(' ');
+  const se=state.isaretli.indexOf(i)>=0;
+  ic+=`<polygon data-kup="${i}" points="${pts}" fill="${se?'rgba(255,216,115,.72)':'rgba(120,170,220,.20)'}" stroke="${se?'#ffd873':'#5f8cbe'}" stroke-width="2" style="cursor:pointer"/>`});
+ KUP_AYRIT.forEach((e,i)=>{const a=P[e[0]],b=P[e[1]],on=erisilir('ayrit',i),se=r.mod==='ayrit'&&state.isaretli.indexOf(i)>=0;
+  ic+=`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${se?'#ffd873':on?'#8fc0e2':'#3d5a7d'}" stroke-width="${se?6:on?4:3}" stroke-linecap="round"/>`;
+  if(r.mod==='ayrit'&&on&&!se)ic+=`<line data-kup="${i}" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="transparent" stroke-width="22" style="cursor:pointer"/>`});
+ KUP_KOSE.forEach((k,i)=>{const p=P[i],on=erisilir('kose',i),se=r.mod==='kose'&&state.isaretli.indexOf(i)>=0;
+  ic+=`<circle ${r.mod==='kose'&&on?`data-kup="${i}"`:''} cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${se?8:on?7:4}" fill="${se?'#ffd873':on?'#e8f2fb':'#43608a'}" stroke="${se?'#c9922a':'#5f8cbe'}" stroke-width="2" style="cursor:pointer"/>`});
+ return `<svg class="kup-svg" id="kupSvg" viewBox="0 0 200 200" width="215" height="215">${ic}</svg>`}
+function acinimHtml(){let h='';for(let i=0;i<12;i++){const f=ACINIM_YER.indexOf(i);
+ h+=f>=0?`<i class="${state.isaretli.indexOf(f)>=0?'acik':''}">${state.isaretli.indexOf(f)>=0?esc(KUP_YUZ[f].ad):''}</i>`:'<i style="border:0;background:transparent"></i>'}
+ return `<div class="acinim">${h}</div><div class="caption">Küpün açınımı</div>`}
+function kupCiz(r){$('#stage').innerHTML=`<div class="stack">${kupSvg(r)}
+  <div class="caption">İşaretlediğin ${esc(r.ad)}: <b>${state.isaretli.length}</b>${state.bitti?' · '+esc(r.ozet):''}</div>
+  ${r.mod==='yuz'?acinimHtml():''}</div>`;
+ const sv=$('#kupSvg');if(!sv)return;
+ sv.querySelectorAll('[data-kup]').forEach(el=>el.onclick=()=>kupSec(+el.dataset.kup));
+ let bas=null;
+ sv.onpointerdown=e=>{bas=[e.clientX,e.clientY,state.yaw||0,state.pitch||0];sv.setPointerCapture&&sv.setPointerCapture(e.pointerId)};
+ sv.onpointermove=e=>{if(!bas)return;const dx=e.clientX-bas[0],dy=e.clientY-bas[1];
+  if(Math.abs(dx)<3&&Math.abs(dy)<3)return;
+  state.yaw=bas[2]+dx*0.7;state.pitch=Math.max(-80,Math.min(80,bas[3]-dy*0.7));state.surukle=true;kupCiz(r)};
+ sv.onpointerup=()=>{bas=null;setTimeout(()=>state.surukle=false,60)};sv.onpointercancel=()=>bas=null}
+function setDonme(y,p){state.yaw=y;state.pitch=p;kupCiz(round())}
+function kupSec(i){const r=round();
+ if(state.surukle)return;
+ if(state.isaretli.indexOf(i)>=0){feedback('Bunu zaten buldun');return}
+ if(!erisilir(r.mod,i))return;
+ state.isaretli.push(i);kupCiz(r);
+ if(state.isaretli.length>=r.toplam){state.bitti=true;kupCiz(r);good()}}
+function renderKup(r){state.yaw=-32;state.pitch=18;state.isaretli=[];state.bitti=false;kupCiz(r);
+ $('#task').innerHTML=`<div class="caption">Küpü parmağınla döndür; arkada kalan ${esc(r.ad)} öne gelince işaretle.</div><button class="action" id="kupSay">Saydım, bitti</button>`;
+ $('#kupSay').onclick=()=>{if(state.isaretli.length>=r.toplam)return;
+  wrong('Modeli çevir: henüz işaretlemediğin bölgeler var. Arkaya bakmayı dene.')}}
+
+/* ===== w26: şekil kalesi (çokgen sınıflama) ===== */
+function sekilSvg(sk){const p=sk.noktalar,n=sk.acik?p.length-1:p.length;let ic='';
+ for(let i=0;i<n;i++){const a=p[i],b=p[(i+1)%p.length],iz=state.izler.indexOf(i)>=0;
+  ic+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${iz?'#e08b2a':'#33526b'}" stroke-width="4" stroke-linecap="round"/>`;
+  ic+=`<line data-kenar="${i}" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="transparent" stroke-width="17" style="cursor:pointer"/>`;
+  if(iz)ic+=`<circle cx="${(a[0]+b[0])/2}" cy="${(a[1]+b[1])/2}" r="8" fill="#fdf0d0" stroke="#c9922a" stroke-width="2"/><text x="${(a[0]+b[0])/2}" y="${(a[1]+b[1])/2+3.5}" text-anchor="middle" font-size="10" font-weight="900" fill="#7a5312">${state.izler.indexOf(i)+1}</text>`}
+ p.forEach(q=>{ic+=`<circle cx="${q[0]}" cy="${q[1]}" r="3.5" fill="#33526b"/>`});
+ return `<svg class="sekil-svg" viewBox="-6 -6 112 112" width="228" height="228" style="transform:rotate(${state.donme||0}deg);transition:transform .5s">${ic}</svg>`}
+function sekilSahne(r){const sk=r.sekiller[state.i],n=sk.acik?sk.noktalar.length-1:sk.noktalar.length;
+ return `<div class="stack">${sekilSvg(sk)}
+  <div class="caption">${state.izler.length<n?'Kenarlara tek tek dokunup say: '+state.izler.length:'Bütün kenarları izledin: '+state.izler.length}</div>
+  <div class="unit-strip">${r.sekiller.map((x,j)=>`<span class="unit-chip">${j<state.i?'✓':j===state.i?'●':'·'}</span>`).join('')}</div></div>`}
+function sekilCiz(r){if(state.i>=r.sekiller.length)return;const sk=r.sekiller[state.i],n=sk.acik?sk.noktalar.length-1:sk.noktalar.length;
+ $('#stage').innerHTML=sekilSahne(r);
+ $$('[data-kenar]').forEach(el=>el.onclick=()=>{const i=+el.dataset.kenar;
+  if(state.gecis)return;
+  if(state.izler.indexOf(i)>=0)return feedback('Bu kenarı saydın');
+  state.izler.push(i);sekilCiz(r)});
+ const acik=state.izler.length>=n;
+ $('#task').innerHTML=`<div class="caption">${acik?'Şimdi doğru kapıyı seç.':'Önce bütün kenarları parmağınla izle.'}</div>
+  <div class="actions">${KAPILAR.map((k,j)=>`<button class="kapi" data-kapi="${j}" ${acik?'':'disabled style="opacity:.45"'}><b>${esc(k.ad)}</b><small>${esc(k.alt)}</small></button>`).join('')}</div>`;
+ if(acik)$$('[data-kapi]').forEach(b=>b.onclick=()=>sekilKapi(r,KAPILAR[+b.dataset.kapi]))}
+const KAPILAR=[{id:3,ad:'Üçgen',alt:'3 kenar △'},{id:4,ad:'Dörtgen',alt:'4 kenar ▭'},{id:5,ad:'Beşgen',alt:'5 kenar ⬠'},
+ {id:6,ad:'Altıgen',alt:'6 kenar ⬡'},{id:8,ad:'Sekizgen',alt:'8 kenar ⯃'},{id:'acik',ad:'Çokgen değil',alt:'kapalı değil'}];
+function sekilKapi(r,k){if(state.gecis||state.i>=r.sekiller.length)return;const sk=r.sekiller[state.i],dogru=sk.acik?'acik':sk.noktalar.length;
+ if(k.id!==dogru){state.izler=sk.noktalar.map((_,i)=>i).filter(i=>i<(sk.acik?sk.noktalar.length-1:sk.noktalar.length));
+  sekilCiz(r);return wrong(sk.acik?'Şeklin uçları birleşiyor mu? Kapalı olmayan çizgi çokgen sayılmaz.':'Kenarları birlikte saydık: numaralara bak ve kapıyı yeniden seç.')}
+ state.donme=(state.donme||0)+35;sekilCiz(r);speak(sk.ad);
+ state.i++;
+ if(state.i>=r.sekiller.length){feedback('Kale kapıları açıldı');ertele(()=>good(),FAST?30:520);return}
+ feedback('Doğru kapı: '+k.ad);state.izler=[];gecisBasla(()=>{state.donme=0;sekilCiz(r)},FAST?30:860)}
+function renderSekil(r){state.i=0;state.izler=[];state.donme=0;sekilCiz(r)}
+
+/* ===== w27: köşegen dedektifi ===== */
+function kosegenSvg(r){const p=r.noktalar;let ic='';
+ for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length];
+  ic+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#33526b" stroke-width="4" stroke-linecap="round"/>`}
+ (state.cizgiler||[]).forEach(c=>{const a=p[c.a],b=p[c.b];
+  ic+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${c.kenar?'#33526b':'#e08b2a'}" stroke-width="4" stroke-dasharray="${c.kenar?'':'7 5'}" stroke-linecap="round"/>`});
+ if(state.kesisim)ic+=`<circle cx="${state.kesisim[0]}" cy="${state.kesisim[1]}" r="6" fill="#fff" stroke="#e08b2a" stroke-width="3"/>`;
+ p.forEach((q,i)=>{const se=state.secim===i;
+  ic+=`<circle data-kose="${i}" cx="${q[0]}" cy="${q[1]}" r="${se?10:8}" fill="${se?'#ffd873':'#fff'}" stroke="#33526b" stroke-width="3" style="cursor:pointer"/>
+   <text x="${q[0]}" y="${q[1]+3.5}" text-anchor="middle" font-size="10" font-weight="900" fill="#33526b">${esc(r.adlar[i])}</text>`});
+ return `<svg viewBox="-8 -8 116 116" width="232" height="232" style="touch-action:manipulation">${ic}</svg>`}
+function kosegenCiz(r){$('#stage').innerHTML=`<div class="stack">${kosegenSvg(r)}
+  ${(state.olcum||[]).length?`<div class="report">${state.olcum.map(o=>`<div><b>${o.uz}</b><small>${esc(o.ad)}</small></div>`).join('')}</div>`:''}
+  <div class="caption">${esc(state.not||'Komşu olmayan köşeleri birleştir.')}</div></div>`;
+ $$('[data-kose]').forEach(el=>el.onclick=()=>kosegenSec(r,+el.dataset.kose));
+ if(state.faz===1){
+  $('#task').innerHTML='<button class="action" id="olc">📏 İki çizgiyi ölç ve karşılaştır</button>';
+  $('#olc').onclick=()=>kosegenOlc(r);
+ }else if(state.faz===2){
+  $('#task').innerHTML=`<div class="caption">${esc(r.soru.metin)}</div><div class="choices">${r.soru.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{
+   if(!r.soru.secenekler[+b.dataset.choice].correct)return wrong('Üçgende her köşe için diğer iki köşeye bak: aralarında kenar var mı?');
+   good()});
+ }else{
+  $('#task').innerHTML=`<div class="caption">İki köşeye sırayla dokun; aralarında çizgi oluşur.</div>${r.soru&&r.kosegen>r.noktalar.length?'<button class="action" id="yokBtn">Burada köşegen yok</button>':''}`;
+  const yb=$('#yokBtn');if(yb)yb.onclick=()=>{if((state.cizgiler||[]).length<r.noktalar.length)return wrong('Önce bütün köşe çiftlerini dene: hepsi kenar mı çıkıyor?');
+   state.faz=2;state.not='Üçgende komşu olmayan köşe çifti yok.';kosegenCiz(r)};
+ }}
+function kosegenSec(r,i){
+ if(state.faz>0)return;
+ if(state.secim==null){state.secim=i;state.not='Şimdi ikinci köşeye dokun.';return kosegenCiz(r)}
+ if(state.secim===i){state.secim=null;state.not='Seçim kalktı.';return kosegenCiz(r)}
+ const a=state.secim,b=i,n=r.noktalar.length;state.secim=null;
+ const komsu=(a+1)%n===b||(b+1)%n===a;
+ if((state.cizgiler||[]).some(c=>(c.a===a&&c.b===b)||(c.a===b&&c.b===a))){state.not='Bu çizgiyi zaten çizdin.';return kosegenCiz(r)}
+ state.cizgiler=(state.cizgiler||[]).concat({a,b,kenar:komsu});
+ if(komsu){state.not=`${r.adlar[a]} ile ${r.adlar[b]} komşu köşeler: aralarındaki çizgi bir KENAR, köşegen değil.`;
+  kosegenCiz(r);return wrong(state.not)}
+ state.not=`${r.adlar[a]}${r.adlar[b]} bir köşegen: komşu olmayan iki köşeyi birleştirdi.`;
+ const kosegenler=state.cizgiler.filter(c=>!c.kenar);
+ if(kosegenler.length>=(r.kosegen||0)){
+  const p=r.noktalar,k1=kosegenler[0],k2=kosegenler[1];
+  state.kesisim=[(p[k1.a][0]+p[k1.b][0]+p[k2.a][0]+p[k2.b][0])/4,(p[k1.a][1]+p[k1.b][1]+p[k2.a][1]+p[k2.b][1])/4];
+  state.faz=1;state.not='İki köşegen orta noktada kesişti. Şimdi uzunlukları ölç.'}
+ kosegenCiz(r)}
+function kosegenOlc(r){const p=r.noktalar,k=state.cizgiler.filter(c=>!c.kenar);
+ state.olcum=k.map(c=>({ad:r.adlar[c.a]+r.adlar[c.b],uz:Math.round(Math.hypot(p[c.a][0]-p[c.b][0],p[c.a][1]-p[c.b][1]))}));
+ const esit=state.olcum.every(o=>o.uz===state.olcum[0].uz);
+ state.not=esit?'İki köşegen aynı uzunlukta çıktı.':'Köşegenler farklı uzunlukta.';
+ kosegenCiz(r);good()}
+function renderKosegen(r){state.secim=null;state.cizgiler=[];state.faz=0;state.olcum=[];state.kesisim=null;state.not='';kosegenCiz(r)}
+
+/* ===== w28: geometri stüdyosu (cetvel ve gönye) ===== */
+const IZGARA=6, IZ_ADIM=42, IZ_KAY=16;
+function izgaraYer(c,s){return [IZ_KAY+c*IZ_ADIM, IZ_KAY+s*IZ_ADIM]}
+function studyoSvg(r){let ic='';
+ for(let sr=0;sr<=IZGARA;sr++)for(let c=0;c<=IZGARA;c++){const p=izgaraYer(c,sr),se=(state.koseler||[]).some(k=>k[0]===c&&k[1]===sr);
+  ic+=`<circle data-nokta="${c},${sr}" class="grid-dot${se?' secili':''}" cx="${p[0]}" cy="${p[1]}" r="${se?7:4}" style="cursor:pointer"/>`}
+ const k=state.koseler||[];
+ for(let i=0;i<k.length-1;i++){const a=izgaraYer(k[i][0],k[i][1]),b=izgaraYer(k[i+1][0],k[i+1][1]);
+  ic+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#e08b2a" stroke-width="5" stroke-linecap="round"/>`;
+  if(state.cetvel)ic+=`<text x="${(a[0]+b[0])/2}" y="${(a[1]+b[1])/2-7}" text-anchor="middle" font-size="12" font-weight="900" fill="#8a5725">${(Math.hypot(k[i][0]-k[i+1][0],k[i][1]-k[i+1][1])).toFixed(1)}</text>`}
+ if(state.kapali&&k.length>2){const a=izgaraYer(k[k.length-1][0],k[k.length-1][1]),b=izgaraYer(k[0][0],k[0][1]);
+  ic+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#e08b2a" stroke-width="5" stroke-linecap="round"/>`}
+ if(state.gonye)(state.aci||[]).forEach(a=>{const p=izgaraYer(a.c[0],a.c[1]);
+  ic+=`<circle cx="${p[0]}" cy="${p[1]}" r="13" fill="none" stroke="${a.dik?'#2f9e5e':'#e05555'}" stroke-width="3"/>`});
+ return `<svg viewBox="0 0 ${IZ_KAY*2+IZGARA*IZ_ADIM} ${IZ_KAY*2+IZGARA*IZ_ADIM}" width="272" height="272" style="touch-action:manipulation;background:#fbf7ef;border:4px solid #c9a86a;border-radius:12px">${ic}</svg>`}
+function studyoCiz(r){$('#stage').innerHTML=`<div class="stack">${studyoSvg(r)}
+  <div class="caption">${esc(state.not||r.gorev)}</div>
+  ${state.rapor?`<div class="talk">${esc(state.rapor)}</div>`:''}</div>`;
+ $$('[data-nokta]').forEach(el=>el.onclick=()=>{const [c,sr]=el.dataset.nokta.split(',').map(Number);
+  if((state.koseler||[]).some(k=>k[0]===c&&k[1]===sr))return;
+  state.koseler.push([c,sr]);state.cetvel=true;state.not='Cetvel iki nokta arasını ölçtü.';studyoCiz(r)});
+ $('#task').innerHTML=`<div class="actions"><button class="action" id="tCetvel">📏 Kenarları ölç</button><button class="action" id="tGonye">📐 Açıları ölç</button></div>
+  <div class="actions"><button class="action" id="tSil">↩ Son köşeyi sil</button><button class="action" id="tBitir">Şekli kapat ve bitir</button></div>`;
+ $('#tCetvel').onclick=()=>{state.cetvel=!state.cetvel;state.not=state.cetvel?'Cetvel açık: kenar uzunlukları birim cinsinden yazıyor.':'Cetvel kapandı.';studyoCiz(r)};
+ $('#tGonye').onclick=()=>{state.gonye=true;studyoAci();state.not='Gönye köşelere kondu: yeşil halka dik açı, kırmızı halka dik değil.';studyoCiz(r)};
+ $('#tSil').onclick=()=>{state.koseler.pop();state.kapali=false;state.aci=[];studyoCiz(r)};
+ $('#tBitir').onclick=()=>studyoBitir(r)}
+function studyoAci(){const k=state.koseler||[];state.aci=[];
+ if(k.length<3)return;
+ for(let i=0;i<k.length;i++){const o=k[i],a=k[(i-1+k.length)%k.length],b=k[(i+1)%k.length];
+  const v1=[a[0]-o[0],a[1]-o[1]],v2=[b[0]-o[0],b[1]-o[1]];
+  state.aci.push({c:o,dik:Math.abs(v1[0]*v2[0]+v1[1]*v2[1])<1e-9})}}
+function studyoBitir(r){const k=state.koseler||[];
+ if(k.length!==r.kose)return wrong(`Şu an ${k.length} köşe seçtin. Görevdeki köşe sayısını yeniden oku.`);
+ const uz=k.map((p,i)=>{const q=k[(i+1)%k.length];return Math.hypot(p[0]-q[0],p[1]-q[1])});
+ if(uz.some(u=>u===0))return wrong('İki köşe üst üste geldi; birini sil.');
+ studyoAci();
+ if(r.kural==='ucgen'){const alan=Math.abs((k[1][0]-k[0][0])*(k[2][1]-k[0][1])-(k[2][0]-k[0][0])*(k[1][1]-k[0][1]));
+  if(alan===0)return wrong('Üç nokta aynı doğru üzerinde; üçgen kapanmıyor. Birini kaydır.')}
+ if(r.kural==='kare'){const esit=uz.every(u=>Math.abs(u-uz[0])<1e-9),dik=state.aci.every(a=>a.dik);
+  state.gonye=true;state.cetvel=true;
+  if(!dik){studyoCiz(r);return wrong('Gönyeye bak: kırmızı halkalı köşede dik açı yok.')}
+  if(!esit){studyoCiz(r);return wrong('Dik açılar tamam ama kenarlar eş değil: bu bir dikdörtgen, kare değil.')}}
+ if(r.kural==='altigen'){for(let i=0;i<k.length;i++){const o=k[i],a=k[(i-1+k.length)%k.length],b=k[(i+1)%k.length];
+  if((a[0]-o[0])*(b[1]-o[1])-(b[0]-o[0])*(a[1]-o[1])===0)return wrong('Üç köşe aynı doğru üzerinde: orada gerçek bir köşe oluşmuyor.')}}
+ state.kapali=true;state.cetvel=true;
+ state.rapor=`${r.kose} köşe · ${r.kose} kenar · kullanılan araç: cetvel${state.gonye?' ve gönye':''}`;
+ studyoCiz(r);good()}
+function renderStudyo(r){state.koseler=[];state.aci=[];state.cetvel=true;state.gonye=false;state.kapali=false;state.rapor='';state.not='';studyoCiz(r)}
+
+/* ===== w29: çevre avcıları (tahmin → ölçme → toplam) ===== */
+function cevreSvg(r){const p=r.sekil,n=p.noktalar.length;let ic='';
+ for(let i=0;i<n;i++){const a=p.noktalar[i],b=p.noktalar[(i+1)%n],olculdu=state.olculen.indexOf(i)>=0;
+  ic+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${olculdu?'#e08b2a':'#33526b'}" stroke-width="${olculdu?6:4}" stroke-linecap="round"/>`;
+  if(state.faz===1)ic+=`<line data-kenar="${i}" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="transparent" stroke-width="20" style="cursor:pointer"/>`;
+  if(olculdu){const k=p.kenarUz[i],mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;
+   for(let u=0;u<k;u++){const t1=u/k,t2=(u+1)/k,x1=a[0]+(b[0]-a[0])*t1,y1=a[1]+(b[1]-a[1])*t1,x2=a[0]+(b[0]-a[0])*t2,y2=a[1]+(b[1]-a[1])*t2;
+    ic+=`<circle cx="${((x1+x2)/2).toFixed(1)}" cy="${((y1+y2)/2).toFixed(1)}" r="3" fill="#8a5725"/>`}
+   ic+=`<circle cx="${mx}" cy="${my}" r="10" fill="#fdf0d0" stroke="#c9922a" stroke-width="2"/><text x="${mx}" y="${my+4}" text-anchor="middle" font-size="11" font-weight="900" fill="#7a5312">${k}</text>`}}
+ return `<svg viewBox="-14 -14 128 128" width="236" height="236">${r.ic||''}${ic}</svg>`}
+function cevreCiz(r){
+ $('#stage').innerHTML=`<div class="stack">${cevreSvg(r)}
+  <div class="caption">${esc(state.faz===0?r.nesne:state.faz===1?('Ölçülen kenar: '+state.olculen.length+'/'+r.sekil.kenarUz.length):'Toplam '+r.gercek+' '+r.birim)}</div>
+  ${state.tahmin!=null?`<div class="report"><div><b>${state.tahmin}</b><small>tahminin</small></div>${state.faz>=2?`<div><b>${r.gercek}</b><small>ölçüm</small></div><div><b>${Math.abs(r.gercek-state.tahmin)}</b><small>fark</small></div>`:''}</div>`:''}</div>`;
+ if(state.faz===0){
+  $('#task').innerHTML=`<div class="caption">Kenar uzunlukları henüz belli değil. Çevre sence yaklaşık kaç ${esc(r.birim)}?</div>
+   <div class="choices">${r.tahmin.map((c,i)=>`<button class="choice" data-tahmin="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-tahmin]').forEach(b=>b.onclick=()=>{state.tahmin=r.tahmin[+b.dataset.tahmin].v;state.faz=1;feedback('Tahmin kaydedildi');cevreCiz(r)});
+ }else if(state.faz===1){
+  $('#task').innerHTML=`<div class="caption">Her kenara dokun: ${esc(r.birim==='cm'?'cetvel kenarı ölçsün':'birimler kenar boyunca dizilsin')}.</div>`;
+  $$('[data-kenar]').forEach(el=>el.onclick=()=>{const i=+el.dataset.kenar;
+   if(state.olculen.indexOf(i)>=0)return feedback('Bu kenarı ölçtün');
+   state.olculen.push(i);cevreCiz(r);
+   if(state.olculen.length>=r.sekil.kenarUz.length){state.faz=2;feedback('Bütün kenarlar ölçüldü');gecisBasla(()=>cevreCiz(r),FAST?30:600)}});
+ }else{
+  $('#task').innerHTML=`<div class="caption">Ölçtüğün kenarları topla: çevre kaç ${esc(r.birim)}?</div>
+   <div class="choices">${r.toplamSec.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{
+   if(!r.toplamSec[+b.dataset.choice].correct)return wrong('Kenar sayılarını yeniden topla: '+r.sekil.kenarUz.join(' + '));
+   good()});
+ }}
+function renderCevre(r){state.faz=0;state.tahmin=null;state.olculen=[];cevreCiz(r)}
+
+/* ===== w30: ip dolama ===== */
+function ipSvg(r){const R=r.yaricap,cx=70,cy=70,a0=-90,a1=-90+Math.min(360,state.aci||0);
+ const nk=a=>[cx+R*Math.cos(a*Math.PI/180),cy+R*Math.sin(a*Math.PI/180)];
+ const p0=nk(a0),p1=nk(a1),buyuk=(state.aci||0)>180?1:0;
+ const iz=(state.aci||0)>1?`<path class="ip-cizgi" d="M ${p0[0].toFixed(1)} ${p0[1].toFixed(1)} A ${R} ${R} 0 ${buyuk} 1 ${p1[0].toFixed(1)} ${p1[1].toFixed(1)}"/>`:'';
+ return `<svg id="ipSvg" viewBox="0 0 140 140" width="228" height="228" style="touch-action:none">
+  <ellipse cx="${cx}" cy="${cy}" rx="${R}" ry="${R}" fill="#cfd8e0" stroke="#7b8ea1" stroke-width="4"/>
+  <ellipse cx="${cx}" cy="${cy}" rx="${R-9}" ry="${R-9}" fill="#e8eef3" stroke="#9fb0c4" stroke-width="2"/>
+  ${iz}<circle cx="${p0[0].toFixed(1)}" cy="${p0[1].toFixed(1)}" r="6" fill="#e08b2a" stroke="#8a5725" stroke-width="2"/>
+  ${(state.aci||0)>1?`<circle cx="${p1[0].toFixed(1)}" cy="${p1[1].toFixed(1)}" r="5" fill="#e05555"/>`:''}</svg>`}
+function cetvelHtml(cm,uzunluk,renk){let tik='';for(let i=0;i<=30;i++)tik+=`<i>${i%5===0?`<b>${i}</b>`:''}</i>`;
+ return `<div style="width:min(300px,96%)"><div style="position:relative;height:16px"><div style="position:absolute;left:0;top:5px;height:6px;border-radius:3px;background:${renk||'#e05555'};width:${(uzunluk/30*100).toFixed(1)}%"></div></div><div class="cetvel">${tik}</div></div>`}
+function ipCiz(r){
+ if(state.faz===0){
+  $('#stage').innerHTML=`<div class="stack">${ipSvg(r)}
+   <div class="caption">${(state.aci||0)<350?'İpi mandaldan başlayıp kutunun çevresinde dolaştır. Dolanan: '+Math.round(state.aci||0)+'°':'Tam tur tamamlandı; ip başlangıca ulaştı.'}</div></div>`;
+  const sv=$('#ipSvg');if(sv){let son=null;
+   const aci=e=>{const b=sv.getBoundingClientRect();return Math.atan2(e.clientY-b.top-b.height/2,e.clientX-b.left-b.width/2)*180/Math.PI};
+   sv.onpointerdown=e=>{son=aci(e);sv.setPointerCapture&&sv.setPointerCapture(e.pointerId)};
+   sv.onpointermove=e=>{if(son==null)return;const y=aci(e);let d=y-son;if(d>180)d-=360;if(d<-180)d+=360;son=y;
+    state.aci=Math.max(0,Math.min(360,(state.aci||0)+d));ipCiz(r)};
+   sv.onpointerup=()=>son=null;sv.onpointercancel=()=>son=null}
+  $('#task').innerHTML=`<button class="action" id="ipBitir">İpi cetvele taşı</button>`;
+  $('#ipBitir').onclick=()=>{if((state.aci||0)<345)return wrong('İp henüz başlangıç mandalına dönmedi; açık kalan bölümü de dolaştır.');
+   state.faz=1;ipCiz(r)};
+ }else{
+  $('#stage').innerHTML=`<div class="stack"><div class="caption">İp kesilip düzleştirildi. Cetveli sıfırdan oku.</div>
+   ${cetvelHtml(r.cm,r.cm)}${r.oncekiCm?`<div class="caption">Önceki kutunun ipi:</div>${cetvelHtml(r.oncekiCm,r.oncekiCm,'#3f92c4')}`:''}</div>`;
+  $('#task').innerHTML=`<div class="caption">İpin uzunluğu kaç santimetre?</div>
+   <div class="choices">${r.okuma.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{
+   if(!r.okuma[+b.dataset.choice].correct)return wrong('İpin ucu cetvelde hangi çizgide bitiyor? Sıfırdan saymaya başla.');
+   good()});
+ }}
+function ipSar(d){state.aci=d;ipCiz(round())}
+function renderIp(r){state.faz=0;state.aci=0;ipCiz(r)}
+
+/* ===== w31: sıvı laboratuvarı ===== */
+function surahiHtml(r,litre,tahmin,gen){const H=190,W=gen||r.genislik||78;
+ const y=l=>H*(l/r.maks);
+ let der='';if(state.faz>0)for(let l=1;l<=r.maks;l++)der+=`<div class="derece" style="bottom:${y(l).toFixed(1)}px">${l} L</div>`;
+ return `<div class="surahi" id="surahi" style="width:${W}px;height:${H}px">
+  <div class="su" style="height:${y(litre).toFixed(1)}px"></div>${der}
+  ${tahmin!=null?`<div class="tahmin-cizgi" id="tahminCizgi" style="bottom:${y(tahmin).toFixed(1)}px"></div>`:''}</div>`}
+function siviCiz(r){const l=state.litre||0;
+ $('#stage').innerHTML=`<div class="stack"><div class="row">${surahiHtml(r,l,state.tahmin)}
+   ${state.faz>=2?`<div class="row">${Array.from({length:r.hedef},(_,i)=>`<div class="litre-kap"><i style="height:${i<(state.dolu||0)?'100%':'0'}"></i></div>`).join('')}</div>`:''}
+   ${r.karsilastir&&state.faz>=2?surahiHtml(r,l,null,120):''}</div>
+  <div class="caption">${state.faz===0?'Sürahide derece yok. 3 litre sence nerede biter? Çizgiyi sürükle.'.replace('3',String(r.hedef)):'Kaptaki su: '+l.toFixed(1).replace('.',',')+' L'}
+  ${state.tahmin!=null&&state.faz>0?` · tahmin çizgin ${state.tahmin.toFixed(1).replace('.',',')} L`:''}</div></div>`;
+ const sr=$('#surahi');
+ if(state.faz===0&&sr){const tasi=e=>{const b=sr.getBoundingClientRect();
+   state.tahmin=Math.max(0,Math.min(r.maks,Math.round((b.bottom-e.clientY)/b.height*r.maks*4)/4));siviCiz(r)};
+  sr.onpointerdown=e=>{e.preventDefault();state.tut=true;sr.setPointerCapture&&sr.setPointerCapture(e.pointerId);tasi(e)};
+  sr.onpointermove=e=>{if(state.tut)tasi(e)};sr.onpointerup=()=>state.tut=false;sr.onpointercancel=()=>state.tut=false;
+  $('#task').innerHTML='<button class="action" id="tahminOk2">Tahmin çizgimi onayla</button>';
+  $('#tahminOk2').onclick=()=>{if(state.tahmin==null)return wrong('Önce çizgiyi sürükleyip bir yere koy.');
+   state.faz=1;feedback('Şimdi dereceler açıldı');siviCiz(r)};
+ }else if(state.faz===1){
+  $('#task').innerHTML=`<div class="actions"><button class="action" id="musluk">🚰 Musluğu aç (basılı tut)</button><button class="action" id="bosalt">↩ Biraz boşalt</button></div><button class="action" id="siviOk">Bu kadar yeter</button>`;
+  const m=$('#musluk');
+  const ak=()=>{state.akiyor=true;state.saat2=setInterval(()=>{if(!state.akiyor){clearInterval(state.saat2);return}
+    state.litre=Math.min(r.maks,(state.litre||0)+0.2);siviCiz(r)},90)};
+  m.onpointerdown=e=>{e.preventDefault();ak()};m.onpointerup=()=>state.akiyor=false;m.onpointerleave=()=>state.akiyor=false;
+  $('#bosalt').onclick=()=>{state.litre=Math.max(0,(state.litre||0)-0.5);siviCiz(r)};
+  $('#siviOk').onclick=()=>{state.akiyor=false;
+   if(Math.abs((state.litre||0)-r.hedef)>0.05)return wrong(`Derecelere bak: ${r.hedef} L çizgisine göre ${(state.litre>r.hedef?'fazla':'eksik')} su var. Musluğu ayarla.`);
+   state.faz=2;state.dolu=0;feedback('Şimdi 1 litrelik kaplarla doğrula');siviCiz(r)};
+ }else{
+  $('#task').innerHTML=`<div class="actions"><button class="action" id="aktar">1 L kaba aktar</button><button class="action" id="siviBitir">Doğrulamayı bitir</button></div>`;
+  $('#aktar').onclick=()=>{if((state.dolu||0)>=r.hedef)return feedback('Bütün kaplar doldu');
+   state.dolu=(state.dolu||0)+1;state.litre=Math.max(0,state.litre-1);siviCiz(r)};
+  $('#siviBitir').onclick=()=>{if((state.dolu||0)!==r.hedef)return wrong(`Sürahideki su kaç tane 1 litrelik kabı doldurdu? Aktarmaya devam et.`);
+   if(r.sonSoru){state.faz=3;siviSoru(r);return}good()};
+ }}
+function siviSoru(r){$('#task').innerHTML=`<div class="caption">${esc(r.sonSoru.metin)}</div>
+ <div class="choices">${r.sonSoru.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+ $$('[data-choice]').forEach(b=>b.onclick=()=>{
+  if(!r.sonSoru.secenekler[+b.dataset.choice].correct)return wrong('İki kaptaki suyu 1 litrelik kaplara aktarsan kaç kap olurdu? Miktar kabın şekliyle değişmez.');
+  good()})}
+function setSivi(l){state.litre=l;siviCiz(round())}
+function renderSivi(r){state.faz=0;state.litre=0;state.tahmin=null;state.dolu=0;state.akiyor=false;siviCiz(r)}
+
+/* ===== w32: mozaik atölyesi ===== */
+function anahtar(a,b){const f=n=>Math.round(n*1000)/1000;
+ const A=[f(a[0]),f(a[1])],B=[f(b[0]),f(b[1])];
+ return (A[0]<B[0]||(A[0]===B[0]&&A[1]<=B[1]))?A.join(',')+'|'+B.join(','):B.join(',')+'|'+A.join(',')}
+function mozaikKenar(parcalar){const say={},bilgi={};
+ parcalar.forEach(p=>{const n=p.nokta.length;
+  for(let i=0;i<n;i++){const a=p.nokta[i],b=p.nokta[(i+1)%n],k=anahtar(a,b);
+   say[k]=(say[k]||0)+1;bilgi[k]=[a,b]}});
+ const dis=[],ic=[];
+ Object.keys(say).forEach(k=>(say[k]===1?dis:ic).push(bilgi[k]));
+ return {dis,ic}}
+function mozaikSvg(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.indexOf(i)>=0);
+ const sk=42,ox=18,oy=150;const X=p=>ox+p[0]*sk,Y=p=>oy-p[1]*sk;
+ let ic='';
+ r.parcalar.forEach((p,i)=>{const var_=state.yerlesen.indexOf(i)>=0;
+  const pts=p.nokta.map(q=>X(q).toFixed(1)+','+Y(q).toFixed(1)).join(' ');
+  ic+=`<polygon ${var_?'':`data-yuva="${i}"`} points="${pts}" fill="${var_?p.renk:'transparent'}" stroke="${var_?'#8a5725':'#b9945c'}" stroke-width="${var_?2:2}" stroke-dasharray="${var_?'':'6 5'}" style="cursor:pointer"/>`});
+ if(state.faz>=1){const k=mozaikKenar(yerlesen);
+  k.ic.forEach(e=>{ic+=`<line x1="${X(e[0]).toFixed(1)}" y1="${Y(e[0]).toFixed(1)}" x2="${X(e[1]).toFixed(1)}" y2="${Y(e[1]).toFixed(1)}" stroke="#b9945c" stroke-width="3" stroke-dasharray="5 4"/>`});
+  k.dis.forEach((e,i)=>{const iz=state.izli.indexOf(i)>=0;
+   ic+=`<line x1="${X(e[0]).toFixed(1)}" y1="${Y(e[0]).toFixed(1)}" x2="${X(e[1]).toFixed(1)}" y2="${Y(e[1]).toFixed(1)}" stroke="${iz?'#e05555':'#33526b'}" stroke-width="${iz?7:4}" stroke-linecap="round"/>`;
+   ic+=`<line data-dis="${i}" x1="${X(e[0]).toFixed(1)}" y1="${Y(e[0]).toFixed(1)}" x2="${X(e[1]).toFixed(1)}" y2="${Y(e[1]).toFixed(1)}" stroke="transparent" stroke-width="20" style="cursor:pointer"/>`})}
+ return `<svg class="mozaik-svg" viewBox="0 0 300 190" width="290" height="184">${ic}</svg>`}
+function mozaikCiz(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.indexOf(i)>=0);
+ const k=state.faz>=1?mozaikKenar(yerlesen):null;
+ $('#stage').innerHTML=`<div class="stack">${mozaikSvg(r)}
+  <div class="caption">${state.faz===0?'Parçayı seç, sonra kesik çizgili yuvaya dokun.':state.faz===1?('Dış sınırı izle: '+state.izli.length+' birim kenar'):'Dış çevre '+k.dis.length+' birim'}</div></div>`;
+ if(state.faz===0){
+  $('#task').innerHTML=`<div class="actions">${r.parcalar.map((p,i)=>`<button class="parca-btn${state.secili===i?' secili':''}${state.yerlesen.indexOf(i)>=0?' bitti':''}" data-parca="${i}">${esc(p.ad)}</button>`).join('')}</div>`;
+  $$('[data-parca]').forEach(b=>b.onclick=()=>{const i=+b.dataset.parca;
+   if(state.yerlesen.indexOf(i)>=0)return;state.secili=i;mozaikCiz(r)});
+  $$('[data-yuva]').forEach(el=>el.onclick=()=>{const i=+el.dataset.yuva;
+   if(state.secili==null)return feedback('Önce bir parça seç',true);
+   if(state.secili!==i)return wrong('Bu yuva seçtiğin parçanın biçimine uymuyor. Kenar sayısına bak.');
+   state.yerlesen.push(i);state.secili=null;
+   if(state.yerlesen.length>=r.parcalar.length){state.faz=1;state.izli=[];feedback('Mozaik kuruldu')}
+   mozaikCiz(r)});
+ }else if(state.faz===1){
+  $('#task').innerHTML='<div class="caption">Yalnız dış sınırdaki kenarlara dokun. Kesik çizgililer iki parçanın arasında kaldı.</div>';
+  $$('[data-dis]').forEach(el=>el.onclick=()=>{const i=+el.dataset.dis;
+   if(state.izli.indexOf(i)>=0)return feedback('Bu kenarı saydın');
+   state.izli.push(i);mozaikCiz(r);
+   if(state.izli.length>=k.dis.length){state.faz=2;feedback('Dış sınır tamam');gecisBasla(()=>mozaikCiz(r),FAST?30:600)}});
+ }else{
+  $('#task').innerHTML=`<div class="caption">Parçaların çevreleri ayrı ayrı toplansaydı ${r.ayriToplam} birim olurdu. Birleşik şeklin çevresi kaç birim?</div>
+   <div class="choices">${r.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{
+   if(!r.secenekler[+b.dataset.choice].correct)return wrong('İçte kalan ortak kenarlar çevreye dâhil değil. İzlediğin kırmızı kenarları say.');
+   good()});
+ }}
+function renderMozaik(r){state.faz=0;state.yerlesen=[];state.izli=[];state.secili=null;mozaikCiz(r)}
+
+/* ===== ortak: bir doğruya göre yansıma ===== */
+function yansitNokta(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],d=dx*dx+dy*dy;
+ const t=((p[0]-a[0])*dx+(p[1]-a[1])*dy)/d,px=a[0]+t*dx,py=a[1]+t*dy;
+ return [2*px-p[0],2*py-p[1]]}
+function kumeEsit(A,B,tol){return A.every(p=>B.some(q=>Math.hypot(p[0]-q[0],p[1]-q[1])<tol))}
+
+/* ===== w33: katlama laboratuvarı ===== */
+function katlaSvg(r){const p=r.nokta,sk=r.sekil;let ic='';
+ ic+=`<polygon points="${sk.map(q=>q.join(',')).join(' ')}" fill="#cfe3f2" stroke="#5f8cbe" stroke-width="2"/>`;
+ if(state.deneme){const y=sk.map(q=>yansitNokta(q,state.deneme[0],state.deneme[1]));
+  ic+=`<polygon points="${y.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="rgba(224,85,85,.35)" stroke="#e05555" stroke-width="2" stroke-dasharray="5 4"/>`}
+ (state.bulunan||[]).forEach(c=>{const a=p[c[0]],b=p[c[1]];
+  ic+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#2f9e5e" stroke-width="4" stroke-linecap="round"/>`});
+ if(state.deneme)ic+=`<line x1="${state.deneme[0][0]}" y1="${state.deneme[0][1]}" x2="${state.deneme[1][0]}" y2="${state.deneme[1][1]}" stroke="#e05555" stroke-width="4" stroke-dasharray="7 5"/>`;
+ p.forEach((q,i)=>{ic+=`<circle data-kn="${i}" cx="${q[0]}" cy="${q[1]}" r="${state.secim===i?8:6}" fill="${state.secim===i?'#ffd873':'#fff'}" stroke="#5f8cbe" stroke-width="2" style="cursor:pointer"/>`});
+ return `<svg viewBox="-10 -10 120 120" width="240" height="240" style="touch-action:manipulation">${ic}</svg>`}
+function katlaCiz(r){$('#stage').innerHTML=`<div class="stack">${katlaSvg(r)}
+ <div class="caption">${esc(state.not||'İki noktaya dokunarak bir çizgi kur, sonra katla.')}</div>
+ <div class="caption">Bulduğun doğru: <b>${(state.bulunan||[]).length}</b></div></div>`;
+ $$('[data-kn]').forEach(el=>el.onclick=()=>katlaSec(r,+el.dataset.kn));
+ $('#task').innerHTML='<div class="caption">Katlandığında iki tarafı tam çakıştıran bütün çizgileri bul.</div>';}
+function katlaSec(r,i){
+ if(state.secim==null){state.secim=i;state.deneme=null;state.not='Şimdi ikinci noktaya dokun.';return katlaCiz(r)}
+ if(state.secim===i){state.secim=null;state.not='Seçim kalktı.';return katlaCiz(r)}
+ const a=r.nokta[state.secim],b=r.nokta[i],ilk=state.secim;state.secim=null;
+ if((state.bulunan||[]).some(c=>(c[0]===ilk&&c[1]===i)||(c[0]===i&&c[1]===ilk))){state.not='Bu çizgiyi zaten buldun.';return katlaCiz(r)}
+ const y=r.sekil.map(q=>yansitNokta(q,a,b));
+ const olur=kumeEsit(y,r.sekil,2.5)&&kumeEsit(r.sekil,y,2.5);
+ state.deneme=[a,b];
+ if(!olur){state.not='Katladık: kırmızı yarı şeklin üstüne oturmadı, taşan bölge kaldı.';katlaCiz(r);return wrong(state.not)}
+ state.bulunan=(state.bulunan||[]).concat([[ilk,i]]);
+ state.not='Katlandı ve iki yarı tam çakıştı: bu bir simetri doğrusu.';
+ katlaCiz(r);
+ if(state.bulunan.length>=r.gerek){state.deneme=null;katlaCiz(r);good()}}
+function renderKatla(r){state.secim=null;state.bulunan=[];state.deneme=null;state.not='';katlaCiz(r)}
+
+/* ===== w34: aynadaki ikizler ===== */
+function poliSvg(p,renk,noktalar,w){const xs=p.map(q=>q[0]),ys=p.map(q=>q[1]);
+ const x0=Math.min(...xs)-4,y0=Math.min(...ys)-4,gx=Math.max(...xs)-x0+4,gy=Math.max(...ys)-y0+4;
+ let ic=`<polygon points="${p.map(q=>(q[0]-x0).toFixed(1)+','+(q[1]-y0).toFixed(1)).join(' ')}" fill="${renk}" stroke="#33526b" stroke-width="2"/>`;
+ (noktalar||[]).forEach(n=>{ic+=`<circle cx="${(n[0]-x0).toFixed(1)}" cy="${(n[1]-y0).toFixed(1)}" r="3" fill="#33526b"/>`});
+ return `<svg viewBox="0 0 ${gx.toFixed(1)} ${gy.toFixed(1)}" width="${w||74}" height="${w||74}">${ic}</svg>`}
+function aynaSecenekler(r){const AX=r.eksen;
+ const yan=p=>p.map(q=>[2*AX-q[0],q[1]]);
+ const mrk=p=>[p.reduce((a,q)=>a+q[0],0)/p.length,p.reduce((a,q)=>a+q[1],0)/p.length];
+ const dogru=yan(r.yarim),dn=yan(r.ic||[]);
+ const c=mrk(dogru);
+ const donmus=dogru.map(q=>[2*c[0]-q[0],2*c[1]-q[1]]),donIc=dn.map(q=>[2*c[0]-q[0],2*c[1]-q[1]]);
+ const kucuk=dogru.map(q=>[c[0]+(q[0]-c[0])*0.72,c[1]+(q[1]-c[1])*0.72]),kucIc=dn.map(q=>[c[0]+(q[0]-c[0])*0.72,c[1]+(q[1]-c[1])*0.72]);
+ return [{p:dogru,ic:dn,dogru:true},{p:donmus,ic:donIc},{p:kucuk,ic:kucIc}]}
+function aynaSahne(r){const sec=state.secenekler[state.secim!=null?state.secim:-1];
+ let ic=`<polygon points="${r.yarim.map(q=>q.join(',')).join(' ')}" fill="${r.renk}" stroke="#33526b" stroke-width="2"/>`;
+ (r.ic||[]).forEach(n=>{ic+=`<circle cx="${n[0]}" cy="${n[1]}" r="3" fill="#33526b"/>`});
+ ic+=`<line x1="${r.eksen}" y1="2" x2="${r.eksen}" y2="98" stroke="#e05aa0" stroke-width="3" stroke-dasharray="6 5"/>`;
+ if(sec){ic+=`<polygon points="${sec.p.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="${sec.dogru?r.renk:'rgba(224,85,85,.45)'}" stroke="#33526b" stroke-width="2"/>`;
+  (sec.ic||[]).forEach(n=>{ic+=`<circle cx="${n[0].toFixed(1)}" cy="${n[1].toFixed(1)}" r="3" fill="#33526b"/>`});
+  if(sec.dogru)r.yarim.forEach((q,i)=>{const e=[2*r.eksen-q[0],q[1]];
+   ic+=`<line x1="${q[0]}" y1="${q[1]}" x2="${e[0].toFixed(1)}" y2="${e[1]}" stroke="#2f9e5e" stroke-width="1" stroke-dasharray="3 3"/>`})}
+ return `<svg viewBox="-4 -4 118 108" width="270" height="248">${ic}</svg>`}
+function aynaCiz(r){$('#stage').innerHTML=`<div class="stack">${aynaSahne(r)}
+ <div class="caption">${esc(state.not||'Aynanın sağına hangi parça gelmeli?')}</div></div>`;
+ $('#task').innerHTML=`<div class="actions">${state.secenekler.map((sc,i)=>`<button class="secenek-kart${state.secim===i?' secili':''}" data-sec="${i}">${poliSvg(sc.p,r.renk,sc.ic)}</button>`).join('')}</div>
+  <button class="action" id="aynaOk">Bu parçayı yerleştir</button>`;
+ $$('[data-sec]').forEach(b=>b.onclick=()=>{state.secim=+b.dataset.sec;state.not='Parçayı aynanın sağına koydun; kenarları karşılaştır.';aynaCiz(r)});
+ $('#aynaOk').onclick=()=>{if(state.secim==null)return wrong('Önce bir parça seç.');
+  if(!state.secenekler[state.secim].dogru){state.not='Üst üste getirdik: bu parça yarımın aynadaki hâline oturmuyor.';aynaCiz(r);return wrong(state.not)}
+  state.not='Eş parça: aynı boyutta ama yönü aynaya göre ters. Eş noktalar eksene aynı uzaklıkta.';aynaCiz(r);good()}}
+function renderAyna(r){state.secim=null;state.not='';state.secenekler=aynaSecenekler(r);aynaCiz(r)}
+
+/* ===== w35: kilim dokuma tezgâhı ===== */
+const KILIM_RENK={k:'#e05555',m:'#3f92c4',s:'#f2c45b',y:'#2f9e5e',b:'#f6ede0'};
+function kilimGerek(r){const g=[];r.sol.forEach((sat,y)=>sat.forEach((c,x)=>{if(c&&c!=='b')g.push({x:7-x,y,renk:c,kx:x})}));return g}
+function kilimCiz(r){const gerek=kilimGerek(r);
+ let h='';for(let y=0;y<r.sol.length;y++)for(let x=0;x<8;x++){
+  const sol=x<4,renk=sol?(r.sol[y][x]||'b'):(state.sag[y][x-4]||'b');
+  const hedef=state.kaynak&&state.kaynak.y===y&&(7-state.kaynak.x)===x;
+  h+=`<div class="huc${x===3?' eksen':''}${hedef?' hayalet':''}${state.kaynak&&state.kaynak.x===x&&state.kaynak.y===y?' kaynak':''}" data-huc="${x},${y}" style="background:${KILIM_RENK[renk]}"></div>`}
+ $('#stage').innerHTML=`<div class="stack"><div class="kilim${state.bitti?' kilim-katla':''}" style="grid-template-columns:repeat(8,30px)">${h}</div>
+  <div class="caption">${esc(state.not||'Sol yarıdaki bir kareye dokun: eksene kaç sütun uzakta olduğunu say.')}</div>
+  <div class="caption">Tamamlanan: ${state.dogruSay||0}/${gerek.length}</div></div>`;
+ $$('[data-huc]').forEach(el=>el.onclick=()=>kilimDokun(r,el.dataset.huc));
+ $('#task').innerHTML=`<div class="palet">${Object.keys(KILIM_RENK).filter(k=>k!=='b').map(k=>`<button data-renk="${k}" class="${state.renk===k?'secili':''}" style="background:${KILIM_RENK[k]}"></button>`).join('')}
+   <button data-renk="b" class="${state.renk==='b'?'secili':''}" style="background:#f6ede0">🧽</button></div>
+  <div class="actions"><button class="action" id="kilimGeri">↩ Son dokumayı geri al</button></div>`;
+ $$('[data-renk]').forEach(b=>b.onclick=()=>{state.renk=b.dataset.renk;kilimCiz(r)});
+ $('#kilimGeri').onclick=()=>{const son=(state.gecmis||[]).pop();if(!son)return;
+  state.sag[son.y][son.x]=son.eski;state.dogruSay=kilimSay(r);kilimCiz(r)}}
+function kilimSay(r){return kilimGerek(r).filter(g=>state.sag[g.y][g.x-4]===g.renk).length}
+function kilimDokun(r,kod){const [x,y]=kod.split(',').map(Number);
+ if(x<4){state.kaynak={x,y};state.not=`Bu kare eksenden ${3-x+1} sütun uzakta; karşı tarafta da o kadar uzağa dokun.`;return kilimCiz(r)}
+ if(!state.renk)return feedback('Önce paletten renk seç',true);
+ const beklenen=r.sol[y][7-x]||'b';
+ const eski=state.sag[y][x-4];
+ state.sag[y][x-4]=state.renk==='b'?null:state.renk;
+ state.gecmis=(state.gecmis||[]).concat({x:x-4,y,eski});
+ state.dogruSay=kilimSay(r);
+ if(state.renk!=='b'&&state.renk!==beklenen){
+  const kx=7-x;state.not=`Eksene uzaklık: sol karede ${3-kx+1}, senin dokunduğun karede ${x-4+1}. Renk ve uzaklık uyuşmuyor.`;
+  kilimCiz(r);return wrong(state.not)}
+ state.not=state.renk==='b'?'Silindi.':'Eş kare doğru: aynadaki gibi.';
+ kilimCiz(r);
+ if(state.dogruSay>=kilimGerek(r).length&&kilimFazlaYok(r)){state.bitti=true;kilimCiz(r);
+  feedback('Kilim tamam, katlanıyor');gecisBasla(()=>good(),FAST?40:900)}}
+function kilimFazlaYok(r){for(let y=0;y<r.sol.length;y++)for(let x=0;x<4;x++){
+  const bek=r.sol[y][3-x]||null,v=state.sag[y][x]||null;
+  if((bek==='b'?null:bek)!==v)return false}
+ return true}
+function renderKilim(r){state.sag=r.sol.map((sat,y)=>[0,1,2,3].map(x=>(r.hatali&&r.hatali[y]&&r.hatali[y][x])||null));
+ state.renk=null;state.kaynak=null;state.gecmis=[];state.bitti=false;state.not='';state.dogruSay=kilimSay(r);kilimCiz(r)}
+
+/* ===== w36: satranç tahtası ===== */
+const SUTUN=['A','B','C','D','E','F','G','H'];
+function tahtaCiz(r){let h='<div class="ust"></div>'+SUTUN.map(c=>`<div class="ust">${c}</div>`).join('');
+ for(let s=8;s>=1;s--){h+=`<div class="etiket">${s}</div>`;
+  for(let c=0;c<8;c++){const kod=SUTUN[c]+s;
+   const kay=r.ciftler.some(p=>p.kaynak===kod),hed=(state.bulunan||[]).indexOf(kod)>=0;
+   h+=`<div class="kare ${(c+s)%2?'acik':'koyu'}${r.eksen==='dikey'&&c===3?' eksen-d':''}${r.eksen==='yatay'&&s===5?' eksen-y':''}" data-kare="${kod}">${kay?'♞':hed?'♘':''}</div>`}}
+ $('#stage').innerHTML=`<div class="stack"><div class="tahta">${h}</div>
+  <div class="caption">${esc(state.not||(r.eksen==='dikey'?'Pembe çizgi dikey eksen: D ile E sütunlarının arasında.':'Pembe çizgi yatay eksen: 4 ile 5 sıralarının arasında.'))}</div>
+  <div class="caption">Bulunan eş: ${(state.bulunan||[]).length}/${r.ciftler.length}</div></div>`;
+ $$('[data-kare]').forEach(el=>el.onclick=()=>satrancSec(r,el.dataset.kare));
+ if(state.faz===1){
+  $('#task').innerHTML=`<div class="caption">${esc(r.sonSoru.metin)}</div><div class="choices">${r.sonSoru.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{
+   if(!r.sonSoru.secenekler[+b.dataset.choice].correct)return wrong('Dikey eksende sütun uzaklığı sayılır: C sütunu eksenden kaç adım uzakta?');
+   good()});
+ }else $('#task').innerHTML='<div class="caption">Şövalyenin eksene göre eşinin durduğu kareye dokun. Eksenden kaç sütun/sıra uzaktaysa, öbür tarafta da o kadar uzaktadır.</div>'}
+function satrancSec(r,kod){
+ if(state.faz===1)return;
+ if((state.bulunan||[]).indexOf(kod)>=0)return;
+ const cift=r.ciftler.find(p=>p.hedef===kod&&(state.bulunan||[]).indexOf(p.hedef)<0);
+ if(!cift){const c=SUTUN.indexOf(kod[0]),sr=+kod[1];
+  const kalan=r.ciftler.filter(p=>(state.bulunan||[]).indexOf(p.hedef)<0)[0];
+  const kc=SUTUN.indexOf(kalan.kaynak[0]),ks=+kalan.kaynak[1];
+  state.not=r.eksen==='dikey'
+   ?`${kalan.kaynak} eksenden ${Math.abs(3.5-kc).toFixed(1).replace('.0','')} sütun uzakta; ${kod} ise ${Math.abs(3.5-c).toFixed(1).replace('.0','')} sütun uzakta.`
+   :`${kalan.kaynak} eksenden ${Math.abs(4.5-ks).toFixed(1).replace('.0','')} sıra uzakta; ${kod} ise ${Math.abs(4.5-sr).toFixed(1).replace('.0','')} sıra uzakta.`;
+  tahtaCiz(r);return wrong(state.not)}
+ state.bulunan=(state.bulunan||[]).concat(kod);
+ state.not=`${cift.kaynak} → ${cift.hedef}: eksenin iki yanında eşit uzaklıkta.`;
+ tahtaCiz(r);
+ if(state.bulunan.length>=r.ciftler.length){
+  if(r.sonSoru){state.faz=1;feedback('Şimdi iki ekseni karşılaştır');tahtaCiz(r);return}
+  good()}}
+function renderSatranc(r){state.bulunan=[];state.faz=0;state.not='';tahtaCiz(r)}
+
+/* ===== w37 & w38: simetrik program (ortak motor) ===== */
+const YON={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]},YON_OK={U:'↑',D:'↓',L:'←',R:'→'};
+function yolCiz(bas,prog){const yol=[bas.slice()];let p=bas.slice();
+ prog.forEach(k=>{const d=YON[k];p=[p[0]+d[0],p[1]+d[1]];yol.push(p.slice())});return yol}
+function kodAyna(k,eksen){return eksen==='dikey'?({L:'R',R:'L'}[k]||k):({U:'D',D:'U'}[k]||k)}
+function kodEs(p,r){return r.eksen==='dikey'?[r.en-1-p[0],p[1]]:[p[0],r.boy-1-p[1]]}
+function kodSahne(r){const yol=state.yol||[state.bas.slice()],ref=state.refYol||[];
+ let h='';
+ for(let y=0;y<r.boy;y++)for(let x=0;x<r.en;x++){
+  const engel=(r.engel||[]).some(e=>e[0]===x&&e[1]===y);
+  const iz=yol.some(p=>p[0]===x&&p[1]===y),riz=ref.some(p=>p[0]===x&&p[1]===y);
+  const hed=r.hedef&&r.hedef[0]===x&&r.hedef[1]===y;
+  const rob=yol.length&&yol[yol.length-1][0]===x&&yol[yol.length-1][1]===y;
+  h+=`<div class="kh${engel?' engel':''}${riz?' refiz':''}${iz?' iz':''}${hed?' hedef':''}${r.eksen==='dikey'&&x===r.en/2-1?' eks-d':''}${r.eksen==='yatay'&&y===r.boy/2-1?' eks-y':''}">${rob?'🤖':hed?'🚩':engel?'':''}</div>`}
+ return `<div class="kod-izgara" style="grid-template-columns:repeat(${r.en},30px)">${h}</div>`}
+function kodCiz(r){
+ $('#stage').innerHTML=`<div class="stack">${kodSahne(r)}
+  ${r.referansProgram?`<div class="caption">Referans program (solda):</div><div class="prog">${r.referansProgram.map(k=>`<span class="kod-blok ref">${YON_OK[k]}</span>`).join('')}</div>`:''}
+  <div class="caption">Senin programın:</div>
+  <div class="prog">${(state.program||[]).length?state.program.map((k,i)=>`<span class="kod-blok${state.hataIx===i?' hata':''}${state.aktif===i?' aktif':''}" data-blok="${i}">${YON_OK[k]}</span>`).join(''):'<span class="caption">boş</span>'}</div>
+  <div class="caption">${esc(state.not||r.gorev||'')}</div></div>`;
+ $$('[data-blok]').forEach(el=>el.onclick=()=>{state.program.splice(+el.dataset.blok,1);state.hataIx=-1;state.yol=null;kodCiz(r)});
+ $('#task').innerHTML=`<div class="actions">${['U','L','R','D'].map(k=>`<button class="action" data-yon="${k}">${YON_OK[k]}</button>`).join('')}</div>
+  <div class="actions"><button class="action" id="kodSil">↩ Sil</button><button class="action" id="kodRun">▶ Çalıştır</button></div>`;
+ $$('[data-yon]').forEach(b=>b.onclick=()=>{state.program.push(b.dataset.yon);state.hataIx=-1;state.yol=null;kodCiz(r)});
+ $('#kodSil').onclick=()=>{state.program.pop();state.yol=null;kodCiz(r)};
+ $('#kodRun').onclick=()=>kodCalistir()}
+function kodCalistir(){const r=round(),p=state.program||[];
+ if(!p.length)return wrong('Önce yön düğmeleriyle bir program kur.');
+ let pos=state.bas.slice();const yol=[pos.slice()];
+ for(let i=0;i<p.length;i++){const d=YON[p[i]];pos=[pos[0]+d[0],pos[1]+d[1]];
+  const disi=pos[0]<0||pos[1]<0||pos[0]>=r.en||pos[1]>=r.boy;
+  const engel=(r.engel||[]).some(e=>e[0]===pos[0]&&e[1]===pos[1]);
+  if(disi||engel){state.hataIx=i;state.yol=yol;state.not=disi?'Bu komut robotu tahtanın dışına çıkardı.':'Bu komut robotu engele çarptırdı.';
+   kodCiz(r);return wrong(state.not)}
+  yol.push(pos.slice())}
+ state.yol=yol;
+ if(r.denetim==='simetri'){
+  const bek=state.refYol.map(q=>kodEs(q,r));
+  const uy=yol.length===bek.length&&yol.every((q,i)=>q[0]===bek[i][0]&&q[1]===bek[i][1]);
+  if(!uy){const i=yol.findIndex((q,j)=>!bek[j]||q[0]!==bek[j][0]||q[1]!==bek[j][1]);
+   state.hataIx=Math.max(0,i-1);state.not=`${i}. adımda saptın: referansın o adımdaki karesinin eşi başka bir kare.`;
+   kodCiz(r);return wrong(state.not)}
+ }
+ if(r.hedef&&(pos[0]!==r.hedef[0]||pos[1]!==r.hedef[1])){
+  state.not=`Hedefe ulaşmadın: ${Math.abs(r.hedef[0]-pos[0])} sütun, ${Math.abs(r.hedef[1]-pos[1])} satır fark kaldı.`;
+  kodCiz(r);return wrong(state.not)}
+ state.not='Program çalıştı ve iki rota eksene göre çakıştı.';kodCiz(r);good()}
+function renderKod(r){state.program=[];state.hataIx=-1;state.aktif=-1;state.not='';
+ state.bas=r.baslangic.slice();
+ state.refYol=r.referansProgram?yolCiz(r.refBaslangic||r.baslangic,r.referansProgram):[];
+ state.yol=[state.bas.slice()];kodCiz(r)}
+
+/* ===== w39: kalite kontrol (vektör harfler) ===== */
+function harfSvg(it,yansi){let ic=`<polygon points="${it.p.map(q=>q.join(',')).join(' ')}" fill="${it.renk||'#3f87b7'}" stroke="#1f3b52" stroke-width="2"/>`;
+ if(yansi){const a=it.eksen==='dikey'?[[50,0],[50,100]]:[[0,50],[100,50]];
+  const y=it.p.map(q=>yansitNokta(q,a[0],a[1]));
+  ic+=`<polygon points="${y.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="rgba(224,85,85,.42)" stroke="#e05555" stroke-width="2" stroke-dasharray="5 4"/>`}
+ ic+=it.eksen==='dikey'
+  ?'<line x1="50" y1="-4" x2="50" y2="104" stroke="#e05aa0" stroke-width="3" stroke-dasharray="6 5"/>'
+  :'<line x1="-4" y1="50" x2="104" y2="50" stroke="#e05aa0" stroke-width="3" stroke-dasharray="6 5"/>';
+ return `<svg viewBox="-6 -6 112 112" width="212" height="212">${ic}</svg>`}
+function harfCiz(r){const it=r.items[state.i];
+ $('#stage').innerHTML=`<div class="stack"><div class="harf-kart">${harfSvg(it,state.yansi)}</div>
+  <div class="caption">${esc(it.ad)} · ${it.eksen==='dikey'?'dikey eksen':'yatay eksen'}</div>
+  <div class="caption">${esc(state.not||'Kart karar verilene kadar burada bekler.')}</div>
+  <div class="unit-strip">${r.items.map((x,j)=>`<span class="unit-chip">${j<state.i?'✓':j===state.i?'●':'·'}</span>`).join('')}</div></div>`;
+ $('#task').innerHTML='<div class="choices"><button class="choice" data-karar="1">Simetriktir</button><button class="choice" data-karar="0">Simetrik değildir</button></div>';
+ $$('[data-karar]').forEach(b=>b.onclick=()=>harfKarar(r,b.dataset.karar==='1'))}
+function harfKarar(r,karar){if(state.gecis)return;const it=r.items[state.i];
+ const a=it.eksen==='dikey'?[[50,0],[50,100]]:[[0,50],[100,50]];
+ const y=it.p.map(q=>yansitNokta(q,a[0],a[1]));
+ const simetrik=kumeEsit(y,it.p,3)&&kumeEsit(it.p,y,3);
+ state.yansi=true;
+ if(karar!==simetrik){state.not=simetrik?'Katladık: iki yarı tam çakıştı, demek ki simetrikmiş.':'Katladık: kırmızı yarı taştı, iki yarı çakışmadı.';
+  harfCiz(r);return wrong(state.not)}
+ state.not=simetrik?'İki yarı tam üst üste geldi.':'Kırmızı yarı taştı: bu eksende simetri yok.';
+ harfCiz(r);state.i++;
+ if(state.i>=r.items.length){state.i--;harfCiz(r);good();return}
+ state.yansi=false;feedback('Doğru karar');gecisBasla(()=>{state.not='';harfCiz(r)},FAST?30:860)}
+function renderHarf(r){state.i=0;state.yansi=false;state.not='';harfCiz(r)}
+
+/* ===== w40: mozaik ustası (çift eksen) ===== */
+function dortluEsler(r,x,y){const ex=r.en-1-x,ey=r.boy-1-y;return [[ex,y],[x,ey],[ex,ey]]}
+function dortluGerek(r){const g=[];r.kaynak.forEach(k=>{dortluEsler(r,k.x,k.y).forEach(e=>g.push({x:e[0],y:e[1],renk:k.renk}))});return g}
+function dortluCiz(r){const gerek=dortluGerek(r);
+ let h='';for(let y=0;y<r.boy;y++)for(let x=0;x<r.en;x++){
+  const kay=r.kaynak.find(k=>k.x===x&&k.y===y);
+  const renk=kay?kay.renk:(state.hucre[y][x]||'b');
+  const kil=state.sec&&dortluEsler(r,state.sec.x,state.sec.y).some(e=>e[0]===x&&e[1]===y);
+  h+=`<div class="huc${kil?' hayalet':''}${state.sec&&state.sec.x===x&&state.sec.y===y?' kaynak':''}${x===r.en/2-1?' eksen':''}" data-huc="${x},${y}" style="background:${KILIM_RENK[renk]};${y===r.boy/2-1?'box-shadow:inset 0 -2px 0 #e05aa0;':''}"></div>`}
+ const dogru=gerek.filter(g=>state.hucre[g.y][g.x]===g.renk).length;
+ $('#stage').innerHTML=`<div class="stack"><div class="kilim${state.bitti?' kilim-katla':''}" style="grid-template-columns:repeat(${r.en},30px)">${h}</div>
+  <div class="caption">${esc(state.not||'Kaynak hücreye dokun: üç eşi kılavuzla işaretlenir.')}</div>
+  <div class="caption">Tamamlanan: ${dogru}/${gerek.length}</div></div>`;
+ $$('[data-huc]').forEach(el=>el.onclick=()=>dortluDokun(r,el.dataset.huc));
+ $('#task').innerHTML=`<div class="palet">${Object.keys(KILIM_RENK).filter(k=>k!=='b').map(k=>`<button data-renk="${k}" class="${state.renk===k?'secili':''}" style="background:${KILIM_RENK[k]}"></button>`).join('')}
+   <button data-renk="b" class="${state.renk==='b'?'secili':''}" style="background:#f6ede0">🧽</button></div>
+  <div class="actions"><button class="action" id="dortGeri">↩ Geri al</button></div>`;
+ $$('[data-renk]').forEach(b=>b.onclick=()=>{state.renk=b.dataset.renk;dortluCiz(r)});
+ $('#dortGeri').onclick=()=>{const son=(state.gecmis||[]).pop();if(!son)return;
+  state.hucre[son.y][son.x]=son.eski;dortluCiz(r)}}
+function dortluDokun(r,kod){const [x,y]=kod.split(',').map(Number);
+ const kay=r.kaynak.find(k=>k.x===x&&k.y===y);
+ if(kay){state.sec={x,y};state.not=`Bu hücre dikey eksenden ${Math.abs(r.en/2-0.5-x).toFixed(1).replace('.0','')}, yatay eksenden ${Math.abs(r.boy/2-0.5-y).toFixed(1).replace('.0','')} adım uzakta.`;return dortluCiz(r)}
+ if(!state.renk)return feedback('Önce paletten renk seç',true);
+ const gerek=dortluGerek(r).find(g=>g.x===x&&g.y===y);
+ const eski=state.hucre[y][x];
+ state.hucre[y][x]=state.renk==='b'?null:state.renk;
+ state.gecmis=(state.gecmis||[]).concat({x,y,eski});
+ if(state.renk!=='b'&&(!gerek||gerek.renk!==state.renk)){
+  state.not=gerek?`Bu hücre bir eş ama rengi kaynağıyla aynı değil.`:'Bu hücrenin kaynağı yok: hangi eksende yansıttığını yeniden düşün.';
+  dortluCiz(r);return wrong(state.not)}
+ state.not=state.renk==='b'?'Silindi.':'Doğru eş hücre.';
+ const g=dortluGerek(r);
+ const tam=g.every(q=>state.hucre[q.y][q.x]===q.renk)&&
+  state.hucre.every((sat,yy)=>sat.every((v,xx)=>{
+   if(r.kaynak.some(k=>k.x===xx&&k.y===yy))return true;
+   const bek=g.find(q=>q.x===xx&&q.y===yy);return (bek?bek.renk:null)===(v||null)}));
+ dortluCiz(r);
+ if(tam){state.bitti=true;dortluCiz(r);feedback('Desen tamam, katlanıyor');gecisBasla(()=>good(),FAST?40:900)}}
+function renderDortlu(r){state.hucre=Array.from({length:r.boy},(_,y)=>Array.from({length:r.en},(_,x)=>{
+  const h=(r.hazir||[]).find(q=>q.x===x&&q.y===y);return h?h.renk:null}));
+ state.renk=null;state.sec=null;state.gecmis=[];state.bitti=false;state.not='';dortluCiz(r)}
+
+/* ===== ortak: standart çetele ===== */
+function ceteleSvg(n,olcek){const g=Math.floor(n/5),k=n%5;let ic='',x=6;
+ for(let i=0;i<g;i++){for(let j=0;j<4;j++)ic+=`<line x1="${x+j*8}" y1="5" x2="${x+j*8}" y2="27" stroke="#33526b" stroke-width="3"/>`;
+  ic+=`<line x1="${x-4}" y1="27" x2="${x+28}" y2="5" stroke="#e05555" stroke-width="3"/>`;x+=46}
+ for(let j=0;j<k;j++)ic+=`<line x1="${x+j*8}" y1="5" x2="${x+j*8}" y2="27" stroke="#33526b" stroke-width="3"/>`;
+ const w=Math.max(52,x+k*8+8),o=olcek||1;
+ return `<svg viewBox="0 0 ${w} 32" width="${(w*o).toFixed(0)}" height="${(32*o).toFixed(0)}">${ic}</svg>`}
+
+/* ===== w41: dedektif bürosu ===== */
+function arastirmaCiz(r){
+ if(state.faz===3){return arastirmaKur(r)}
+ const it=r.items[state.i];
+ $('#stage').innerHTML=`<div class="stack"><div class="soru-kart">${esc(it.soru)}</div>
+  <div class="caption">${esc(state.not||'Önce kimlere sorulacağını ve neyin ölçüleceğini belirle.')}</div>
+  ${state.grup!=null?`<div class="unit-strip"><span class="unit-chip">hedef grup: ${esc(it.grup[state.grup].label)}</span>${state.degisken!=null?`<span class="unit-chip">değişken: ${esc(it.degisken[state.degisken].label)}</span>`:''}</div>`:''}
+  <div class="unit-strip">${r.items.map((x,j)=>`<span class="unit-chip">${j<state.i?'✓':j===state.i?'●':'·'}</span>`).join('')}</div></div>`;
+ if(state.grup==null){
+  $('#task').innerHTML=`<div class="caption">Bu soru kimlere sorulur?</div><div class="choices">${it.grup.map((c,i)=>`<button class="choice" data-grup="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-grup]').forEach(b=>b.onclick=()=>{if(!it.grup[+b.dataset.grup].correct)return wrong('Sorunun hedef grubunu yeniden düşün: cevap kimlerden toplanacak?');
+   state.grup=+b.dataset.grup;state.not='Şimdi neyin ölçüleceğini seç.';arastirmaCiz(r)});
+ }else if(state.degisken==null){
+  $('#task').innerHTML=`<div class="caption">Bu soruda ne ölçülüyor?</div><div class="choices">${it.degisken.map((c,i)=>`<button class="choice" data-deg="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-deg]').forEach(b=>b.onclick=()=>{if(!it.degisken[+b.dataset.deg].correct)return wrong('Ölçülen özelliğe değişken denir. Soruda hangi bilgi kişiden kişiye değişir?');
+   state.degisken=+b.dataset.deg;state.not='Şimdi soruyu sınıflandır.';arastirmaCiz(r)});
+ }else{
+  $('#task').innerHTML=`<div class="kutu-iki"><button data-tur="arastirma">İstatistiksel araştırma sorusu<br><small>farklı kişilerden veri toplanır, dağılım oluşur</small></button>
+   <button data-tur="sabit">Tek, sabit bilgi sorusu<br><small>cevabı herkes için aynıdır</small></button></div>`;
+  $$('[data-tur]').forEach(b=>b.onclick=()=>{
+   if(b.dataset.tur!==it.tur)return wrong('Kontrol et: kimlerden toplanacak, hangi değişkene ait, farklı cevaplardan bir dağılım oluşur mu?');
+   feedback(it.gerekce);speak(it.gerekce);state.i++;
+   if(state.i>=r.items.length){if(r.kurgu){state.faz=3;gecisBasla(()=>arastirmaCiz(r),FAST?30:900);return}
+    state.i--;arastirmaCiz(r);good();return}
+   state.grup=null;state.degisken=null;state.not='';gecisBasla(()=>arastirmaCiz(r),FAST?30:900)});
+ }}
+function arastirmaKur(r){const k=r.kurgu,se=state.kurulan||{};
+ const cumle=se.konu!=null&&se.grup!=null&&se.deg!=null
+  ? `${k.grup[se.grup]} öğrencilerinin ${k.degisken[se.deg]} nedir?` : '';
+ $('#stage').innerHTML=`<div class="stack"><div class="soru-kart">${cumle?esc(cumle):'Kartları seçerek kendi araştırma sorunu kur.'}</div>
+  <div class="caption">Konu: ${se.konu!=null?esc(k.konu[se.konu]):'—'} · Grup: ${se.grup!=null?esc(k.grup[se.grup]):'—'} · Değişken: ${se.deg!=null?esc(k.degisken[se.deg]):'—'}</div></div>`;
+ $('#task').innerHTML=`<div class="caption">Konu</div><div class="actions">${k.konu.map((c,i)=>`<button class="action" data-k="${i}">${esc(c)}</button>`).join('')}</div>
+  <div class="caption">Grup</div><div class="actions">${k.grup.map((c,i)=>`<button class="action" data-g="${i}">${esc(c)}</button>`).join('')}</div>
+  <div class="caption">Değişken</div><div class="actions">${k.degisken.map((c,i)=>`<button class="action" data-d="${i}">${esc(c)}</button>`).join('')}</div>
+  <button class="action" id="kurOk">Sorumu onayla</button>`;
+ $$('[data-k]').forEach(b=>b.onclick=()=>{state.kurulan={...(state.kurulan||{}),konu:+b.dataset.k};arastirmaCiz(r)});
+ $$('[data-g]').forEach(b=>b.onclick=()=>{state.kurulan={...(state.kurulan||{}),grup:+b.dataset.g};arastirmaCiz(r)});
+ $$('[data-d]').forEach(b=>b.onclick=()=>{state.kurulan={...(state.kurulan||{}),deg:+b.dataset.d};arastirmaCiz(r)});
+ $('#kurOk').onclick=()=>{const q=state.kurulan||{};
+  if(q.konu==null||q.grup==null||q.deg==null)return wrong('Üç karttan da birer tane seç: konu, grup ve değişken.');
+  if(q.konu!==k.dogru.konu||q.grup!==k.dogru.grup||q.deg!==k.dogru.deg)
+   return wrong('Seçtiğin kartlar birbirine uymuyor: değişken konuya ait mi, grup gerçekten araştırılabilir mi?');
+  good()}}
+function renderArastirma(r){state.i=0;state.faz=r.items.length?0:3;state.grup=null;state.degisken=null;state.not='';state.kurulan={};arastirmaCiz(r)}
+
+/* ===== w42: sınıf anketi (çetele) ===== */
+function anketCiz(r){const y=state.ix<r.yanitlar.length?r.yanitlar[state.ix]:null;
+ const toplam=state.sayim.reduce((a,b)=>a+b,0);
+ $('#stage').innerHTML=`<div class="stack"><div class="till">${esc(r.plan)}</div>
+  ${y?`<div class="task-card">Yanıt ${state.ix+1}/${r.yanitlar.length}: “${esc(r.sutun[y].ad)}”</div>`:'<div class="task-card">Bütün yanıtlar işlendi.</div>'}
+  <div class="row">${r.sutun.map((c,i)=>`<div class="anket-sutun${state.vurgu===i?' vurgu':''}" data-sutun="${i}"><small>${esc(c.ad)}</small>${ceteleSvg(state.sayim[i],0.85)}<small>${state.sayim[i]}</small></div>`).join('')}</div>
+  <div class="caption">İşlenen yanıt: ${toplam} / ${r.yanitlar.length}</div>
+  <div class="caption">${esc(state.not||'Yanıtı dinle, doğru sütuna dokun; beşinci işaret çapraz gelir.')}</div></div>`;
+ $$('[data-sutun]').forEach(el=>el.onclick=()=>anketDokun(r,+el.dataset.sutun));
+ $('#task').innerHTML=`<div class="actions"><button class="action" id="anketGeri">↩ Son çeteleyi geri al</button>${state.ix>=r.yanitlar.length?'<button class="action" id="anketBitir">Sıklıklara geç</button>':''}</div>`;
+ $('#anketGeri').onclick=()=>{const son=(state.gecmis||[]).pop();if(son==null)return;
+  state.sayim[son]--;state.ix--;state.not='Son çetele geri alındı.';anketCiz(r)};
+ const bb=$('#anketBitir');if(bb)bb.onclick=()=>{
+  if(state.sayim.reduce((a,b)=>a+b,0)!==r.yanitlar.length)return wrong('Çetele toplamı yanıt sayısına eşit değil.');
+  const yanlis=r.sutun.some((c,i)=>state.sayim[i]!==r.yanitlar.filter(v=>v===i).length);
+  if(yanlis)return wrong('Sütunlardan biri yanlış: yanıtları tek tek yeniden dinleyip geri alarak düzelt.');
+  good()}}
+function anketDokun(r,i){if(state.ix>=r.yanitlar.length)return feedback('Bütün yanıtlar işlendi');
+ const dogru=r.yanitlar[state.ix];
+ state.sayim[i]++;state.gecmis=(state.gecmis||[]).concat(i);state.vurgu=i;
+ const besinci=state.sayim[i]%5===0;
+ state.ix++;
+ if(i!==dogru){state.not=`Bu yanıt “${r.sutun[dogru].ad}” sütununa aitti. Geri al düğmesiyle düzeltebilirsin.`;
+  anketCiz(r);return wrong(state.not)}
+ state.not=besinci?'Beşinci işaret çapraz geldi: bir beşli grup tamamlandı.':'Çetele işlendi.';
+ if(besinci)speak('beş');
+ anketCiz(r)}
+function renderAnket(r){state.ix=0;state.sayim=r.sutun.map(()=>0);state.gecmis=[];state.vurgu=-1;state.not='';anketCiz(r)}
+
+/* ===== w43: sıklık tablosu ===== */
+function siklikCiz(r){
+ $('#stage').innerHTML=`<div class="stack">${r.satir.map((sa,i)=>`<div class="cetele-satir"><b>${esc(sa.ad)}</b>${ceteleSvg(sa.n,0.8)}
+   <div class="yer${state.yerlesen[i]!=null?' dolu':''}" data-yer="${i}">${state.yerlesen[i]!=null?state.yerlesen[i]:'?'}</div></div>`).join('')}
+  <div class="caption">${esc(state.not||'Önce beşli grupları, sonra kalan çizgileri say.')}</div>
+  ${state.yerlesen.every(x=>x!=null)?`<div class="caption">Toplam veri: ${state.yerlesen.reduce((a,b)=>a+b,0)}</div>`:''}</div>`;
+ $('#task').innerHTML=`<div class="caption">Sıklık kartını doğru satıra taşı.</div>
+  <div class="actions">${state.kartlar.map(v=>`<button class="action" data-kart="${v}" ${state.yerlesen.indexOf(v)>=0?'style="opacity:.35"':''}>${v}</button>`).join('')}</div>`;
+ $$('[data-kart]').forEach(b=>b.onclick=()=>{state.secKart=+b.dataset.kart;state.not='Kart seçildi: hangi satıra ait?';siklikCiz(r)});
+ $$('[data-yer]').forEach(el=>el.onclick=()=>{const i=+el.dataset.yer;
+  if(state.secKart==null)return feedback('Önce bir sıklık kartı seç',true);
+  if(state.secKart!==r.satir[i].n){const g=Math.floor(r.satir[i].n/5),k=r.satir[i].n%5;
+   state.not=`Bu satırda ${g} beşli grup ve ${k} tek çizgi var. Kart kaybolmadı, yeniden dene.`;siklikCiz(r);return wrong(state.not)}
+  state.yerlesen[i]=state.secKart;state.secKart=null;state.not='Doğru: çetele ile sayı aynı satırda.';
+  siklikCiz(r);
+  if(state.yerlesen.every(x=>x!=null))good()})}
+function renderSiklik(r){state.yerlesen=r.satir.map(()=>null);state.secKart=null;state.not='';
+ state.kartlar=r.satir.map(s=>s.n).slice().sort(()=>Math.random()-0.5);siklikCiz(r)}
+
+/* ===== w44: nokta grafiği ===== */
+function noktaCiz(r){const kaynak=r.satir;
+ $('#stage').innerHTML=`<div class="stack"><div class="anahtar">1 nokta = 1 ${esc(r.birim)}</div>
+  ${kaynak.map(sa=>`<div class="cetele-satir"><b>${esc(sa.ad)}</b>${ceteleSvg(sa.n,0.72)}<div class="yer dolu">${sa.n}</div></div>`).join('')}
+  <div class="nokta-graf">${kaynak.map((sa,i)=>`<div class="nokta-sutun"><div data-sut="${i}" style="display:flex;flex-direction:column-reverse;align-items:center;gap:2px;min-height:96px;justify-content:flex-start">${Array.from({length:state.nokta[i]},(_,j)=>`<span class="nk${j>=sa.n?' fazla':''}"></span>`).join('')}</div><small>${esc(sa.ad)}</small><button class="action" data-eksi="${i}" style="min-height:26px;min-width:34px;padding:0;font-size:15px">−</button></div>`).join('')}</div>
+  <div class="caption">${esc(state.not||'Sütuna dokun: tabandan başlayarak bir nokta eklenir.')}</div></div>`;
+ $$('[data-sut]').forEach(el=>el.onclick=()=>{const i=+el.dataset.sut;
+  if(state.faz>0)return;
+  state.nokta[i]++;state.gecmis=(state.gecmis||[]).concat(i);
+  if(state.nokta[i]>kaynak[i].n){state.not=`${kaynak[i].ad} sütununda sıklık ${kaynak[i].n}; fazla nokta kırmızı görünüyor, geri al.`;
+   noktaCiz(r);return wrong(state.not)}
+  state.not='Nokta eklendi.';noktaCiz(r);
+  if(kaynak.every((sa,j)=>state.nokta[j]===sa.n)){state.faz=1;state.soruIx=0;feedback('Grafik tamam');gecisBasla(()=>noktaSoru(r),FAST?30:700)}});
+ $$('[data-eksi]').forEach(el=>el.onclick=()=>{const i=+el.dataset.eksi;if(state.faz>0||!state.nokta[i])return;
+  state.nokta[i]--;state.not='Bir nokta çıkarıldı.';noktaCiz(r)});
+ if(state.faz===0)$('#task').innerHTML='<div class="actions"><button class="action" id="noktaGeri">↩ Son eklediğim noktayı geri al</button></div>';
+ else noktaSoruTask(r);
+ const g=$('#noktaGeri');if(g)g.onclick=()=>{const son=(state.gecmis||[]).pop();if(son==null)return;
+  state.nokta[son]--;state.not='Son nokta geri alındı.';noktaCiz(r)}}
+function noktaSoru(r){noktaCiz(r)}
+function noktaSoruTask(r){const q=r.sorular[state.soruIx];
+ $('#task').innerHTML=`<div class="caption">${esc(q.metin)}</div><div class="choices">${q.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+ $$('[data-choice]').forEach(b=>b.onclick=()=>{
+  if(!q.secenekler[+b.dataset.choice].correct)return wrong('Grafikteki nokta sayılarını yeniden karşılaştır.');
+  state.soruIx++;
+  if(state.soruIx>=r.sorular.length)return good();
+  feedback('Doğru');noktaCiz(r)})}
+function renderNokta(r){state.nokta=r.satir.map((sa,i)=>(r.hazir?r.hazir[i]:0));state.gecmis=[];state.faz=0;state.soruIx=0;state.not='';noktaCiz(r)}
+
+/* ===== ortak: salt-okunur nokta grafiği ===== */
+function grafRO(satir,isaret){return `<div class="graf-ro">${satir.map((sa,i)=>`<div class="st">${Array.from({length:sa.n},(_,j)=>{
+ const im=isaret&&isaret(i,j);return `<span class="${im||''}" data-gn="${i},${j}"></span>`}).join('')}<small>${esc(sa.ad)}</small></div>`).join('')}</div>`}
+
+/* ===== w45: grafik terazisi ===== */
+function teraziGCiz(r){
+ if(r.mod==='toplam')return teraziToplam(r);
+ const a=r.satir[0].n,b=r.satir[1].n,fark=Math.abs(a-b),buyuk=a>=b?0:1,kucuk=1-buyuk;
+ const isaret=(i,j)=>i===buyuk&&j>=r.satir[kucuk].n?(state.isaretli.indexOf(j)>=0?'fazla':''):'esles';
+ $('#stage').innerHTML=`<div class="stack">${grafRO(r.satir,isaret)}
+  ${terazi(r.satir[0].n,r.satir[1].n+(state.eklenen||0),r.satir[0].ad,r.satir[1].ad+(state.eklenen?' +'+state.eklenen:''),r.satir[0].n===r.satir[1].n+(state.eklenen||0))}
+  <div class="caption">${esc(state.not||'Sütunları hizala: eşleşmeyen noktalara dokun.')}</div></div>`;
+ $$('[data-gn]').forEach(el=>el.onclick=()=>{const [i,j]=el.dataset.gn.split(',').map(Number);
+  if(state.faz>0)return;
+  if(i!==buyuk||j<r.satir[kucuk].n)return wrong('Bu nokta karşı sütunda eşi olan bir nokta. Yalnız eşleşmeyenlere dokun.');
+  if(state.isaretli.indexOf(j)>=0)return feedback('Bunu işaretledin');
+  state.isaretli.push(j);state.not=`İşaretlenen eşleşmeyen nokta: ${state.isaretli.length}`;teraziGCiz(r);
+  if(state.isaretli.length>=fark){state.faz=1;state.not='Şimdi az kefeye o kadar birim ekle.';gecisBasla(()=>teraziGCiz(r),FAST?30:600)}});
+ if(state.faz===0)$('#task').innerHTML='<div class="caption">Uzun sütunda karşılığı olmayan noktalara dokun.</div>';
+ else if(state.faz===1){
+  $('#task').innerHTML='<div class="actions"><button class="action" id="blokEkle">+1 nokta ekle</button><button class="action" id="blokGeri">↩ Geri al</button></div>';
+  $('#blokEkle').onclick=()=>{state.eklenen=(state.eklenen||0)+1;
+   const yeni=r.satir[1].n+state.eklenen;
+   if(yeni>r.satir[0].n){state.not=`Kefe ağırlaştı: ${yeni} > ${r.satir[0].n}. Bir blok geri al.`;teraziGCiz(r);return wrong(state.not)}
+   state.not='Blok eklendi.';teraziGCiz(r);
+   if(yeni===r.satir[0].n){state.faz=2;state.not='Kefe dengelendi.';gecisBasla(()=>teraziGCiz(r),FAST?30:600)}};
+  $('#blokGeri').onclick=()=>{if(state.eklenen)state.eklenen--;teraziGCiz(r)};
+ }else{
+  $('#task').innerHTML=`<div class="caption">Farkı hangi işlem gösterir?</div><div class="choices">${r.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{if(!r.secenekler[+b.dataset.choice].correct)return wrong('Uzun sütundan kısa sütunu çıkar.');good()});
+ }}
+function teraziToplam(r){
+ $('#stage').innerHTML=`<div class="stack">${grafRO(r.satir)}
+  <div class="panel-kart"><h4>Katılımcı sayısı paneli</h4><div class="row">${r.satir.map((sa,i)=>`<div class="badge">${state.alinan.indexOf(i)>=0?sa.n:'?'}</div>`).join('')}</div>
+   <div class="caption">Panele taşınan: ${state.alinan.length}/${r.satir.length}</div></div>
+  <div class="caption">${esc(state.not||'Burada denge değil, TOPLAMA stratejisi kullanılır: her sütunu panele taşı.')}</div></div>`;
+ $$('[data-gn]').forEach(el=>el.onclick=()=>{const i=+el.dataset.gn.split(',')[0];
+  if(state.alinan.indexOf(i)>=0)return feedback('Bu sütunu taşıdın');
+  state.alinan.push(i);state.not=`${r.satir[i].ad} sütunu panele taşındı: ${r.satir[i].n}`;teraziToplam(r);
+  if(state.alinan.length>=r.satir.length){state.faz=2;gecisBasla(()=>teraziToplam(r),FAST?30:600)}});
+ if(state.faz<2)$('#task').innerHTML='<div class="caption">Her sütuna dokunup sıklığını panele taşı.</div>';
+ else{$('#task').innerHTML=`<div class="caption">Toplam katılımcı kaç?</div><div class="choices">${r.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{if(!r.secenekler[+b.dataset.choice].correct)return wrong('Panele taşıdığın sayıları topla.');good()})}}
+function renderTeraziG(r){state.faz=0;state.isaretli=[];state.eklenen=0;state.alinan=[];state.not='';teraziGCiz(r)}
+
+/* ===== w46: zaman ve mekân kapsülü ===== */
+function kapsulCiz(r){
+ const canli=r.satir.map((sa,i)=>({ad:sa.ad,n:state.sayim[i]}));
+ $('#stage').innerHTML=`<div class="stack"><div class="till">${esc(r.soru)}</div>
+  <div class="iki-panel">
+   <div class="panel-kart"><h4>${esc(r.solAd)}</h4>${grafRO(r.sol)}</div>
+   <div class="panel-kart"><h4>${esc(r.sagAd)}</h4>${grafRO(canli)}</div></div>
+  <div class="caption">${state.ix<r.yanitlar.length?`Yanıt ${state.ix+1}/${r.yanitlar.length}: “${esc(r.satir[r.yanitlar[state.ix]].ad)}”`:'Veri toplama bitti.'}</div>
+  <div class="caption">${esc(state.not||'Yanıtı doğru sütuna işle. Soru ve seçenekler iki grupta da aynı.')}</div></div>`;
+ if(state.faz===0){
+  $('#task').innerHTML=`<div class="actions">${r.satir.map((sa,i)=>`<button class="action" data-sut="${i}">${esc(sa.ad)}</button>`).join('')}</div>
+   <div class="actions"><button class="action" id="kapGeri">↩ Geri al</button></div>`;
+  $$('[data-sut]').forEach(b=>b.onclick=()=>{const i=+b.dataset.sut;
+   if(state.ix>=r.yanitlar.length)return;
+   const d=r.yanitlar[state.ix];state.sayim[i]++;state.gec=(state.gec||[]).concat(i);state.ix++;
+   if(i!==d){state.not='Bu yanıt başka sütuna aitti; geri alıp düzelt.';kapsulCiz(r);return wrong(state.not)}
+   state.not='İşlendi.';kapsulCiz(r);
+   if(state.ix>=r.yanitlar.length){const tam=r.satir.every((sa,j)=>state.sayim[j]===r.yanitlar.filter(v=>v===j).length);
+    if(tam){state.faz=1;feedback('İki dağılım yan yana');gecisBasla(()=>kapsulCiz(r),FAST?30:700)}}});
+  $('#kapGeri').onclick=()=>{const son=(state.gec||[]).pop();if(son==null)return;state.sayim[son]--;state.ix--;kapsulCiz(r)};
+ }else{
+  $('#task').innerHTML=`<div class="caption">${esc(r.soruMetni)}</div><div class="choices">${r.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.secenekler[+b.dataset.choice];
+   if(!c.correct)return wrong(c.hint||'Değişen ve sabit kalan öğelere bak: soru mu, grup mu, zaman mı değişti?');
+   good()});
+ }}
+function renderKapsul(r){state.faz=0;state.ix=0;state.sayim=r.satir.map(()=>0);state.gec=[];state.not='';kapsulCiz(r)}
+
+/* ===== w47: çoklu nokta şifresi (ölçek) ===== */
+function olcekCiz(r){
+ $('#stage').innerHTML=`<div class="stack"><div class="anahtar">● = ${r.olcek} ${esc(r.birim)}</div>
+  <div class="graf-ro">${r.satir.map(sa=>`<div class="st">${Array.from({length:sa.n},()=>'<span style="width:20px;height:20px"></span>').join('')}<small>${esc(sa.ad)}</small></div>`).join('')}</div>
+  <div class="ekran">${state.giris||'0'}</div>
+  <div class="caption">${esc(state.not||'Önce noktaları say, sonra anahtarı oku.')}</div></div>`;
+ $('#task').innerHTML=`<div class="caption">${esc(r.soru)}</div>
+  <div class="tus">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-tus="${n}">${n}</button>`).join('')}
+   <button data-tus="0">0</button><button data-tus="sil">⌫</button><button data-tus="ok">✓</button></div>`;
+ $$('[data-tus]').forEach(b=>b.onclick=()=>{const t=b.dataset.tus;
+  if(t==='sil'){state.giris=(state.giris||'').slice(0,-1);return olcekCiz(r)}
+  if(t==='ok'){if(+(state.giris||0)!==r.cevap){state.not='Anahtarı yeniden oku: bir nokta kaç birim gösteriyor?';olcekCiz(r);return wrong(state.not)}
+   state.not='Doğru.';olcekCiz(r);return good()}
+  if((state.giris||'').length>=4)return;
+  state.giris=(state.giris||'')+t;olcekCiz(r)})}
+function renderOlcek(r){state.giris='';state.not='';olcekCiz(r)}
+
+/* ===== w48: veri mimarı (tam süreç) ===== */
+const PROJE_ASAMA=['Soru','Veri','Çetele','Sıklık','Grafik','Yorum'];
+function projeBar(){return `<div class="asama">${PROJE_ASAMA.map((a,i)=>`<span class="${state.faz===i?'aktif':state.faz>i?'bitti':''}">${a}</span>`).join('')}</div>`}
+function projeCiz(r){const sat=state.satir||r.satir;
+ let sahne='';
+ if(state.faz>=1)sahne+=`<div class="till">${esc(state.soru||r.soru)}</div>`;
+ if(state.faz>=2)sahne+=sat.map((sa,i)=>`<div class="cetele-satir"><b>${esc(sa.ad)}</b>${ceteleSvg(state.sayim[i],0.72)}<div class="yer${state.siklik[i]!=null?' dolu':''}" data-yer="${i}">${state.siklik[i]!=null?state.siklik[i]:'?'}</div></div>`).join('');
+ if(state.faz>=4)sahne+=`<div class="nokta-graf">${sat.map((sa,i)=>`<div class="nokta-sutun"><div data-sut="${i}" style="display:flex;flex-direction:column-reverse;align-items:center;gap:2px;min-height:80px">${Array.from({length:state.nokta[i]},()=>'<span class="nk"></span>').join('')}</div><small>${esc(sa.ad)}</small></div>`).join('')}</div>`;
+ $('#stage').innerHTML=`<div class="stack">${projeBar()}${sahne}
+  <div class="caption">${esc(state.not||'')}</div></div>`;
+ if(state.faz===0){
+  $('#task').innerHTML=`<div class="caption">Araştırma sorunu seç.</div><div class="choices">${r.sorular.map((q,i)=>`<button class="choice" data-soru="${i}">${esc(q.metin)}</button>`).join('')}</div>`;
+  $$('[data-soru]').forEach(b=>b.onclick=()=>{const q=r.sorular[+b.dataset.soru];
+   if(!q.uygun)return wrong('Bu soruda hedef grup ya da değişken yok; farklı yanıtlardan dağılım oluşmaz.');
+   state.soru=q.metin;state.satir=q.satir;state.yanitlar=q.yanitlar;
+   state.sayim=q.satir.map(()=>0);state.siklik=q.satir.map(()=>null);state.nokta=q.satir.map(()=>0);
+   const say={};q.yanitlar.forEach(v=>say[v]=(say[v]||0)+1);
+   state.kartlar=q.satir.map((_,i)=>say[i]||0).slice().sort(()=>Math.random()-0.5);
+   state.faz=1;state.ix=0;state.gec=[];state.not='Sanal sınıftan yanıtları topla.';projeCiz(r)});
+ }else if(state.faz===1||state.faz===2){
+  const y=state.yanitlar,ix=state.ix||0;
+  $('#stage').innerHTML=$('#stage').innerHTML.replace('</div>',`</div>`);
+  $('#task').innerHTML=`<div class="caption">${ix<y.length?`${ix+1}. öğrenci: “${esc(state.satir[y[ix]].ad)}”`:'Bütün yanıtlar işlendi.'}</div>
+   <div class="actions">${state.satir.map((sa,i)=>`<button class="action" data-cet="${i}">${esc(sa.ad)}</button>`).join('')}</div>
+   <div class="actions"><button class="action" id="projeGeri">↩ Geri al</button></div>`;
+  if(state.faz===1){state.faz=2;projeCiz(r);return}
+  $$('[data-cet]').forEach(b=>b.onclick=()=>{const i=+b.dataset.cet;
+   if((state.ix||0)>=y.length)return feedback('Yanıtlar bitti');
+   const d=y[state.ix||0];state.sayim[i]++;state.gec=(state.gec||[]).concat(i);state.ix=(state.ix||0)+1;
+   if(i!==d){state.not='Bu yanıt başka satıra aitti; geri al.';projeCiz(r);return wrong(state.not)}
+   state.not=state.sayim[i]%5===0?'Beşli grup tamamlandı.':'Çeteleye işlendi.';projeCiz(r);
+   if(state.ix>=y.length){state.faz=3;state.not='Şimdi çeteleleri sıklığa çevir.';gecisBasla(()=>projeCiz(r),FAST?30:700)}});
+  $('#projeGeri').onclick=()=>{const son=(state.gec||[]).pop();if(son==null)return;state.sayim[son]--;state.ix--;projeCiz(r)};
+ }else if(state.faz===3){
+  $('#task').innerHTML=`<div class="caption">Sıklık kartını doğru satıra taşı.</div>
+   <div class="actions">${state.kartlar.map(v=>`<button class="action" data-kart="${v}">${v}</button>`).join('')}</div>`;
+  $$('[data-kart]').forEach(b=>b.onclick=()=>{state.secKart=+b.dataset.kart;state.not='Kart seçildi.';projeCiz(r)});
+  $$('[data-yer]').forEach(el=>el.onclick=()=>{const i=+el.dataset.yer;
+   if(state.secKart==null)return feedback('Önce kart seç',true);
+   if(state.secKart!==state.sayim[i]){state.not='Bu satırdaki beşli grupları ve kalan çizgileri yeniden say.';projeCiz(r);return wrong(state.not)}
+   state.siklik[i]=state.secKart;state.secKart=null;state.not='Doğru.';projeCiz(r);
+   if(state.siklik.every(x=>x!=null)){state.faz=4;state.not='Sıklıklar kadar nokta koy.';gecisBasla(()=>projeCiz(r),FAST?30:700)}});
+ }else if(state.faz===4){
+  $('#task').innerHTML='<div class="caption">Her sütuna sıklığı kadar nokta ekle.</div>';
+  $$('[data-sut]').forEach(el=>el.onclick=()=>{const i=+el.dataset.sut;
+   state.nokta[i]++;
+   if(state.nokta[i]>state.siklik[i]){state.nokta[i]--;state.not='Bu sütunun sıklığı doldu.';projeCiz(r);return wrong(state.not)}
+   state.not='Nokta eklendi.';projeCiz(r);
+   if(state.nokta.every((n,j)=>n===state.siklik[j])){state.faz=5;state.secYorum=[];state.not='Son adım: iki doğru yorum seç.';gecisBasla(()=>projeCiz(r),FAST?30:700)}});
+ }else{
+  const yor=r.yorumlar;
+  $('#task').innerHTML=`<div class="caption">Proje kartına yazılacak İKİ doğru yorumu seç.</div>
+   <div class="actions">${yor.map((y,i)=>`<button class="veri-kart${(state.secYorum||[]).indexOf(i)>=0?' secili':''}" data-yor="${i}">${esc(y.label)}</button>`).join('')}</div>`;
+  $$('[data-yor]').forEach(b=>b.onclick=()=>{const i=+b.dataset.yor;
+   if(!yor[i].correct)return wrong('Bu yorum grafikle uyuşmuyor ya da "kesin" dili kullanıyor.');
+   if((state.secYorum||[]).indexOf(i)>=0)return;
+   state.secYorum=(state.secYorum||[]).concat(i);projeCiz(r);
+   if(state.secYorum.length>=2)good()});
+ }}
+function renderProje(r){state.faz=r.sorular?0:1;state.ix=0;state.gec=[];state.not='';
+ state.soru=r.soru;state.satir=r.satir;state.yanitlar=r.yanitlar;
+ state.sayim=(r.satir||[]).map(()=>0);state.siklik=(r.satir||[]).map(()=>null);state.nokta=(r.satir||[]).map(()=>0);
+ state.kartlar=[];
+ const say={};(r.yanitlar||[]).forEach(v=>say[v]=(say[v]||0)+1);
+ state.kartlar=(r.satir||[]).map((_,i)=>say[i]||0).slice().sort(()=>Math.random()-0.5);
+ projeCiz(r)}
+
 const GAMES={};
 /* ===== 3. SINIF MATEMATİK — w01–w48 =====
    Kaynak şartname: output/pdf/3_sinif_matematik_oyunlari_detayli_duzeltmeler.pdf
@@ -882,6 +1892,7 @@ function yuzlukModel(n){const y=Math.floor(n/100),o=Math.floor(n%100/10),b=n%10;
    NOT: motorun state.placed'i HEDEF başına sayaç tutar (parça kimliği
    değil), o yüzden değer toplamını burada ayrıca biriktiriyoruz. */
 function modulDegeri(id){return id.indexOf('y')===0?100:id.indexOf('o')===0?10:1}
+function gecisBasla(fn,ms){state.gecis=true;ertele(()=>{state.gecis=false;fn()},ms)}
 function ertele(fn,ms){/* Tur değiştiyse ya da tur bittiyse geciken geri çağrı çalışmasın. */
  const t=roundIndex;setTimeout(()=>{if(roundIndex===t&&!locked)fn()},ms)}
 function turuTazele(){/* Hedef aşıldığında tur kilitlenmesin: can gitti, sahne yeniden kurulur. */
@@ -1395,9 +2406,444 @@ GAMES.w24={title:'Fırıncının Tezgâhı',theme:'kitchen',finish:'Aynı sipari
   result:'3 × 12 + 5 = 41. Daha az tepsiyle de olur ama tek simit sayısı artar, işlem uzar.'}
 ]};
 
+/* ---- Tema 4: geometri (w25–w28) ---- */
+GAMES.w25={title:'3D Geometri Tarayıcısı',theme:'space',finish:'Küpü kendin döndürüp köşeleri, ayrıtları ve yüzleri tek tek taradın: 8 köşe, 12 ayrıt, 6 yüz.',rounds:[
+ {kind:'kup',prompt:'Küpün bütün köşelerini bul ve işaretle.',mod:'kose',toplam:8,ad:'köşe',
+  ozet:'Küpün köşe sayısı 8',
+  result:'Küpün 8 köşesi var. Arkadakileri ancak modeli döndürerek bulabildin.'},
+ {kind:'kup',prompt:'Şimdi bütün ayrıtları işaretle.',mod:'ayrit',toplam:12,ad:'ayrıt',
+  ozet:'Küpün ayrıt sayısı 12',
+  result:'Küpün 12 ayrıtı var. Ayrıt, iki yüzün birleştiği çizgidir.'},
+ {kind:'kup',prompt:'Son olarak bütün yüzleri işaretle; açınımda da yerlerini gör.',mod:'yuz',toplam:6,ad:'yüz',
+  ozet:'Küpün yüz sayısı 6',
+  result:'Küpün 6 kare yüzü var. Açınımda altı kare yan yana açıldı: 8 köşe, 12 ayrıt, 6 yüz.'}
+]};
+
+GAMES.w26={title:'Şekil Kalesi',theme:'pirate',finish:'Kenarları tek tek izleyerek düzenli, düzensiz, dönmüş ve içbükey şekilleri doğru kapılara gönderdin.',rounds:[
+ {kind:'sekil',prompt:'Kenarları izle, sonra şekli doğru kapıya gönder.',noPenalty:true,
+  sekiller:[
+   {ad:'dönmüş üçgen',noktalar:[[50,8],[92,78],[12,64]]},
+   {ad:'dikdörtgen',noktalar:[[14,28],[88,28],[88,72],[14,72]]},
+   {ad:'düzensiz dörtgen',noktalar:[[16,22],[86,34],[74,82],[24,66]]}],
+  result:'Üçgenin 3, dikdörtgenin ve düzensiz dörtgenin 4 kenarı var. Şekil dönse de sınıfı değişmiyor.'},
+ {kind:'sekil',prompt:'Bu kez daha çok kenarlı şekiller var.',noPenalty:true,
+  sekiller:[
+   {ad:'düzensiz beşgen',noktalar:[[50,8],[92,38],[76,86],[22,80],[10,36]]},
+   {ad:'altıgen',noktalar:[[50,6],[90,28],[90,72],[50,94],[10,72],[10,28]]},
+   {ad:'sekizgen',noktalar:[[35,6],[65,6],[92,30],[92,64],[65,90],[35,90],[8,64],[8,30]]}],
+  result:'Beşgen 5, altıgen 6, sekizgen 8 kenarlıdır. Kenarlar eşit olmasa da ad değişmez.'},
+ {kind:'sekil',prompt:'Dikkat: bunlardan biri çokgen bile değil.',noPenalty:true,
+  sekiller:[
+   {ad:'içbükey beşgen',noktalar:[[10,20],[90,20],[90,85],[50,55],[10,85]]},
+   {ad:'açık çizgi',noktalar:[[12,80],[30,20],[60,75],[88,25]],acik:true},
+   {ad:'içbükey altıgen',noktalar:[[12,20],[50,45],[88,20],[88,84],[50,62],[12,84]]}],
+  result:'İçeri çökmüş şekiller de çokgendir; ama uçları birleşmeyen açık çizgi çokgen değildir.'}
+]};
+
+GAMES.w27={title:'Köşegen Dedektifi',theme:'workshop',finish:'Köşegeni kendin çizdin, kesişimi gördün ve uzunlukları ölçerek karşılaştırdın.',rounds:[
+ {kind:'kosegen',prompt:'Komşu olmayan köşeleri birleştir.',noPenalty:true,
+  noktalar:[[15,15],[85,15],[85,85],[15,85]],adlar:['A','B','C','D'],kosegen:2,
+  result:'AC ve BD köşegenleri orta noktada kesişti ve aynı uzunlukta çıktı.'},
+ {kind:'kosegen',prompt:'Aynı işi dikdörtgende yap ve uzunlukları karşılaştır.',noPenalty:true,
+  noktalar:[[8,25],[92,25],[92,75],[8,75]],adlar:['K','L','M','N'],kosegen:2,
+  result:'KM ve LN köşegenleri de eşit uzunlukta. Dikdörtgende de iki köşegen vardır.'},
+ {kind:'kosegen',prompt:'Üçgende köşegen var mı? Dene ve nedenini söyle.',noPenalty:true,
+  noktalar:[[50,10],[90,82],[10,82]],adlar:['A','B','C'],kosegen:99,
+  soru:{metin:'Üçgende neden köşegen yok?',secenekler:[
+   {label:'Her köşe diğer iki köşeye komşu olduğu için',correct:true},
+   {label:'Üçgenin kenarları kısa olduğu için'},
+   {label:'Üçgen kapalı bir şekil olmadığı için'}]},
+  result:'Üçgende her köşe diğer iki köşeye komşudur; komşu olmayan çift kalmadığı için köşegen çizilemez.'}
+]};
+
+GAMES.w28={title:'Geometri Stüdyosu',theme:'workshop',finish:'Köşeleri kendin seçtin, cetvelle ölçtün, gönyeyle dik açıyı denetledin ve şekli özellikleriyle doğruladın.',rounds:[
+ {kind:'studyo',prompt:'Cetveli kullanarak bir üçgen çiz.',kose:3,kural:'ucgen',
+  gorev:'Izgarada üç nokta seç; hangi üçgeni çizeceğin sana kalmış.',
+  cozum:[[1,1],[5,1],[3,5]],
+  result:'Üç nokta seçtin, cetvel kenarları ölçtü: 3 köşe, 3 kenar. Farklı üçgenler de doğru olurdu.'},
+ {kind:'studyo',prompt:'Şimdi kare çiz: dört eş kenar ve dört dik açı.',kose:4,kural:'kare',
+  gorev:'Dört nokta seç; kenarları cetvelle, açıları gönyeyle denetle.',
+  cozum:[[1,1],[4,1],[4,4],[1,4]],
+  result:'Dört kenar da 3 birim ve dört köşe de dik: bu bir kare. Kenarlar eşit olmasaydı dikdörtgen olurdu.'},
+ {kind:'studyo',prompt:'Altı köşeli kapalı bir şekil çiz.',kose:6,kural:'altigen',
+  gorev:'Altı nokta seç; şekil kapanmalı ve altı gerçek köşesi olmalı.',
+  cozum:[[2,0],[4,0],[5,2],[4,4],[2,4],[1,2]],
+  result:'Altı köşe, altı kenar: altıgen. Aynı doğru üzerindeki noktalar köşe saymadığı için dikkat gerekti.'}
+]};
+
+/* ---- Tema 4: ölçme (w29–w32) ---- */
+GAMES.w29={title:'Çevre Avcıları',theme:'class',finish:'Önce göz kararı tahmin ettin, sonra kenarları tek tek ölçüp çevreyi hesapladın.',rounds:[
+ {kind:'cevre',prompt:'Önce tahmin et, sonra kenarları ölç.',noPenalty:false,birim:'silgi',
+  nesne:'Masadaki kitap',
+  ic:'<rect x="8" y="18" width="84" height="64" rx="3" fill="#c96a55" stroke="#8a3f2f" stroke-width="2"/><rect x="12" y="22" width="76" height="56" fill="#f6ede0"/>',
+  sekil:{noktalar:[[8,18],[92,18],[92,82],[8,82]],kenarUz:[4,3,4,3]},
+  tahmin:[{label:'yaklaşık 8 silgi',v:8},{label:'yaklaşık 14 silgi',v:14},{label:'yaklaşık 24 silgi',v:24}],
+  gercek:14,toplamSec:[{label:'14 silgi',correct:true},{label:'12 silgi'},{label:'7 silgi'}],
+  result:'Kenarlar 4 + 3 + 4 + 3 = 14 silgi. Silgiler boşluksuz dizilince çevre tam çıktı.'},
+ {kind:'cevre',prompt:'Bu kez cetvelle santimetre ölç.',birim:'cm',
+  nesne:'Panodaki dikdörtgen kart',
+  ic:'<rect x="6" y="24" width="88" height="52" rx="2" fill="#f2e2b8" stroke="#b9945c" stroke-width="2"/>',
+  sekil:{noktalar:[[6,24],[94,24],[94,76],[6,76]],kenarUz:[20,15,20,15]},
+  tahmin:[{label:'yaklaşık 40 cm',v:40},{label:'yaklaşık 70 cm',v:70},{label:'yaklaşık 120 cm',v:120}],
+  gercek:70,toplamSec:[{label:'70 cm',correct:true},{label:'35 cm'},{label:'300 cm'}],
+  result:'20 + 15 + 20 + 15 = 70 cm. Karşılıklı kenarlar eşit olduğu için ikisini iki kez topladık.'},
+ {kind:'cevre',prompt:'Düzensiz şekilde her kenarı ayrı ölçmen gerekecek.',birim:'cm',
+  nesne:'Kâğıttan kesilmiş beşgen',
+  ic:'<polygon points="50,8 92,34 78,84 22,80 8,36" fill="#cfe3f2" stroke="#5f8cbe" stroke-width="2"/>',
+  sekil:{noktalar:[[50,8],[92,34],[78,84],[22,80],[8,36]],kenarUz:[6,4,5,3,4]},
+  tahmin:[{label:'yaklaşık 12 cm',v:12},{label:'yaklaşık 22 cm',v:22},{label:'yaklaşık 40 cm',v:40}],
+  gercek:22,toplamSec:[{label:'22 cm',correct:true},{label:'18 cm'},{label:'26 cm'}],
+  result:'6 + 4 + 5 + 3 + 4 = 22 cm. Düzensiz şekilde her kenarı ayrı ölçmek gerekir.'}
+]};
+
+GAMES.w30={title:'İp Dolama Serüveni',theme:'workshop',finish:'İpi kutuların çevresine kendin doladın, sonra düzleştirip cetvelle ölçtün.',rounds:[
+ {kind:'ip',prompt:'İpi kutunun çevresinde tam tur dolaştır.',yaricap:40,cm:24,
+  okuma:[{label:'18 cm'},{label:'24 cm',correct:true},{label:'30 cm'}],
+  result:'Küçük kutunun çevresi 24 cm. İp tam tur dolanıp düzleştirilince cetvelde 24’te bitti.'},
+ {kind:'ip',prompt:'Büyük kutuda aynı işi yap ve iki ipi karşılaştır.',yaricap:58,cm:36,oncekiCm:24,
+  okuma:[{label:'30 cm'},{label:'36 cm',correct:true},{label:'24 cm'}],
+  result:'Büyük kutunun çevresi 36 cm; küçük kutunun ipinden 12 cm uzun. Nesne büyüdükçe çevre de büyür.'},
+ {kind:'ip',prompt:'Şimdi düzensiz bir yaprağın sınırını izle.',yaricap:46,cm:28,
+  okuma:[{label:'22 cm'},{label:'28 cm',correct:true},{label:'34 cm'}],
+  result:'Yaprağın çevresi yaklaşık 28 cm. Eğri sınırlar cetvelle doğrudan ölçülemez; önce ip ile izlenir.'}
+]};
+
+GAMES.w31={title:'Sıvı Laboratuvarı',theme:'lab',finish:'Önce litre çizgisini tahmin ettin, sonra doldurup 1 litrelik kaplarla doğruladın.',rounds:[
+ {kind:'sivi',prompt:'Önce tahmin çizgisini koy, sonra tam 3 litre doldur.',hedef:3,maks:5,genislik:74,
+  result:'3 litre su üç tane 1 litrelik kabı tam doldurdu. Tahmin çizgin ile derece çizgisi arasındaki farkı gördün.'},
+ {kind:'sivi',prompt:'Bu kap daha geniş: 4 litre nerede biter?',hedef:4,maks:6,genislik:118,
+  result:'Geniş kapta 4 litre daha alçak bir seviyede duruyor; miktar aynı, yükseklik farklı.'},
+ {kind:'sivi',prompt:'2 litreyi doldur, sonra geniş kapla karşılaştır.',hedef:2,maks:4,genislik:66,karsilastir:true,
+  sonSoru:{metin:'Dar kaptaki 2 litre ile geniş kaptaki 2 litreden hangisi daha çoktur?',
+   secenekler:[{label:'İkisi de aynı miktarda',correct:true},{label:'Dar kaptaki daha çok'},{label:'Geniş kaptaki daha çok'}]},
+  result:'İki kapta da 2 litre var. Su seviyesi farklı görünse de miktar kabın şekliyle değişmez.'}
+]};
+
+GAMES.w32={title:'Mozaik Atölyesi',theme:'workshop',finish:'Mozaiği gerçekten kurdun ve yalnız dış sınırı sayarak çevreyi buldun.',rounds:[
+ {kind:'mozaik',prompt:'Ev mozaiğini kur, sonra yalnız dış sınırı izle.',
+  parcalar:[
+   {ad:'Kare',renk:'#f2c45b',nokta:[[1,0],[2,0],[2,1],[1,1]]},
+   {ad:'Üçgen',renk:'#e08b2a',nokta:[[1,1],[2,1],[1.5,1.866]]}],
+  ayriToplam:7,secenekler:[{label:'5 birim',correct:true},{label:'7 birim'},{label:'6 birim'}],
+  result:'Kare 4, üçgen 3 kenar: ayrı ayrı 7 eder. Birleşince ortak kenar içte kaldı, dış çevre 5 birim oldu.'},
+ {kind:'mozaik',prompt:'Üç altıgenden petek kur ve dış kenarları say.',
+  parcalar:[
+   {ad:'Altıgen 1',renk:'#f2c45b',nokta:[[0.866,0.5],[0.866,1.5],[0,2],[-0.866,1.5],[-0.866,0.5],[0,0]]},
+   {ad:'Altıgen 2',renk:'#e9b04a',nokta:[[2.598,0.5],[2.598,1.5],[1.732,2],[0.866,1.5],[0.866,0.5],[1.732,0]]},
+   {ad:'Altıgen 3',renk:'#dfa03a',nokta:[[4.33,0.5],[4.33,1.5],[3.464,2],[2.598,1.5],[2.598,0.5],[3.464,0]]}],
+  ayriToplam:18,secenekler:[{label:'14 birim',correct:true},{label:'18 birim'},{label:'16 birim'}],
+  result:'Üç altıgen ayrı ayrı 18 kenar; iki ortak kenar içte kaldığı için dış çevre 14 birim.'},
+ {kind:'mozaik',prompt:'Roketi kur; dış sınırı işaretleyip çevreyi bul.',
+  parcalar:[
+   {ad:'Alt kare',renk:'#a9c7e8',nokta:[[1,0],[2,0],[2,1],[1,1]]},
+   {ad:'Üst kare',renk:'#8fb6de',nokta:[[1,1],[2,1],[2,2],[1,2]]},
+   {ad:'Burun üçgeni',renk:'#e05555',nokta:[[1,2],[2,2],[1.5,2.866]]},
+   {ad:'Kanat üçgeni',renk:'#e08b2a',nokta:[[2,0],[2,1],[2.866,0.5]]}],
+  ayriToplam:14,secenekler:[{label:'8 birim',correct:true},{label:'14 birim'},{label:'10 birim'}],
+  result:'Dört parçanın kenar toplamı 14; üç ortak kenar içte kaldı, dış çevre 8 birim.'}
+]};
+
+/* ---- Tema 5: simetri (w33–w36) ---- */
+GAMES.w33={title:'Katlama Laboratuvarı',theme:'lab',finish:'Her çizgiyi kendin çizip katladın; hangilerinin iki yarıyı çakıştırdığını deneyerek buldun.',rounds:[
+ {kind:'katla',prompt:'Katlandığında iki tarafı çakıştıran bütün çizgileri bul.',gerek:4,
+  sekil:[[10,10],[90,10],[90,90],[10,90]],
+  nokta:[[10,10],[50,10],[90,10],[90,50],[90,90],[50,90],[10,90],[10,50]],
+  result:'Karede dört simetri doğrusu var: iki orta çizgi ve iki köşegen. Hepsinde iki yarı tam çakıştı.'},
+ {kind:'katla',prompt:'Aynı işi dikdörtgende yap; köşegeni de dene.',gerek:2,
+  sekil:[[6,26],[94,26],[94,74],[6,74]],
+  nokta:[[6,26],[50,26],[94,26],[94,50],[94,74],[50,74],[6,74],[6,50]],
+  result:'Dikdörtgende yalnız iki orta çizgi işe yarıyor. Köşegende katlayınca köşeler üst üste gelmedi.'},
+ {kind:'katla',prompt:'Dairede merkezden geçen farklı çizgiler dene.',gerek:6,
+  sekil:[[50,8],[71,13.6],[86.4,29],[92,50],[86.4,71],[71,86.4],[50,92],[29,86.4],[13.6,71],[8,50],[13.6,29],[29,13.6]],
+  nokta:[[50,8],[71,13.6],[86.4,29],[92,50],[86.4,71],[71,86.4],[50,92],[29,86.4],[13.6,71],[8,50],[13.6,29],[29,13.6]],
+  result:'Denediğin her çap işe yaradı. Merkezden geçen sonsuz sayıda doğru çizilebildiği için dairenin simetri doğrusu sayısızdır.'}
+]};
+
+GAMES.w34={title:'Aynadaki İkizler',theme:'garden',finish:'Parçaları biçim, boyut ve yön bakımından karşılaştırıp gerçek ayna görüntüsünü seçtin.',rounds:[
+ {kind:'ayna',prompt:'Aynanın sağına hangi parça gelmeli?',eksen:55,renk:'#e0a3d0',
+  yarim:[[55,12],[30,20],[14,42],[26,58],[16,76],[38,84],[55,72]],
+  result:'Doğru parça eş büyüklükte ama yönü aynaya göre ters. Eş noktalar eksene aynı uzaklıkta durdu.'},
+ {kind:'ayna',prompt:'Bu yaprak yarısının aynadaki hâli hangisi?',eksen:55,renk:'#8fc47a',
+  yarim:[[55,10],[36,22],[22,44],[30,62],[20,80],[42,88],[55,80]],
+  result:'Döndürülmüş parça eş büyüklükte olsa da aynadaki gibi durmuyor; yansımada yön ekseni geçerek terslenir.'},
+ {kind:'ayna',prompt:'Bu kez iç noktalar da eşleşmeli.',eksen:55,renk:'#f2c45b',
+  yarim:[[55,14],[32,18],[18,40],[28,64],[20,82],[46,86],[55,74]],
+  ic:[[38,32],[30,52],[42,70]],
+  result:'Yalnız dış sınır değil, içteki noktalar da eksene aynı uzaklıkta yansıdı.'}
+]};
+
+GAMES.w35={title:'Kilim Dokuma Tezgâhı',theme:'market',finish:'Eksene uzaklığı sayarak kilimin sağ yarısını dokudun; katlandığında iki yarı üst üste geldi.',rounds:[
+ {kind:'kilim',prompt:'Sol yarıdaki renkli kareleri eksene göre yansıt.',
+  sol:[[null,null,null,null],[null,'k',null,null],[null,null,'m',null],[null,'s',null,null],[null,null,'y',null],[null,null,null,null]],
+  result:'Dört kare de eksenin öbür yanında aynı uzaklığa dokundu.'},
+ {kind:'kilim',prompt:'Bütün yarım deseni tamamla.',
+  sol:[['k','s','m','y'],['s','m','y','k'],['m','y','k','s'],['y','k','s','m'],['k','m','s','y'],['s','y','m','k']],
+  result:'Her satırda renkler eksenin iki yanında aynı sırayla, ters yönde dizildi.'},
+ {kind:'kilim',prompt:'Dokunmuş kilimde üç hata var; bul ve düzelt.',
+  sol:[['k','s','m','y'],['s','m','y','k'],['m','y','k','s'],['y','k','s','m']],
+  hatali:[['y','s','m','k'],[null,'y','m','s'],['s','k','y','m'],['m','s','k','y']],
+  result:'Hatalı kareler eksene uzaklığı sayılarak bulundu; düzeltilince kilim simetrik oldu.'}
+]};
+
+GAMES.w36={title:'Satranç Tahtası Macerası',theme:'class',finish:'Şövalyelerin eksene uzaklığını sayarak simetrik karelerini buldun ve iki ekseni karşılaştırdın.',rounds:[
+ {kind:'satranc',prompt:'Şövalyenin dikey eksene göre eşi hangi karede?',eksen:'dikey',
+  ciftler:[{kaynak:'B4',hedef:'G4'}],
+  result:'B sütunu eksenden 3 adım uzakta; karşı tarafta 3 adım uzaktaki sütun G. Eşi G4.'},
+ {kind:'satranc',prompt:'Bu kez iki şövalyenin eşini bul.',eksen:'dikey',
+  ciftler:[{kaynak:'A2',hedef:'H2'},{kaynak:'C7',hedef:'F7'}],
+  result:'A eksenden 4 adım uzakta, eşi H. C eksenden 2 adım uzakta, eşi F. Sıra numarası değişmedi.'},
+ {kind:'satranc',prompt:'Eksen yatay: şimdi sıralar yansıyacak.',eksen:'yatay',
+  ciftler:[{kaynak:'C7',hedef:'C2'}],
+  sonSoru:{metin:'Aynı şövalyenin DİKEY eksene göre eşi hangisiydi?',
+   secenekler:[{label:'F7',correct:true},{label:'C2'},{label:'F2'}]},
+  result:'Yatay eksende sütun aynı kalır, sıra yansır: C7 → C2. Dikey eksende ise sıra aynı kalır, sütun yansırdı: C7 → F7.'}
+]};
+
+/* ---- Tema 5: simetri ve kodlama (w37–w40) ---- */
+GAMES.w37={title:'Kodlama Dedektifi',theme:'factory',finish:'Verilen programı uyguladın, sonra simetriğini kendin üretip robotu eş hedefe götürdün.',rounds:[
+ {kind:'kod',prompt:'Yönergeyi uygula: 2 sağ, 3 aşağı, 1 sol.',en:8,boy:6,eksen:'dikey',
+  baslangic:[1,0],hedef:[2,3],engel:[[1,4],[6,4]],cozum:['R','R','D','D','D','L'],
+  gorev:'Robotu bayrağa götür: 2 sağ, 3 aşağı, 1 sol.',
+  result:'2 sağ, 3 aşağı, 1 sol: robot bayrağa ulaştı. Mekaniği öğrendin.'},
+ {kind:'kod',prompt:'Aynı yolun dikey simetriğini sen kur.',en:8,boy:6,eksen:'dikey',denetim:'simetri',
+  baslangic:[6,0],refBaslangic:[1,0],referansProgram:['R','R','D','D','D','L'],hedef:[5,3],engel:[[1,4],[6,4]],
+  gorev:'Sağ ve sol komutlarını eksene göre çevir.',
+  result:'Sağ ↔ sol dönüştü, aşağı aynı kaldı: 2 sol, 3 aşağı, 1 sağ. İki rota eksende katlanınca çakıştı.'},
+ {kind:'kod',prompt:'Bu kez eksen yatay: aşağı ile yukarı yer değiştirir.',en:8,boy:6,eksen:'yatay',denetim:'simetri',
+  baslangic:[0,4],refBaslangic:[0,1],referansProgram:['D','R','R','R','R','U','U'],hedef:[4,5],engel:[[6,1],[6,4]],
+  gorev:'Yukarı ve aşağı komutlarını çevir; sağ aynı kalır.',
+  result:'1 aşağı yerine 1 yukarı, 2 yukarı yerine 2 aşağı: yatay eksende sütunlar aynı kalır, satırlar yansır.'}
+]};
+
+GAMES.w38={title:'Simetri Mimarı',theme:'factory',finish:'Referans rotayı inceleyip komutlarını eksene göre kendin dönüştürdün; başarı yalnız hedefe değil bütün hücrelerin eşliğine bağlıydı.',rounds:[
+ {kind:'kod',prompt:'Soldaki turuncu rotanın dikey simetriğini kur.',en:8,boy:6,eksen:'dikey',denetim:'simetri',
+  baslangic:[6,0],refBaslangic:[1,0],referansProgram:['D','D','D','R','R'],hedef:[4,3],
+  gorev:'Referans rota turuncu, seninki yeşil olacak.',
+  result:'3 aşağı, 2 sağ → 3 aşağı, 2 sol. Aşağı komutu dikey eksende değişmez.'},
+ {kind:'kod',prompt:'Basamaklı rotanın yatay simetriğini yaz.',en:8,boy:6,eksen:'yatay',denetim:'simetri',
+  baslangic:[1,5],refBaslangic:[1,0],referansProgram:['R','D','R','D','R'],hedef:[4,3],
+  gorev:'Yatay eksende sağ komutu aynı kalır, aşağı yukarıya döner.',
+  result:'Sağ-aşağı basamakları, sağ-yukarı basamaklarına döndü; iki rota katlandığında üst üste geldi.'},
+ {kind:'kod',prompt:'Daha uzun rotanın simetriğini kur; bir hücre bile sapmamalı.',en:8,boy:6,eksen:'dikey',denetim:'simetri',
+  baslangic:[7,0],refBaslangic:[0,0],referansProgram:['D','R','R','D','R','D'],hedef:[4,3],
+  gorev:'Her adımda referansın eş hücresine bak.',
+  result:'Altı komutun her biri eksene göre çevrildi; hedefe ulaşmak tek başına yetmedi, bütün hücreler eşleşti.'}
+]};
+
+GAMES.w39={title:'Kalite Kontrol Bandı',theme:'factory',finish:'Her kararını gerçek katlama ile denetledin; simetri yargısı yazı tipine değil şeklin kendisine dayandı.',rounds:[
+ {kind:'harf',prompt:'Kartı dikey eksende katla ve karar ver.',noPenalty:false,
+  items:[
+   {ad:'A harfi',eksen:'dikey',renk:'#3f87b7',p:[[50,8],[85,90],[68,90],[61,70],[39,70],[32,90],[15,90]]},
+   {ad:'H harfi',eksen:'dikey',renk:'#3f87b7',p:[[20,10],[35,10],[35,42],[65,42],[65,10],[80,10],[80,90],[65,90],[65,58],[35,58],[35,90],[20,90]]},
+   {ad:'T harfi',eksen:'dikey',renk:'#3f87b7',p:[[10,10],[90,10],[90,26],[58,26],[58,90],[42,90],[42,26],[10,26]]}],
+  result:'A, H ve T bu çizimlerde dikey eksende katlandığında iki yarı tam çakıştı.'},
+ {kind:'harf',prompt:'Bu harflerde dikkatli ol.',
+  items:[
+   {ad:'L harfi',eksen:'dikey',renk:'#e08b2a',p:[[25,10],[41,10],[41,74],[80,74],[80,90],[25,90]]},
+   {ad:'P harfi',eksen:'dikey',renk:'#e08b2a',p:[[25,10],[70,10],[80,24],[80,44],[70,58],[41,58],[41,90],[25,90]]},
+   {ad:'S motifi',eksen:'dikey',renk:'#e08b2a',p:[[78,18],[40,18],[40,44],[78,44],[78,86],[22,86],[22,70],[60,70],[60,58],[22,58],[22,18],[40,10]]}],
+  result:'L, P ve S dikey eksende katlandığında yarılar taştı: bu eksende simetrik değiller.'},
+ {kind:'harf',prompt:'Şimdi motifler ve eksen yönü değişiyor.',
+  items:[
+   {ad:'Kelebek',eksen:'dikey',renk:'#e0a3d0',p:[[50,12],[26,18],[12,42],[24,58],[14,80],[38,88],[50,74],[62,88],[86,80],[76,58],[88,42],[74,18]]},
+   {ad:'Vazo',eksen:'dikey',renk:'#8fc47a',p:[[34,10],[66,10],[60,26],[80,50],[74,86],[26,86],[20,50],[40,26]]},
+   {ad:'Ok (yatay eksen)',eksen:'yatay',renk:'#f2c45b',p:[[10,38],[58,38],[58,20],[92,50],[58,80],[58,62],[10,62]]}],
+  result:'Kelebek ve vazo dikey eksende, ok yatay eksende simetrik. Eksenin yönü kararı değiştiriyor.'}
+]};
+
+GAMES.w40={title:'Mozaik Ustası',theme:'market',finish:'Her kaynak hücreyi hem dikey hem yatay eksende yansıtıp dört bölgeyi eşitledin.',rounds:[
+ {kind:'dortlu',prompt:'Her kaynak hücrenin üç eşini bul ve boya.',en:6,boy:6,
+  kaynak:[{x:1,y:1,renk:'k'},{x:2,y:0,renk:'m'},{x:0,y:2,renk:'s'},{x:2,y:2,renk:'y'}],
+  result:'Her kaynak hücrenin dikey, yatay ve iki eksene göre üç eşi var; dört bölge aynı deseni taşıyor.'},
+ {kind:'dortlu',prompt:'Daha geniş ızgarada aynı işi yap.',en:8,boy:6,
+  kaynak:[{x:0,y:0,renk:'k'},{x:2,y:1,renk:'m'},{x:3,y:2,renk:'s'},{x:1,y:2,renk:'y'},{x:3,y:0,renk:'k'}],
+  result:'8 × 6 ızgarada da her hücrenin üç eşi tam koordinatta oturdu.'},
+ {kind:'dortlu',prompt:'Bu desende hatalı hücreler var; bul ve düzelt.',en:6,boy:6,
+  kaynak:[{x:1,y:0,renk:'m'},{x:2,y:1,renk:'k'},{x:0,y:1,renk:'y'},{x:2,y:2,renk:'s'}],
+  hazir:[{x:4,y:0,renk:'m'},{x:1,y:5,renk:'k'},{x:4,y:5,renk:'m'},{x:3,y:1,renk:'s'},{x:5,y:1,renk:'y'},{x:0,y:4,renk:'y'},{x:3,y:2,renk:'s'},{x:2,y:3,renk:'s'}],
+  result:'Hatalı hücreler kaynağın rengiyle karşılaştırılarak bulundu; dört bölge yeniden eşleşti.'}
+]};
+
+/* ---- Tema 6: veri (w41–w44) ---- */
+GAMES.w41={title:'Dedektif Bürosu',theme:'class',finish:'Soruların hedef grubunu ve değişkenini belirleyip araştırma sorusu ile tek cevaplı bilgi sorusunu ayırdın.',rounds:[
+ {kind:'arastirma',prompt:'Kartı incele: kimlere sorulacak, ne ölçülecek?',
+  items:[
+   {soru:'Sınıfımızdaki öğrencilerin haftalık okuduğu kitap sayısı nedir?',tur:'arastirma',
+    grup:[{label:'Sınıfımızdaki öğrenciler',correct:true},{label:'Yalnız öğretmen'},{label:'Hedef grup yok'}],
+    degisken:[{label:'Haftalık okunan kitap sayısı',correct:true},{label:'Öğrencinin adı'},{label:'Değişken yok'}],
+    gerekce:'Farklı öğrenciler farklı sayılar söyler; cevaplar bir dağılım oluşturur.'},
+   {soru:'Okulumuzun bahçesinde kaç ağaç var?',tur:'sabit',
+    grup:[{label:'Hedef grup yok, tek sayım var',correct:true},{label:'Bütün öğrenciler'},{label:'Öğretmenler'}],
+    degisken:[{label:'Değişken yok, tek sabit sayı',correct:true},{label:'Ağaç sevgisi'},{label:'Öğrenci sayısı'}],
+    gerekce:'Bahçedeki ağaç sayısı kim sayarsa saysın aynıdır; dağılım oluşmaz.'}],
+  result:'Araştırma sorusunun bir hedef grubu ve kişiden kişiye değişen bir değişkeni olur.'},
+ {kind:'arastirma',prompt:'Bu iki kartı da sınıflandır.',
+  items:[
+   {soru:'Bir hafta kaç gündür?',tur:'sabit',
+    grup:[{label:'Hedef grup yok',correct:true},{label:'3/A öğrencileri'},{label:'Takvim yapanlar'}],
+    degisken:[{label:'Değişken yok, tanım gereği sabit',correct:true},{label:'Günlerin adı'},{label:'Hafta sonu planı'}],
+    gerekce:'Bir haftanın 7 gün olması tanım gereği sabittir; herkes için aynıdır.'},
+   {soru:'3/A öğrencilerinin en sevdiği meyve hangisidir?',tur:'arastirma',
+    grup:[{label:'3/A öğrencileri',correct:true},{label:'Manavlar'},{label:'Hedef grup yok'}],
+    degisken:[{label:'En sevilen meyve',correct:true},{label:'Meyvenin fiyatı'},{label:'Değişken yok'}],
+    gerekce:'Her öğrenci farklı meyve söyleyebilir; yanıtlar sayılıp dağılıma dönüşür.'}],
+  result:'Cevabı herkes için aynı olan sorular araştırma sorusu değildir.'},
+ {kind:'arastirma',prompt:'Şimdi kendi araştırma sorunu kur.',
+  items:[],
+  kurgu:{konu:['Ulaşım','Hava durumu','Renkler'],grup:['3/A','Manavlar','Otobüs şoförleri'],
+   degisken:['okula geliş biçimi','en sevdiği bulut','otobüs plakası'],
+   dogru:{konu:0,grup:0,deg:0}},
+  result:'Konu ulaşım, grup 3/A, değişken okula geliş biçimi: "3/A öğrencilerinin okula geliş biçimi nedir?" iyi bir araştırma sorusudur.'}
+]};
+
+GAMES.w42={title:'Sınıf Anketi',theme:'class',finish:'Yanıtları tek tek çeteleye işledin, beşli grupları oluşturdun ve toplamı katılımcı sayısıyla karşılaştırdın.',rounds:[
+ {kind:'anket',prompt:'Yanıtları doğru sütuna çeteleyle işle.',noPenalty:true,
+  plan:'Soru: 3/A öğrencileri haftada kaç kitap okuyor? · Grup: 10 öğrenci · Yöntem: tek tek sorup çetele tutmak',
+  sutun:[{ad:'0 kitap'},{ad:'1 kitap'},{ad:'2+ kitap'}],
+  yanitlar:[1,2,0,1,1,2,1,0,2,1],
+  result:'10 yanıtın hepsi işlendi: 0 kitap 2, 1 kitap 5, 2+ kitap 3. Toplam çetele sayısı katılımcı sayısına eşit.'},
+ {kind:'anket',prompt:'Bu kez 12 yanıt var; beşli gruplara dikkat et.',noPenalty:true,
+  plan:'Soru: 3/A öğrencilerinin en sevdiği meyve hangisidir? · Grup: 12 öğrenci · Yöntem: sınıfta oylama',
+  sutun:[{ad:'Elma'},{ad:'Muz'},{ad:'Çilek'}],
+  yanitlar:[0,1,0,2,0,0,1,2,0,1,2,0],
+  result:'Elma 6, muz 3, çilek 3. Elma sütununda bir beşli grup ve bir tek çizgi oluştu.'},
+ {kind:'anket',prompt:'Yanlış işlenen çeteleyi bulup geri al.',noPenalty:true,
+  plan:'Soru: 3/A öğrencileri okula nasıl geliyor? · Grup: 9 öğrenci · Yöntem: gözlem defteri',
+  sutun:[{ad:'Yürüyerek'},{ad:'Servisle'},{ad:'Otobüsle'}],
+  yanitlar:[0,1,0,0,2,1,0,1,2],
+  result:'Yürüyerek 4, servisle 3, otobüsle 2; toplam 9. Yanlış işaret geri alınınca tablo tutarlı oldu.'}
+]};
+
+GAMES.w43={title:'Sıklık Tablosu Fabrikası',theme:'factory',finish:'Beşli grupları çerçeveleyip kalan çizgileri sayarak her çeteleyi doğru sıklık sayısına dönüştürdün.',rounds:[
+ {kind:'siklik',prompt:'Her çeteleyi doğru sıklık kartıyla eşle.',
+  satir:[{ad:'Kırmızı',n:7},{ad:'Mavi',n:3},{ad:'Yeşil',n:5},{ad:'Sarı',n:6}],
+  result:'7 = bir beşli grup + 2 çizgi; 5 = tam bir grup; 6 = bir grup + 1. Toplam 21 veri.'},
+ {kind:'siklik',prompt:'Bu tabloda gruplar ve kalanlar karışık.',
+  satir:[{ad:'Yürüyerek',n:9},{ad:'Servis',n:5},{ad:'Otobüs',n:6},{ad:'Bisiklet',n:2}],
+  result:'9 = bir grup + 4; 5 = bir grup; 6 = bir grup + 1; 2 = iki çizgi. Toplam 22 veri.'},
+ {kind:'siklik',prompt:'Birden çok beşli grup olan satırlara dikkat et.',
+  satir:[{ad:'Futbol',n:12},{ad:'Basketbol',n:10},{ad:'Yüzme',n:9},{ad:'Voleybol',n:4}],
+  result:'12 = iki grup + 2; 10 = iki tam grup; 9 = bir grup + 4. Toplam 35 veri.'}
+]};
+
+GAMES.w44={title:'Nokta Grafiği Laboratuvarı',theme:'lab',finish:'Çeteleden okuduğun sıklıkları eş büyüklükte noktalara çevirdin ve grafiği yorumladın.',rounds:[
+ {kind:'nokta',prompt:'Çeteledeki sıklıklar kadar nokta koy.',birim:'kişi',
+  satir:[{ad:'Elma',n:4},{ad:'Muz',n:6},{ad:'Çilek',n:3}],
+  sorular:[{metin:'En çok sevilen meyve hangisi?',secenekler:[{label:'Muz',correct:true},{label:'Elma'},{label:'Çilek'}]},
+   {metin:'Toplam kaç kişi yanıt verdi?',secenekler:[{label:'13',correct:true},{label:'10'},{label:'12'}]}],
+  result:'4 + 6 + 3 = 13 nokta, 13 kişi. Her nokta tam bir kişiyi gösteriyor.'},
+ {kind:'nokta',prompt:'Yeni veri setini grafiğe dök.',birim:'öğrenci',
+  satir:[{ad:'Yürüyerek',n:5},{ad:'Servis',n:2},{ad:'Otobüs',n:7}],
+  sorular:[{metin:'En az kullanılan yol hangisi?',secenekler:[{label:'Servis',correct:true},{label:'Otobüs'},{label:'Yürüyerek'}]},
+   {metin:'Otobüs ile servis arasındaki fark kaç öğrenci?',secenekler:[{label:'5',correct:true},{label:'2'},{label:'7'}]}],
+  result:'5 + 2 + 7 = 14 öğrenci. Otobüs ile servis arasındaki fark 7 − 2 = 5.'},
+ {kind:'nokta',prompt:'Hatalı grafiği düzelt: fazla ve eksik noktalar var.',birim:'kişi',
+  satir:[{ad:'Kedi',n:6},{ad:'Köpek',n:4},{ad:'Kuş',n:2}],hazir:[3,4,5],
+  sorular:[{metin:'Düzelttikten sonra en çok sevilen hayvan hangisi?',secenekler:[{label:'Kedi',correct:true},{label:'Köpek'},{label:'Kuş'}]},
+   {metin:'Toplam kaç kişi?',secenekler:[{label:'12',correct:true},{label:'11'},{label:'14'}]}],
+  result:'Kedi 6, köpek 4, kuş 2: toplam 12. Fazla noktalar geri alınıp eksikler tamamlandı.'}
+]};
+
+/* ---- Tema 6: veri yorumlama (w45–w48) ---- */
+GAMES.w45={title:'Grafik Terazisi',theme:'market',finish:'Farkı grafikte eşleşmeyen noktalardan buldun, toplamı ise ayrı bir strateji ile hesapladın.',rounds:[
+ {kind:'terazig',prompt:'Grafikten farkı bul ve teraziyi dengele.',
+  satir:[{ad:'Çilek',n:9},{ad:'Muz',n:5}],
+  secenekler:[{label:'9 − 5 = 4',correct:true},{label:'9 + 5 = 14'},{label:'5 − 9 = 4'}],
+  result:'Çilek sütununda muzla eşleşmeyen 4 nokta kaldı: 9 − 5 = 4.'},
+ {kind:'terazig',prompt:'Bu kez sütunlar birbirine yakın.',
+  satir:[{ad:'Çilek',n:9},{ad:'Elma',n:8}],
+  secenekler:[{label:'9 − 8 = 1',correct:true},{label:'9 + 8 = 17'},{label:'8 − 9 = 1'}],
+  result:'Yakın sütunlarda bile eşleşmeyen nokta sayısı farkı verir: 9 − 8 = 1.'},
+ {kind:'terazig',prompt:'Şimdi fark değil TOPLAM soruluyor.',mod:'toplam',
+  satir:[{ad:'Elma',n:8},{ad:'Muz',n:5},{ad:'Çilek',n:9}],
+  secenekler:[{label:'22',correct:true},{label:'17'},{label:'14'}],
+  result:'8 + 5 + 9 = 22 katılımcı. Toplamda denge değil, bütün sütunları toplama stratejisi kullanılır.'}
+]};
+
+GAMES.w46={title:'Zaman ve Mekân Kapsülü',theme:'class',finish:'İki dağılımı aynı ölçekte yan yana görüp grup, zaman ve soru değişiminin sonucu nasıl etkilediğini ayırt ettin.',rounds:[
+ {kind:'kapsul',prompt:'3/B verisini topla ve 3/A ile karşılaştır.',noPenalty:true,
+  soru:'Soru: En sevdiğin dondurma hangisi? · Seçenekler her iki sınıfta da aynı',
+  solAd:'3/A (geçen hafta)',sagAd:'3/B (şimdi)',
+  sol:[{ad:'Çikolata',n:6},{ad:'Vanilya',n:3},{ad:'Çilek',n:2}],
+  satir:[{ad:'Çikolata'},{ad:'Vanilya'},{ad:'Çilek'}],
+  yanitlar:[1,2,1,0,1,2,1,0],
+  soruMetni:'İki sınıfın sonucu neden farklı çıktı?',
+  secenekler:[{label:'Grup değişti: farklı sınıf farklı sonuç verebilir',correct:true},
+   {label:'Soru yanlış sorulduğu için'},{label:'3/B öğrencileri sayamadığı için'}],
+  result:'Soru ve seçenekler aynı, değişen tek şey hedef grup. Farklı grup farklı sonuç verebilir.'},
+ {kind:'kapsul',prompt:'Aynı sınıfa dönem sonunda tekrar soruldu.',noPenalty:true,
+  soru:'Soru: En sevdiğin dondurma hangisi? · Aynı sınıf, farklı zaman',
+  solAd:'3/B (dönem başı)',sagAd:'3/B (dönem sonu)',
+  sol:[{ad:'Çikolata',n:2},{ad:'Vanilya',n:4},{ad:'Çilek',n:2}],
+  satir:[{ad:'Çikolata'},{ad:'Vanilya'},{ad:'Çilek'}],
+  yanitlar:[0,0,2,0,1,2,0,2],
+  soruMetni:'Aynı sınıfta sonuç neden değişti?',
+  secenekler:[{label:'Zaman değişti: tercihler zamanla değişebilir',correct:true},
+   {label:'Sonuçlar her zaman kesin aynı kalır'},{label:'Sınıf mevcudu değiştiği için kesin böyle olur'}],
+  result:'Grup aynı, soru aynı; değişen zaman. Tercihler zamanla değişebilir — kesin değişir denemez.'},
+ {kind:'kapsul',prompt:'Bu kez soru da değişmiş; dikkat.',noPenalty:true,
+  soru:'Sol: "En sevdiğin dondurma?" · Sağ: "En sevdiğin meyve?" · Sorular FARKLI',
+  solAd:'3/B dondurma',sagAd:'3/B meyve',
+  sol:[{ad:'Çikolata',n:5},{ad:'Vanilya',n:3},{ad:'Çilek',n:2}],
+  satir:[{ad:'Elma'},{ad:'Muz'},{ad:'Çilek'}],
+  yanitlar:[0,2,0,1,0,2,1,0],
+  soruMetni:'Bu iki sonuç doğrudan karşılaştırılabilir mi?',
+  secenekler:[{label:'Hayır: sorular farklı olduğu için karşılaştırılamaz',correct:true},
+   {label:'Evet, ikisinde de çilek var'},{label:'Evet, aynı sınıfa sorulmuş'}],
+  result:'Karşılaştırma için soru ve seçeneklerin aynı kalması gerekir; yalnız grup ya da zaman değişmelidir.'}
+]};
+
+GAMES.w47={title:'Çoklu Nokta Şifresi',theme:'space',finish:'Her turda anahtarı yeniden okudun; nokta sayısı ile birim değerini çarparak gerçek toplamı buldun.',rounds:[
+ {kind:'olcek',prompt:'Grafiği oku ve sayıyı gir.',olcek:5,birim:'yıldız',
+  satir:[{ad:'Ali',n:4}],soru:'Ali kaç yıldız topladı?',cevap:20,
+  result:'4 nokta × 5 yıldız = 20 yıldız. Anahtar olmadan nokta sayısı tek başına yeterli değil.'},
+ {kind:'olcek',prompt:'Anahtar değişti; yeniden oku.',olcek:2,birim:'kitap',
+  satir:[{ad:'Deniz',n:6}],soru:'Deniz kaç kitap okudu?',cevap:12,
+  result:'6 nokta × 2 kitap = 12 kitap. Aynı nokta sayısı farklı anahtarla farklı sonuç verir.'},
+ {kind:'olcek',prompt:'İki kategori var: farkı gir.',olcek:10,birim:'adım',
+  satir:[{ad:'Cumartesi',n:5},{ad:'Pazar',n:3}],soru:'Cumartesi ile pazar arasındaki fark kaç adım?',cevap:20,
+  result:'Nokta farkı 5 − 3 = 2; her nokta 10 adım olduğundan fark 2 × 10 = 20 adım.'}
+]};
+
+GAMES.w48={title:'Veri Mimarı',theme:'class',finish:'Soruyu seçtin, veriyi topladın, çeteleyi sıklığa ve grafiğe çevirdin ve sonucu yorumladın: araştırmanın bütün adımlarını sen yaptın.',rounds:[
+ {kind:'proje',prompt:'Hazır veriyle bütün dönüşümü öğren.',
+  soru:'Soru: 3/A öğrencileri haftada kaç kitap okuyor? · Grup: 10 öğrenci',
+  satir:[{ad:'0 kitap'},{ad:'1 kitap'},{ad:'2+ kitap'}],
+  yanitlar:[1,1,0,2,1,1,2,0,1,2],
+  yorumlar:[{label:'En çok "1 kitap" yanıtı verildi',correct:true},
+   {label:'Toplam 10 öğrenci yanıt verdi',correct:true},
+   {label:'Bütün çocuklar kesinlikle 1 kitap okur'},
+   {label:'En az yanıt "2+ kitap" oldu'}],
+  result:'Yanıt → çetele → sıklık → grafik → yorum: beş adım da birbiriyle tutarlı çıktı.'},
+ {kind:'proje',prompt:'Kendi sorunu seç ve süreci baştan yürüt.',
+  sorular:[
+   {metin:'3/A öğrencilerinin sevdiği oyun türü nedir?',uygun:true,
+    satir:[{ad:'Zeka'},{ad:'Hareket'},{ad:'Kelime'}],
+    yanitlar:[1,1,0,2,1,0,1,1,2,0,1,2]},
+   {metin:'Bir yılda kaç ay vardır?',uygun:false},
+   {metin:'Okulun adı nedir?',uygun:false}],
+  yorumlar:[{label:'En çok sevilen tür "Hareket" oldu',correct:true},
+   {label:'Toplam 12 öğrenci yanıt verdi',correct:true},
+   {label:'Bütün 3. sınıflar kesinlikle aynı sonucu verir'},
+   {label:'Hiç kimse zeka oyunu sevmiyor'}],
+  result:'Araştırma sorusunun hedef grubu ve değişkeni vardı; 12 yanıt boyunca toplam her adımda korundu.'},
+ {kind:'proje',prompt:'Son proje: soruyu seç, veriyi topla, grafiği kur, yorumla.',
+  sorular:[
+   {metin:'3/A öğrencileri okula nasıl geliyor?',uygun:true,
+    satir:[{ad:'Yürüyerek'},{ad:'Servis'},{ad:'Otobüs'}],
+    yanitlar:[0,2,0,1,0,0,2,1,0,2,1,0,0,2]},
+   {metin:'Bir hafta kaç gündür?',uygun:false},
+   {metin:'Bugün günlerden ne?',uygun:false}],
+  yorumlar:[{label:'En çok kullanılan yol yürümek',correct:true},
+   {label:'Yürüyenler ile servise binenler arasında 4 kişi fark var',correct:true},
+   {label:'Sonuç bütün okullarda kesinlikle aynıdır'},
+   {label:'Hiç kimse otobüs kullanmıyor'}],
+  result:'Proje kartı: soru, hedef grup, 14 yanıt, çetele, sıklık, grafik ve iki yorum. Sonuç bu grup ve bu zaman için geçerli.'}
+]};
+
 
 game=GAMES[GAME_ID];
-if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><div class="big">🧮</div><h2>3. Sınıf Matematik</h2><p style="font-size:13px">Denemek istediğin oyuna dokun.</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px">${Object.keys(GAMES).map(k=>`<button class="action" style="font-size:13px;padding:8px 6px;min-height:58px;line-height:1.15;display:flex;align-items:center;justify-content:center;background:#eaf2fb;border-color:#cfe0f2" onclick="location.hash='oyun=${k}';location.reload()">${esc(GAMES[k].title)}</button>`).join('')}</div></div></div>`}
+if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><div class="big">🧮</div><h2>3. Sınıf Matematik</h2><p style="font-size:13px">48 oyun · denemek istediğine dokun</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;max-height:64vh;overflow:auto">${Object.keys(GAMES).map(k=>`<button class="action" style="font-size:12px;padding:7px 5px;min-height:52px;line-height:1.12;display:flex;align-items:center;justify-content:center;background:#eaf2fb;border-color:#cfe0f2" onclick="location.hash='oyun=${k}';location.reload()">${esc(GAMES[k].title)}</button>`).join('')}</div></div></div>`}
 else if(game.rounds.length!==3){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Tur verisi eksik</h2><p>${esc(game.title)}</p></div></div>`}
 else render();
 window.__MATH3_TEST__={GAMES,solve(){good('Test çözümü')},round:()=>round(),state:()=>state};

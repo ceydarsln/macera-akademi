@@ -69,7 +69,8 @@ async function bekleyenSec(W, sec, sure){
    dokunuş yok sayılıyor. Tıklamadan önce geçişin bitmesini bekle. */
 async function gecisBekle(W){
   await kosul(() => {
-    try { return W.eval('String(!(typeof state !== "undefined" && state && state.gecis))') === 'true'; }
+    try { return W.eval('String(!(typeof state !== "undefined" && state && state.gecis) && ' +
+                        '!(typeof locked !== "undefined" && locked))') === 'true'; }
     catch (e) { return true; }
   }, 15000, 'aşama geçişi');
 }
@@ -584,7 +585,14 @@ async function tur1(W){
     case 'choose': case 'pattern': case 'estimate':
       await dogruyaBas(W, r.choices || []); break;
     case 'stages':
-      for (const asama of r.stages){ await dogruyaBas(W, asama.choices); await bekle(760); }
+      /* Motorun kendi 650 ms geçişi gizli sekmede kısılıyor; sabit bekleme
+         yerine aşama sayacının ilerlemesini bekle. */
+      for (let si = 0; si < r.stages.length; si++){
+        await kosul(() => {
+          try { return Number(W.eval('String(state.stage||0)')) === si; } catch (e) { return false; }
+        }, 15000, 'aşama ' + (si + 1));
+        await dogruyaBas(W, r.stages[si].choices);
+      }
       break;
     case 'drag':
       for (const p of (r.pieces||[]).filter(x=>x.target))
