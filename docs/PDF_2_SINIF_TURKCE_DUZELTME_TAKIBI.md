@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 60/90 oyun uygulandı.**
+**Durum: 68/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -87,3 +87,11 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u58 | Beden Dili Orkestrası | konuşma | Robotun tam bedeni görünüyor; uygun ve aşırı beden dili karşılaştırılıyor. 3. turda cümle uygun jest ve mimikle canlandırılıyor. | Uygulamada |
 | u59 | Gerçeklik Dedektörü | dinleme | Cümleler yalnız sesli veriliyor; gerçek / mümkün / hayal ürünü üç grupta sınıflandırılıyor. 3. turda çocuk bir gerçek ve bir hayal cümlesi yazıp farkı açıklıyor. | Uygulamada |
 | u60 | Yetenek Aynası | okuma | Venn aynasında iki metnin ortak ve özgü mesajları ayrılıyor; konu benzerliği ile ileti benzerliği ayrı örnekle karşılaştırılıyor. 3. turda ortak ileti ve bir fark yazılıyor. | Uygulamada |
+| u61 | Dijital Mektup Arkadaşım | yazma | Hitap, gövde ve kapanış gerçek yazı alanları; arkadaş ile öğretmen üslubu ayrı turda. 3. turda mektup baştan sona çocuk tarafından yazılıyor (gönderme yok, ön izleme). | Uygulamada |
+| u62 | Maceranı Seç Kütüphanesi | okuma | İlgi kartları ve kapaklar birlikte; iki uygun metinden AMACA uyanı seçiliyor. 3. turda çocuk ilgisini ve seçim gerekçesini yazıyor. | Uygulamada |
+| u63 | Film Şeridi | yazma | Kareler sabit; 2. turda geri dönüş karesi sıraya girmiyor ve nedeni söyleniyor. 3. turda üç cümlelik özet yazılıyor. | Uygulamada |
+| u64 | Kürsü Heyecanı | konuşma | Roket sahnesi kaldırıldı; not kartları giriş-gelişme-sonuç panosuna yerleşiyor, ana fikir ile örnek ayrılıyor. 3. turda çocuk kendi planıyla konuşuyor. | Uygulamada |
+| u65 | Yazarın Çalışma Masası | yazma | Masa, ışık, araç ve düzen gerçek nesnelerle; fiziksel düzen ile planlama davranışı ayrılıyor. 3. turda üç maddelik plan yazılıyor. | Uygulamada |
+| u66 | Ses Dedektifi | dinleme | İki kayıt sırayla dinleniyor, seçenekler dinlemeden önce görünmüyor (tarayıcıda doğrulandı). Ortak konu ile ortak mesaj ayrılıyor; 3. turda ortak ileti sesli söyleniyor. | Uygulamada |
+| u67 | Yetenek Galerisi | okuma | Kapaklar etiketsiz; başlık ancak görsel kanıt işaretlenince seçiliyor. 2. turda güçlü/zayıf kanıt karşılaştırılıyor; 3. turda yeni başlığa kapak ve tanıtım yazılıyor. | Uygulamada |
+| u68 | Olay Baloncukları | dinleme | Hikâye yalnız sesli; yazılı metin ilk turda görünmüyor. Geçen olay, çıkarılabilen olay ve hiç geçmeyen olay ayrılıyor; 3. turda üç olay sırayla anlatılıyor. | Uygulamada |

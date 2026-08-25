@@ -2061,6 +2061,195 @@ GAMES.u60={title:'Yetenek Aynası',theme:'class',finish:'İki metnin ortak ileti
   result:'Ortak iletiyi ve farkı ayrı cümlelerle yazdın.'}
 ]};
 
+/* ---- Tema 5 devamı · Yeteneklerimizi Tanıyoruz (u61–u68) ---- */
+const S7={
+ dijital:'<div class="row"><span style="font-size:28px">💻</span><span style="font-size:26px">✉️</span></div><div class="caption">Dijital mektup ekranı</div>',
+ raf2:'<div class="row"><span style="font-size:26px">📚</span><span style="font-size:24px">🏷️</span><span style="font-size:26px">🧒</span></div><div class="caption">Kütüphane rafı ve ilgi kartları</div>',
+ film:'<div class="row"><span style="font-size:28px">🎞️</span><span style="font-size:26px">🎬</span></div><div class="caption">Film şeridi</div>',
+ kursu:'<div class="row"><span style="font-size:28px">🎙️</span><span style="font-size:26px">📋</span></div><div class="caption">Kürsü ve not panosu</div>',
+ masa:'<div class="row"><span style="font-size:26px">🖊️</span><span style="font-size:26px">🗒️</span><span style="font-size:24px">💡</span></div><div class="caption">Yazarın çalışma masası</div>',
+ kaset:'<div class="row"><span style="font-size:28px">📼</span><span style="font-size:26px">🎧</span></div><div class="caption">İki ses kaseti</div>',
+ galeri:'<div class="row"><span style="font-size:26px">🖼️</span><span style="font-size:26px">🖼️</span></div><div class="caption">Yetenek galerisi</div>',
+ balon:'<div class="row"><span style="font-size:28px">💭</span><span style="font-size:26px">🎧</span></div><div class="caption">Olay baloncukları</div>'
+};
+
+GAMES.u61={title:'Dijital Mektup Arkadaşım',theme:'room',finish:'Hitap, gövde ve kapanışı ayırdın, üslubu alıcıya göre değiştirdin ve mektubu baştan sona kendin yazdın.',rounds:[
+ {kind:'esle',prompt:'Her parçayı doğru alana koy.',sahne:S7.dijital,
+  gorev:'Mektubun üç bölümü var: hitap, gövde ve kapanış.',
+  etiketler:[{t:'Sevgili Deniz,'},{t:'Bu hafta okulda bahar şenliği vardı.'},{t:'Sevgiler, Ela'}],
+  yuvalar:[{ad:'Hitap',dogru:0},{ad:'Gövde (asıl haber)',dogru:1},{ad:'Kapanış',dogru:2}],
+  result:'Mektup hitapla başlar, gövdede haber verilir, kapanışla biter.'},
+ {kind:'esle',prompt:'Alıcı değişince üslup da değişir.',sahne:S7.dijital,
+  gorev:'Aynı mektup, iki farklı alıcı.',
+  etiketler:[{t:'Selam Deniz, nasılsın?'},{t:'Sayın Öğretmenim, iyi günler.'}],
+  yuvalar:[{ad:'Arkadaşına yazarken',dogru:0},
+   {ad:'Öğretmenine yazarken',dogru:1,ipucu:'Öğretmene "siz" diye hitap edilir ve resmî bir dil kullanılır.'}],
+  result:'Arkadaşa samimi, öğretmene resmî bir dille yazılır.'},
+ {kind:'yaz',prompt:'Kısa mektubunu baştan sona yaz.',sahne:S7.dijital,
+  gorev:'Üç satırlık bir mektup yaz: birinci satır hitap, ikinci satır haber, üçüncü satır kapanış. (Gönderilmiyor, yalnız ön izleme.)',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Sevgili Deniz,\nBu hafta okulumuzda bahar şenliği vardı, çok eğlendik.\nSevgiler, Ela',
+  ornekCevap:'Sevgili Deniz,\nBu hafta okulumuzda bahar şenliği vardı, çok eğlendik.\nSevgiler, Ela',
+  result:'Hitap, gövde ve kapanışı olan kısa bir mektup yazdın.'}
+]};
+
+GAMES.u62={title:'Maceranı Seç Kütüphanesi',theme:'room',finish:'Metni ilgi alanına ve amacına göre seçtin ve gerekçeni yazdın.',rounds:[
+ {kind:'esle',prompt:'Her çocuğa ilgisine uygun kitabı ver.',sahne:S7.raf2,
+  gorev:'İlgi kartlarını oku, uygun kitabı seç.',
+  etiketler:[{t:'Yıldızlar ve Gezegenler'},{t:'Futbol Tarihi'},{t:'Sulu Boya Teknikleri'}],
+  yuvalar:[{ad:'Uzayı merak eden çocuk',dogru:0},
+   {ad:'Maç izlemeyi seven çocuk',dogru:1},
+   {ad:'Resim yapmayı seven çocuk',dogru:2}],
+  result:'Okuyacağımız metni ilgimize göre seçmek okumayı keyifli kılar.'},
+ {kind:'kanit',prompt:'İki kitap da ilgisine uyuyor: amaca bak.',sahne:S7.raf2,
+  baslik:'Deniz’in durumu',
+  metin:[['Deniz hem hayvanları hem çizim yapmayı seviyor. ',{t:'Yarın fen dersinde kuşları anlatacak',dogru:true},'. Kütüphanede ',{t:'“Kuşların Yaşamı”'},' ve ',{t:'“Kuş Çizmeyi Öğren”'},' var.']],
+  gerekKanit:1,soru:'Deniz hangisini seçmeli?',
+  secenekler:[{label:'“Kuşların Yaşamı”',correct:true},
+   {label:'“Kuş Çizmeyi Öğren”',hint:'İşaretlediğin bölüm sunum yapacağını söylüyor, çizim yapacağını değil.'},
+   {label:'İkisi de aynı işi görür'}],
+  result:'İkisi de ilgisine uyuyor; amacı (sunum yapmak) hangisinin uygun olduğunu belirledi.'},
+ {kind:'yaz',prompt:'Kendi seçimini ve nedenini yaz.',sahne:S7.raf2,
+  gorev:'Alt alta iki satır yaz: birinci satırda ilgi alanını, ikinci satırda seçeceğin kitabı ve nedenini yaz.',
+  enAzSatir:2,buyukHarf:true,gerekli:['çünkü'],
+  ipucuMetin:'Ben hayvanları çok seviyorum.\n“Kuşların Yaşamı” kitabını seçerim çünkü kuşların nasıl yaşadığını öğrenmek istiyorum.',
+  ornekCevap:'Ben hayvanları çok seviyorum.\n“Kuşların Yaşamı” kitabını seçerim çünkü kuşların nasıl yaşadığını öğrenmek istiyorum.',
+  result:'Seçimini ilgi alanına ve amacına dayandırdın.'}
+]};
+
+GAMES.u63={title:'Film Şeridi',theme:'class',finish:'Olayları sıraya dizdin, geri dönüş karesini ayırdın ve filmi üç cümleyle özetledin.',rounds:[
+ {kind:'sira',prompt:'Kareleri oluş sırasına diz.',sahne:S7.film,
+  gorev:'Film şeridindeki kareler sabit; hangisi önce olmuş?',
+  kartlar:[{t:'Tohum toprakta filizlendi.'},{t:'Çiftçi tarlaya tohum ekti.'},{t:'Başaklar sararıp hasat edildi.'}],
+  dogru:[1,0,2],
+  ipucular:['Filizlenmeden önce ne yapılmalı?','Ekimden sonra ne olur?','En sonunda ne yapılır?'],
+  result:'Ekim, filizlenme, hasat: doğal sıra.'},
+ {kind:'sira',prompt:'Beş kare var; biri geri dönüş.',sahne:S7.film,
+  gorev:'Bir kare "o gün olanları hatırladı" diyor: bu geri dönüştür, sıraya girmez.',
+  kartlar:[{t:'Kapıyı açıp içeri girdi.'},{t:'Zil çaldı.'},{t:'Geçen yaz aynı evde kaldığını hatırladı.'},{t:'Çantasını yere bıraktı.'}],
+  dogru:[1,0,3],
+  kartIpucu:{2:'Bu kare geçmişi hatırlatıyor; olayların akışına girmez, geri dönüştür.'},
+  ipucular:['Kapı açılmadan önce ne olur?','Zilden sonra ne yapılır?','İçeri girince ne yapılır?'],
+  result:'Zil, kapı, çanta: gerçek sıra. Hatırlama karesi geri dönüştü, sıraya girmedi.'},
+ {kind:'yaz',prompt:'Filmi üç cümleyle özetle.',sahne:S7.film,
+  gorev:'Sıraladığın tohum filmini üç cümlelik özet olarak yaz. Her cümle alt satırda olsun.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Çiftçi ilkbaharda tarlaya tohum ekti.\nYağmurlardan sonra tohumlar filizlendi.\nYazın başaklar sararınca hasat yapıldı.',
+  ornekCevap:'Çiftçi ilkbaharda tarlaya tohum ekti.\nYağmurlardan sonra tohumlar filizlendi.\nYazın başaklar sararınca hasat yapıldı.',
+  result:'Olayları sırasıyla üç cümlelik özete dönüştürdün.'}
+]};
+
+GAMES.u64={title:'Kürsü Heyecanı',theme:'class',finish:'Konuşma planını giriş-gelişme-sonuç olarak kurdun ve kendi planınla konuştun.',rounds:[
+ {kind:'esle',prompt:'Not kartlarını panoya yerleştir.',sahne:S7.kursu,
+  gorev:'Konu: “En sevdiğim mevsim”.',
+  etiketler:[{t:'Bugün size en sevdiğim mevsimi anlatacağım.'},{t:'Kışın kar yağınca kardan adam yapıyoruz.'},{t:'Bu yüzden en sevdiğim mevsim kış.'}],
+  yuvalar:[{ad:'Giriş',dogru:0},{ad:'Gelişme (örnek)',dogru:1},{ad:'Sonuç',dogru:2}],
+  result:'Giriş konuyu tanıtır, gelişme örnek verir, sonuç toparlar.'},
+ {kind:'kanit',prompt:'Hangi cümle ana fikir, hangisi örnek?',sahne:S7.kursu,
+  baslik:'Konuşma notları',
+  metin:[[{t:'Kitap okumak insanı geliştirir',dogru:true},'. Örneğin ',{t:'geçen ay okuduğum kitapta yeni sözcükler öğrendim'},'. ',{t:'Kütüphanemiz ikinci katta'},'.']],
+  gerekKanit:1,soru:'Konuşmanın ana fikri hangisi?',
+  secenekler:[{label:'Kitap okumak insanı geliştirir',correct:true},
+   {label:'Kütüphanemiz ikinci katta',hint:'Bu bir ayrıntı; konuşmanın asıl savı değil.'},
+   {label:'Geçen ay bir kitap okudum'}],
+  result:'Ana fikir savdır; örnek onu destekler, ayrıntı ise konuşmanın konusu değildir.'},
+ {kind:'konus',prompt:'Kendi planınla bir dakika konuş.',sahne:S7.kursu,
+  gorev:'"En sevdiğim mevsim" konusunda giriş, bir örnek ve sonuç cümlesiyle konuş.',
+  ornek:'Örnek: “Bugün size en sevdiğim mevsimi anlatacağım. Kışın karda oynamayı çok seviyorum. Bu yüzden en sevdiğim mevsim kış.”',
+  olcutler:['Giriş cümlesiyle başladım.','En az bir örnek verdim.','Sonuç cümlesiyle bitirdim.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Planlı bir konuşma yaptın: giriş, örnek ve sonuç.'}
+]};
+
+GAMES.u65={title:'Yazarın Çalışma Masası',theme:'room',finish:'Fiziksel düzen ile planlama davranışını ayırdın ve kendi yazma ortamı planını yazdın.',rounds:[
+ {kind:'esle',prompt:'Masayı yazmaya hazırla.',sahne:S7.masa,
+  gorev:'Her eksiği doğru çözümle tamamla.',
+  etiketler:[{t:'masa lambasını aç'},{t:'kalem ve defteri hazırla'},{t:'gereksiz eşyaları kaldır'}],
+  yuvalar:[{ad:'Masa karanlık',dogru:0},{ad:'Yazma araçları yok',dogru:1},{ad:'Masa dağınık',dogru:2}],
+  result:'Işık, araç ve düzen: yazmaya başlamadan önce üçü de hazır olmalı.'},
+ {kind:'esle',prompt:'Fiziksel düzen mi, davranış mı?',sahne:S7.masa,
+  gorev:'Bazı hazırlıklar masayla, bazıları kafamızla ilgilidir.',
+  etiketler:[{t:'Fiziksel düzen'},{t:'Planlama ve odaklanma'}],
+  yuvalar:[{ad:'Masayı toplamak',dogru:0},
+   {ad:'Ne yazacağımı önce düşünmek',dogru:1,ipucu:'Bu hazırlık masada değil, zihinde yapılır.'}],
+  result:'Masayı düzenlemek fiziksel, ne yazacağını planlamak zihinsel hazırlıktır.'},
+ {kind:'yaz',prompt:'Kendi yazma ortamı planını yaz.',sahne:S7.masa,
+  gorev:'Alt alta üç madde yaz: masanı nasıl hazırlayacağını, hangi araçları koyacağını ve yazmadan önce ne düşüneceğini yaz.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Masamı toplayıp lambamı açacağım.\nDefterimi ve kalemimi hazır bulunduracağım.\nYazmadan önce ne anlatacağımı planlayacağım.',
+  ornekCevap:'Masamı toplayıp lambamı açacağım.\nDefterimi ve kalemimi hazır bulunduracağım.\nYazmadan önce ne anlatacağımı planlayacağım.',
+  result:'Hem masanı hem planını hazırladın.'}
+]};
+
+GAMES.u66={title:'Ses Dedektifi',theme:'class',finish:'İki kaydın ortak iletisini buldun ve ortak konu ile ortak mesajı ayırdın.',rounds:[
+ {kind:'dinle',prompt:'İki kaydı dinle, ortak iletiyi bul.',sahne:S7.kaset,
+  gorev:'İki kısa metin sırayla dinlenecek. Metinler ekranda yazılı değil.',
+  ses:'Birinci kayıt: Ali her gün on dakika kitap okudu, bir ayda kitabı bitirdi. İkinci kayıt: Nil her akşam beş dakika keman çalıştı, ay sonunda parçayı çalabildi.',
+  soru:'İki kaydın ortak iletisi nedir?',
+  secenekler:[{label:'Küçük ama düzenli çalışma sonuç getirir',correct:true},
+   {label:'Kitap okumak kemandan kolaydır',hint:'Bir kez daha dinle: ikisinde de düzenli tekrar var.'},
+   {label:'Herkes akşamları çalışmalıdır'}],
+  result:'Biri kitap, öbürü keman; ortak olan her gün düzenli çalışmanın sonuç getirmesi.'},
+ {kind:'esle',prompt:'Ortak konu mu, ortak mesaj mı?',sahne:S7.kaset,
+  gorev:'İki metin aynı konudan söz edebilir ama farklı mesaj verebilir.',
+  etiketler:[{t:'İkisi de müzikten söz ediyor'},{t:'İkisi de çalışmanın önemini anlatıyor'}],
+  yuvalar:[{ad:'Ortak konu',dogru:0},{ad:'Ortak mesaj (ileti)',dogru:1}],
+  result:'Konu neden söz edildiğidir; ileti ne demek istendiğidir.'},
+ {kind:'konus',prompt:'Ortak iletiyi kendi cümlenle söyle.',sahne:S7.kaset,
+  gorev:'İki kaydın ortak iletisini kendi cümlenle sesli söyle ve her iki kayıttan birer örnek ver.',
+  ornek:'Örnek: “İki metin de düzenli çalışmanın sonuç getirdiğini anlatıyor. Ali her gün okudu, Nil her akşam keman çalıştı.”',
+  olcutler:['Ortak iletiyi bir cümlede söyledim.','Birinci kayıttan örnek verdim.','İkinci kayıttan örnek verdim.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Ortak iletiyi iki kayıttan örneklerle destekleyerek söyledin.'}
+]};
+
+GAMES.u67={title:'Yetenek Galerisi',theme:'room',finish:'Başlığa uyan kapağı güçlü kanıtla seçtin ve kendi kapak fikrini yazdın.',rounds:[
+ {kind:'kanit',prompt:'Kapaktaki ipucunu işaretle, sonra başlığı seç.',sahne:S7.galeri,
+  baslik:'Etiketsiz kapak',
+  metin:[['Çerçevede ',{t:'ellerinde çamur olan bir çocuk',dogru:true},' ve ',{t:'tornada dönen bir vazo',dogru:true},' var. Arkada ',{t:'bir pencere'},' görünüyor.']],
+  gerekKanit:2,soru:'Bu kapak hangi başlığa ait olabilir?',
+  secenekler:[{label:'Çömlekçinin Elleri',correct:true},
+   {label:'Denizde Bir Gün',hint:'İşaretlediğin ipuçları çamur ve torna: bir el sanatı.'},
+   {label:'Uzay Yolculuğu'}],
+  result:'Çamur ve torna çömlekçiliği gösteriyor.'},
+ {kind:'kanit',prompt:'Aynı başlık, iki kapak: hangisi güçlü?',sahne:S7.galeri,
+  baslik:'Başlık: “Sahnenin Yıldızı”',
+  metin:[['Birinci kapakta ',{t:'sahnede ışık altında dans eden bir çocuk',dogru:true},' var.'],
+   ['İkinci kapakta ',{t:'evde televizyon izleyen bir çocuk'},' var.']],
+  gerekKanit:1,soru:'Hangi kapak başlığı daha güçlü destekliyor?',
+  secenekler:[{label:'Birinci kapak',correct:true},
+   {label:'İkinci kapak',hint:'Başlık sahneden söz ediyor; televizyon izlemek sahne değildir.'},
+   {label:'İkisi de aynı'}],
+  result:'Sahne ışığı ve dans başlıkla doğrudan bağ kuruyor.'},
+ {kind:'yaz',prompt:'Yeni başlığa kapak ve tanıtım yaz.',sahne:S7.galeri,
+  gorev:'Başlık: “Küçük Mucit”. Kapağa ne çizerdin? Alt alta iki satır yaz: birinci satırda kapak fikrini, ikinci satırda kısa tanıtım cümleni yaz.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Kapakta vidalı, tekerlekli küçük bir robot ve elinde tornavida tutan bir çocuk olurdu.\nBu kitap kendi robotunu yapmaya çalışan bir çocuğu anlatıyor.',
+  ornekCevap:'Kapakta vidalı, tekerlekli küçük bir robot ve elinde tornavida tutan bir çocuk olurdu.\nBu kitap kendi robotunu yapmaya çalışan bir çocuğu anlatıyor.',
+  result:'Kapak fikrini ve tanıtımını başlıkla tutarlı biçimde yazdın.'}
+]};
+
+GAMES.u68={title:'Olay Baloncukları',theme:'class',finish:'Dinlediğin hikâyedeki olayları ayırdın ve sırayla anlattın.',rounds:[
+ {kind:'dinle',prompt:'Hikâyeyi dinle, sonra olayı seç.',sahne:S7.balon,
+  gorev:'Hikâye yalnız sesli. Metin ekranda yazılı değil.',
+  ses:'Küçük kirpi ormanda yürürken ayağına diken battı. Tavşan onu görüp yardım etti. Kirpi teşekkür edip evine döndü.',
+  soru:'Hikâyede GEÇEN olay hangisi?',
+  secenekler:[{label:'Tavşan kirpiye yardım etti',correct:true},
+   {label:'Kirpi ağaca tırmandı',hint:'Bir kez daha dinle: kirpi ne yaptı?'},
+   {label:'Tavşan kaçtı'}],
+  result:'Hikâyede diken batması, tavşanın yardımı ve kirpinin dönüşü geçti.'},
+ {kind:'esle',prompt:'Üç ifadeyi ayır.',sahne:S7.balon,
+  gorev:'Metinde geçen, metinden çıkarılabilecek ve hiç geçmeyen ifadeler var.',
+  etiketler:[{t:'Kirpinin ayağına diken battı.'},{t:'Kirpi canı yandığı için durdu.'},{t:'Kirpi denizde yüzdü.'}],
+  yuvalar:[{ad:'Metinde geçen',dogru:0},
+   {ad:'Metinden çıkarılabilen',dogru:1,ipucu:'Bu doğrudan söylenmedi ama diken batmasından anlaşılabilir.'},
+   {ad:'Hiç geçmeyen',dogru:2}],
+  result:'Geçen olay söylenir, çıkarım ipuçlarından anlaşılır, geçmeyen ise metinde hiç yoktur.'},
+ {kind:'konus',prompt:'Üç olayı sırayla anlat.',sahne:S7.balon,
+  gorev:'Dinlediğin hikâyedeki üç olayı oluş sırasına göre sesli anlat.',
+  ornek:'Örnek: “Önce kirpinin ayağına diken battı. Sonra tavşan ona yardım etti. En sonunda kirpi teşekkür edip evine döndü.”',
+  olcutler:['Üç olayı da söyledim.','Olayları doğru sırayla anlattım.','Zaman sözcükleri kullandım.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Dinlediğin hikâyeyi olay sırasıyla anlattın.'}
+]};
+
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card">
  <div class="big">📖</div><h2>2. Sınıf Türkçe</h2>
