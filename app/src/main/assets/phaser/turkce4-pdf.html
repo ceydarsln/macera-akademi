@@ -1949,6 +1949,313 @@ GAMES.z32={title:'Araştırma Adımları',theme:'masa',
   result:'Araştırma sorunu ve kaynağını birlikte planladın.'}
 ]};
 
+/* ---- z33 Bağlaç Ayırma (bant durduruldu; boşluk vurgulu) ---- */
+GAMES.z33={title:'Bağlaç Ayırma',theme:'atolye',
+ finish:'Boşluğa uygun bağlacı anlamdan buldun, bağlaç değişince anlamın değiştiğini gördün ve kendi cümlelerini yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Boşluğa hangi bağlaç gelir?',sahne:SAHNE.matbaa,
+  soru:'«___» yerine hangi bağlaç gelmeli?',
+  kutular:['ve','ama','çünkü'],
+  ipucu:'Ekleme mi, karşıtlık mı, neden mi?',
+  kartlar:[
+   {t:'Defterimi «___» kalemimi çantama koydum.',dogru:0,neden:'İki şey ekleniyor: "ve".'},
+   {t:'Çok yoruldum «___» yürümeye devam ettim.',dogru:1,neden:'Beklenenin tersi oldu: "ama".'},
+   {t:'Bugün erken yattım «___» sabah gezimiz var.',dogru:2,neden:'Bir neden bildiriliyor: "çünkü".'},
+   {t:'Annem «___» babam maça geldi.',dogru:0,neden:'İki kişi ekleniyor.'},
+   {t:'Kitabı okudum «___» sonunu anlamadım.',dogru:1,neden:'Karşıtlık var.'},
+   {t:'Bahçeyi suladık «___» toprak çok kurumuştu.',dogru:2,neden:'Yapılan işin nedeni söyleniyor.'}]},
+ {kind:'karar',prompt:'Aynı iki cümle, üç bağlaç.',sahne:SAHNE.matbaa,
+  durum:'İki cümle: "Yağmur yağdı." + "Maça gitmedik."\nA) Yağmur yağdı ve maça gitmedik.\nB) Yağmur yağdı ama maça gitmedik.\nC) Maça gitmedik çünkü yağmur yağdı.',
+  soru:'Hangisi nedeni açıkça gösterir?',
+  secenekler:[
+   {label:'C',correct:true},
+   {label:'A',hint:'"ve" yalnız ekler; neden ilişkisini göstermez.'},
+   {label:'B',hint:'"ama" karşıtlık kurar; burada karşıtlık yok.'}],
+  araSoz:'Doğru. Peki B neden tuhaf?',
+  neden:{soru:'B cümlesi niçin anlamlı değil?',secenekler:[
+   {label:'Yağmur yağması ile gitmemek karşıt değil, neden-sonuçtur',correct:true},
+   {label:'Cümle çok kısa',hint:'Uzunluk sorun değil.'},
+   {label:'"ama" bağlaç değildir',hint:'"ama" bir bağlaçtır; sorun anlam ilişkisi.'}]},
+  result:'Bağlaç, iki cümle arasındaki ilişkiyi belirler: ekleme, karşıtlık ya da neden.'},
+ {kind:'yaz',prompt:'İki bağlaçla kendi cümlelerini yaz.',sahne:SAHNE.matbaa,
+  gorev:'"ve", "ama" ve "çünkü" bağlaçlarından ikisini kullanarak iki cümle yaz.',
+  enAzKelime:12,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'En az iki farklı bağlaç kullan',desen:'(ve|ama|çünkü)[\\s\\S]*(ve|ama|çünkü)',bayrak:'i'}],
+  bank:['ve','ama','çünkü'],
+  ipucuMetin:'…  …',
+  yasak:['Yağmur yağdı ama maça gitmedik.'],
+  ornekCevap:'Sabah erken kalktım ve güzel bir kahvaltı yaptım. Otobüsü kaçırdım çünkü çantamı evde unutmuştum.',
+  result:'Bağlaçları kendi cümlelerinde doğru ilişkilerle kullandın.'}
+]};
+
+/* ---- z34 Bağlaç Makinesi (bağlacın işlevi gösteriliyor) ---- */
+GAMES.z34={title:'Bağlaç Makinesi',theme:'atolye',
+ finish:'Bağlacın işlevini ayırdın, yanlış bağlacın anlamı nasıl bozduğunu gördün ve neden-sonucu iki yönde yazdın.',rounds:[
+ {kind:'esle',prompt:'Her bağlacı işleviyle eşle.',sahne:SAHNE.matbaa,
+  soru:'Önce alttan bir işlev seç, sonra ait olduğu bağlaca dokun.',
+  ipucu:'Bağlaç iki cümleyi nasıl birleştiriyor?',
+  yuvalar:[
+   {hedef:'ve',dogru:0,neden:'İki bilgiyi yan yana ekler.',hint:'Bu bağlaç ekleme yapar.'},
+   {hedef:'ama',dogru:1,neden:'Beklenenin tersini bildirir.',hint:'Bu bağlaç karşıtlık kurar.'},
+   {hedef:'çünkü',dogru:2,neden:'Önceki cümlenin nedenini verir.',hint:'Bu bağlaç neden bildirir.'},
+   {hedef:'ya da',dogru:3,neden:'İki seçenekten birini bildirir.',hint:'Bu bağlaç seçenek sunar.'}],
+  etiketler:[
+   {t:'İki bilgiyi ekler'},
+   {t:'Beklenenin tersini bildirir'},
+   {t:'Nedeni bildirir'},
+   {t:'Seçenek sunar'}]},
+ {kind:'karar',prompt:'Yanlış bağlaç anlamı nasıl bozar?',sahne:SAHNE.matbaa,
+  durum:'"Ödevimi bitirdim ___ oyun oynayabilirim."\nBoşluğa "ama" konursa: "Ödevimi bitirdim ama oyun oynayabilirim."',
+  soru:'Bu cümlede ne tuhaf?',
+  secenekler:[
+   {label:'Ödevi bitirmek oyun oynamaya engel değil, tersine izin verir',correct:true},
+   {label:'Cümlede özne eksik',hint:'Özne "ben" olarak gizli; sorun bağlaç.'},
+   {label:'"oynayabilirim" yanlış yazılmış',hint:'Yazım doğru; sorun anlam ilişkisi.'}],
+  araSoz:'Doğru. Peki hangisi uygun olur?',
+  neden:{soru:'Boşluğa hangi bağlaç uyar?',secenekler:[
+   {label:'"bu yüzden" ya da "artık"',correct:true},
+   {label:'"ama"',hint:'Karşıtlık yok; sonuç bildiriliyor.'},
+   {label:'"çünkü"',hint:'"çünkü" nedeni bildirir; burada sonuç geliyor.'}]},
+  result:'Yanlış bağlaç, doğru cümleyi anlamsız kılar.'},
+ {kind:'yaz',prompt:'Neden-sonucu iki yönde yaz.',sahne:SAHNE.matbaa,
+  gorev:'Aynı olayı iki kez yaz: bir kez "çünkü" ile (önce sonuç), bir kez "bu yüzden" ile (önce neden).',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'"çünkü" sözcüğünü kullan',desen:'çünkü',bayrak:'i'},
+   {ad:'"bu yüzden" ifadesini kullan',desen:'bu yüzden',bayrak:'i'}],
+  bank:['çünkü','bu yüzden'],
+  ipucuMetin:'… çünkü …  … bu yüzden …',
+  ornekCevap:'Sabah otobüsü kaçırdım çünkü alarmım çalmadığı için çok geç kalktım. Çok geç kalktım bu yüzden otobüsü kaçırdım.',
+  result:'Aynı ilişkiyi iki yönde de kurdun.'}
+]};
+
+/* ---- z35 Arasöz Atölyesi (görev metni işaret adını söylemiyor) ---- */
+GAMES.z35={title:'Arasöz Atölyesi',theme:'sahne',
+ finish:'Arasözü virgüllerle ayırdın, sıralama virgülünden farkını gördün ve arasözlü kendi cümleni yazdın.',rounds:[
+ {kind:'duzelt',prompt:'Araya giren açıklamayı ayır.',sahne:SAHNE.masa,
+  gorev:'Broşürdeki bu cümlede araya giren açıklama ayrılmamış. Anlamına uygun işaretleri koy. Sözcükleri değiştirme.',
+  hatali:'Sahne şefimiz Ayla Hanım oyunun sonunda kısa bir konuşma yapacak',
+  denetim:[
+   {ad:'Araya giren açıklamayı iki virgülle ayır',desen:',[^,]+,'},
+   {ad:'Cümleyi noktayla bitir',desen:'\\.\\s*$'}],
+  ornekCevap:'Sahne şefimiz, Ayla Hanım, oyunun sonunda kısa bir konuşma yapacak.',
+  result:'Araya giren açıklama iki virgül arasına alınır.'},
+ {kind:'karar',prompt:'İki virgül, iki ayrı görev.',sahne:SAHNE.masa,
+  durum:'A) "Çantama defter, kalem, silgi koydum."\nB) "Öğretmenimiz, Selma Hanım, bugün gelmedi."',
+  soru:'Bu iki cümlede virgüllerin görevi aynı mı?',
+  secenekler:[
+   {label:'Hayır: A\'da sıralama yapıyor, B\'de araya giren açıklamayı ayırıyor',correct:true},
+   {label:'Evet, ikisi de sıralama yapıyor',hint:'B\'de sıralanan bir şey yok; bir açıklama araya girmiş.'},
+   {label:'Evet, ikisi de açıklama ayırıyor',hint:'A\'da üç nesne sıralanıyor.'}],
+  araSoz:'Doğru. Peki kısa çizginin görevi ne?',
+  neden:{soru:'"Ankara - İstanbul treni" ifadesindeki kısa çizgi ne yapar?',secenekler:[
+   {label:'İki yer arasındaki bağı gösterir',correct:true},
+   {label:'Araya giren açıklamayı ayırır',hint:'Bunu virgül yapar.'},
+   {label:'Cümleyi bitirir',hint:'Cümleyi nokta bitirir.'}]},
+  result:'Virgül hem sıralar hem arasözü ayırır; kısa çizgi arada bağ kurar.'},
+ {kind:'yaz',prompt:'Arasözlü kendi cümleni yaz.',sahne:SAHNE.masa,
+  gorev:'İçinde araya giren bir açıklama bulunan bir cümle yaz ve virgülleri sen koy.',
+  enAzKelime:9,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'Araya giren açıklamayı iki virgülle ayır',desen:',[^,]+,'}],
+  ipucuMetin:'… , … , …',
+  yasak:['Öğretmenimiz, Selma Hanım, bugün gelmedi.'],
+  ornekCevap:'Sıra arkadaşım, Kerem, bugün bana yeni kitabını sevinerek ödünç verdi.',
+  result:'Arasözü kendi cümlende iki virgülle ayırdın.'}
+]};
+
+/* ---- z36 Neden-Sonuç Köprüsü (simge eşleşmesi kaldırıldı) ---- */
+GAMES.z36={title:'Neden-Sonuç Köprüsü',theme:'doga',
+ finish:'Nedenleri sonuçlarıyla eşledin, bir nedenin birden çok sonucu olabildiğini gördün ve kendi cümleni iki yönde yazdın.',rounds:[
+ {kind:'esle',prompt:'Her nedeni sonucuyla eşle.',sahne:SAHNE.basamak,
+  soru:'Önce alttan bir sonuç seç, sonra nedenine dokun.',
+  ipucu:'Hangisi önce oldu, hangisi ondan doğdu?',
+  yuvalar:[
+   {hedef:'NEDEN: Bütün gece kar yağdı.',dogru:0,neden:'Kar yağışı yolları kapattı.',hint:'Kar yağınca ne olur?'},
+   {hedef:'NEDEN: Musluğu açık unuttum.',dogru:1,neden:'Açık musluk suyun boşa akmasına yol açtı.',hint:'Açık musluk neye yol açar?'},
+   {hedef:'NEDEN: Her gün on sayfa okudum.',dogru:2,neden:'Düzenli okuma kitabı bitirdi.',hint:'Düzenli okumanın sonucu nedir?'},
+   {hedef:'NEDEN: Çiçeği hiç sulamadım.',dogru:3,neden:'Susuz kalan çiçek kurudu.',hint:'Sulanmayan bitkiye ne olur?'}],
+  etiketler:[
+   {t:'SONUÇ: Okullar tatil edildi.'},
+   {t:'SONUÇ: Su faturası çok yükseldi.'},
+   {t:'SONUÇ: Kitabı bir ayda bitirdim.'},
+   {t:'SONUÇ: Yaprakları sarardı ve döküldü.'}]},
+ {kind:'karar',prompt:'Bir nedenin birden çok sonucu olabilir.',sahne:SAHNE.basamak,
+  durum:'Neden: "Sabah çok erken kalktım."\nOlası sonuçlar: kahvaltımı acele etmeden yaptım · otobüse yetiştim · öğleden sonra uykum geldi.',
+  soru:'Bu üç sonuç için ne söylenir?',
+  secenekler:[
+   {label:'Üçü de aynı nedenden doğabilir',correct:true},
+   {label:'Yalnız biri doğru olabilir',hint:'Üçü de erken kalkmanın sonucu olabilir.'},
+   {label:'Hiçbiri o nedene bağlı değil',hint:'Üçü de erken kalkmakla ilgili.'}],
+  araSoz:'Doğru. Peki zincirleme kurabilir misin?',
+  neden:{soru:'"Otobüse yetiştim" sonucunun kendisi neyin nedeni olabilir?',secenekler:[
+   {label:'Derse zamanında yetişmemin',correct:true},
+   {label:'Erken kalkmamın',hint:'Erken kalkmak neden, otobüse yetişmek sonuç.'},
+   {label:'Uykumun gelmesinin',hint:'Uyku erken kalkmaya bağlı, otobüse değil.'}]},
+  result:'Bir sonuç, kendisinden sonraki bir olayın nedeni olabilir: zincirleme ilişki.'},
+ {kind:'yaz',prompt:'Kendi neden-sonucunu iki yönde yaz.',sahne:SAHNE.basamak,
+  gorev:'Kendi yaşamından bir neden-sonuç ilişkisini önce "çünkü" ile, sonra "bu yüzden" ile yaz.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'"çünkü" sözcüğünü kullan',desen:'çünkü',bayrak:'i'},
+   {ad:'"bu yüzden" ifadesini kullan',desen:'bu yüzden',bayrak:'i'}],
+  ipucuMetin:'… çünkü …  … bu yüzden …',
+  ornekCevap:'Dün akşam ödevimi erken bitirdim çünkü sabah gezimiz vardı. Sabah gezimiz vardı bu yüzden erken yattım.',
+  result:'Aynı ilişkiyi hem nedenden hem sonuçtan kurdun.'}
+]};
+
+/* ---- z37 Eş Anlam Sahnesi (hafıza kartı yerine replikte doğrulama) ---- */
+GAMES.z37={title:'Eş Anlam Sahnesi',theme:'sahne',
+ finish:'Eş anlamlı çiftleri repliklerde eşledin, konuşma diline uygun olanı seçtin ve kendi repliğini söyledin.',rounds:[
+ {kind:'esle',prompt:'Repliği eş anlamlısıyla eşle.',sahne:SAHNE.sozluk,sesliSoyle:true,
+  soru:'Önce alttan bir sözcük seç, sonra aynı anlamı taşıyan repliğe dokun.',
+  ipucu:'Seçtiğin sözcük replikte sesli okunacak.',
+  yuvalar:[
+   {hedef:'"Bu haber beni çok mutlu etti."',dogru:0,neden:'"Sevindirdi" ile "mutlu etti" aynı anlamı taşır.',hint:'Bu replik sevinçle ilgili.'},
+   {hedef:'"Kapıyı usulca kapat."',dogru:1,neden:'"Sessizce" ile "usulca" aynı anlamı taşır.',hint:'Bu replik gürültüsüzlükle ilgili.'},
+   {hedef:'"Onun cevabını merak ediyorum."',dogru:2,neden:'"Yanıt" ile "cevap" aynı anlamı taşır.',hint:'Bu replik soruya verilenle ilgili.'},
+   {hedef:'"Dün akşam bir konuk geldi."',dogru:3,neden:'"Misafir" ile "konuk" aynı anlamı taşır.',hint:'Bu replik eve gelen kişiyle ilgili.'}],
+  etiketler:[{t:'sevindirdi'},{t:'sessizce'},{t:'yanıt'},{t:'misafir'}]},
+ {kind:'karar',prompt:'Konuşmada hangisi daha uygun düşer?',sahne:SAHNE.sozluk,
+  durum:'Sahnede bir çocuk, yaşlı komşusuna kapıyı açıyor ve içeri buyur ediyor.',
+  soru:'Hangi replik bu sahneye daha uygun?',
+  secenekler:[
+   {label:'"Buyurun teyzeciğim, hoş geldiniz."',correct:true},
+   {label:'"Gir bakalım içeri."',hint:'Yaşlı komşuya karşı bu üslup saygılı değil.'},
+   {label:'"Ziyaretçi kabulü gerçekleştirilmiştir."',hint:'Bu ifade konuşma dili değil, resmî yazı dili.'}],
+  araSoz:'Doğru. Peki ölçüt ne?',
+  neden:{soru:'Eş anlamlılardan hangisini seçeceğini ne belirler?',secenekler:[
+   {label:'Kime, nerede ve nasıl konuştuğum',correct:true},
+   {label:'Sözcüğün kısalığı',hint:'Kısalık üslubu belirlemez.'},
+   {label:'Sözcüğün yeni olması',hint:'Eski-yeni ayrımı burada ölçüt değil.'}]},
+  result:'Eş anlamlılar arasında seçim, muhataba ve ortama göre yapılır.'},
+ {kind:'konus',prompt:'Kendi repliğini söyle.',sahne:SAHNE.sozluk,
+  gorev:'Bir eş anlamlı çift seç ("konuk-misafir", "yanıt-cevap") ve ikisini de kullanarak kısa bir replik söyle.',
+  ornek:'Örnek: Bugün bize bir konuk geliyor. Misafirimiz için pasta yaptık.',
+  olcutler:['Eş anlamlı çiftin iki üyesini de kullandım.','Anlaşılır ve uygun bir üslupla konuştum.','Repliğim bir duruma uyuyor.'],
+  result:'Eş anlamlı çifti konuşmanda kullandın.'}
+]};
+
+/* ---- z38 Mecaz mı, Gerçek mi (kapsül düşmesi kaldırıldı; önce kanıt) ---- */
+GAMES.z38={title:'Mecaz mı, Gerçek mi?',theme:'kutuphane',
+ finish:'Sözcüğün anlamını bağlamdan çıkardın, mecaz ile gerçek anlamı karşılaştırdın ve anlamı kendi cümlenle yazdın.',rounds:[
+ {kind:'kanit',prompt:'Bağlam ipucunu işaretle, sonra anlamı seç.',sahne:SAHNE.sozluk,
+  baslik:'Cümle',
+  metin:[['Öğretmenimiz sınıfa girince ',{t:'herkes sustu'},' ve ',{t:'onun sıcak bir gülümsemesi vardı',dogru:true},'; ',{t:'çocuklar rahatladı',dogru:true},'.']],
+  gerekKanit:2,soru:'Buradaki "sıcak" ne anlama geliyor?',
+  secenekler:[
+   {label:'Sevecen, güven veren',correct:true},
+   {label:'Yüksek sıcaklıkta',hint:'Gülümsemenin derecesi ölçülmez; işaretlediğin kanıt rahatlamayı gösteriyor.'},
+   {label:'Yeni pişmiş',hint:'Metinde yemekle ilgili bir kanıt yok.'}],
+  result:'"Sıcak" burada gerçek anlamda değil; sevecenliği anlatan mecaz anlamda.'},
+ {kind:'kanit',prompt:'Aynı sözcük, iki cümle.',sahne:SAHNE.sozluk,
+  baslik:'İki cümle',
+  metin:[['1) Annem ',{t:'sıcak çorbayı'},' masaya koydu; ',{t:'buharı tütüyordu',dogru:true},'.'],
+   ['2) Komşumuz bize ',{t:'çok sıcak davrandı'},' ve ',{t:'bizi güler yüzle karşıladı',dogru:true},'.']],
+  gerekKanit:2,soru:'Hangi cümlede "sıcak" gerçek anlamdadır?',
+  secenekler:[
+   {label:'Birinci cümlede',correct:true},
+   {label:'İkinci cümlede',hint:'İkincide güler yüz anlatılıyor; bu mecaz anlam.'},
+   {label:'İkisinde de mecaz',hint:'Buharı tüten çorba gerçekten sıcaktır.'}],
+  araSoz:'Doğru. Peki ayıran ne?',
+  neden:{soru:'Gerçek anlamı mecazdan ne ayırır?',secenekler:[
+   {label:'Sözcüğün ilk ve temel karşılığıyla kullanılması',correct:true},
+   {label:'Cümlenin uzunluğu',hint:'Uzunluk anlamı belirlemez.'},
+   {label:'Sözcüğün cümledeki yeri',hint:'Yeri değil, kullanıldığı anlam belirler.'}]},
+  result:'Gerçek anlam sözcüğün temel karşılığıdır; mecaz anlam ona benzetmeyle kurulur.'},
+ {kind:'yaz',prompt:'Anlamı sözlükle doğrulayıp yaz.',sahne:SAHNE.sozluk,
+  gorev:'"Ağır" sözcüğünün anlamını kendi cümlenle yaz ve onu mecaz anlamda kullandığın bir örnek ekle.',
+  kaynakBaslik:'Sözlük',
+  kaynak:'ağır: 1. Tartıda çok çeken. 2. Anlaması güç, zor.',
+  enAzKelime:13,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'"ağır" sözcüğünü kullan',desen:'ağır',bayrak:'i'}],
+  ipucuMetin:'Ağır … demektir. Mecaz olarak: …',
+  yasak:['ağır: 1. Tartıda çok çeken. 2. Anlaması güç, zor.'],
+  ornekCevap:'Ağır, tartıda çok çeken demektir. Mecaz olarak bu sorunun çok ağır olduğunu söyleyebiliriz.',
+  result:'Gerçek ve mecaz anlamı kendi cümlelerinde ayırdın.'}
+]};
+
+/* ---- z39 Sunum Masası (kürsü ve dinleyici; plan dinleyiciye göre) ---- */
+GAMES.z39={title:'Sunum Masası',theme:'sahne',
+ finish:'Sunum planını amaca göre kurdun, dinleyici değişince planın değiştiğini gördün ve sunumunu yapıp değerlendirdin.',rounds:[
+ {kind:'esle',prompt:'Sunum planının bölümlerini yerleştir.',sahne:SAHNE.masa,
+  soru:'Önce alttan bir not kartı seç, sonra ait olduğu bölüme dokun.',
+  ipucu:'Sunum da yazı gibi giriş, gelişme ve sonuçtan oluşur.',
+  yuvalar:[
+   {hedef:'AÇILIŞ — dinleyiciyi konuya çek',dogru:0,neden:'Açılış merak uyandırır.',hint:'Bu bölüm dinleyiciyi karşılar.'},
+   {hedef:'GELİŞME — bilgileri sırayla ver',dogru:1,neden:'Gelişmede bilgiler örneklerle verilir.',hint:'Bu bölüm asıl bilgileri taşır.'},
+   {hedef:'SONUÇ — toparla ve bitir',dogru:2,neden:'Sonuç, dinleyiciye akılda kalacak bir cümle bırakır.',hint:'Bu bölüm sunumu kapatır.'},
+   {hedef:'SORU-CEVAP — dinleyiciyi dinle',dogru:3,neden:'Sunum, dinleyicinin sorularıyla tamamlanır.',hint:'Bu bölümde konuşan dinleyicidir.'}],
+  etiketler:[
+   {t:'"Hiç bir karıncanın kaç adım attığını düşündünüz mü?"'},
+   {t:'"Karıncalar koloni hâlinde yaşar; her birinin ayrı görevi vardır."'},
+   {t:'"Kısacası küçük canlılar büyük düzenler kurar."'},
+   {t:'"Merak ettiğiniz bir şey varsa buyurun."'}]},
+ {kind:'karar',prompt:'Dinleyici değişince plan değişir.',sahne:SAHNE.masa,
+  durum:'Aynı karınca sunumunu iki yerde yapacaksın: A) kendi sınıfında, B) veli toplantısında.',
+  soru:'Veli toplantısı için hangisi daha uygun olur?',
+  secenekler:[
+   {label:'Daha resmî bir dil ve nasıl araştırdığımı da anlatmak',correct:true},
+   {label:'Sınıftakiyle tamamen aynı sunumu yapmak',hint:'Dinleyici değişince beklentiler de değişir.'},
+   {label:'Sunumu kısaltıp yalnız şaka yapmak',hint:'Sunumun amacı bilgi vermek.'}],
+  araSoz:'Doğru. Peki beden dili?',
+  neden:{soru:'Sunum yaparken beden dili için hangisi doğru?',secenekler:[
+   {label:'Dinleyiciye bakmak ve dik durmak',correct:true},
+   {label:'Notlara bakıp okumak',hint:'Sürekli okumak dinleyiciyle bağı koparır.'},
+   {label:'Elleri cebe koyup arkaya dönmek',hint:'Bu duruş dinleyiciyi dışarıda bırakır.'}]},
+  result:'Sunum planı ve üslubu dinleyiciye göre ayarlanır.'},
+ {kind:'konus',prompt:'Bir dakikalık sunumunu yap.',sahne:SAHNE.masa,
+  gorev:'Sevdiğin bir konuda kısa bir sunum yap: açılış, bir bilgi ve kapanış cümlesi söyle.',
+  ornek:'Örnek: Merhaba arkadaşlar. Bugün size karıncaları anlatacağım. Karıncalar koloni hâlinde yaşar ve her birinin görevi vardır. Kısacası küçük canlılar büyük düzenler kurar.',
+  olcutler:['Açılış cümlesi söyledim.','En az bir bilgi verdim.','Kapanış cümlesiyle bitirdim.','Anlaşılır ve yüksek sesle konuştum.'],
+  result:'Planına göre kısa bir sunum yaptın ve kendini değerlendirdin.'}
+]};
+
+/* ---- z40 Yazım Denetçisi (büyüteç kaldırıldı; öğrenci düzeltiyor) ---- */
+GAMES.z40={title:'Ayrı mı, Birleşik mi?',theme:'atolye',
+ finish:'Ayrı-birleşik yazım kurallarını uyguladın, karışık kuralları birlikte kullandın ve kendi paragrafını denetledin.',rounds:[
+ {kind:'sinifla',prompt:'Bu ek ayrı mı yazılır, birleşik mi?',sahne:SAHNE.kalem,
+  soru:'İşaretli ek nasıl yazılmalı?',
+  kutular:['AYRI YAZILIR','BİRLEŞİK YAZILIR'],
+  ipucu:'"de/da" bulunma eki birleşik, "dahi/bile" anlamındaki "de/da" ayrı yazılır.',
+  kartlar:[
+   {t:'Ben «de» seninle gelmek istiyorum. ("dahi" anlamında)',dogru:0,
+    neden:'"Dahi" anlamındaki "de" ayrı yazılır.'},
+   {t:'Kalemim çanta«da» kaldı. (bulunma bildiriyor)',dogru:1,
+    neden:'Bulunma eki olan "-da" birleşik yazılır.'},
+   {t:'Sen «de» bizimle oynar mısın? ("dahi" anlamında)',dogru:0,
+    neden:'"Dahi" anlamında ayrı.'},
+   {t:'Kitap masa«da» duruyor. (bulunma bildiriyor)',dogru:1,
+    neden:'Nerede olduğunu bildiriyor: birleşik.'},
+   {t:'Bu soruyu «ki» kolaydı, herkes çözdü. (bağlaç)',dogru:0,
+    neden:'Bağlaç olan "ki" ayrı yazılır.'},
+   {t:'Sabah«ki» dersimiz matematikti. (ilgi eki)',dogru:1,
+    neden:'İlgi eki olan "-ki" birleşik yazılır.'}]},
+ {kind:'duzelt',prompt:'Karışık kuralları birlikte uygula.',sahne:SAHNE.kalem,
+  gorev:'Bu metinde ayrı-birleşik yazım hataları var. Düzelt.',
+  hatali:'bende sizinle gelmek istiyorum ama akşamki maçı kaçırmak istemiyorum sende gelirmisin',
+  sozcukKorunsun:false,
+  denetim:[
+   {ad:'Cümleyi büyük harfle başlat',desen:'^[A-ZÇĞİÖŞÜ]'},
+   {ad:'"dahi" anlamındaki "de" sözcüğünü ayır (ben de)',desen:'Ben de',bayrak:''},
+   {ad:'"dahi" anlamındaki "de" sözcüğünü ayır (sen de)',desen:'sen de',bayrak:'i'},
+   {ad:'İlgi ekini birleşik yaz (akşamki)',desen:'akşamki',bayrak:'i'},
+   {ad:'Soru ekini ayır (gelir misin)',desen:'gelir misin',bayrak:'i'},
+   {ad:'Soru cümlesini soru işaretiyle bitir',desen:'\\?'}],
+  ornekCevap:'Ben de sizinle gelmek istiyorum ama akşamki maçı kaçırmak istemiyorum. Sen de gelir misin?',
+  result:'"de/da", "-ki" ve "mi" kurallarını birlikte uyguladın.'},
+ {kind:'yaz',prompt:'Kendi paragrafını yaz ve denetle.',sahne:SAHNE.kalem,
+  gorev:'İçinde hem ayrı yazılan "de" hem de soru eki "mi" bulunan iki cümle yaz. Yazımını sen denetle.',
+  enAzKelime:12,enAzCumle:2,buyukHarf:true,
+  denetim:[
+   {ad:'"dahi" anlamında ayrı "de/da" kullan',desen:'\\b(ben|sen|o|biz|siz|onlar)\\s+d[ae]\\b',bayrak:'i'},
+   /* "misin" gibi çekimli biçimlerde \b tutmuyor; başta boşluk aramak yeterli */
+   {ad:'Soru ekini ayrı yaz (… mı/mi/mu/mü)',desen:'\\sm[ıiuü]',bayrak:'i'},
+   {ad:'Soru cümlesini soru işaretiyle bitir',desen:'\\?'}],
+  ipucuMetin:'Ben de … Sen … mi …?',
+  yasak:['Ben de sizinle gelmek istiyorum.'],
+  ornekCevap:'Ben de bu maceralı kitabı okumak istiyorum. Sen bugün benimle kütüphaneye gelir misin?',
+  result:'Ayrı yazılan "de" ile soru ekini kendi cümlelerinde doğru kullandın.'}
+]};
+
 /* ===== açılış ===== */
 game=GAMES[GAME_ID]||GAMES.z01;
 render();
