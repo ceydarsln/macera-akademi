@@ -38,6 +38,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w22 | Doğa Dedektifleri | Verilerden problem kurma | Roket-yakıt motoru gitti; 3 çadır ve her çadırda 4 çocuk gerçekten görünüyor. Hazır çözüm kartı başlangıçta yok: çocuk önce gerekli verileri seçiyor (gereksiz veri seçilirse neden gerekmediği tartışılıyor), sonra kelime kartlarıyla soru cümlesini kuruyor, çözüm ancak bundan sonra seçiliyor. 3. turda bölme sorusunun çarpma sağlaması da yapılıyor. | Uygulamada |
 | w23 | Kozmik Tahterevalli | Eşitliğin anlamı | Yönerge kaç doğru beklendiğini açıkça yazıyor ("3 tane var"). Karta dokununca değeri kefeye biniyor, kefe açısı farkla orantılı eğiliyor ve iki değer birden okunuyor. Yanlış kart eleniyor ama tur bitmiyor; bütün eşdeğer ifadeler bulunana kadar sürüyor. 3. turda 20 + ? = 35 eksik bloğu ekleniyor. | Uygulamada |
 | w24 | Fırıncının Tezgâhı | Kısa ve verimli işlem stratejisi | Sipariş metni artık "4 tepsi × 12" demiyor, yalnız toplam simiti söylüyor. 12'lik tepside 12 simit gerçekten görünüyor, tekler ayrı duruyor. Doğru ama uzun yol yanlış sayılmıyor: sipariş tamamlanınca "daha az işlemle olur mu?" seçeneği çıkıyor ve işlem sayısı tek tek koymakla karşılaştırılıyor. İpucu kademeli: önce büyük grup, sonra 12'nin katları. | Uygulamada |
+| w25 | 3D Geometri Tarayıcısı | Küpün köşe, ayrıt ve yüzleri | Açılış sesi artık sayı vermiyor ("bütün köşeleri bul"). Küp parmakla döndürülen gerçek 3B model: öndeki öğeler büyük ve dokunulabilir, arkadakiler sönük ve dokunulamaz, hepsine ancak döndürerek erişiliyor. Aynı öğeye ikinci dokunuş saymıyor. 8-12-6 özeti yalnız tamamlandığında çıkıyor; yüz turunda açınım eşleşiyor. | Uygulamada |
+| w26 | Şekil Kalesi | Çokgenleri kenar sayısına göre sınıflama | Bant kaldırıldı, şekil ekranda sabit ve tam görünür. Çocuk kenarlara tek tek dokunup numaralandırıyor; kapılar ancak bütün kenarlar izlenince açılıyor. Kapılarda ad + kenar sayısı + örnek var. Düzensiz, dönmüş, içbükey çokgenler ve bir açık çizgi ("çokgen değil") kullanılıyor. Yanlış kapıda şekil kaybolmuyor, can gitmiyor. | Uygulamada |
+| w27 | Köşegen Dedektifi | Kare ve dikdörtgende köşegen | Açılış sesi sonucu vermiyor; yalnız "komşu olmayan köşeleri birleştir" diyor. İki köşe seçilince çizgi gerçekten oluşuyor, komşu seçimde çizgi kenar rengine dönüp farkı açıklıyor. İki köşegen çizilince kesişim vurgulanıyor ve uzunluklar ölçülüp karşılaştırılıyor. 3. turda üçgen karşı örneği: çocuk nedeni kendisi seçiyor. | Uygulamada |
+| w28 | Geometri Stüdyosu | Araç kullanarak şekil çizme | Hazır kenarlar kaldırıldı: köşeleri çocuk ızgarada kendi seçiyor. Cetvel kenar uzunluklarını birim cinsinden yazıyor, gönye köşelere konup dik açıyı yeşil/kırmızı halkayla gösteriyor. Karede eş kenar ve dik açı ölçütleri ayrı ayrı denetlenip hangisinin sağlanmadığı söyleniyor (dikdörtgen çeldiricisi dâhil). Son köşe silinebiliyor, bitişte kenar/köşe ve kullanılan araç raporlanıyor. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -89,6 +93,18 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
   eksik blok aşamaları, elenmiş kartların işaretlenmesi (w23).
 - `renderFirin` + `firin`: tepsi/tek paketleme, işlem sayacı, kademeli ipucu,
   "doğru ama daha kısası var mı?" karşılaştırması (w24).
+- `renderKup` + `kup`: gerçek 3B döndürme (yaw/pitch), derinliğe göre
+  erişilebilirlik, kalıcı işaretleme ve küp açınımı (w25).
+- `renderSekil` + `sekil`: kenar izleme ve numaralandırma, kenarlar bitmeden
+  açılmayan kapılar, doğruda şeklin döndürülmesi (w26).
+- `renderKosegen` + `kosegen`: köşe çifti seçimi, komşu/komşu değil ayrımı,
+  kesişim vurgusu ve uzunluk ölçümü (w27).
+- `renderStudyo` + `studyo`: nokta ızgarasında serbest köşe seçimi, cetvel
+  ölçümü, gönye ile dik açı denetimi ve ölçüte göre gerekçeli ret (w28).
+- `gecisBasla(fn,ms)`: aşama ilerledikten sonra sahne henüz yenilenmemişken
+  gelen dokunuşlar bir sonraki aşamanın verisine uygulanıyordu; geçiş boyunca
+  girdi kilitleniyor. (Gizli sekmede tarayıcı oyunun zamanlayıcısını kıstığı
+  için bu boşluk saniyelere çıkabiliyordu.)
 - `ertele(fn,ms)`: geciken geri çağrılar tur değiştiyse çalışmaz. `render`,
   `wrong`, `updateStage` ve `renderRound` artık oyun bittikten sonra çağrılırsa
   sessizce çıkar (koşumda seyrek görülen "round().prompt undefined" hatası).
