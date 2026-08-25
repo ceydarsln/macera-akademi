@@ -537,7 +537,9 @@ function duzeltCiz(r){const t=state.yazi!=null?state.yazi:r.hatali;
  $('#duzeltOk').onclick=()=>{const v=state.yazi!=null?state.yazi:r.hatali;
   const eksik=r.denetim.find(d=>!new RegExp(d.desen,d.bayrak||'').test(v));
   if(eksik)return wrong('Hâlâ düzeltilmemiş: '+eksik.ad);
-  if(sadeleştir(v)===sadeleştir(r.hatali))return wrong('Metinde hiçbir değişiklik yapmadın.');
+  /* Büyük harf oyununda tek değişiklik büyük harftir; sadeleştir() küçük
+     harfe indirdiği için düzeltme 'değişiklik yok' sayılıyordu. */
+  if(String(v).trim()===String(r.hatali).trim())return wrong('Metinde hiçbir değişiklik yapmadın.');
   good()}}
 function renderDuzelt(r){state.yazi=r.hatali;state.not='';duzeltCiz(r)}
 
@@ -1063,6 +1065,205 @@ GAMES.u20={title:'Zaman Şeridi',theme:'class',finish:'Olayları zaman şeridine
   ornek:'Örnek: Önce arsa temizlendi. Daha sonra duvarlar örüldü ve sıralar kondu. En sonunda öğrenciler derse başladı.',
   olcutler:['Üç cümle kurdum.','"Önce" ile başladım.','"En sonunda" ile bitirdim.','Olayları doğru sırayla anlattım.'],
   result:'Zaman sözcükleriyle üç cümlelik sözlü özetini yaptın.'}
+]};
+
+/* ---- Tema 2 · Atatürk ve Millî Değerlerimiz (u21–u28) ---- */
+const S2={
+ defter:'<div class="row"><span style="font-size:30px">📜</span><span style="font-size:26px">🖋️</span></div><div class="caption">El yazması defter</div>',
+ tören:'<div class="row"><span style="font-size:28px">🎏</span><span style="font-size:30px">🇹🇷</span><span style="font-size:28px">🥁</span></div><div class="caption">23 Nisan tören alanı</div>',
+ mektup:'<div class="row"><span style="font-size:30px">✉️</span><span style="font-size:26px">📄</span></div><div class="caption">Yırtık mektup</div>',
+ ayna:'<div class="row"><span style="font-size:28px">🧒</span><span style="font-size:26px">🪞</span><span style="font-size:28px">👦</span></div><div class="caption">Karakter aynası</div>',
+ sokak:'<div class="row"><span style="font-size:28px">🏚️</span><span style="font-size:26px">🪧</span><span style="font-size:28px">🏛️</span></div><div class="caption">Tarihî sokak</div>',
+ telgraf:'<div class="row"><span style="font-size:30px">📠</span><span style="font-size:26px">📃</span></div><div class="caption">Telgraf metni</div>',
+ gramofon:'<div class="row"><span style="font-size:32px">📻</span></div><div class="caption">Gramofon kaydı</div>'
+};
+
+GAMES.u21={title:'İstiklâl Kâşifi',theme:'class',finish:'Tarihî cümlelerde sözcüğün anlamını bağlamdan çıkardın ve kendi cümlenizi yazdın.',rounds:[
+ {kind:'kanit',prompt:'Bağlam ipucunu işaretle, sonra anlamı seç.',sahne:S2.defter,
+  baslik:'Defter sayfası',
+  metin:[['Köylüler ',{t:'buğdayı ambara taşıdı'},'; kışın ',{t:'zahire tükenmesin diye',dogru:true},' herkes ',{t:'elinden geleni yaptı'},'.']],
+  gerekKanit:1,soru:'"Zahire" bu cümlede ne demek?',
+  secenekler:[{label:'Saklanan yiyecek, tahıl',correct:true},{label:'Para',hint:'İşaretlediğin bölüm ambara taşınan buğdaydan söz ediyor.'},{label:'Silah'}],
+  result:'Ambara taşınan buğday ve kış hazırlığı zahirenin yiyecek olduğunu gösteriyor.'},
+ {kind:'kanit',prompt:'Aynı sözcük iki cümlede: hangisi hangisi?',sahne:S2.defter,
+  baslik:'İki tarihî cümle',
+  metin:[['Birinci cümle: Askerler ',{t:'cephede nöbet tuttu'},'.'],
+   ['İkinci cümle: Kadınlar ',{t:'cephane taşıyarak'},' ',{t:'orduya destek oldu',dogru:true},'.']],
+  gerekKanit:1,soru:'İkinci cümledeki "cephane" ne demek?',
+  secenekler:[{label:'Savaşta kullanılan mermi ve malzeme',correct:true},
+   {label:'Savaşın yapıldığı yer',hint:'Savaşın yapıldığı yer "cephe"dir; burada taşınan bir şey var.'},
+   {label:'Yiyecek deposu'}],
+  result:'"Cephe" yer, "cephane" taşınan malzemedir. Tek harf farkı anlamı değiştiriyor.'},
+ {kind:'yaz',prompt:'Sözlükle kontrol et, sonra kendi cümlenizi yaz.',sahne:S2.defter,
+  gorev:'Sözlük: "zahire = kışlık olarak saklanan tahıl ve yiyecek". Bu sözcüğü kendi cümlende kullan.',
+  enAzKelime:6,buyukHarf:true,bitis:'.',gerekli:['zahire'],
+  yasak:['Köylüler kışın zahire tükenmesin diye çalıştı.'],
+  ipucuMetin:'Örnek: Dedem kilerde kışlık zahire biriktirirdi.',
+  ornekCevap:'Dedem her sonbahar kilere kışlık zahire doldururdu.',
+  bank:['zahire','kışlık','kilerde','biriktirdi'],
+  result:'Sözcüğü sözlük anlamına uygun biçimde kendi cümlende kullandın.'}
+]};
+
+GAMES.u22={title:'Noktalama Muhafızları',theme:'class',finish:'İşaretin cümlenin tonunu nasıl değiştirdiğini duydun ve tören cümlelerini kendin noktaladın.',rounds:[
+ {kind:'esle',prompt:'Her cümleye doğru işareti indir.',sahne:S2.tören,
+  gorev:'Cümleyi sesli oku, sonuna hangi işaret gelir?',
+  etiketler:[{t:'.'},{t:'?'},{t:'!'}],
+  yuvalar:[{ad:'Bayrağımız göndere çekildi',dogru:0},
+   {ad:'Tören saat kaçta başlıyor',dogru:1},
+   {ad:'Ne güzel bir bayram',dogru:2,ipucu:'Bu cümle duygu bildiriyor, sesi yükseltiyor.'}],
+  result:'Anlatan cümlede nokta, soran cümlede soru işareti, duygu bildiren cümlede ünlem kullanılır.'},
+ {kind:'esle',prompt:'Aynı cümle, üç işaret: ton değişiyor.',sahne:S2.tören,
+  gorev:'"Bugün tören var" gövdesi üç kez yazıldı. Hangi anlatıma hangi işaret uyar?',
+  etiketler:[{t:'.'},{t:'?'},{t:'!'}],
+  yuvalar:[{ad:'Bugün tören var (bilgi veriyorum)',dogru:0},
+   {ad:'Bugün tören var mı (emin değilim)',dogru:1},
+   {ad:'Bugün tören var (çok sevindim)',dogru:2}],
+  result:'Aynı sözcükler, farklı işaret: bilgi veren, soran ve sevinen üç ayrı cümle oldu.'},
+ {kind:'yaz',prompt:'Törenle ilgili üç cümle yaz.',sahne:S2.tören,
+  gorev:'Alt alta üç cümle yaz: birincisi nokta, ikincisi soru işareti, üçüncüsü ünlemle bitsin.',
+  enAzSatir:3,buyukHarf:true,gerekli:['.','?','!'],
+  ipucuMetin:'Bugün okulumuzda tören var.\nSen de şiir okuyacak mısın?\nNe kadar heyecanlıyım!',
+  ornekCevap:'Bugün okulumuzda tören var.\nSen de şiir okuyacak mısın?\nNe kadar heyecanlıyım!',
+  result:'Üç cümleyi üç farklı işaretle tamamladın.'}
+]};
+
+GAMES.u23={title:'Yarım Kalan Mektup',theme:'room',finish:'Metnin üslubuna ve kişilerine uyan devamı seçtin, sonra mektubu kendi sözlerinle bitirdin.',rounds:[
+ {kind:'kanit',prompt:'Mektuptaki ipucunu işaretle, sonra devamını seç.',sahne:S2.mektup,
+  baslik:'Yırtık mektup',
+  metin:[['Sevgili anneciğim, buradaki ',{t:'kış çok soğuk geçiyor',dogru:true},'. ',{t:'Arkadaşlarımla iyi anlaşıyorum'},'. Gönderdiğin ',{t:'yün çorapları giyiyorum'},'…']],
+  gerekKanit:1,soru:'Mektup nasıl devam etmiş olabilir?',
+  secenekler:[{label:'Ellerin dert görmesin, çok işime yaradı.',correct:true},
+   {label:'Deniz suyu bugün çok sıcaktı.',hint:'İşaretlediğin bölüm soğuk kıştan söz ediyor.'},
+   {label:'Yeni bisikletimi çok sevdim.'}],
+  result:'Soğuk kış ve yün çorap ipuçları teşekkür cümlesine bağlanıyor.'},
+ {kind:'kanit',prompt:'İki makul devam var: kişi, zaman ve duygu tutarlı mı?',sahne:S2.mektup,
+  baslik:'Mektubun ikinci sayfası',
+  metin:[['Dün ',{t:'bayram töreninde şiir okudum',dogru:true},'. ',{t:'Çok heyecanlandım'},' ama ',{t:'sonunda alkışladılar'},'…']],
+  gerekKanit:1,soru:'Hangi devam kişi ve zaman bakımından tutarlı?',
+  secenekler:[{label:'Sesim titredi ama şiiri sonuna kadar okudum.',correct:true},
+   {label:'Yarın şiir okuyacağım, çok heyecanlıyım.',hint:'Metin "dün" diyor; devamı gelecek zamanda olamaz.'},
+   {label:'Kardeşim şiiri çok güzel okudu.'}],
+  result:'Metin "dün" ve "ben" diyor; devamı da geçmiş zamanda ve aynı kişiyle sürmeli.'},
+ {kind:'yaz',prompt:'Mektuba kendi sonunu yaz.',sahne:S2.mektup,
+  gorev:'Mektubu iki cümleyle bitir. Birinci cümlede mektuptaki bir ayrıntıya değin, ikinci cümlede vedalaş.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Yün çoraplar sayesinde hiç üşümedim.\nSeni çok özledim, öptüm anneciğim.',
+  ornekCevap:'Yün çoraplar sayesinde hiç üşümedim.\nSeni çok özledim, öptüm anneciğim.',
+  result:'Mektubun kendi sonunu metne bağlı kalarak yazdın.'}
+]};
+
+GAMES.u24={title:'Karakter Aynası',theme:'class',finish:'Benzerlik ile aynı olmayı ayırdın ve bir benzer, bir farklı yönü tam cümleyle anlattın.',rounds:[
+ {kind:'esle',prompt:'Her kanıtı doğru bölgeye yerleştir.',sahne:S2.ayna,
+  gorev:'Venn aynası: solda yalnız Atatürk, ortada ikisi, sağda yalnız sen.',
+  etiketler:[{t:'Selanik’te doğdu'},{t:'Okumayı çok severdi'},{t:'Tablet kullanıyor'}],
+  yuvalar:[{ad:'Yalnız Atatürk',dogru:0},{ad:'İkisinde de var',dogru:1},{ad:'Yalnız sen',dogru:2}],
+  result:'Doğum yeri yalnız ona ait, okuma sevgisi ortak, tablet yalnız bugünün çocuğuna ait.'},
+ {kind:'kanit',prompt:'Benzer olmak aynı olmak mıdır?',sahne:S2.ayna,
+  baslik:'İki cümle',
+  metin:[['Atatürk çocukken ',{t:'matematik dersini çok severdi',dogru:true},'. Sen de ',{t:'matematikte problem çözmeyi seviyorsun'},'; ama o ',{t:'tahtaya tebeşirle yazardı'},'.']],
+  gerekKanit:1,soru:'Bu iki kişi için doğru olan hangisi?',
+  secenekler:[{label:'Benzer yönleri var ama aynı değiller',correct:true},
+   {label:'Tamamen aynılar',hint:'Tebeşirle tahtaya yazmakla tablet kullanmak aynı şey değil.'},
+   {label:'Hiç benzer yönleri yok'}],
+  result:'Aynı dersi sevmek benzerliktir; nasıl çalıştıkları farklıdır. Benzer olmak aynı olmak değildir.'},
+ {kind:'yaz',prompt:'Bir benzer, bir farklı yön yaz.',sahne:S2.ayna,
+  gorev:'Alt alta iki cümle yaz. Birinci cümlede bir benzerliği, ikinci cümlede bir farkı tam cümleyle anlat.',
+  enAzSatir:2,buyukHarf:true,gerekli:['benze'],
+  ipucuMetin:'İkimiz de kitap okumayı sevdiğimiz için benzeriz.\nO tahtaya tebeşirle yazardı, ben deftere kalemle yazıyorum.',
+  ornekCevap:'İkimiz de kitap okumayı sevdiğimiz için benzeriz.\nO tahtaya tebeşirle yazardı, ben deftere kalemle yazıyorum.',
+  result:'Benzerliği ve farkı ayrı ayrı, tam cümlelerle anlattın.'}
+]};
+
+GAMES.u25={title:'Tabela Avcısı',theme:'city',finish:'Harf biçimi değişse de sözcüğün aynı kaldığını gördün ve yüksek sesle okudun.',rounds:[
+ {kind:'esle',prompt:'Aynı sözcüğü farklı yazılarda bul.',sahne:S2.sokak,
+  gorev:'Üç tabelada da aynı sözcük yazıyor, yazı biçimleri farklı.',
+  etiketler:[{t:'ECZANE'},{t:'𝓮𝓬𝔃𝓪𝓷𝓮'},{t:'eczane'}],
+  yuvalar:[{ad:'Matbaa harfleriyle (büyük)',dogru:0},
+   {ad:'El yazısıyla',dogru:1},
+   {ad:'Sade okul yazısıyla',dogru:2}],
+  result:'Üç tabelada da aynı sözcük yazıyor: yazı biçimi değişti, sözcük değişmedi.'},
+ {kind:'kanit',prompt:'Benzer görünen sözcüklere dikkat.',sahne:S2.sokak,
+  baslik:'Sokaktaki tabelalar',
+  metin:[['Sağdaki tabelada ',{t:'MANAV',dogru:true},', karşısındaki tabelada ',{t:'MANAJ'},' yazıyor. Üsttekinde ise ',{t:'MANEVRA'},' var.']],
+  gerekKanit:1,soru:'Meyve sebze satılan yer hangisi?',
+  secenekler:[{label:'MANAV',correct:true},{label:'MANAJ',hint:'Harfleri karşılaştır: son harf farklı.'},{label:'MANEVRA'}],
+  result:'Benzer görünen sözcükleri harf harf karşılaştırmak gerekir.'},
+ {kind:'konus',prompt:'Tabelayı yüksek sesle oku.',sahne:S2.sokak,
+  gorev:'"ECZANE" sözcüğünü önce matbaa harfleriyle, sonra el yazısıyla oku. Sonra harf biçimi değişse de sözcüğün neden aynı kaldığını açıkla.',
+  ornek:'Örnek: “Eczane… eczane. Harflerin biçimi değişti ama sesler ve sıra aynı olduğu için sözcük aynı kaldı.”',
+  olcutler:['Sözcüğü iki yazı biçiminde de okudum.','Anlaşılır ve yeterli sesle okudum.','Harf biçiminin değiştiğini söyledim.','Sözcüğün aynı kaldığını açıkladım.'],
+  result:'Yazı biçimi değişse de harflerin sesi ve sırası aynı kaldığı için sözcük değişmiyor.'}
+]};
+
+GAMES.u26={title:'Büyük Harf Kalkanı',theme:'class',finish:'Cümle başı ve özel adlarda büyük harfi ayırt ettin ve iki cümleyi kendin yazdın.',rounds:[
+ {kind:'duzelt',prompt:'Telgraftaki küçük harfleri düzelt.',sahne:S2.telgraf,
+  gorev:'Cümle başındaki ve özel adlardaki harfleri büyük yaz. Metni aşağıdaki alanda düzenle.',
+  hatali:'bugün ankara’dan telgraf geldi. mustafa kemal atatürk 19 mayıs’ta samsun’a çıktı.',
+  denetim:[{ad:'Cümleler büyük harfle başlıyor',desen:'^Bugün[\\s\\S]*\\.\\s*Mustafa'},
+   {ad:'Ankara büyük harfle',desen:'Ankara'},
+   {ad:'Mustafa Kemal Atatürk büyük harfle',desen:'Mustafa Kemal Atatürk'},
+   {ad:'Samsun büyük harfle',desen:'Samsun'},
+   {ad:'Mayıs büyük harfle',desen:'Mayıs'}],
+  ornekCevap:'Bugün Ankara’dan telgraf geldi. Mustafa Kemal Atatürk 19 Mayıs’ta Samsun’a çıktı.',
+  result:'Cümle başı, kişi adı, şehir adı ve ay adı büyük harfle yazılır.'},
+ {kind:'esle',prompt:'Hangi ad türü, neden büyük harfle?',sahne:S2.telgraf,
+  gorev:'Her örneğin hangi kurala girdiğini seç.',
+  etiketler:[{t:'kişi adı'},{t:'şehir adı'},{t:'bayram adı'},{t:'kurum adı'}],
+  yuvalar:[{ad:'Mustafa Kemal',dogru:0},{ad:'İzmir',dogru:1},
+   {ad:'Cumhuriyet Bayramı',dogru:2},{ad:'Türkiye Büyük Millet Meclisi',dogru:3}],
+  result:'Kişi, şehir, bayram ve kurum adları özel addır; hepsi büyük harfle başlar.'},
+ {kind:'yaz',prompt:'İki cümleyi kendin yaz.',sahne:S2.telgraf,
+  gorev:'Alt alta iki cümle yaz. Birinci cümlede bir şehir adı, ikinci cümlede bir bayram adı geçsin; büyük harfleri kendin koy.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Yaz tatilinde Ankara’ya gittik.\nCumhuriyet Bayramı’nda okulda tören yapıldı.',
+  ornekCevap:'Yaz tatilinde Ankara’ya gittik.\nCumhuriyet Bayramı’nda okulda tören yapıldı.',
+  result:'Özel adları ve cümle başlarını büyük harfle yazdın.'}
+]};
+
+GAMES.u27={title:'Doğruluk Terazisi',theme:'class',finish:'Duyduğun bilgiyi bildiğin kanıtla karşılaştırdın ve kararını gerekçelendirdin.',rounds:[
+ {kind:'dinle',prompt:'Kaydı dinle, sonra karar ver.',sahne:S2.gramofon,
+  gorev:'Gramofon kaydını dinle. Metin ekranda yazılı değil.',
+  ses:'Cumhuriyet yirmi dokuz Ekim bin dokuz yüz yirmi üçte ilan edildi.',
+  soru:'Duyduğun bilgi doğru mu?',
+  secenekler:[{label:'Doğru',correct:true},{label:'Yanlış',hint:'Bir kez daha dinle: söylenen tarihi bildiğin tarihle karşılaştır.'},
+   {label:'Kayıtta tarih söylenmedi'}],
+  result:'Kayıttaki tarih doğru: Cumhuriyet 29 Ekim 1923’te ilan edildi.'},
+ {kind:'dinle',prompt:'Bu kez bilgi eksik olabilir.',sahne:S2.gramofon,
+  gorev:'Kaydı dinle ve eksik mi yanlış mı olduğunu ayır.',
+  ses:'Atatürk Samsuna çıktı ve orada doğdu.',
+  soru:'Bu bilgi hangisi?',
+  secenekler:[{label:'Bir kısmı doğru, bir kısmı yanlış',correct:true},
+   {label:'Tamamen doğru',hint:'Samsun’a çıkması doğru; ama doğduğu yer Samsun değil.'},
+   {label:'Tamamen yanlış'}],
+  result:'Samsun’a çıkması doğru, orada doğduğu yanlış. Kısmen doğru bilgi bütünüyle doğru sayılmaz.'},
+ {kind:'yaz',prompt:'Kararını gerekçelendir.',sahne:S2.gramofon,
+  gorev:'"Atatürk Selanik’te doğdu." bilgisi için kararını yaz. Cümlen "Biliyorum çünkü" ile başlasın.',
+  enAzKelime:7,buyukHarf:true,bitis:'.',gerekli:['Biliyorum çünkü'],
+  ipucuMetin:'Biliyorum çünkü …',
+  ornekCevap:'Biliyorum çünkü kitabımızda Atatürk’ün Selanik’te doğduğu yazıyordu.',
+  bank:['Biliyorum çünkü','kitabımızda','öğretmenimiz','Selanik'],
+  result:'Kararını bildiğin bir kanıta dayandırdın: doğruluk kontrolü böyle yapılır.'}
+]};
+
+GAMES.u28={title:'Hitap Yıldızları',theme:'class',finish:'Selamlaşma, hitap ve vedalaşmayı doğru kişiye ve doğru yere yerleştirdin, sonra sesli canlandırdın.',rounds:[
+ {kind:'esle',prompt:'Her kişiye uygun hitabı seç.',sahne:S2.tören,
+  gorev:'23 Nisan töreninde üç kişiyle karşılaştın.',
+  etiketler:[{t:'Merhaba, nasılsın?'},{t:'Günaydın öğretmenim.'},{t:'Hoş geldiniz efendim.'}],
+  yuvalar:[{ad:'Sınıf arkadaşın',dogru:0},{ad:'Öğretmenin',dogru:1},
+   {ad:'Törene gelen misafir',dogru:2,ipucu:'Tanımadığın bir büyüğü karşılarken hangi ifade kullanılır?'}],
+  result:'Arkadaşa "merhaba", öğretmene "günaydın öğretmenim", misafire "hoş geldiniz efendim" denir.'},
+ {kind:'esle',prompt:'Aynı konuşmanın üç yeri: başı, ortası, sonu.',sahne:S2.tören,
+  gorev:'Konuşmanın hangi bölümüne hangi ifade uyar?',
+  etiketler:[{t:'Günaydın öğretmenim.'},{t:'Öğretmenim, şiiri ben okuyabilir miyim?'},{t:'İyi günler, görüşmek üzere.'}],
+  yuvalar:[{ad:'Konuşmanın başı (selamlaşma)',dogru:0},
+   {ad:'Konuşmanın ortası (hitapla istek)',dogru:1},
+   {ad:'Konuşmanın sonu (vedalaşma)',dogru:2}],
+  result:'Selamlaşma başta, hitapla istek ortada, vedalaşma sonda yer alır.'},
+ {kind:'konus',prompt:'İki turlu diyaloğu sesli canlandır.',sahne:S2.tören,
+  gorev:'Törende öğretmeninle karşılaştın. Önce selamla ve bir şey iste, sonra vedalaş. İki turu da sesli söyle.',
+  ornek:'Örnek: “Günaydın öğretmenim. Şiiri ben okuyabilir miyim?” — “Elbette.” — “Teşekkür ederim, iyi günler.”',
+  olcutler:['Selamlaşma ifadesi kullandım.','Öğretmenime uygun hitap ettim.','Bir istekte bulundum.','Vedalaşarak bitirdim.'],
+  result:'Selamlaşma, hitap, istek ve vedalaşmayı aynı konuşmada sırayla kullandın.'}
 ]};
 
 game=GAMES[GAME_ID];

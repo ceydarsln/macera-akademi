@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 20/90 oyun uygulandı.**
+**Durum: 28/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -47,3 +47,11 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u18 | Zıt Anlamlılar Ekspresi | yazma | Köprü kutuları kaldırıldı, çiftler vagonlarda yan yana. 2. turda önce-sonra ve erken-geç gibi bağlama duyarlı çiftlere geçiliyor; 3. turda iki çift aynı paragrafta kullanılıyor. | Uygulamada |
 | u19 | Neden-Sonuç Köprüsü | okuma | Her neden sonucuna bağlanıyor; 2. turda aynı ilişki "çünkü" ve "bu yüzden" ile iki yönde kuruluyor; 3. turda biri doğa biri günlük yaşamdan iki cümle yazılıyor. | Uygulamada |
 | u20 | Zaman Şeridi | konuşma | Roket-yakıt sahnesi kaldırıldı, yatay zaman şeridi ve sabit kartlar var. 2. turda önce/ardından/daha sonra/en sonunda ayırt ediliyor; 3. turda çocuk üç cümlelik sözlü özet yapıyor. | Uygulamada |
+| u21 | İstiklâl Kâşifi | yazma | El yazması defter sabit; parlayan sözcük ile bağlam ipucu aynı görüş alanında. "Cephe/cephane" gibi yakın sözcükler ayrı cümlelerde karşılaştırılıyor; 3. turda sözlük kontrolünden sonra yeni cümle yazılıyor. | Uygulamada |
+| u22 | Noktalama Muhafızları | yazma | Kapsül/radar dili kaldırıldı; cümleler sabit ve tonuyla okunuyor. 2. turda aynı gövde üç işaretle karşılaştırılıyor; 3. turda tören üzerine üç cümle yazılıp nokta-soru-ünlemle bitiriliyor. | Uygulamada |
+| u23 | Yarım Kalan Mektup | yazma | Devam seçenekleri metnin üslubuna uyuyor; 2. turda kişi, zaman ve duygu tutarlılığı sınanıyor ("dün" diyen metne gelecek zamanlı devam reddediliyor). 3. turda çocuk mektubun sonunu kendi yazıyor. | Uygulamada |
+| u24 | Karakter Aynası | konuşma | Venn aynası: yalnız Atatürk / ikisinde de / yalnız sen bölgeleri. 2. turda "benzer olmak aynı olmak değildir" ayrımı kuruluyor; 3. turda bir benzerlik ve bir fark tam cümleyle yazılıyor. | Uygulamada |
+| u25 | Tabela Avcısı | okuma | Su altı balık-ağ motoru kaldırıldı; tarihî sokakta matbaa, el yazısı ve okul yazısı tabelaları var. 2. turda MANAV/MANAJ/MANEVRA çeldiricileri harf harf ayırt ediliyor; 3. turda çocuk tabelayı sesli okuyup biçim değişse de sözcüğün aynı kaldığını açıklıyor. | Uygulamada |
+| u26 | Büyük Harf Kalkanı | yazma | Doğru biçim otomatik verilmiyor: çocuk telgraf metnini gerçekten düzenliyor, beş ölçüt canlı denetleniyor. 2. turda kişi/şehir/bayram/kurum adları ayrılıyor; 3. turda iki cümle klavyeyle yeniden yazılıyor. | Uygulamada |
+| u27 | Doğruluk Terazisi | dinleme | Kayıt metni ekranda yazılı değil, tekrar dinleme cezasız. 2. turda kısmen doğru bilgi ile tümüyle yanlış bilgi ayrılıyor; 3. turda karar "Biliyorum çünkü …" ile gerekçelendiriliyor. | Uygulamada |
+| u28 | Hitap Yıldızları | konuşma | Arkadaş, öğretmen ve misafir için ayrı hitaplar; 2. turda selamlaşma-hitap-vedalaşma konuşmanın farklı yerlerine yerleştiriliyor; 3. turda iki turlu diyalog sesli canlandırılıyor. | Uygulamada |
