@@ -15,6 +15,10 @@ for f in "$SABLONLAR"/*-phaser.html; do
   ad=$(basename "$f" -phaser.html)
   sed -e 's|https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js|phaser.min.js|' \
       -e "s|src=\"svgciz.js\"|src=\"svgciz.js?s=$DAMGA\"|" "$f" > "$VARLIKLAR/phaser/$ad.html"
+  # Uygulama iframe'i "phaser/<ad>.html" istiyor; web klasöründe kaynaklar
+  # "<ad>-phaser.html" adıyla durduğu için web sürümü 404 veriyordu.
+  # Aynı adla bir kopya da web klasörüne yazılır (üretilmiş dosya, .gitignore'da).
+  cp "$f" "$SABLONLAR/$ad.html"
 done
 cp "$SABLONLAR/svgciz.js" "$VARLIKLAR/phaser/svgciz.js"
 cp "$KAYNAK/macera-akademi.html" "$VARLIKLAR/macera-akademi.html"

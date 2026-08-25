@@ -22,3 +22,8 @@ __pycache__/
 test-results/
 tools/audio/ses/
 tools/audio/gunluk/
+
+# Uygulama iframe'i 'phaser/<ad>.html' istiyor; aynala.sh bu adla üretilmiş
+# kopyaları web/phaser'a da yazar. Kaynak yalnız *-phaser.html dosyalarıdır.
+web/phaser/*.html
+!web/phaser/*-phaser.html

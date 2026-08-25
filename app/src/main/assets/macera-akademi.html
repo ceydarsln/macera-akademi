@@ -781,6 +781,9 @@
     .hud-title .t2{ font-size:12px; }
     .hud-chip{ font-size:12px; padding:4px 6px; }
   }
+  /* Tilki balonu iframe'in üstünde duruyor (top:58px, ~52px yüksek).
+     Oyun motorları kendi HUD'unu en üste çiziyor; 52px'lik boşluk 375px
+     genişlikte tur sayacını ve canları balonun altında bırakıyordu. */
   @media (orientation:landscape) and (max-height:520px){
     :root{ --phone-max:760px; }
     .imm-content{ justify-content:flex-start; }
@@ -10272,7 +10275,7 @@ const MATH4_TEMA1 = [
                {id:'v1', label:'10',      need:1}],
       speak:'Basamak değeri, rakamın bulunduğu basamağa göre değişir.'}},
 
-{id:'p04', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Sıralama Kulesi', sub:'Küçükten büyüğe sırala', emo:'🗼',
+{id:'p04', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Sıralama Kulesi', sub:'Sayıları küçükten büyüğe sırala', emo:'🗼',
  kaz:'MAT.4.1.3.a — En fazla altı basamaklı sayıları öncelik/sonralık ilişkisine göre belirler.',
  type:'orderSequence',
  cfg:{instruction:'Kule karıştı! Sayılara <b>küçükten büyüğe</b> doğru sırayla dokun 🗼<br><span style="font-size:12px">📏 Önce basamak sayısına, eşitse soldan başlayarak rakamlara bak.</span>',
@@ -10286,7 +10289,7 @@ const MATH4_TEMA1 = [
       order:['s1','s2','s3','s4','s5'],
       speak:'Sayıları küçükten büyüğe sırala.'}},
 
-{id:'p05', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Yuvarlama Treni', sub:'Makası doğru tünele çevir', emo:'🚄',
+{id:'p05', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Yuvarlama Treni', sub:'En yakın onluk/yüzlük/binlik', emo:'🚄',
  kaz:'MAT.4.1.3.c — En fazla dört basamaklı sayıları en yakın onluğa, yüzlüğe ve binliğe yuvarlayarak tasnif eder.',
  type:'dragSlider',
  cfg:{instruction:'Tren geliyor! <b>Makas kolunu sürükleyerek</b> sayıyı doğru tünele yuvarla 🚄',
@@ -10321,7 +10324,7 @@ const MATH4_TEMA1 = [
       tip:'🚦 Kural: Yuvarlanacak basamağın <b>sağındaki</b> rakam 5 veya daha büyükse yukarı, küçükse aşağı.',
       successMsg:'Şef makasçı oldun! Onluğa, yüzlüğe ve binliğe yuvarlamayı öğrendin 🚄'}},
 
-{id:'p06', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Gökdelen Asansörü', sub:'Yüzer sayarak yukarı çık', emo:'🏢',
+{id:'p06', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Gökdelen Asansörü', sub:'Yüzer ve biner ileri-geri sayma', emo:'🏢',
  kaz:'MAT.4.1.4.b — Yüzer ve biner ileriye ve geriye doğru ritmik sayarak hedeflenen sayıya ulaşır.',
  type:'jumpPath',
  cfg:{instruction:'Gökdelende <b>yüzer yüzer</b> sayarak yukarı çık! Sıradaki doğru kata zıpla 🏢',
@@ -10353,7 +10356,7 @@ const MATH4_TEMA1 = [
       tip:'🏢 Yüzer sayarken her adımda <b>+100</b>: 1000, 1100, 1200, 1300, 1400, 1500 …',
       successMsg:'Çatıya çıktın! Yüzer ritmik saymayı ve hedefe ulaşmayı öğrendin 🏢'}},
 
-{id:'p07', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Örüntü Radarı', sub:'Eksik sayıyı yakala', emo:'📡',
+{id:'p07', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Örüntü Radarı', sub:'Eksik terimi ve kuralı bul', emo:'📡',
  kaz:'MAT.4.1.5.a / ç — Örüntüdeki ilişkiyi belirler; artma, azalma ve tekrar durumlarını ifade eder.',
  type:'catchDrop',
  cfg:{instruction:'Radar örüntüyü tarıyor! <b>Kuralı bul</b> ve eksik sayıyı taşıyan küreyi yakala 📡',
@@ -10375,7 +10378,7 @@ const MATH4_TEMA1 = [
       ],
       successMsg:'Radar şefi oldun! Artan, azalan ve çarpımlı örüntülerin kuralını bulmayı öğrendin 📡'}},
 
-{id:'p08', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Okunuş Eşleştirme', sub:'Sayıyı okunuşuyla eşle', emo:'🗣️',
+{id:'p08', grp:'Tema 1 · Sayılar ve Nicelikler (1)', title:'Okunuş Eşleştirme', sub:'Sayıyı okunuşuyla eşleştir', emo:'🗣️',
  kaz:'MAT.4.1.1.c — Niceliklerin büyüklüklerine karşılık gelen sayıları okur ve yazar.',
  type:'memoryPairs',
  cfg:{instruction:'Kartlar kapalı! Kartları çevir ve her <b>sayıyı okunuşuyla</b> eşleştir 🗣️',
@@ -10397,7 +10400,7 @@ MATH4_TEMA1.forEach(g=>{ g.subj = 'math'; g.grade = 4; });
    ===================================================================== */
 const MATH4_TEMA2 = [
 
-{id:'p09', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Kesir Tasnif Bandı', sub:'Basit, bileşik, tam sayılı', emo:'🍕',
+{id:'p09', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Kesir Tasnif Bandı', sub:'Basit, bileşik ve tam sayılı kesir', emo:'🍕',
  kaz:'MAT.4.1.6.a — Basit, bileşik ve tam sayılı kesirlerin temsillerini tanır.',
  type:'beltSort',
  cfg:{instruction:'Kesir bandı çalışıyor! Gelen kesir <b>BASİT</b>, <b>BİLEŞİK</b> mi yoksa <b>TAM SAYILI</b> mı? 🍕<br><span style="font-size:12px">📏 Pay &lt; payda → basit · Pay ≥ payda → bileşik · Bütün + kesir → tam sayılı</span>',
@@ -10461,7 +10464,7 @@ const MATH4_TEMA2 = [
       tip:'🎂 <b>Bileşik kesir</b>, bütünlere ve kalan kesre ayrılabilir: 5/4 = 1 tam 1/4',
       successMsg:'Pastane şefi oldun! Bileşik ve tam sayılı kesirleri parçalarla kurmayı öğrendin 🎂'}},
 
-{id:'p11', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Denk Kesir Köprüsü', sub:'Eşit değerdeki kesirleri birleştir', emo:'🌉',
+{id:'p11', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Denk Kesir Köprüsü', sub:'Eşit değerdeki kesirler', emo:'🌉',
  kaz:'MAT.4.1.7 — Denk kesirlerin temsillerini tanır, belirler ve kullanır.',
  type:'dragMatch',
  cfg:{instruction:'Köprüyü kur! Her kesri <b>denk kesriyle</b> (aynı değerdeki kesirle) birleştir 🌉',
@@ -10478,7 +10481,7 @@ const MATH4_TEMA2 = [
                {id:'g5', label:'2/8', need:1}],
       speak:'Denk kesirler farklı yazılır ama aynı değeri gösterir.'}},
 
-{id:'p12', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Birim Kesir Kulesi', sub:'Büyükten küçüğe sırala', emo:'🗼',
+{id:'p12', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Birim Kesir Kulesi', sub:'Birim kesirleri sırala', emo:'🗼',
  kaz:'MAT.4.1.8 — Birim kesirler arasındaki büyüklük küçüklük ilişkisini belirler.',
  type:'orderSequence',
  cfg:{instruction:'Kule karıştı! Birim kesirlere <b>büyükten küçüğe</b> doğru sırayla dokun 🗼<br><span style="font-size:12px">📏 Payı 1 olan kesirlerde <b>payda büyüdükçe kesir küçülür</b>.</span>',
@@ -10492,7 +10495,7 @@ const MATH4_TEMA2 = [
       order:['b1','b2','b3','b4','b5'],
       speak:'Birim kesirleri büyükten küçüğe sırala.'}},
 
-{id:'p13', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'En Büyük Kesir Radarı', sub:'Büyük olanı yakala', emo:'📡',
+{id:'p13', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'En Büyük Kesir Radarı', sub:'Kesirleri karşılaştır', emo:'📡',
  kaz:'MAT.4.1.9 — Paydaları eşit kesirler arasındaki büyüklük küçüklük ilişkisini belirler.',
  type:'catchDrop',
  cfg:{instruction:'Radarı <b>sürükleyerek</b> en <b>BÜYÜK</b> kesri yakala 📡',
@@ -10544,7 +10547,7 @@ const MATH4_TEMA2 = [
       tip:'🧮 Paydalar eşitse: <b>pay ± pay</b>, payda <b>değişmez</b>.',
       successMsg:'Hesap ustası oldun! Paydaları eşit kesirlerle toplama ve çıkarmayı öğrendin 🧮'}},
 
-{id:'p15', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Çokluk Ölçeri', sub:'Çokluğun kesir kadarını bul', emo:'🧺',
+{id:'p15', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Çokluk Ölçeri', sub:'Bir çokluğun kesir kadarını bul', emo:'🧺',
  kaz:'MAT.4.1.10 — Bir çokluğun basit kesir kadarını ve bir kesir kadarı verilen çokluğun tamamını çözümler.',
  type:'dragSlider',
  cfg:{instruction:'Ölçeri <b>sürükleyerek</b> çokluğun kesir kadarını bul 🧺<br><span style="font-size:12px">📏 Önce çokluğu paydaya böl, sonra pay kadar al.</span>',
@@ -10573,7 +10576,7 @@ const MATH4_TEMA2 = [
       tip:'🧺 Çokluğun kesir kadarı: <b>çokluk ÷ payda × pay</b> · Tamamı: <b>parça ÷ pay × payda</b>',
       successMsg:'Ölçüm ustası oldun! Çokluğun kesir kadarını ve tamamını bulmayı öğrendin 🧺'}},
 
-{id:'p16', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Birim Dönüşüm Kartları', sub:'Uzunluk ve kütle birimleri', emo:'📐',
+{id:'p16', grp:'Tema 2 · Sayılar ve Nicelikler (2)', title:'Birim Dönüşüm Kartları', sub:'Uzunluk ve kütle dönüşümleri', emo:'📐',
  kaz:'MAT.4.1.13 — Uzunluk ve kütle birimlerinin kendi içindeki dönüşümlerini yorumlar.',
  type:'memoryPairs',
  cfg:{instruction:'Kartlar kapalı! Kartları çevir ve her ölçüyü <b>eşit değerdeki birimle</b> eşleştir 📐',
@@ -10647,7 +10650,7 @@ const MATH4_TEMA3 = [
       tip:'🧮 Toplamada <b>elde</b>, çıkarmada <b>onluk bozma</b> yapılır. Yakın sayılarda kısa yol dene!',
       successMsg:'Kasa şefi oldun! Dört basamaklı toplama ve çıkarmayı öğrendin 🧮'}},
 
-{id:'p19', grp:'Tema 3 · İşlemlerden Cebirsel Düşünmeye', title:'Tahmin Terazisi', sub:'Sonucu yuvarlayarak tahmin et', emo:'⚖️',
+{id:'p19', grp:'Tema 3 · İşlemlerden Cebirsel Düşünmeye', title:'Tahmin Terazisi', sub:'Çarpma ve bölmede tahmin', emo:'⚖️',
  kaz:'MAT.4.2.3.a / b / c — Çarpma ve bölme sonuçlarını tahmin eder, çıkarım ve yargıda bulunur.',
  type:'dragSlider',
  cfg:{instruction:'Göstergeyi <b>sürükleyerek</b> sonucu tahmin et! Sayıları yuvarlayarak düşün ⚖️',
@@ -10682,7 +10685,7 @@ const MATH4_TEMA3 = [
       tip:'⚖️ Tahmin için sayıları <b>en yakın onluk/yüzlüğe</b> yuvarla, sonra işlemi zihinden yap.',
       successMsg:'Tahmin ustası oldun! Çarpma ve bölme sonuçlarını yuvarlayarak tahmin etmeyi öğrendin ⚖️'}},
 
-{id:'p20', grp:'Tema 3 · İşlemlerden Cebirsel Düşünmeye', title:'Kısa Yol Bandı', sub:'Sihirli mührü seç', emo:'⚡',
+{id:'p20', grp:'Tema 3 · İşlemlerden Cebirsel Düşünmeye', title:'Kısa Yol Bandı', sub:'10 ve 100 ile çarpma-bölme', emo:'⚡',
  kaz:'MAT.4.2.4 — Zihinden çözümlenen çarpma ve bölme işlemleri ile kısa yollarını yapılandırır.',
  type:'beltSort',
  cfg:{instruction:'Kısa yol bandı! Her işlem için <b>doğru mührü</b> seç ⚡',
@@ -10704,7 +10707,7 @@ const MATH4_TEMA3 = [
       tip:'⚡ ×10 → 1 sıfır ekle · ×100 → 2 sıfır ekle · ÷10 → 1 sıfır sil · ÷100 → 2 sıfır sil',
       successMsg:'Kısa yol şefi oldun! 10 ve 100 ile çarpma-bölme kısa yollarını öğrendin ⚡'}},
 
-{id:'p21', grp:'Tema 3 · İşlemlerden Cebirsel Düşünmeye', title:'Robot Paketleme Bandı', sub:'Çarpma ve bölme birbirinin sağlaması', emo:'🤖',
+{id:'p21', grp:'Tema 3 · İşlemlerden Cebirsel Düşünmeye', title:'Robot Paketleme Bandı', sub:'Çarpma-bölme tersliği', emo:'🤖',
  kaz:'MAT.4.2.5.a / b — Çarpma ve bölme işlemlerini fark eder ve birbiri ile ilişkilendirir.',
  type:'groupMultiply',
  cfg:{instruction:'Fabrika bandında paketleme! Kutulara <b>sırayla dokunarak</b> ritmik say, sonra kısa yolu keşfet 🤖',
@@ -10777,7 +10780,7 @@ const MATH4_TEMA3 = [
       tip:'📝 İyi bir problem: <b>veriler + soru cümlesi</b> içerir · Gereksiz bilgiler çözüme katkı sağlamaz.',
       successMsg:'Problem yazarı oldun! Dört işlem gerektiren problem kurmayı ve gereksiz bilgiyi ayırmayı öğrendin 📝'}},
 
-{id:'p24', grp:'Tema 3 · İşlemlerden Cebirsel Düşünmeye', title:'Eşitlik Terazisi', sub:'İki tarafı dengede tut', emo:'⚖️',
+{id:'p24', grp:'Tema 3 · İşlemlerden Cebirsel Düşünmeye', title:'Eşitlik Terazisi', sub:'Eşitliğin iki tarafı', emo:'⚖️',
  kaz:'MAT.4.2.9 — Dört işlem bağlamında eşitliğin farklı anlamlarını yorumlar.',
  type:'tiltBalance',
  cfg:{instruction:'Teraziyi dengele! <b>Eşittir</b> bir sonuç değil, <b>iki tarafın eşit değerde</b> olduğunu gösterir ⚖️',
@@ -10826,7 +10829,7 @@ MATH4_TEMA3.forEach(g=>{ g.subj = 'math'; g.grade = 4; });
    ===================================================================== */
 const MATH4_TEMA4 = [
 
-{id:'p25', grp:'Tema 4 · Nesnelerin Geometrisi (1)', title:'Açınım Ayırma Bandı', sub:'Bu açınım hangi cisme ait?', emo:'📐',
+{id:'p25', grp:'Tema 4 · Nesnelerin Geometrisi (1)', title:'Açınım Ayırma Bandı', sub:'Açınımdan cismi belirle', emo:'📐',
  kaz:'MAT.4.3.1.a / b — Geometrik cisimlerin açınımlarını inceleyerek yüzler arasında ilişki kurar ve cismi oluşturur.',
  type:'beltSort',
  cfg:{instruction:'Açınım bandı çalışıyor! Gelen <b>açınım</b> hangi cisme ait? Doğru kutuya dokun 📐<br><span style="font-size:12px">📏 Açınım, bir cismin bütün yüzlerinin düzleme açılmış hâlidir.</span>',
@@ -10877,7 +10880,7 @@ const MATH4_TEMA4 = [
       tip:'🧊 Küp: <b>8 köşe · 12 ayrıt · 6 eş kare yüz</b>',
       successMsg:'Tarama tamamlandı! Küpün 8 köşesi, 12 ayrıtı ve 6 eş kare yüzü olduğunu keşfettin 🧊'}},
 
-{id:'p27', grp:'Tema 4 · Nesnelerin Geometrisi (1)', title:'Üçgen Çeşitleri Bandı', sub:'Kenarlarına göre ayır', emo:'🔺',
+{id:'p27', grp:'Tema 4 · Nesnelerin Geometrisi (1)', title:'Üçgen Çeşitleri Bandı', sub:'Kenarlarına göre üçgenler', emo:'🔺',
  kaz:'MAT.4.3.2.c — Kenarlarına göre üçgen çeşitlerini ifade eder.',
  type:'beltSort',
  cfg:{instruction:'Üçgen bandı! Gelen üçgen <b>kenarlarına göre</b> hangi çeşit? 🔺<br><span style="font-size:12px">📏 Kenarlardaki <b>tırnak işaretleri</b> eşit kenarları gösterir.</span>',
@@ -10986,7 +10989,7 @@ const MATH4_TEMA4 = [
       tip:'🧵 Eğri kenarlar cetvelle doğrudan ölçülemez — <b>ip dolayıp</b> sonra ipi cetvelde düzleştiririz.',
       successMsg:'İp ustası oldun! Eğri kenarların çevresini ölçmek için doğru aracı seçmeyi öğrendin 🧵'}},
 
-{id:'p31', grp:'Tema 4 · Nesnelerin Geometrisi (1)', title:'Alan Tahmin Ölçeri', sub:'Kaç birim kare kaplar?', emo:'🟦',
+{id:'p31', grp:'Tema 4 · Nesnelerin Geometrisi (1)', title:'Alan Tahmin Ölçeri', sub:'Birim karelerle alan tahmini', emo:'🟦',
  kaz:'MAT.4.3.4 — Standart olmayan ölçü birimi kullanarak şeklin alanına ilişkin tahminde bulunur ve karşılaştırır.',
  type:'dragSlider',
  cfg:{instruction:'Ölçeri <b>sürükleyerek</b> şeklin alanını tahmin et, sonra gerçek sayımı gör 🟦<br><span style="font-size:12px">📏 Alan, bir yüzeyi kaplayan birim sayısıdır.</span>',
@@ -11015,7 +11018,7 @@ const MATH4_TEMA4 = [
       tip:'🟦 Alan = yüzeyi kaplayan birim sayısı · Birim büyüdükçe sayı azalır → standart birim gerekir.',
       successMsg:'Alan tahmin uzmanı oldun! Standart olmayan birimlerle alan tahmini yapmayı ve karşılaştırmayı öğrendin 🟦'}},
 
-{id:'p32', grp:'Tema 4 · Nesnelerin Geometrisi (1)', title:'Ölçme Aracı Deposu', sub:'Doğru aracı seç', emo:'🧰',
+{id:'p32', grp:'Tema 4 · Nesnelerin Geometrisi (1)', title:'Ölçme Aracı Deposu', sub:'Doğru ölçme aracını seç', emo:'🧰',
  kaz:'MAT.4.3.3.a / b — Çevre uzunluğunu ölçmede kullanılabilecek matematiksel araç ve teknolojiyi tanır ve belirler.',
  type:'serveOrder',
  cfg:{instruction:'Ölçme deposundasın! Her görev için <b>en uygun aracı</b> tepsiye koy 🧰',
@@ -11110,7 +11113,7 @@ const MATH4_TEMA5 = [
       tip:'🔄 Açı bir <b>dönme miktarıdır</b> · Dar &lt; 90° · Dik = 90° · Geniş: 90°–180° · Doğru = 180°',
       successMsg:'Döndürme ustası oldun! Açıyı dönme miktarı olarak hissettin ve dar-dik-geniş açıları oluşturdun 🔄'}},
 
-{id:'p35', grp:'Tema 5 · Nesnelerin Geometrisi (2)', title:'Açı Tasnif Bandı', sub:'Dar, dik, geniş', emo:'📐',
+{id:'p35', grp:'Tema 5 · Nesnelerin Geometrisi (2)', title:'Açı Tasnif Bandı', sub:'Dar, dik ve geniş açı', emo:'📐',
  kaz:'MAT.4.3.7 — Dik açıyı referans alarak açıları dar ve geniş olarak sınıflandırır ve adlandırır.',
  type:'beltSort',
  cfg:{instruction:'Açı bandı çalışıyor! Gelen açı <b>DAR</b>, <b>DİK</b> mi yoksa <b>GENİŞ</b> mi? 📐<br><span style="font-size:12px">📏 Dik açıyı (küçük kare işaretli) ölçüt al: küçükse dar, büyükse geniş.</span>',
@@ -11174,7 +11177,7 @@ const MATH4_TEMA5 = [
       tip:'📄 Kâğıt köşesi = 90° · Standart olmayan birimler kişiye göre değişir → <b>derece</b> ve <b>açıölçer</b> gerekir.',
       successMsg:'Deney tamam! Standart olmayan birimle ölçüp standart ölçme aracının neden gerekli olduğunu keşfettin 📄'}},
 
-{id:'p37', grp:'Tema 5 · Nesnelerin Geometrisi (2)', title:'Açı Özellik Köprüsü', sub:'Açıyı özelliğiyle birleştir', emo:'🌉',
+{id:'p37', grp:'Tema 5 · Nesnelerin Geometrisi (2)', title:'Açı Özellik Köprüsü', sub:'Açıyı özelliğiyle eşleştir', emo:'🌉',
  kaz:'MAT.4.3.7.a / c — Dik açının özelliklerini belirler; dar ve geniş açının özelliklerini tasnif eder.',
  type:'dragMatch',
  cfg:{instruction:'Köprüyü kur! Her <b>açı çeşidini</b> doğru <b>özelliğiyle</b> birleştir 🌉',
@@ -11191,7 +11194,7 @@ const MATH4_TEMA5 = [
                {id:'o5', label:'Tam 360° (bir tur)',  need:1}],
       speak:'Açılar ölçülerine göre adlandırılır.'}},
 
-{id:'p38', grp:'Tema 5 · Nesnelerin Geometrisi (2)', title:'Açı Kartları', sub:'Açıyı günlük örnekle eşle', emo:'🃏',
+{id:'p38', grp:'Tema 5 · Nesnelerin Geometrisi (2)', title:'Açı Kartları', sub:'Açıyı günlük örnekle eşleştir', emo:'🃏',
  kaz:'MAT.4.3.5.b — Açıları bağlamından koparmadan günlük yaşam durumlarına dönüştürür.',
  type:'memoryPairs',
  cfg:{instruction:'Kartlar kapalı! Kartları çevir ve her <b>açıyı günlük yaşam örneğiyle</b> eşleştir 🃏',
@@ -11398,7 +11401,7 @@ const MATH4_TEMA6 = [
       tip:'📄 Simetri doğrusu: katlandığında iki tarafın <b>tam üst üste geldiği</b> çizgi.',
       successMsg:'Katlama ustası! Kare 4, dikdörtgen 2, daire sayısız simetri doğrusuna sahip — hepsini çizerek keşfettin 📄'}},
 
-{id:'p46', grp:'Tema 6 · Nesnelerin Geometrisi (3)', title:'Kodlama Mimarı', sub:'Yapıyı kodlama ile oluştur', emo:'💻',
+{id:'p46', grp:'Tema 6 · Nesnelerin Geometrisi (3)', title:'Kodlama Mimarı', sub:'Geometrik yapı için rota kodla', emo:'💻',
  kaz:'MAT.4.3.10.a / b — Geometrik şekil ve yapı bilgisi arasında ilişki kurarak kodlama stratejisi oluşturur.',
  type:'codeGrid',
  cfg:{instruction:'Mimarlık laboratuvarında robot bekliyor! <b>Yön bloklarıyla kodlama stratejisi</b> oluştur ve ▶️ Çalıştır 💻',
@@ -11424,7 +11427,7 @@ const MATH4_TEMA6 = [
       ],
       successMsg:'Kodlama mimarı oldun! Geometrik yapı için kodlama stratejisi oluşturmayı öğrendin 💻'}},
 
-{id:'p47', grp:'Tema 6 · Nesnelerin Geometrisi (3)', title:'Simetri Sayısı Köprüsü', sub:'Şeklin kaç simetri doğrusu var?', emo:'🌉',
+{id:'p47', grp:'Tema 6 · Nesnelerin Geometrisi (3)', title:'Simetri Sayısı Köprüsü', sub:'Şeklin simetri doğrusu sayısı', emo:'🌉',
  kaz:'MAT.4.3.9 — Şekillerin simetri doğrularını belirler.',
  type:'dragMatch',
  cfg:{instruction:'Köprüyü kur! Her <b>şekli</b> sahip olduğu <b>simetri doğrusu sayısıyla</b> birleştir 🌉',
@@ -11591,7 +11594,7 @@ const MATH4_TEMA7 = [
       ],
       successMsg:'Anket tamamlandı! Beşli gruplama sayesinde en sevilen mevsimi kolayca gördün: YAZ 📝'}},
 
-{id:'p53', grp:'Tema 7 · Olasılık ve Veriye Dayalı Araştırma', title:'Grafik Fabrikası', sub:'Veriyi grafiğe dök', emo:'📊',
+{id:'p53', grp:'Tema 7 · Olasılık ve Veriye Dayalı Araştırma', title:'Grafik Fabrikası', sub:'Çeteleyi grafiğe dönüştür', emo:'📊',
  kaz:'MAT.4.4.2.d / e — Verileri analiz etmek için uygun görselleştirme aracını seçer ve verileri görselleştirir.',
  type:'graphBuild',
  cfg:{instruction:'Çeteleyi grafiğe çeviriyoruz! Her <b>1 kişi için</b> ilgili sütuna bir <b>blok</b> ekle 📊',
@@ -11604,7 +11607,7 @@ const MATH4_TEMA7 = [
       tip:'📊 Sütun grafiğinde her <b>blok bir veriyi</b> (bir kişiyi) temsil eder.',
       successMsg:'Grafik hazır! Çetele verisini sütun grafiğine dönüştürmeyi öğrendin 📊'}},
 
-{id:'p54', grp:'Tema 7 · Olasılık ve Veriye Dayalı Araştırma', title:'Veri Terazisi', sub:'Farkı dengeyle bul', emo:'⚖️',
+{id:'p54', grp:'Tema 7 · Olasılık ve Veriye Dayalı Araştırma', title:'Veri Terazisi', sub:'Grafikten fark ve toplam bul', emo:'⚖️',
  kaz:'MAT.4.4.2.f — Araştırma sonuçlarını yorumlar, gruplar arasında sayısal karşılaştırma yapar.',
  type:'tiltBalance',
  cfg:{instruction:'Veri terazisi! Az olan tarafa <b>blok ekleyerek</b> dengeyi kur — eklediğin sayı <b>farkı</b> gösterir ⚖️',
@@ -11650,7 +11653,7 @@ const MATH4_TEMA7 = [
                     {label:'🏀 Basketbol en çok sevilen'},
                     {label:'🏐 Hepsi eşit sevilmektedir'}]}},
 
-{id:'p56', grp:'Tema 7 · Olasılık ve Veriye Dayalı Araştırma', title:'Grafik Hesap Makinesi', sub:'Grafikten sonuç çıkar', emo:'🧮',
+{id:'p56', grp:'Tema 7 · Olasılık ve Veriye Dayalı Araştırma', title:'Grafik Hesap Makinesi', sub:'Grafikten sayısal sonuç çıkar', emo:'🧮',
  kaz:'MAT.4.4.2.f — Araştırma sonuçlarını yorumlar, grafikten sayısal çıkarım yapar.',
  type:'numPad',
  cfg:{instruction:'Grafiği oku ve hesapla! Sonucu tuş takımıyla yaz 🧮<br><span style="font-size:12px">📊 <b>⚽ Futbol: 5</b> · <b>🏀 Basketbol: 3</b> · <b>🏐 Voleybol: 2</b></span>',
@@ -16981,6 +16984,26 @@ function setFoxPrompt(text){
   if(text) gs.foxPrompt = String(text);
   const el = document.querySelector('.fox-prompt-text');
   if(el && text) el.innerHTML = String(text);
+  balonBosluguAyarla();
+}
+/* Tilki balonu iframe'in üstünde duruyor ve metin uzunluğuna göre boyu
+   değişiyor. Sabit bir üst boşluk 375 px'lik telefonda oyunun tur sayacını
+   ve canlarını balonun altında bırakıyordu; boşluk balonun gerçek
+   yüksekliğine göre ayarlanır. */
+function balonBosluguAyarla(){
+  /* requestAnimationFrame arka plandaki sekmede hiç çalışmıyor; doğrudan
+     ölçüp bir de gecikmeli tekrar ölçüyoruz (yazı tipi/emoji geç yerleşirse). */
+  const olc = () => {
+    const balon = document.querySelector('.phaser-prompt-row');
+    const sahne = document.getElementById('immStage');
+    if(!balon || !sahne) return;
+    const b = balon.getBoundingClientRect(), s = sahne.getBoundingClientRect();
+    const gerek = Math.ceil(b.bottom - s.top + 8);
+    /* Değişkeni kökte tutuyoruz: ekran yeniden çizilince satır içi stil
+       sıfırlanıyordu, CSS değişkeni ise kalıcı. */
+    if(gerek > 0) document.documentElement.style.setProperty('--balon-bosluk', gerek + 'px');
+  };
+  olc(); setTimeout(olc, 120); setTimeout(olc, 420);
 }
 function renderSceneLayer(game){
   const def = SCENE_DEFS[game.scene] || SCENE_DEFS.sky;
@@ -20724,7 +20747,9 @@ function autoSpeak(game){
   else if (PHASER_OYUNLAR[game.id] === 'matematik-pdf' ||
            PHASER_OYUNLAR[game.id] === 'matematik2-pdf' ||
            PHASER_OYUNLAR[game.id] === 'matematik3-pdf' ||
-             PHASER_OYUNLAR[game.id] === 'sayma-pdf') text = '';
+           PHASER_OYUNLAR[game.id] === 'matematik4-pdf' ||
+             PHASER_OYUNLAR[game.id] === 'sayma-pdf' ||
+             PHASER_OYUNLAR[game.id] === 'turkce2-pdf') text = '';
   else if (phaserOyunuMu(game)) text = game.cfg.speak || game.cfg.instruction;
   else text = getCurrentPrompt(game);
   if(text && text !== gs.spokenKey){
@@ -21247,10 +21272,32 @@ const PHASER_OYUNLAR = {
   w37:'matematik3-pdf', w38:'matematik3-pdf', w39:'matematik3-pdf', w40:'matematik3-pdf',
   w41:'matematik3-pdf', w42:'matematik3-pdf', w43:'matematik3-pdf', w44:'matematik3-pdf',
   w45:'matematik3-pdf', w46:'matematik3-pdf', w47:'matematik3-pdf', w48:'matematik3-pdf',
+  /* 2. sınıf Türkçe: uygulanan oyunlar yeni motora bağlanır, kalanlar eski şablonda kalır */
+  u01:'turkce2-pdf', u02:'turkce2-pdf', u03:'turkce2-pdf', u04:'turkce2-pdf', u05:'turkce2-pdf', u06:'turkce2-pdf', u07:'turkce2-pdf', u08:'turkce2-pdf', u09:'turkce2-pdf', u10:'turkce2-pdf',
+  u11:'turkce2-pdf', u12:'turkce2-pdf', u13:'turkce2-pdf', u14:'turkce2-pdf', u15:'turkce2-pdf', u16:'turkce2-pdf', u17:'turkce2-pdf', u18:'turkce2-pdf', u19:'turkce2-pdf', u20:'turkce2-pdf',
   s0:'sayma-pdf', s1:'sayma-pdf', s2:'sayma-pdf', s3:'sayma-pdf', s4:'sayma-pdf', s5:'sayma-pdf',
   s6:'sayma-pdf', s7:'sayma-pdf', s8:'sayma-pdf', s9:'sayma-pdf', s10:'sayma-pdf',
   n1:'sayma-pdf', n2:'sayma-pdf', n3:'sayma-pdf', n4:'sayma-pdf', n5:'sayma-pdf',
   n6:'sayma-pdf', n7:'sayma-pdf', n8:'sayma-pdf', n9:'sayma-pdf',
+
+  /* 4. sınıf matematik PDF motoru — p01–p56.
+     Şartname: output/pdf/4_sinif_matematik_oyunlari_detayli_duzeltmeler.pdf
+     Her oyun üç turlu, konusuna özel sahnede; bant/roket/kronometre
+     ortak motorlarına düşmez. */
+  p01:'matematik4-pdf', p02:'matematik4-pdf', p03:'matematik4-pdf', p04:'matematik4-pdf',
+  p05:'matematik4-pdf', p06:'matematik4-pdf', p07:'matematik4-pdf', p08:'matematik4-pdf',
+  p09:'matematik4-pdf', p10:'matematik4-pdf', p11:'matematik4-pdf', p12:'matematik4-pdf',
+  p13:'matematik4-pdf', p14:'matematik4-pdf', p15:'matematik4-pdf', p16:'matematik4-pdf',
+  p17:'matematik4-pdf', p18:'matematik4-pdf', p19:'matematik4-pdf', p20:'matematik4-pdf',
+  p21:'matematik4-pdf', p22:'matematik4-pdf', p23:'matematik4-pdf', p24:'matematik4-pdf',
+  p25:'matematik4-pdf', p26:'matematik4-pdf', p27:'matematik4-pdf', p28:'matematik4-pdf',
+  p29:'matematik4-pdf', p30:'matematik4-pdf', p31:'matematik4-pdf', p32:'matematik4-pdf',
+  p33:'matematik4-pdf', p34:'matematik4-pdf', p35:'matematik4-pdf', p36:'matematik4-pdf',
+  p37:'matematik4-pdf', p38:'matematik4-pdf', p39:'matematik4-pdf', p40:'matematik4-pdf',
+  p41:'matematik4-pdf', p42:'matematik4-pdf', p43:'matematik4-pdf', p44:'matematik4-pdf',
+  p45:'matematik4-pdf', p46:'matematik4-pdf', p47:'matematik4-pdf', p48:'matematik4-pdf',
+  p49:'matematik4-pdf', p50:'matematik4-pdf', p51:'matematik4-pdf', p52:'matematik4-pdf',
+  p53:'matematik4-pdf', p54:'matematik4-pdf', p55:'matematik4-pdf', p56:'matematik4-pdf',
 
   /* İki kullanıcı PDF'inde ayrıntılandırılan 49 matematik oyunu.
      Her biri üç turlu, hikâyeye özel sahneye gider; genel uzay/kepçe
@@ -21403,6 +21450,8 @@ function phaserCerceve(g){
 }
 
 function renderPhaserScreen(g){
+  /* Şablon DOM'a eklendikten sonra balon boşluğunu ölç. */
+  setTimeout(balonBosluguAyarla, 0);
   return `<div class="immersive-stage" id="immStage" style="background:#101c2b">
     <div class="imm-hud" style="background:linear-gradient(180deg,rgba(16,28,43,.96),rgba(16,28,43,0)); padding:10px 13px 18px;">
       <button class="back-btn" onclick="go('subjectList')">←</button>
@@ -21411,7 +21460,7 @@ function renderPhaserScreen(g){
       <div class="hud-chip">SV ${state.hero.level} · 🪙 ${state.hero.coins}</div>
     </div>
     ${gs.celebrating ? '' : renderPhaserPrompt(g)}
-    <div class="imm-content phaser-content" id="gameBody" style="padding:52px 0 0; display:block; overflow:hidden;">
+    <div class="imm-content phaser-content" id="gameBody" style="padding:var(--balon-bosluk,118px) 0 0; display:block; overflow:hidden;">
       ${gs.celebrating ? renderCelebration(g) : phaserCerceve(g)}
     </div>
   </div>`;
