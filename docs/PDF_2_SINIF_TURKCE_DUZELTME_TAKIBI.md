@@ -129,6 +129,26 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | 5 | Boş metin gönderimi can götürüyordu; oysa eksik ölçüt ekranda zaten canlı görünüyor. | `yazCiz`, `duzeltCiz` | Eksik ölçüt ve "değişiklik yok" uyarıları `uyar()` ile cezasız; örnek cümleyi kopyalama hâlâ hata sayılıyor. |
 | 6 | `ornekCevap` (u85) `enAzKelime` eşiğinin altındaydı; koşum zaman aşımına düşüyordu. | `GAMES.u85` | Örnek cevap 13 sözcüğe çıkarıldı. |
 
+## Kabul ölçütü denetimi (tools/tr2_denetim.html)
+
+`tools/hb2_denetim.html`'den (2. sınıf hayat bilgisi oturumu) uyarlanan tarayıcı aracı,
+90 oyunun 270 turunu 390×844'te tek tek çizip dört ölçütü tarıyor: yatay/dikey kırpılma,
+44 px dokunma alanı ve merkezine başka öğe binmesi, etiketlerde emoji ipucu, cevap sızıntısı.
+İlk taramada çıkan ve düzeltilen bulgular:
+
+| # | Bulgu | Kapsam | Düzeltme |
+|---|---|---|---|
+| 7 | Dokunma alanı 44 px'in altında: kelime bankası düğmeleri 29 px, sıralama kartları 33 px, yuva kartları 42 px, rubrik satırları. | 164 tur | `.kelime-bank button`, `.sira-kart`, `.rubrik button`, `.yuvakart` için `min-height:44px`. |
+| 8 | `sira` turunda kartlar veri sırasında çiziliyordu; `dogru` çoğu turda `[0,1,2,…]` olduğu için doğru sıra ekrandan okunabiliyordu. | u02 tur 1 | `siraDizilim()` — oyun kimliği ve tur numarasından türeyen tohumlu (rastgelesiz) karıştırma; `data-kart` gerçek dizini taşıdığı için koşum etkilenmiyor. |
+| 9 | Uzun etiketler dar sütunda yatayda kırpılıyordu ("mahallemizdeki çocuklar", "İlgilenmiyorum."). | u08 tur 3, u17 tur 1 | `.choice`/`.action` için `overflow-wrap:anywhere; hyphens:auto`. |
+
+Aracın ilk sürümü `kanit` turlarında 12 "doğru seçenek metinde yazılı" bulgusu üretti; bunlar
+yanlış pozitif: ana fikir, sözlük anlamı ve "birinci/ikinci kapak" turlarında doğru seçeneğin
+metinde geçmesi tasarım gereğidir — çocuk zaten kanıtı işaretleyerek seçiyor. Bu kural,
+"seçenekler kanıt işaretlenmeden açılmasın" denetimiyle değiştirildi.
+
+Düzeltmelerden sonra: **270/270 tur temiz.**
+
 Test kapsamı: 375×812 ve 1280×800; boş gönderim, 4000 karakterlik girdi, etiketsiz yuva dokunuşu,
 art arda hızlı dokunuş, sınırsız tekrar dinleme, tur geçişleri ve bitiş ekranı. Konsolda hata yok,
 ağ isteklerinin tamamı 200. Koşum: `tools/dom_kosum.html#ids=u01…u90` → 90/90.

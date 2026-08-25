@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>2. sınıf Türkçe — kabul ölçütü denetimi</title>
+<style>
+body{font:13px/1.45 system-ui;margin:0;display:grid;grid-template-columns:400px 1fr;height:100vh}
+#panel{overflow:auto;padding:10px;border-right:2px solid #ccc}
+#panel div{padding:1px 0}
+.g{color:#0a6b45}.b{color:#b3261e;font-weight:700}.n{color:#666}
+iframe{width:390px;height:844px;border:0;justify-self:center;align-self:center;box-shadow:0 0 0 2px #ccc}
+</style>
+</head>
+<body>
+<div id="panel"></div>
+<iframe id="cerceve"></iframe>
+<script>
+'use strict';
+/* 2. sınıf Türkçe motorunun 90 oyunu × 3 turu için şartnamenin kabul
+   ölçütlerini tarar. hb2_denetim.html'den uyarlandı (maceraakademi-3-93).
+     ölçüt 2 — cevap ekranın hiçbir yerinde yazılı olmayacak
+     ölçüt 4 — etiket/kart/seçeneklerde emoji ipucu olmayacak
+     ölçüt 5 — 390x844'te kırpılma yok, dokunma alanı >= 44 px
+     kip kuralı — dinleme turunda metin ve cevap anahtarı ekranda olmayacak */
+const IDS = Array.from({length:90},(_,i)=>'u'+String(i+1).padStart(2,'0'));
+const MOTOR = '../web/phaser/turkce2-pdf-phaser.html';
+const panel = document.getElementById('panel');
+const cerceve = document.getElementById('cerceve');
+const yaz = (m,c)=>{panel.insertAdjacentHTML('beforeend','<div class="'+(c||'')+'">'+m+'</div>');panel.scrollTop=panel.scrollHeight};
+const bekle = ms => new Promise(r=>{
+  if(!document.hidden) return void setTimeout(r,ms);
+  const son=Date.now()+ms,k=new MessageChannel();
+  k.port1.onmessage=()=>(Date.now()>=son?r():k.port2.postMessage(0));
+  k.port2.postMessage(0);
+});
+const sade = s => String(s||'').toLocaleLowerCase('tr').replace(/[^\wçğıöşü]+/g,' ').replace(/\s+/g,' ').trim();
+const EMOJI = /\p{Extended_Pictographic}/u;
+
+function turVerisi(W){
+  return JSON.parse(W.eval('JSON.stringify(round(),(k,v)=>typeof v==="function"?undefined:v)'));
+}
+
+/* ölçüt 5a — hiçbir kutu yatayda taşmasın, hiçbir yazı kırpılmasın */
+function kirpilmaDenetle(W){
+  const kusur=[];
+  const D=W.document;
+  if(D.documentElement.scrollWidth > D.documentElement.clientWidth+1)
+    kusur.push('sayfa yatayda kayıyor ('+D.documentElement.scrollWidth+'>'+D.documentElement.clientWidth+')');
+  D.querySelectorAll('.choice,.action,.yuvakart,.sira-kart,.metin-kart,.task-card,.olcut div,.rubrik button,.kelime-bank button')
+   .forEach(el=>{
+    if(el.scrollWidth > el.clientWidth+1) kusur.push('yatayda kırpılıyor: "'+el.textContent.trim().slice(0,42)+'"');
+    if(el.scrollHeight > el.clientHeight+2) kusur.push('dikeyde kırpılıyor: "'+el.textContent.trim().slice(0,42)+'"');
+  });
+  return kusur;
+}
+
+/* ölçüt 5b — dokunma alanı en az 44 px ve merkezinden gerçekten isabet alıyor.
+   getBoundingClientRect ince SVG çizgilerinde stroke'u saymadığı için
+   isabet ayrıca elementFromPoint ile sınanıyor. */
+function dokunmaDenetle(W){
+  const kusur=[];
+  W.document.querySelectorAll('button,[data-choice],[data-et],[data-yuva],[data-kart],[data-ol],[data-bank],textarea')
+   .forEach(el=>{
+    const r=el.getBoundingClientRect();
+    if(!r.width || !r.height) return;                    /* gizli öğe */
+    if(r.width<44 || r.height<44)
+      kusur.push('dokunma alanı küçük ('+Math.round(r.width)+'x'+Math.round(r.height)+'): "'+el.textContent.trim().slice(0,26)+'"');
+    const h=W.document.elementFromPoint(r.left+r.width/2, r.top+r.height/2);
+    if(h && h!==el && !el.contains(h) && !h.contains(el))
+      kusur.push('merkezine başka öğe biniyor: "'+el.textContent.trim().slice(0,26)+'"');
+  });
+  return kusur;
+}
+
+/* ölçüt 4 — sınıflandırma ve eşleştirmede emoji ipucu olmasın */
+function emojiDenetle(r){
+  const kusur=[];
+  const bak=(ad,s)=>{ if(EMOJI.test(String(s||''))) kusur.push('emoji ipucu ('+ad+'): "'+String(s).slice(0,34)+'"') };
+  (r.etiketler||[]).forEach(e=>bak('etiket',e.t));
+  (r.yuvalar||[]).forEach(y=>bak('yuva',y.ad));
+  (r.kartlar||[]).forEach(k=>bak('kart',k.t));
+  (r.secenekler||[]).forEach(c=>bak('seçenek',c.label));
+  (r.olcutler||[]).forEach(o=>bak('ölçüt',o));
+  return kusur;
+}
+
+/* ölçüt 2 — cevap ekranda yazılı olmasın */
+function sizintiDenetle(W,r){
+  const kusur=[];
+  const D=W.document;
+  const sahne = sade((D.querySelector('#stage')||{}).textContent);
+  const icerir = (metin,parca)=>{ const p=sade(parca); return p.length>=8 && sade(metin).includes(p) };
+
+  /* okuma — kanit kipinde doğru seçeneğin metinde geçmesi TASARIM GEREĞİ:
+     ana fikir, sözlük anlamı ve "birinci/ikinci kapak" gibi turlarda çocuk
+     zaten metindeki kanıtı işaretleyerek seçiyor. Bu yüzden burada sızıntı
+     araması yapılmıyor; yerine kanıt kapısının gerçekten kapalı olduğu
+     sınanıyor. */
+  if(r.kind==='kanit' && (r.gerekKanit||0)>0){
+    const acik = D.querySelectorAll('[data-choice]').length>0;
+    const isaret = Number(W.eval('String((state.kanit||[]).length)'))||0;
+    if(acik && isaret < r.gerekKanit) kusur.push('seçenekler kanıt işaretlenmeden açık');
+  }
+  /* dinleme — ilk turda metin de cevap anahtarı da ekranda olmamalı */
+  if(r.kind==='dinle'){
+    const acik = D.querySelectorAll('[data-choice]').length>0;
+    if(acik && !Number(W.eval('String(state.dinleme||0)')))
+      kusur.push('seçenekler dinlemeden önce açık');
+    if(r.ses && icerir(sahne,String(r.ses).slice(0,40)))
+      kusur.push('dinlenecek metin ekranda yazılı');
+    (r.secenekler||[]).filter(c=>c.correct).forEach(c=>{
+      if(icerir(sahne,c.label)) kusur.push('doğru seçenek sahnede yazılı: "'+c.label.slice(0,40)+'"');
+    });
+  }
+  /* eşleştirme — yuva adı doğru etiketi söylemesin */
+  if(r.kind==='esle'){
+    (r.yuvalar||[]).forEach((y,i)=>{
+      const et=((r.etiketler||[])[y.dogru]||{}).t||'';
+      if(icerir(y.ad||'',et)) kusur.push('yuva adı doğru etiketi içeriyor (satır '+(i+1)+')');
+    });
+  }
+  /* sıralama — kartların ekrandaki dizilişi doğru sırayı ele vermesin */
+  if(r.kind==='sira' && (r.dogru||[]).length===(r.kartlar||[]).length){
+    const ekran=[...D.querySelectorAll('[data-kart]')].map(b=>+b.dataset.kart);
+    if(ekran.length && ekran.every((v,i)=>v===r.dogru[i]))
+      kusur.push('kartlar ekranda doğru sırada duruyor');
+  }
+  /* yazma — örnek cevap kendi ölçütlerini sağlamalı, yoksa tur çözülemez */
+  if(r.kind==='yaz' && r.ornekCevap){
+    const kelime = sade(r.ornekCevap) ? sade(r.ornekCevap).split(' ').length : 0;
+    if(r.enAzKelime && kelime < r.enAzKelime)
+      kusur.push('ornekCevap enAzKelime altında ('+kelime+'<'+r.enAzKelime+')');
+    if(r.enAzSatir && String(r.ornekCevap).split('\n').length < r.enAzSatir)
+      kusur.push('ornekCevap enAzSatir altında');
+    (r.yasak||[]).forEach(y=>{ if(sade(r.ornekCevap).includes(sade(y)))
+      kusur.push('ornekCevap yasak listesindeki cümleyi içeriyor') });
+  }
+  /* konuşma — örnek, öğrencinin üreteceği cevabın yerine geçmesin */
+  if(r.kind==='konus' && !r.ornek) kusur.push('konuşma turunda dinlenecek örnek yok');
+  return kusur;
+}
+
+window.SONUC={bitti:false,kusurlu:[],rapor:[],toplamTur:0};
+
+(async()=>{
+  yaz('denetim: '+IDS.length+' oyun × 3 tur');
+  for(const id of IDS){
+    const bulgular=[];
+    for(let t=0;t<3;t++){
+      await new Promise(coz=>{ cerceve.onload=()=>coz();
+        cerceve.src = MOTOR + '?test=1&denetim='+id+t+'#oyun='+id; });
+      const W=cerceve.contentWindow;
+      /* motorun ilk çizimini bekle */
+      for(let k=0;k<80 && !W.document.querySelector('.hud .round');k++) await bekle(60);
+      if(t>0){ W.eval('roundIndex='+t+';render()'); await bekle(160); }
+      for(let k=0;k<40 && !W.document.querySelector('#task');k++) await bekle(50);
+      await bekle(120);
+      let r; try{ r=turVerisi(W); }catch(e){ bulgular.push('tur '+(t+1)+': tur verisi okunamadı — '+e.message); continue }
+      window.SONUC.toplamTur++;
+      [].concat(
+        kirpilmaDenetle(W), dokunmaDenetle(W), emojiDenetle(r), sizintiDenetle(W,r)
+      ).forEach(k=>bulgular.push('tur '+(t+1)+' ('+r.kind+'): '+k));
+    }
+    if(bulgular.length){ window.SONUC.kusurlu.push(id);
+      window.SONUC.rapor.push({id,bulgular});
+      yaz('✗ '+id+' — '+bulgular.length+' bulgu','b');
+      bulgular.forEach(b=>yaz('&nbsp;&nbsp;'+b,'n'));
+    } else yaz('✓ '+id,'g');
+  }
+  window.SONUC.bitti=true;
+  yaz('<br>BİTTİ · temiz '+(IDS.length-window.SONUC.kusurlu.length)+'/'+IDS.length+
+      ' · taranan tur '+window.SONUC.toplamTur);
+})();
+</script>
+</body>
+</html>
