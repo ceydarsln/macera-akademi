@@ -446,13 +446,26 @@ function renderSinif(r){state.ix=0;state.not='';state.sayim=r.kutular.map(()=>0)
 
 /* ===== SIRA: gerçek sahnede adım sıralama; roket-yakıt yok.
    Yanlışta bütün dizi silinmez, yalnız son seçim geri alınır. ===== */
+/* Kartlar dizi sırasında çizilirse ve doğru sıra [0,1,2,...] ise, doğru
+   cevap ekrandan okunur. Tohumlu (Math.random'sız) karıştırma ile ekran
+   dizilişi ayrılır; data-kart gerçek dizini taşımayı sürdürür. */
+function siraDizilim(r,tohum){
+ const n=r.kartlar.length,idx=[...Array(n).keys()];
+ let x=(tohum*2654435761)%2147483647; if(x<=0)x+=2147483646;
+ for(let i=n-1;i>0;i--){x=(x*48271)%2147483647;const j=x%(i+1);const t=idx[i];idx[i]=idx[j];idx[j]=t}
+ if(idx.every((v,i)=>v===(r.dogru||[])[i]))idx.push(idx.shift());
+ return idx}
+function siraTohum(){let h=0;const s=GAME_ID+':'+roundIndex;
+ for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;
+ return Math.abs(h)+1}
 function siraCiz(r){
  $('#stage').innerHTML=sahneHtml(r)+
   (r.gorev?`<div class="konus-balon">${esc(r.gorev)}</div>`:'')+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  const d=state.dizi||[];
- $('#task').innerHTML=`<div class="dizi">${r.kartlar.map((k,i)=>{
-   const p=d.indexOf(i);
+ if(!state.dizilim)state.dizilim=siraDizilim(r,siraTohum());
+ $('#task').innerHTML=`<div class="dizi">${state.dizilim.map(i=>{
+   const k=r.kartlar[i],p=d.indexOf(i);
    return `<button class="sirakart ${p>=0?'secili':''}" data-kart="${i}"><span class="no">${p>=0?p+1:''}</span><span>${esc(k.t)}</span></button>`}).join('')}</div>`+
   `<div class="hint">${d.length}/${r.kartlar.length} adım dizildi. ${esc(r.ipucu||'')}</div>`;
  $$('[data-kart]').forEach(b=>b.onclick=()=>{
@@ -465,7 +478,7 @@ function siraCiz(r){
   state.dizi=d.concat(i);state.not='';
   if(state.dizi.length>=r.dogru.length){siraCiz(r);return good()}
   siraCiz(r)})}
-function renderSira(r){state.dizi=[];state.not='';siraCiz(r)}
+function renderSira(r){state.dizi=[];state.not='';state.dizilim=null;siraCiz(r)}
 
 /* ===== ESLE: parça ile hedef arasında emoji/renk eşleşmesi YOK; karar bilgiye
    dayanır. Dokunma alanları 44 px üstünde (şartname ölçüt 4 ve 5). ===== */
