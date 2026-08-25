@@ -46,6 +46,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w30 | İp Dolama Serüveni | Eğri çevreyi ip ile ölçme | Kronometre kadranı ve süre şeridi gitti. Kutu, başlangıç mandalı ve ip var: çocuk parmağıyla çevrede dolaşıyor, iz gerçek açıyla büyüyor, tam tura ulaşmadan ölçüme geçilmiyor. Sonra ip düzleştirilip cetvelde sıfırdan okunuyor; 2. turda iki ip alt alta karşılaştırılıyor. | Uygulamada |
 | w31 | Sıvı Laboratuvarı | Litre tahmini ve ölçme | Yatay süre şeridi kaldırıldı; dereceli sürahi ve musluk var. Önce dereceler kapalıyken çocuk tahmin çizgisini sürüklüyor, sonra dereceler açılıyor ve musluk basılı tutularak seviye yükseliyor. Taşma cezasız, geri boşaltılabiliyor. Son aşamada su 1 litrelik kaplara aktarılarak bağımsız doğrulanıyor; 3. turda dar/geniş kap karşılaştırması var. | Uygulamada |
 | w32 | Mozaik Atölyesi | Şekillerle tasarım ve çevre | Parçalar gerçekten birleşiyor: ortak kenarlar kesik çizgiyle içeride kalıyor ve dokunulamıyor. Çocuk yalnız dış sınırdaki birim kenarları izleyip sayıyor. Ayrı çevrelerin toplamı ile birleşik çevre karşılaştırılıyor (ev 7→5, petek 18→14, roket 14→8); yanlış olan "bireysel çevreleri topla" yolu artık kabul edilmiyor. | Uygulamada |
+| w33 | Katlama Laboratuvarı | Simetri doğrularını keşfetme | Açılış artık cevabı vermiyor: yalnız "katlandığında iki tarafı çakıştıran bütün çizgileri bul" diyor. Çizgi seçilince şekil gerçekten katlanıyor; yansıyan yarı saydam kopya üstüne oturmazsa taşan bölge görünüyor (dikdörtgenin köşegeni karşı örnek). Dairede 12 nokta arasından istenen çap serbestçe denenebiliyor; altı farklı çap sonsuzluğu somutlaştırıyor. Sayı özeti yalnız sonda. | Uygulamada |
+| w34 | Aynadaki İkizler | Simetri parçalarının eşliği | Metin düğmeleri kaldırıldı: üç seçenek de gerçek vektör parça (doğru yansıma, 180° döndürülmüş, %72 küçültülmüş) ve hepsi yarım şekilden hesaplanarak üretiliyor. Parça aynanın sağına konunca eş noktalar ince çizgilerle bağlanıyor; yanlışta iki şekil üst üste getirilip uyuşmayan kısım gösteriliyor. 3. turda iç noktalar da eşleşmek zorunda. | Uygulamada |
+| w35 | Kilim Dokuma Tezgâhı | Dikey simetri ile deseni tamamlama | Renk kalıcı kalem gibi davranıyor, silgi ve geri al eklendi. Kaynak kareye dokununca eksene uzaklık sayılıyor ve karşı hücrede hayalet hedef beliriyor. Yanlış dokunuş kalıcı değil; geri bildirim iki karenin eksene uzaklığını karşılaştırıyor, doğruyu doldurmuyor. 3. tur hatalı dokunmuş kareleri düzeltme üzerine; bitişte kilim katlanıyor. | Uygulamada |
+| w36 | Satranç Tahtası Macerası | Simetrik konum bulma | Şövalyeler ♞ taş simgesiyle çiziliyor, hedef kareler baştan işaretli değil. İpucu koordinat vermiyor, yöntemi söylüyor: "eksenden kaç sütun uzaktaysa öbür tarafta da o kadar". Yanlış karede iki karenin eksene uzaklığı sayılıp karşılaştırılıyor. 3. turda eksen yataya çevrilip iki eksen karşılaştırılıyor. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -114,6 +118,16 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 - `renderMozaik` + `mozaik`: parçaların yuvalara yerleştirilmesi,
   `mozaikKenar()` ile ortak/dış kenar ayrımı, dış sınırın izlenerek sayılması
   ve ayrı çevre toplamıyla karşılaştırma (w32).
+- `yansitNokta()` / `kumeEsit()`: bir doğruya göre yansıma ve nokta kümesi
+  karşılaştırması — simetri yargıları bununla hesaplanıyor (w33, w34).
+- `renderKatla` + `katla`: nokta çiftinden çizgi, gerçek katlama denemesi,
+  örtüşmeyen bölgenin gösterilmesi (w33).
+- `renderAyna` + `ayna`: seçenekler yarım şekilden üretiliyor (yansıma,
+  döndürme, küçültme), eş nokta bağlantıları (w34).
+- `renderKilim` + `kilim`: kalem/silgi/geri al, hayalet hedef, uzaklık sayan
+  geri bildirim, katlama animasyonu (w35).
+- `renderSatranc` + `satranc`: taş simgeli tahta, dikey/yatay eksen, uzaklık
+  karşılaştıran geri bildirim (w36).
 - `gecisBasla(fn,ms)`: aşama ilerledikten sonra sahne henüz yenilenmemişken
   gelen dokunuşlar bir sonraki aşamanın verisine uygulanıyordu; geçiş boyunca
   girdi kilitleniyor. (Gizli sekmede tarayıcı oyunun zamanlayıcısını kıstığı

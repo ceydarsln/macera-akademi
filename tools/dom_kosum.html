@@ -23,7 +23,7 @@
 const ENGINE1 = 'm01,m02,m03,m05,m09,m10,m11,m12,m14,m15,m17,m18,m20,m22,m23,m24,m25,m26,m28,m31,m32,m33,m34,m35,m36,m37,m38,m39,m41,m42,m43,m44,m45,m46,m47,m48,m49,m50,m51,m52,m53,m54,m55,m56,m57,m58,m59,m60,m61'.split(',');
 const ENGINE2 = 'v01,v02,v03,v04,v05,v06,v07,v08,v09,v10,v11,v12,v13,v14,v15,v16,v17,v18,v19,v20,v21,v22,v23,v24,v25,v26,v27,v28,v29,v30,v31,v32,v33,v34,v35,v36,v37,v38,v39,v40,v41,v42'.split(',');
 
-const ENGINE3 = 'w01,w02,w03,w04,w05,w06,w07,w08,w09,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32'.split(',');   /* 3. sınıf: partiler hâlinde büyüyor */
+const ENGINE3 = 'w01,w02,w03,w04,w05,w06,w07,w08,w09,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36'.split(',');   /* 3. sınıf: partiler hâlinde büyüyor */
 
 const panel = document.getElementById('panel');
 const cerceve = document.getElementById('cerceve');
@@ -327,6 +327,54 @@ async function tur2(W){
       await tikla(W, '[data-choice="' + r.secenekler.findIndex(c => c.correct) + '"]');
       break;
     }
+    case 'katla': {
+      /* Bütün nokta çiftlerini dene; motor yalnız gerçek simetri doğrusunu kabul eder. */
+      const n = r.nokta.length;
+      for (let a = 0; a < n && JSON.parse(W.eval('JSON.stringify(state.bulunan.length)')) < r.gerek; a++)
+        for (let b = a + 1; b < n; b++){
+          const olur = JSON.parse(W.eval(
+            '(function(){const r=round(),a=r.nokta[' + a + '],b=r.nokta[' + b + '];' +
+            'const y=r.sekil.map(q=>yansitNokta(q,a,b));' +
+            'return kumeEsit(y,r.sekil,2.5)&&kumeEsit(r.sekil,y,2.5)&&' +
+            '!state.bulunan.some(c=>(c[0]===' + a + '&&c[1]===' + b + ')||(c[0]===' + b + '&&c[1]===' + a + '))})()'));
+          if (!olur) continue;
+          await tikla(W, '[data-kn="' + a + '"]'); await bekle(25);
+          await tikla(W, '[data-kn="' + b + '"]'); await bekle(45);
+          if (JSON.parse(W.eval('JSON.stringify(state.bulunan.length)')) >= r.gerek) break;
+        }
+      break;
+    }
+    case 'ayna': {
+      const ix = JSON.parse(W.eval('JSON.stringify(state.secenekler.findIndex(s=>s.dogru))'));
+      await tikla(W, '[data-sec="' + ix + '"]'); await bekle(80);
+      await tikla(W, '#aynaOk');
+      break;
+    }
+    case 'kilim': {
+      const gerek = JSON.parse(W.eval('JSON.stringify(kilimGerek(round()))'));
+      /* önce fazlalık/hatalı kareleri sil, sonra doğru renkleri doku */
+      await tikla(W, '[data-renk="b"]'); await bekle(40);
+      for (let y = 0; y < r.sol.length; y++)
+        for (let x = 4; x < 8; x++){
+          const bek = r.sol[y][7 - x] || null;
+          const su = JSON.parse(W.eval('JSON.stringify(state.sag[' + y + '][' + (x - 4) + ']||null)'));
+          if (su && su !== bek){ await tikla(W, '[data-huc="' + x + ',' + y + '"]'); await bekle(20); }
+        }
+      const renkler = [...new Set(gerek.map(g => g.renk))];
+      for (const rk of renkler){
+        await tikla(W, '[data-renk="' + rk + '"]'); await bekle(40);
+        for (const g of gerek.filter(x => x.renk === rk)){
+          const su = JSON.parse(W.eval('JSON.stringify(state.sag[' + g.y + '][' + (g.x - 4) + ']||null)'));
+          if (su === rk) continue;
+          await tikla(W, '[data-huc="' + g.x + ',' + g.y + '"]'); await bekle(20);
+        }
+      }
+      break;
+    }
+    case 'satranc':
+      for (const c of r.ciftler){ await tikla(W, '[data-kare="' + c.hedef + '"]'); await bekle(90); }
+      if (r.sonSoru){ await bekle(150); await tikla(W, '[data-choice="' + r.sonSoru.secenekler.findIndex(c => c.correct) + '"]'); }
+      break;
     case 'para':
       for (const h of r.hedefler){
         /* farklı bileşim istenen adımda küçükten büyüğe öde */

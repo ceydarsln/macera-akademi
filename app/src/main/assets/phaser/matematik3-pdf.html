@@ -232,6 +232,24 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .parca-btn{background:#fff;border:3px solid #cbd5e1;border-radius:11px;padding:5px 9px;font-weight:900;font-size:13px;color:#1f3b52;cursor:pointer}
 .parca-btn.secili{background:#fdf0d0;border-color:#d9b25e}
 .parca-btn.bitti{opacity:.4}
+.kilim{display:grid;gap:2px;background:#8a5725;padding:4px;border-radius:8px;position:relative}
+.kilim .huc{width:30px;height:30px;border-radius:3px;background:#f6ede0;cursor:pointer;position:relative}
+.kilim .huc.eksen{box-shadow:inset -2px 0 0 #e05aa0}
+.kilim .huc.hayalet{outline:3px dashed #e05aa0;outline-offset:-3px}
+.kilim .huc.kaynak{box-shadow:inset 0 0 0 3px #33526b}
+.kilim-katla{transform:scaleX(-1);transition:transform .8s}
+.palet{display:flex;gap:5px;justify-content:center;flex-wrap:wrap}
+.palet button{width:36px;height:36px;border-radius:9px;border:3px solid #cbd5e1;cursor:pointer}
+.palet button.secili{border-color:#33526b;transform:scale(1.1)}
+.tahta{display:grid;grid-template-columns:18px repeat(8,32px);gap:1px}
+.tahta .kare{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer}
+.tahta .kare.acik{background:#f0e0c0}.tahta .kare.koyu{background:#b98b5e}
+.tahta .kare.eksen-d{box-shadow:inset -2px 0 0 #e05aa0}
+.tahta .kare.eksen-y{box-shadow:inset 0 -2px 0 #e05aa0}
+.tahta .etiket{width:18px;height:32px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#5b7185}
+.tahta .ust{width:32px;height:16px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#5b7185}
+.secenek-kart{background:#fff;border:3px solid #cbd5e1;border-radius:12px;padding:4px;cursor:pointer}
+.secenek-kart.secili{border-color:#e08b2a;background:#fdf6e9}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -266,7 +284,7 @@ function P(id,html,target){return{id,html,target}}
 function T(id,html,need=1){return{id,html,need}}
 function Q(prompt,scene,choices,result,hint,extra={}){return{kind:'choice',prompt,scene,choices,result,hint,...extra}}
 function D(prompt,scene,pieces,targets,result,hint,extra={}){return{kind:'drag',prompt,scene,pieces,targets,result,hint,...extra}}
-function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare,bar:renderBar,lift:renderLift,timing:renderTiming,station:renderStation,para:renderPara,arena:renderArena,tersi:renderTers,kargo:renderKargo,seker:renderSeker,robot:renderRobot,problem:renderProblem,terazi:renderTerazi,firin:renderFirin,kup:renderKup,sekil:renderSekil,kosegen:renderKosegen,studyo:renderStudyo,cevre:renderCevre,ip:renderIp,sivi:renderSivi,mozaik:renderMozaik}[r.kind];(fn||renderChoice)(r)}
+function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare,bar:renderBar,lift:renderLift,timing:renderTiming,station:renderStation,para:renderPara,arena:renderArena,tersi:renderTers,kargo:renderKargo,seker:renderSeker,robot:renderRobot,problem:renderProblem,terazi:renderTerazi,firin:renderFirin,kup:renderKup,sekil:renderSekil,kosegen:renderKosegen,studyo:renderStudyo,cevre:renderCevre,ip:renderIp,sivi:renderSivi,mozaik:renderMozaik,katla:renderKatla,ayna:renderAyna,kilim:renderKilim,satranc:renderSatranc}[r.kind];(fn||renderChoice)(r)}
 function renderChoice(r){$('#task').innerHTML=`<div class="choices">${r.choices.map((c,i)=>`<button class="choice" data-choice="${i}">${c.html||esc(c.label)}</button>`).join('')}</div>`;$$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.choices[+b.dataset.choice];if(c.correct)good(c.message);else wrong(c.hint||r.hint)})}
 /* Ritmik sayma: aynı seçenek listesinden sırayla doğru sayılar seçilir.
    Her doğru seçimde sahnedeki dal/adım büyür (state.step), böylece rota
@@ -1256,6 +1274,152 @@ function mozaikCiz(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.ind
  }}
 function renderMozaik(r){state.faz=0;state.yerlesen=[];state.izli=[];state.secili=null;mozaikCiz(r)}
 
+/* ===== ortak: bir doğruya göre yansıma ===== */
+function yansitNokta(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],d=dx*dx+dy*dy;
+ const t=((p[0]-a[0])*dx+(p[1]-a[1])*dy)/d,px=a[0]+t*dx,py=a[1]+t*dy;
+ return [2*px-p[0],2*py-p[1]]}
+function kumeEsit(A,B,tol){return A.every(p=>B.some(q=>Math.hypot(p[0]-q[0],p[1]-q[1])<tol))}
+
+/* ===== w33: katlama laboratuvarı ===== */
+function katlaSvg(r){const p=r.nokta,sk=r.sekil;let ic='';
+ ic+=`<polygon points="${sk.map(q=>q.join(',')).join(' ')}" fill="#cfe3f2" stroke="#5f8cbe" stroke-width="2"/>`;
+ if(state.deneme){const y=sk.map(q=>yansitNokta(q,state.deneme[0],state.deneme[1]));
+  ic+=`<polygon points="${y.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="rgba(224,85,85,.35)" stroke="#e05555" stroke-width="2" stroke-dasharray="5 4"/>`}
+ (state.bulunan||[]).forEach(c=>{const a=p[c[0]],b=p[c[1]];
+  ic+=`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#2f9e5e" stroke-width="4" stroke-linecap="round"/>`});
+ if(state.deneme)ic+=`<line x1="${state.deneme[0][0]}" y1="${state.deneme[0][1]}" x2="${state.deneme[1][0]}" y2="${state.deneme[1][1]}" stroke="#e05555" stroke-width="4" stroke-dasharray="7 5"/>`;
+ p.forEach((q,i)=>{ic+=`<circle data-kn="${i}" cx="${q[0]}" cy="${q[1]}" r="${state.secim===i?8:6}" fill="${state.secim===i?'#ffd873':'#fff'}" stroke="#5f8cbe" stroke-width="2" style="cursor:pointer"/>`});
+ return `<svg viewBox="-10 -10 120 120" width="240" height="240" style="touch-action:manipulation">${ic}</svg>`}
+function katlaCiz(r){$('#stage').innerHTML=`<div class="stack">${katlaSvg(r)}
+ <div class="caption">${esc(state.not||'İki noktaya dokunarak bir çizgi kur, sonra katla.')}</div>
+ <div class="caption">Bulduğun doğru: <b>${(state.bulunan||[]).length}</b></div></div>`;
+ $$('[data-kn]').forEach(el=>el.onclick=()=>katlaSec(r,+el.dataset.kn));
+ $('#task').innerHTML='<div class="caption">Katlandığında iki tarafı tam çakıştıran bütün çizgileri bul.</div>';}
+function katlaSec(r,i){
+ if(state.secim==null){state.secim=i;state.deneme=null;state.not='Şimdi ikinci noktaya dokun.';return katlaCiz(r)}
+ if(state.secim===i){state.secim=null;state.not='Seçim kalktı.';return katlaCiz(r)}
+ const a=r.nokta[state.secim],b=r.nokta[i],ilk=state.secim;state.secim=null;
+ if((state.bulunan||[]).some(c=>(c[0]===ilk&&c[1]===i)||(c[0]===i&&c[1]===ilk))){state.not='Bu çizgiyi zaten buldun.';return katlaCiz(r)}
+ const y=r.sekil.map(q=>yansitNokta(q,a,b));
+ const olur=kumeEsit(y,r.sekil,2.5)&&kumeEsit(r.sekil,y,2.5);
+ state.deneme=[a,b];
+ if(!olur){state.not='Katladık: kırmızı yarı şeklin üstüne oturmadı, taşan bölge kaldı.';katlaCiz(r);return wrong(state.not)}
+ state.bulunan=(state.bulunan||[]).concat([[ilk,i]]);
+ state.not='Katlandı ve iki yarı tam çakıştı: bu bir simetri doğrusu.';
+ katlaCiz(r);
+ if(state.bulunan.length>=r.gerek){state.deneme=null;katlaCiz(r);good()}}
+function renderKatla(r){state.secim=null;state.bulunan=[];state.deneme=null;state.not='';katlaCiz(r)}
+
+/* ===== w34: aynadaki ikizler ===== */
+function poliSvg(p,renk,noktalar,w){const xs=p.map(q=>q[0]),ys=p.map(q=>q[1]);
+ const x0=Math.min(...xs)-4,y0=Math.min(...ys)-4,gx=Math.max(...xs)-x0+4,gy=Math.max(...ys)-y0+4;
+ let ic=`<polygon points="${p.map(q=>(q[0]-x0).toFixed(1)+','+(q[1]-y0).toFixed(1)).join(' ')}" fill="${renk}" stroke="#33526b" stroke-width="2"/>`;
+ (noktalar||[]).forEach(n=>{ic+=`<circle cx="${(n[0]-x0).toFixed(1)}" cy="${(n[1]-y0).toFixed(1)}" r="3" fill="#33526b"/>`});
+ return `<svg viewBox="0 0 ${gx.toFixed(1)} ${gy.toFixed(1)}" width="${w||74}" height="${w||74}">${ic}</svg>`}
+function aynaSecenekler(r){const AX=r.eksen;
+ const yan=p=>p.map(q=>[2*AX-q[0],q[1]]);
+ const mrk=p=>[p.reduce((a,q)=>a+q[0],0)/p.length,p.reduce((a,q)=>a+q[1],0)/p.length];
+ const dogru=yan(r.yarim),dn=yan(r.ic||[]);
+ const c=mrk(dogru);
+ const donmus=dogru.map(q=>[2*c[0]-q[0],2*c[1]-q[1]]),donIc=dn.map(q=>[2*c[0]-q[0],2*c[1]-q[1]]);
+ const kucuk=dogru.map(q=>[c[0]+(q[0]-c[0])*0.72,c[1]+(q[1]-c[1])*0.72]),kucIc=dn.map(q=>[c[0]+(q[0]-c[0])*0.72,c[1]+(q[1]-c[1])*0.72]);
+ return [{p:dogru,ic:dn,dogru:true},{p:donmus,ic:donIc},{p:kucuk,ic:kucIc}]}
+function aynaSahne(r){const sec=state.secenekler[state.secim!=null?state.secim:-1];
+ let ic=`<polygon points="${r.yarim.map(q=>q.join(',')).join(' ')}" fill="${r.renk}" stroke="#33526b" stroke-width="2"/>`;
+ (r.ic||[]).forEach(n=>{ic+=`<circle cx="${n[0]}" cy="${n[1]}" r="3" fill="#33526b"/>`});
+ ic+=`<line x1="${r.eksen}" y1="2" x2="${r.eksen}" y2="98" stroke="#e05aa0" stroke-width="3" stroke-dasharray="6 5"/>`;
+ if(sec){ic+=`<polygon points="${sec.p.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="${sec.dogru?r.renk:'rgba(224,85,85,.45)'}" stroke="#33526b" stroke-width="2"/>`;
+  (sec.ic||[]).forEach(n=>{ic+=`<circle cx="${n[0].toFixed(1)}" cy="${n[1].toFixed(1)}" r="3" fill="#33526b"/>`});
+  if(sec.dogru)r.yarim.forEach((q,i)=>{const e=[2*r.eksen-q[0],q[1]];
+   ic+=`<line x1="${q[0]}" y1="${q[1]}" x2="${e[0].toFixed(1)}" y2="${e[1]}" stroke="#2f9e5e" stroke-width="1" stroke-dasharray="3 3"/>`})}
+ return `<svg viewBox="-4 -4 118 108" width="270" height="248">${ic}</svg>`}
+function aynaCiz(r){$('#stage').innerHTML=`<div class="stack">${aynaSahne(r)}
+ <div class="caption">${esc(state.not||'Aynanın sağına hangi parça gelmeli?')}</div></div>`;
+ $('#task').innerHTML=`<div class="actions">${state.secenekler.map((sc,i)=>`<button class="secenek-kart${state.secim===i?' secili':''}" data-sec="${i}">${poliSvg(sc.p,r.renk,sc.ic)}</button>`).join('')}</div>
+  <button class="action" id="aynaOk">Bu parçayı yerleştir</button>`;
+ $$('[data-sec]').forEach(b=>b.onclick=()=>{state.secim=+b.dataset.sec;state.not='Parçayı aynanın sağına koydun; kenarları karşılaştır.';aynaCiz(r)});
+ $('#aynaOk').onclick=()=>{if(state.secim==null)return wrong('Önce bir parça seç.');
+  if(!state.secenekler[state.secim].dogru){state.not='Üst üste getirdik: bu parça yarımın aynadaki hâline oturmuyor.';aynaCiz(r);return wrong(state.not)}
+  state.not='Eş parça: aynı boyutta ama yönü aynaya göre ters. Eş noktalar eksene aynı uzaklıkta.';aynaCiz(r);good()}}
+function renderAyna(r){state.secim=null;state.not='';state.secenekler=aynaSecenekler(r);aynaCiz(r)}
+
+/* ===== w35: kilim dokuma tezgâhı ===== */
+const KILIM_RENK={k:'#e05555',m:'#3f92c4',s:'#f2c45b',y:'#2f9e5e',b:'#f6ede0'};
+function kilimGerek(r){const g=[];r.sol.forEach((sat,y)=>sat.forEach((c,x)=>{if(c&&c!=='b')g.push({x:7-x,y,renk:c,kx:x})}));return g}
+function kilimCiz(r){const gerek=kilimGerek(r);
+ let h='';for(let y=0;y<r.sol.length;y++)for(let x=0;x<8;x++){
+  const sol=x<4,renk=sol?(r.sol[y][x]||'b'):(state.sag[y][x-4]||'b');
+  const hedef=state.kaynak&&state.kaynak.y===y&&(7-state.kaynak.x)===x;
+  h+=`<div class="huc${x===3?' eksen':''}${hedef?' hayalet':''}${state.kaynak&&state.kaynak.x===x&&state.kaynak.y===y?' kaynak':''}" data-huc="${x},${y}" style="background:${KILIM_RENK[renk]}"></div>`}
+ $('#stage').innerHTML=`<div class="stack"><div class="kilim${state.bitti?' kilim-katla':''}" style="grid-template-columns:repeat(8,30px)">${h}</div>
+  <div class="caption">${esc(state.not||'Sol yarıdaki bir kareye dokun: eksene kaç sütun uzakta olduğunu say.')}</div>
+  <div class="caption">Tamamlanan: ${state.dogruSay||0}/${gerek.length}</div></div>`;
+ $$('[data-huc]').forEach(el=>el.onclick=()=>kilimDokun(r,el.dataset.huc));
+ $('#task').innerHTML=`<div class="palet">${Object.keys(KILIM_RENK).filter(k=>k!=='b').map(k=>`<button data-renk="${k}" class="${state.renk===k?'secili':''}" style="background:${KILIM_RENK[k]}"></button>`).join('')}
+   <button data-renk="b" class="${state.renk==='b'?'secili':''}" style="background:#f6ede0">🧽</button></div>
+  <div class="actions"><button class="action" id="kilimGeri">↩ Son dokumayı geri al</button></div>`;
+ $$('[data-renk]').forEach(b=>b.onclick=()=>{state.renk=b.dataset.renk;kilimCiz(r)});
+ $('#kilimGeri').onclick=()=>{const son=(state.gecmis||[]).pop();if(!son)return;
+  state.sag[son.y][son.x]=son.eski;state.dogruSay=kilimSay(r);kilimCiz(r)}}
+function kilimSay(r){return kilimGerek(r).filter(g=>state.sag[g.y][g.x-4]===g.renk).length}
+function kilimDokun(r,kod){const [x,y]=kod.split(',').map(Number);
+ if(x<4){state.kaynak={x,y};state.not=`Bu kare eksenden ${3-x+1} sütun uzakta; karşı tarafta da o kadar uzağa dokun.`;return kilimCiz(r)}
+ if(!state.renk)return feedback('Önce paletten renk seç',true);
+ const beklenen=r.sol[y][7-x]||'b';
+ const eski=state.sag[y][x-4];
+ state.sag[y][x-4]=state.renk==='b'?null:state.renk;
+ state.gecmis=(state.gecmis||[]).concat({x:x-4,y,eski});
+ state.dogruSay=kilimSay(r);
+ if(state.renk!=='b'&&state.renk!==beklenen){
+  const kx=7-x;state.not=`Eksene uzaklık: sol karede ${3-kx+1}, senin dokunduğun karede ${x-4+1}. Renk ve uzaklık uyuşmuyor.`;
+  kilimCiz(r);return wrong(state.not)}
+ state.not=state.renk==='b'?'Silindi.':'Eş kare doğru: aynadaki gibi.';
+ kilimCiz(r);
+ if(state.dogruSay>=kilimGerek(r).length&&kilimFazlaYok(r)){state.bitti=true;kilimCiz(r);
+  feedback('Kilim tamam, katlanıyor');gecisBasla(()=>good(),FAST?40:900)}}
+function kilimFazlaYok(r){for(let y=0;y<r.sol.length;y++)for(let x=0;x<4;x++){
+  const bek=r.sol[y][3-x]||null,v=state.sag[y][x]||null;
+  if((bek==='b'?null:bek)!==v)return false}
+ return true}
+function renderKilim(r){state.sag=r.sol.map((sat,y)=>[0,1,2,3].map(x=>(r.hatali&&r.hatali[y]&&r.hatali[y][x])||null));
+ state.renk=null;state.kaynak=null;state.gecmis=[];state.bitti=false;state.not='';state.dogruSay=kilimSay(r);kilimCiz(r)}
+
+/* ===== w36: satranç tahtası ===== */
+const SUTUN=['A','B','C','D','E','F','G','H'];
+function tahtaCiz(r){let h='<div class="ust"></div>'+SUTUN.map(c=>`<div class="ust">${c}</div>`).join('');
+ for(let s=8;s>=1;s--){h+=`<div class="etiket">${s}</div>`;
+  for(let c=0;c<8;c++){const kod=SUTUN[c]+s;
+   const kay=r.ciftler.some(p=>p.kaynak===kod),hed=(state.bulunan||[]).indexOf(kod)>=0;
+   h+=`<div class="kare ${(c+s)%2?'acik':'koyu'}${r.eksen==='dikey'&&c===3?' eksen-d':''}${r.eksen==='yatay'&&s===5?' eksen-y':''}" data-kare="${kod}">${kay?'♞':hed?'♘':''}</div>`}}
+ $('#stage').innerHTML=`<div class="stack"><div class="tahta">${h}</div>
+  <div class="caption">${esc(state.not||(r.eksen==='dikey'?'Pembe çizgi dikey eksen: D ile E sütunlarının arasında.':'Pembe çizgi yatay eksen: 4 ile 5 sıralarının arasında.'))}</div>
+  <div class="caption">Bulunan eş: ${(state.bulunan||[]).length}/${r.ciftler.length}</div></div>`;
+ $$('[data-kare]').forEach(el=>el.onclick=()=>satrancSec(r,el.dataset.kare));
+ if(state.faz===1){
+  $('#task').innerHTML=`<div class="caption">${esc(r.sonSoru.metin)}</div><div class="choices">${r.sonSoru.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-choice]').forEach(b=>b.onclick=()=>{
+   if(!r.sonSoru.secenekler[+b.dataset.choice].correct)return wrong('Dikey eksende sütun uzaklığı sayılır: C sütunu eksenden kaç adım uzakta?');
+   good()});
+ }else $('#task').innerHTML='<div class="caption">Şövalyenin eksene göre eşinin durduğu kareye dokun. Eksenden kaç sütun/sıra uzaktaysa, öbür tarafta da o kadar uzaktadır.</div>'}
+function satrancSec(r,kod){
+ if(state.faz===1)return;
+ if((state.bulunan||[]).indexOf(kod)>=0)return;
+ const cift=r.ciftler.find(p=>p.hedef===kod&&(state.bulunan||[]).indexOf(p.hedef)<0);
+ if(!cift){const c=SUTUN.indexOf(kod[0]),sr=+kod[1];
+  const kalan=r.ciftler.filter(p=>(state.bulunan||[]).indexOf(p.hedef)<0)[0];
+  const kc=SUTUN.indexOf(kalan.kaynak[0]),ks=+kalan.kaynak[1];
+  state.not=r.eksen==='dikey'
+   ?`${kalan.kaynak} eksenden ${Math.abs(3.5-kc).toFixed(1).replace('.0','')} sütun uzakta; ${kod} ise ${Math.abs(3.5-c).toFixed(1).replace('.0','')} sütun uzakta.`
+   :`${kalan.kaynak} eksenden ${Math.abs(4.5-ks).toFixed(1).replace('.0','')} sıra uzakta; ${kod} ise ${Math.abs(4.5-sr).toFixed(1).replace('.0','')} sıra uzakta.`;
+  tahtaCiz(r);return wrong(state.not)}
+ state.bulunan=(state.bulunan||[]).concat(kod);
+ state.not=`${cift.kaynak} → ${cift.hedef}: eksenin iki yanında eşit uzaklıkta.`;
+ tahtaCiz(r);
+ if(state.bulunan.length>=r.ciftler.length){
+  if(r.sonSoru){state.faz=1;feedback('Şimdi iki ekseni karşılaştır');tahtaCiz(r);return}
+  good()}}
+function renderSatranc(r){state.bulunan=[];state.faz=0;state.not='';tahtaCiz(r)}
+
 const GAMES={};
 /* ===== 3. SINIF MATEMATİK — w01–w48 =====
    Kaynak şartname: output/pdf/3_sinif_matematik_oyunlari_detayli_duzeltmeler.pdf
@@ -1920,6 +2084,62 @@ GAMES.w32={title:'Mozaik Atölyesi',theme:'workshop',finish:'Mozaiği gerçekten
    {ad:'Kanat üçgeni',renk:'#e08b2a',nokta:[[2,0],[2,1],[2.866,0.5]]}],
   ayriToplam:14,secenekler:[{label:'8 birim',correct:true},{label:'14 birim'},{label:'10 birim'}],
   result:'Dört parçanın kenar toplamı 14; üç ortak kenar içte kaldı, dış çevre 8 birim.'}
+]};
+
+/* ---- Tema 5: simetri (w33–w36) ---- */
+GAMES.w33={title:'Katlama Laboratuvarı',theme:'lab',finish:'Her çizgiyi kendin çizip katladın; hangilerinin iki yarıyı çakıştırdığını deneyerek buldun.',rounds:[
+ {kind:'katla',prompt:'Katlandığında iki tarafı çakıştıran bütün çizgileri bul.',gerek:4,
+  sekil:[[10,10],[90,10],[90,90],[10,90]],
+  nokta:[[10,10],[50,10],[90,10],[90,50],[90,90],[50,90],[10,90],[10,50]],
+  result:'Karede dört simetri doğrusu var: iki orta çizgi ve iki köşegen. Hepsinde iki yarı tam çakıştı.'},
+ {kind:'katla',prompt:'Aynı işi dikdörtgende yap; köşegeni de dene.',gerek:2,
+  sekil:[[6,26],[94,26],[94,74],[6,74]],
+  nokta:[[6,26],[50,26],[94,26],[94,50],[94,74],[50,74],[6,74],[6,50]],
+  result:'Dikdörtgende yalnız iki orta çizgi işe yarıyor. Köşegende katlayınca köşeler üst üste gelmedi.'},
+ {kind:'katla',prompt:'Dairede merkezden geçen farklı çizgiler dene.',gerek:6,
+  sekil:[[50,8],[71,13.6],[86.4,29],[92,50],[86.4,71],[71,86.4],[50,92],[29,86.4],[13.6,71],[8,50],[13.6,29],[29,13.6]],
+  nokta:[[50,8],[71,13.6],[86.4,29],[92,50],[86.4,71],[71,86.4],[50,92],[29,86.4],[13.6,71],[8,50],[13.6,29],[29,13.6]],
+  result:'Denediğin her çap işe yaradı. Merkezden geçen sonsuz sayıda doğru çizilebildiği için dairenin simetri doğrusu sayısızdır.'}
+]};
+
+GAMES.w34={title:'Aynadaki İkizler',theme:'garden',finish:'Parçaları biçim, boyut ve yön bakımından karşılaştırıp gerçek ayna görüntüsünü seçtin.',rounds:[
+ {kind:'ayna',prompt:'Aynanın sağına hangi parça gelmeli?',eksen:55,renk:'#e0a3d0',
+  yarim:[[55,12],[30,20],[14,42],[26,58],[16,76],[38,84],[55,72]],
+  result:'Doğru parça eş büyüklükte ama yönü aynaya göre ters. Eş noktalar eksene aynı uzaklıkta durdu.'},
+ {kind:'ayna',prompt:'Bu yaprak yarısının aynadaki hâli hangisi?',eksen:55,renk:'#8fc47a',
+  yarim:[[55,10],[36,22],[22,44],[30,62],[20,80],[42,88],[55,80]],
+  result:'Döndürülmüş parça eş büyüklükte olsa da aynadaki gibi durmuyor; yansımada yön ekseni geçerek terslenir.'},
+ {kind:'ayna',prompt:'Bu kez iç noktalar da eşleşmeli.',eksen:55,renk:'#f2c45b',
+  yarim:[[55,14],[32,18],[18,40],[28,64],[20,82],[46,86],[55,74]],
+  ic:[[38,32],[30,52],[42,70]],
+  result:'Yalnız dış sınır değil, içteki noktalar da eksene aynı uzaklıkta yansıdı.'}
+]};
+
+GAMES.w35={title:'Kilim Dokuma Tezgâhı',theme:'market',finish:'Eksene uzaklığı sayarak kilimin sağ yarısını dokudun; katlandığında iki yarı üst üste geldi.',rounds:[
+ {kind:'kilim',prompt:'Sol yarıdaki renkli kareleri eksene göre yansıt.',
+  sol:[[null,null,null,null],[null,'k',null,null],[null,null,'m',null],[null,'s',null,null],[null,null,'y',null],[null,null,null,null]],
+  result:'Dört kare de eksenin öbür yanında aynı uzaklığa dokundu.'},
+ {kind:'kilim',prompt:'Bütün yarım deseni tamamla.',
+  sol:[['k','s','m','y'],['s','m','y','k'],['m','y','k','s'],['y','k','s','m'],['k','m','s','y'],['s','y','m','k']],
+  result:'Her satırda renkler eksenin iki yanında aynı sırayla, ters yönde dizildi.'},
+ {kind:'kilim',prompt:'Dokunmuş kilimde üç hata var; bul ve düzelt.',
+  sol:[['k','s','m','y'],['s','m','y','k'],['m','y','k','s'],['y','k','s','m']],
+  hatali:[['y','s','m','k'],[null,'y','m','s'],['s','k','y','m'],['m','s','k','y']],
+  result:'Hatalı kareler eksene uzaklığı sayılarak bulundu; düzeltilince kilim simetrik oldu.'}
+]};
+
+GAMES.w36={title:'Satranç Tahtası Macerası',theme:'class',finish:'Şövalyelerin eksene uzaklığını sayarak simetrik karelerini buldun ve iki ekseni karşılaştırdın.',rounds:[
+ {kind:'satranc',prompt:'Şövalyenin dikey eksene göre eşi hangi karede?',eksen:'dikey',
+  ciftler:[{kaynak:'B4',hedef:'G4'}],
+  result:'B sütunu eksenden 3 adım uzakta; karşı tarafta 3 adım uzaktaki sütun G. Eşi G4.'},
+ {kind:'satranc',prompt:'Bu kez iki şövalyenin eşini bul.',eksen:'dikey',
+  ciftler:[{kaynak:'A2',hedef:'H2'},{kaynak:'C7',hedef:'F7'}],
+  result:'A eksenden 4 adım uzakta, eşi H. C eksenden 2 adım uzakta, eşi F. Sıra numarası değişmedi.'},
+ {kind:'satranc',prompt:'Eksen yatay: şimdi sıralar yansıyacak.',eksen:'yatay',
+  ciftler:[{kaynak:'C7',hedef:'C2'}],
+  sonSoru:{metin:'Aynı şövalyenin DİKEY eksene göre eşi hangisiydi?',
+   secenekler:[{label:'F7',correct:true},{label:'C2'},{label:'F2'}]},
+  result:'Yatay eksende sütun aynı kalır, sıra yansır: C7 → C2. Dikey eksende ise sıra aynı kalır, sütun yansırdı: C7 → F7.'}
 ]};
 
 

@@ -190,145 +190,179 @@ TYPE_RISK = {
 }
 
 TYPE_FEEDBACK = {
-    "beltSort": "Yanlış kutuda bant dursun; kart sabitlenip yeniden okunsun ve ölçüt doğru söylenmeden hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
-    "serveOrder": "Yanlış seçimde tepsi kilitlenmesin; sepetin toplamı ve kalan bütçe görünür kalsın, öğrenci ürün çıkarıp yeniden denesin.",
+    "beltSort": "Yanlış kutuda bant dursun ve wrongHint doğru kutunun adını SÖYLEMESİN; kart sabitlenip yeniden okunsun, ölçüt soruyla hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
+    "serveOrder": "Yanlış kartta tepsi kilitlenmesin; istek yeniden okunsun ve kartın neden uymadığı deney/model amacı üzerinden gösterilsin.",
     "catchDrop": "Yanlış yakalamada düşme dursun; seçenek sabitlenip yeniden karar verilsin. Kaçan kapsül can yakmasın.",
-    "sentenceBuild": "Yanlışta bütün dizi bozulmasın; yalnız son kart geri alınsın. Anlamlı alternatif diziliş kurulduysa doğru kabul edilsin.",
-    "orderSequence": "Yanlış adımda dizi silinmesin; yalnız son seçim geri alınsın ve “önce ne olmalı?” sorusunu düşündüren ipucu verilsin.",
+    "sentenceBuild": "Yanlışta bütün dizi bozulmasın; yalnız son kart geri alınsın. Anlamlı alternatif soru kurulduysa doğru kabul edilsin.",
+    "orderSequence": "Yanlış adımda dizi silinmesin; yalnız son seçim geri alınsın ve “bu adımdan önce neyi bilmemiz gerekir?” sorusu sorulsun.",
     "memoryPairs": "Yanlış çiftte kartlar hemen kapanmasın; iki içerik yan yana okunup farkı soran kısa bir ipucu verilsin. Can standardı diğer oyunlarla eşitlensin.",
-    "dragMatch": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı bilgi kısa bir soruyla vurgulansın.",
-    "surveyChart": "Yanlış işaretlemede cevap yeniden dinletilsin; sayım bitince sonuç doğrudan açıklanmasın, öğrenciye “en çok/en az hangisi, kaç fark var?” soruları sorulsun.",
-    "codeGrid": "Engele çarpınca robot dursun ve programdaki hatalı adım işaretlensin; tüm program silinmesin. Hatalı adım yön adıyla (“burada batıya gittin”) tarif edilsin.",
+    "dragMatch": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı bilimsel ilişki kısa bir soruyla vurgulansın.",
+    "dragSlider": "Yanlış değerde doğru sayı tek başına verilmesin; olgu animasyonla gösterilip (Dünya bir tam tur atarken saat ilerlesin) yeniden karar verilsin.",
+    "holdFill": "Hedefi geçince ceza verilmesin; maddede ne olduğu görünsün (su kaynamaya başlar, çikolata yanar) ve öğrenci sonucu gözleyerek yeniden denesin.",
     "graphBuild": "Yanlış sütuna blok konursa blok geri dönsün; veri satırı yeniden okunsun ve hangi kategoriye ait olduğu sorulsun. Grafik silinmesin.",
-    "numPad": "Yanlış sayıda doğru cevap ekrana yazılmasın; grafikteki ilgili sütunlar vurgulanıp “bu ikisini karşılaştır” denilerek yeniden denensin.",
-    "dragSlider": "Yanlış seçimde doğru değer tek başına verilmesin; seçilen sürenin bir günde neye denk geldiği görsel olarak canlandırılıp yeniden karar verilsin.",
+    "codeGrid": "Engele çarpınca bisiklet dursun ve programdaki hatalı adım işaretlensin; tüm program silinmesin. Hata plan üzerinde (“burada ana caddeye girdin”) tarif edilsin.",
 }
 
 TYPE_ACCEPT = {
-    "beltSort": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve harita rengi turunda kart rengin kendisini gösterecek.",
-    "serveOrder": "Karar için gereken bütün sayısal veri (fiyat, bütçe, kalan tutar) ekranda okunur biçimde bulunacak; sepet toplamı hiçbir ögenin arkasında kalmayacak.",
+    "beltSort": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve wrongHint metinleri doğru kutunun adını içermeyecek.",
+    "serveOrder": "Seçilen öge ekranda gerçekten bir şey oluşturacak (tabak dolacak, devre kurulacak, maket yükselecek); ürün/model kazanımları yalnız kart seçmeyle tamamlanmış sayılmayacak.",
     "catchDrop": "İlk turda düşme kapalı, seçenekler sabit olacak; başarı doğru karar ve gerekçeyle ölçülecek. Her oyunun yönergesi kendi konusunu anlatacak.",
-    "sentenceBuild": "Kartlar küçük harfle gelecek; baş harf ve son işaret öğrencinin kararı olacak. Son turda serbest yazı ya da sözlü ifade alanı bulunacak.",
-    "orderSequence": "Roket-yakıt sahnesi kaldırılacak; sırayı ele veren tarih/numara ilk turda gizlenecek ve kartlar 390x844 ekranda tam içeride kalacak.",
+    "sentenceBuild": "Kartlar küçük harfle gelecek; baş harf ve soru işareti öğrencinin kararı olacak. Son turda öğrenci kendi araştırma sorusunu yazacak.",
+    "orderSequence": "Roket-yakıt sahnesi kaldırılacak; adımlar konusuna ait bir sahnede (laboratuvar tezgâhı, su döngüsü şeması, devre masası) sıralanacak ve kartlar ekranda tam içeride kalacak.",
     "memoryPairs": "Kart konumları ve içerik her açılışta karışacak; can sayısı genel standartla (3) eşitlenecek ve her eşleşme bir gerekçe adımıyla doğrulanacak.",
-    "dragMatch": "Parça yazıları çipe tam sığacak; hiçbir sözcük kesilmeyecek. Emojiler cevabı eşleştirmeyecek, hedef alanlar en az 44 px olacak ve her eşleşme gerekçeyle doğrulanacak.",
-    "surveyChart": "Cevap ifadeleri sütun adını birebir tekrar etmeyecek; sayım çetele çizgisiyle görünecek ve oyun ancak sonuç yorumu yapıldıktan sonra tamamlanacak.",
-    "codeGrid": "Yön düğmeleri KUZEY/GÜNEY/DOĞU/BATI olarak adlandırılacak; haritada kuzey oku, ölçek ve en az iki işaret noktası bulunacak; görev metni rotayı söylemeyecek ve öğrenci son turda yolu kendisi tarif edecek.",
-    "graphBuild": "Kategori hedefleri ya kaynak satırında okunur biçimde verilecek ya da öğrenci nesneleri sayarak kendisi çıkaracak; blok deposu grafiğin üzerine binmeyecek ve grafiğe sayı ölçeği eklenecek.",
-    "numPad": "Ekranda gerçek bir grafik bulunacak ve soru o grafikten okunacak; işlem hazır yazılmayacak, öğrenci hangi verileri karşılaştıracağına kendisi karar verecek.",
-    "dragSlider": "Tren-tünel sahnesi kaldırılacak; ölçülen kavram (bir günün saat çizelgesi, ekran karşısında geçen süre) ekranda görsel olarak canlandırılacak ve karar gerekçelendirilecek.",
+    "dragMatch": "Parça yazıları çipe tam sığacak; hiçbir sözcük kesilmeyecek. Hedef alanlar en az 44 px olacak ve her eşleşme bir gerekçe sorusuyla doğrulanacak.",
+    "dragSlider": "Tren-tünel sahnesi kaldırılacak; ölçülen olgu ekranda canlanacak (Dünya dönecek, termometre ısınan maddeyle birlikte yükselecek) ve karar gözleme dayanacak.",
+    "holdFill": "Hedef sıcaklık görev metninde, “Hedef” satırında ve ölçek işaretinde yazılı olmayacak; öğrenci maddeye ve amaca bakarak karar verecek. Ekranda gerçek ocak, kap ve madde bulunacak; hâl değişimi sırasında sıcaklığın sabit kaldığı gösterilecek.",
+    "graphBuild": "Kategori hedefleri ya kaynak satırında okunur biçimde verilecek ya da öğrenci nesneleri sayarak kendisi çıkaracak; toplam blok sayacı gizlenecek ve grafiğe sayı ölçeği eklenecek.",
+    "codeGrid": "Izgara gerçek bir şehir planına dönüşecek: sokaklar, kavşaklar ve en az iki işaret noktası bulunacak. Güzergâh seçimi gerekçelendirilecek ve görev metni rotayı söylemeyecek.",
 }
 
 
 DESIGNS = {
-"sb01": ("Gerçek bir mahalle/okul sahnesi çizilsin; davranış iki kişi arasında kısa bir sahne olarak canlansın, kart bantta akmasın ve hiçbir kenarda kırpılmasın.",
-        "Niyet ile etki ayrılsın: iyi niyetli ama bölücü sonuç doğuran davranışlar eklensin.",
-        "Öğrenci toplumsal birliği güçlendirecek kendi fikrini söylesin veya yazsın."),
-"sb02": ("Gerçek bir sınıf panosu çizilsin; kartlarda kategori etiketi yazmasın, öğrenci hangi kartın ilgi alanı, hangisinin güçlü yön olduğuna kendisi karar versin.",
-        "Aynı özellik hem güçlü yön hem gelişime açık alan olabilecek biçimde sunulsun.",
-        "Öğrenci kendi ilgi alanını ve geliştirmek istediği yönü kendi cümlesiyle yazsın."),
-"sb03": ("Gerçek okul yaşamı sahneleri kullanılsın (tekerlekli sandalye, farklı dil, farklı inanç); saygı davranışı o sahnede uygulansın ve emoji eşleşmesi kaldırılsın.",
-        "Saygı gibi görünüp dışlayan davranışlar çeldirici olsun (acıma, aşırı yardım).",
-        "Öğrenci bir farklılığa nasıl saygı göstereceğini kendi cümlesiyle anlatsın."),
-"sb04": ("Genel “doğru cevabı yakala” yönergesi kaldırılsın; sorular sosyal bilgiler dersinin somut bir katkısına bağlansın ve seçenekler sabit kartlarda dursun.",
-        "Dersin farklı katkıları (harita okuma, tarih bilinci, ekonomi kararı) ayrı örneklerle karşılaştırılsın.",
-        "Öğrenci dersten öğrendiği bir şeyi günlük yaşamında nerede kullandığını anlatsın."),
-"sb05": ("Gerçek bir sınıf durumu canlansın; kurulan cümle panoya asılsın ve karşıdaki karaktere söylensin. Kartlar küçük harfle gelsin.",
-        "Saygılı ve kırıcı iki ifade karşılaştırılsın; fark tartışılsın.",
-        "Öğrenci kendi saygı cümlesini hazır kart olmadan kursun."),
-"sb06": ("Gerçek bir sınıf anketi sahnesi kurulsun; cevap ifadesi sütun adını birebir tekrar etmesin ve sayım çetele çizgisiyle görünsün.",
-        "Öğrencinin kendi cevabı da ankete katılsın; kendini sınıfla karşılaştırsın.",
-        "Öğrenci sonucu yorumlayıp kendisini çoğunlukla/azınlıkla nerede bulduğunu söylesin."),
-"sb07": ("Gerçek bir harita parçası ve harita anahtarı kutusu çizilsin; sembol haritanın üzerinde gösterilsin ve emoji eşleşmesi kaldırılsın.",
-        "Benzer semboller çeldirici olsun (havaalanı/liman, il/ilçe merkezi).",
-        "Öğrenci verilen bir haritada üç sembolü bulup ne anlattığını söylesin."),
-"sb08": ("KRİTİK: kart rengin ADINI yazmak yerine RENGİN KENDİSİNİ göstersin - kazanım harita renklerini tanımaktır. Kart hiçbir kenarda kırpılmasın; denemede “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu. Arkada gerçek bir fiziki harita dursun.",
-        "Aynı rengin tonları ayrılsın (açık yeşil ova, koyu yeşil ova); yükselti basamağı kavramı verilsin.",
-        "Öğrenci gerçek bir fiziki haritada renklere bakarak bir bölgeyi tarif etsin."),
-"sb09": ("Bu dersteki sürüm yön adlarını kullandığı için diğer sınıflardan bir adım önde; bunu koruyarak yön düğmeleri de KUZEY/GÜNEY/DOĞU/BATI olarak adlandırılsın. Haritaya kuzey oku, ölçek ve sokak adları eklensin; görev metni rotayı söylemesin.",
-        "Başlangıç noktası değişsin; öğrenci aynı hedefe farklı yönlerden gitsin.",
-        "Öğrenci gittiği yolu “önce kuzeye iki adım, sonra doğuya...” diye kendisi tarif etsin."),
-"sb10": ("Gerçek coğrafya görselleri kullanılsın (dağ, nehir, ova); kart çevrilince o unsurun insan yaşamına etkisi kısa sahneyle gösterilsin.",
-        "Aynı unsurun hem olumlu hem sınırlayıcı etkisi karşılaştırılsın (nehir: sulama ama taşkın).",
-        "Öğrenci yaşadığı yerin bir doğal unsurunun etkisini anlatsın."),
-"sb11": ("Gerçek bir ev ve bina sahnesi çizilsin; her önlem o mekânda uygulanan somut bir işe dönüşsün ve roket kaldırılsın.",
-        "Farklı afetler için (deprem, sel, yangın) önlem sırası karşılaştırılsın.",
-        "Öğrenci evinde alınabilecek üç önlemi sırayla söylesin."),
-"sb12": ("Gerçek bir plan kâğıdı açılsın; seçilen öge planın ilgili bölümüne yazılsın ve plan adım adım oluşsun. Kazanım ÜRÜN oluşturmayı istiyor.",
-        "Eksik plan örnekleri karşılaştırılsın: buluşma yeri olmayan plan neden işe yaramaz?",
-        "Öğrenci kendi ailesi için buluşma yerini ve iletişim kişisini yazarak planı tamamlasın."),
-"sb13": ("Gerçek oyuncak fotoğrafları ve dönem görselleri kullanılsın; roket kaldırılsın. İlk turda tarihler gizlensin, sıralama oyuncağın malzemesi ve yapımından çıkarılsın.",
-        "Kanıt kavramı işlensin: hangi ipucu bize eski olduğunu söylüyor?",
-        "Öğrenci ailesinden bir oyuncak öyküsü toplayıp anlatsın."),
-"sb14": ("Gerçek oyun sahneleri yan yana çizilsin (sokakta saklambaç / ekranda oyun); özellik iki sahnede karşılaştırılsın ve bant durdurulsun.",
-        "Kısmen değişen özellikler eklensin (oyun kuralları aynı, araçlar farklı).",
-        "Öğrenci bir oyunun değişen ve değişmeyen yanını söylesin."),
-"sb15": ("Gerçek bir soy ağacı şablonu açılsın; seçilen öge ağacın ilgili dalına yerleşsin ve ürün gözle görülür biçimde oluşsun.",
-        "Farklı kaynak türleri (fotoğraf, sözlü anlatım, belge) karşılaştırılsın.",
-        "Öğrenci kendi aile ağacına iki kuşak ekleyip bir kaynak belirtsin."),
-"sb16": ("Gerçek miras görselleri kullanılsın (cami, köprü, halk oyunu, yemek); kart çevrilince öge kısa bir sahneyle tanıtılsın.",
-        "Somut ve somut olmayan miras ayrımı yapılsın; ölçüt tartışılsın.",
-        "Öğrenci kendi çevresinden bir miras ögesi söyleyip türünü belirtsin."),
-"sb17": ("Genel radar yönergesi kaldırılsın; soru somut bir miras ögesine bağlansın ve seçenekler sabit kartlarda dursun.",
-        "Mirasın korunmadığı durumların sonucu gösterilsin.",
-        "Öğrenci bir mirası tanımanın neden önemli olduğunu kendi cümleleriyle ifade etsin."),
-"sb18": ("Gerçek kaynak görselleri kullanılsın (eski fotoğraf, mektup, nüfus cüzdanı, ses kaydı); eşleşince kaynağın anlattığı bilgi ortaya çıksın.",
-        "Aynı olayı farklı anlatan iki kaynak karşılaştırılsın; kanıt kavramı işlensin.",
-        "Öğrenci bir aile kaynağından çıkardığı bilgiyi anlatsın."),
-"sb19": ("Gerçek yatay zaman şeridi ve dönem görselleri kullanılsın; roket kaldırılsın. İlk turda tarihler gizlensin.",
-        "Olaylar arasındaki neden-sonuç bağı sorulsun: hangisi diğerini mümkün kıldı?",
-        "Öğrenci Cumhuriyete giden yoldaki bir fedakârlığı kanıtıyla anlatsın."),
-"sb20": ("Gerçek öncesi-sonrası sahneleri kurulsun (harf devrimi öncesi/sonrası bir tabela, kadınların seçim sandığı); emoji eşleşmesi kaldırılsın.",
-        "Bir yeniliğin birden çok getirisi gösterilsin.",
-        "Öğrenci bir Cumhuriyet yeniliğinin bugünkü karşılığını anlatsın."),
-"sb21": ("Gerçek dönem fotoğrafları kullanılsın; durum kartı iki dönemin görselleri arasında karşılaştırılsın ve bant durdurulsun.",
-        "Geçiş dönemine ait, iki tarafa da yakın örnekler çeldirici olsun.",
-        "Öğrenci bir değişimi öncesi-sonrası olarak karşılaştırıp anlatsın."),
-"sb22": ("Gerçek bir seçim sahnesi kurulsun: sandık, oy pusulası, aday panosu. Oy ifadesi aday adını birebir tekrar etmesin ve sayım çetele çizgisiyle görünsün.",
-        "Berabere biten ve tek oyla kazanılan senaryolar eklensin; gizli oy ilkesi gösterilsin.",
-        "Öğrenci sonucu yorumlasın ve seçilmeyen adayların fikirlerine ne olacağını söylesin."),
-"sb23": ("Gerçek bir okul meclisi sahnesi kurulsun; kurulan cümle kürsüde okunsun ve panoya asılsın. Kartlar küçük harfle gelsin.",
-        "Katılım öneren ve şikâyet eden ifadeler karşılaştırılsın.",
-        "Öğrenci okulunda katılabileceği bir süreci ve fikrini kendisi yazsın."),
-"sb24": ("Gerçek Millî Mücadele görselleri kullanılsın; kart çevrilince fedakârlığın anlamı kısa bir anlatımla açılsın.",
-        "Cephede ve cephe gerisinde yapılan fedakârlıklar karşılaştırılsın.",
-        "Öğrenci bir fedakârlığı kanıtıyla birlikte anlatsın."),
-"sb25": ("KRİTİK: hedef değerler ekranda görünmüyor - kaynak satırında yalnız birim açıklaması var, hangi alanın kaç damla olduğu yazmıyor ve oyun deneme-yanılmayla çözülüyor. Veriler ya kaynak satırında okunur biçimde verilsin ya da öğrenci sayarak kendisi çıkarsın. Blok deposu grafiğin üzerine binmesin.",
-        "Grafik tamamlanınca “en çok nerede su harcanıyor, kaç litre fark var?” soruları sorulsun.",
-        "Öğrenci grafiği yorumlayıp evinde su tasarrufu için bir öneri getirsin."),
-"sb26": ("KRİTİK: başlık “Grafik Dedektifi” olduğu hâlde ekranda grafik yok ve “60 + 40 = ?” işlemi hazır yazılı. Ekrana gerçek bir grafik konsun, soru o grafikten okunsun ve işlem yazılmasın.",
-        "İki yılın grafiği yan yana verilsin; öğrenci değişimi karşılaştırsın.",
-        "Öğrenci grafikten çıkardığı sonucu bir cümleyle ifade etsin - yalnız sayı değil yorum istensin."),
-"sb27": ("Gerçek bir market rafı ve alışveriş sahnesi çizilsin; ürün kartı rafta bir ürün olarak görünsün ve bant durdurulsun.",
-        "Bağlama göre değişen ürünler eklensin (yağmurluk yağmurlu günde ihtiyaç); ölçüt tartışılsın.",
-        "Öğrenci kendi bir isteğini ve bir ihtiyacını ayırt edip nedenini söylesin."),
-"sb28": ("KRİTİK: ürün kartlarında FİYAT yazmıyor - öğrenci 30 TL'yi tutturmayı bilemez. Her ürüne okunur bir fiyat etiketi konsun, sepet toplamı ve kalan bütçe hiçbir ögenin arkasında kalmadan görünsün.",
-        "Bütçenin yetmediği durumlar eklensin; öğrenci ihtiyacı isteğe tercih etsin.",
-        "Öğrenci kendi seçimini “şunu aldım çünkü...” diye gerekçelendirsin."),
-"sb29": ("Gerçek üretim zinciri sahnesi çizilsin (tarla, değirmen, fırın, market, sofra); roket kaldırılsın ve adımlar bu mekânlarda görünsün.",
-        "Farklı ürünler için zincir karşılaştırılsın (süt, ayakkabı).",
-        "Öğrenci bir ürünün yolculuğunu üç aşamada anlatsın."),
-"sb30": ("KRİTİK: altı parçanın beşinde son sözcük çipe sığmayıp kesiliyor (“...yetiştirmesi”, “...dikilmesi”, “...götürmesi” okunmuyor). Yazılar tam sığacak biçimde yerleşsin; emoji ipuçları kategoriyi ele vermesin.",
-        "Aynı ürünün üç aşaması birlikte verilsin; öğrenci zinciri kursun.",
-        "Öğrenci kendi yaşamından üretim, dağıtım ve tüketim örneği versin."),
-"sb31": ("Gerçek bir ekran/uygulama arayüzü çizilsin; davranış o arayüzde bir eylem olarak görünsün ve bant durdurulsun.",
-        "Görünüşte zararsız ama riskli davranışlar çeldirici olsun (tanıdık görünen hesap).",
-        "Öğrenci kendi belirlediği bir güvenlik kuralını söylesin."),
-"sb32": ("Genel radar yönergesi kaldırılsın; bilgi kartı sabit gelsin ve öğrenci “paylaşırım / paylaşmam” kararını gerekçe seçerek versin.",
-        "Bağlama göre değişen örnekler eklensin: okul panosunda ad, internette adres; izin kavramı işlensin.",
-        "Öğrenci dijital mahremiyet kuralını “... paylaşmam çünkü ...” kalıbıyla gerekçelendirsin."),
-"sb33": ("Gerçek bilim insanı çocukluk anıları kullanılsın; eşleşince merakın hangi keşfe dönüştüğü kısa sahneyle gösterilsin ve emoji eşleşmesi kaldırılsın.",
-        "Merakın hemen sonuç vermediği, uzun sürdüğü örnekler eklensin.",
-        "Öğrenci kendi merak ettiği bir konuyu ve nasıl araştıracağını söylesin."),
-"sb34": ("Gerçek bir mesajlaşma ekranı sahnesi kurulsun; adımlar o ekranda yapılan işler olarak sıralansın (ekran görüntüsü al, engelle, güvendiğin yetişkine göster). Roket kaldırılsın.",
-        "Yanlış tepkiler çeldirici olsun (karşılık vermek, sessiz kalmak); sonucu gösterilsin.",
-        "Öğrenci güvendiği yetişkinleri ve ne söyleyeceğini kendisi belirtsin."),
-"sb35": ("Tren-tünel sahnesi kaldırılsın; ekranda bir günün saat çizelgesi olsun ve seçilen ekran süresi bu çizelgede yerini alsın; kalan zamanla neler yapılabileceği görünsün.",
-        "Hafta içi ve hafta sonu karşılaştırılsın; yaşa uygun öneri aralığı gösterilsin.",
-        "Öğrenci kendi ekran süresi kuralını nedeniyle birlikte söylesin."),
-"sb36": ("Gerçek bir okul panosu çizilsin; kurulan kural cümlesi panoya asılsın ve gerekçe bölümü ayrı bir alan olsun. Kartlar küçük harfle gelsin.",
-        "Kural ile gerekçe ayrı ayrı kurulsun: “ne yapmalı” ve “çünkü”.",
-        "Öğrenci kendi dijital güvenlik kuralını gerekçesiyle yazsın."),
+"f01": ("Gerçek bir laboratuvar sahnesi çizilsin; ifade bir bilim insanının defterinden okunsun, kart bantta akmasın ve kırpılmasın. wrongHint metinleri doğru kutuyu söylemesin.",
+        "Bilimsel görünen ama kanıtsız ifadeler çeldirici olsun; ölçüt (test edilebilirlik, tekrarlanabilirlik) tartışılsın.",
+        "Öğrenci bir iddiayı bilimsel yapmak için hangi kanıtın gerektiğini söylesin."),
+"f02": ("Genel radar yönergesi kaldırılsın; kaynak kartları (ansiklopedi, blog, kurum sitesi, sosyal medya) sabit dursun ve her kartta yazar, tarih, kurum görünsün.",
+        "Aynı bilgiyi veren iki kaynak ölçütlerle karşılaştırılsın.",
+        "Öğrenci seçtiği kaynağı “güvenilir çünkü...” diye gerekçelendirsin."),
+"f03": ("Gerçek bir araştırma masası çizilsin; adımlar defterde satır satır oluşsun ve roket kaldırılsın.",
+        "Atlanan adımın sonucu gösterilsin: soru sormadan veri toplamak neden işe yaramaz?",
+        "Öğrenci kendi merak ettiği konu için adımları sırayla yazsın."),
+"f04": ("Gerçek bilim insanı çalışma sahneleri kullanılsın; eşleşince özelliğin davranışa nasıl döküldüğü kısa animasyonla gösterilsin.",
+        "Yakın özellikler çeldirici olsun (meraklı/aceleci, sabırlı/kararsız).",
+        "Öğrenci kendisinde gördüğü bir bilim insanı özelliğini örnekle anlatsın."),
+"f05": ("Gerçek bir çanta ve masa sahnesi çizilsin; seçilen kaynak çantaya girsin ve içeriği görünsün.",
+        "Güvenilir görünen ama uygun olmayan kaynaklar çeldirici olsun.",
+        "Öğrenci kendi araştırması için üç kaynak seçip nedenini söylesin."),
+"f06": ("Gerçek bir araştırma defteri açılsın; kurulan soru deftere yazılsın ve iyi soru ölçütleri (test edilebilir mi?) yanında dursun. Kartlar küçük harfle gelsin.",
+        "Test edilebilir ve edilemez sorular karşılaştırılsın.",
+        "Öğrenci kendi araştırma sorusunu hazır kart olmadan yazsın."),
+"f07": ("Gerçek bir besin masası ve içerik etiketi çizilsin; besin kartı tabakta görünsün ve bant durdurulsun.",
+        "Birden çok içerik taşıyan besinler eklensin; “en çok hangisi?” ölçütü tartışılsın.",
+        "Öğrenci kendi öğününde hangi içeriğin baskın olduğunu söylesin."),
+"f08": ("Gerçek besin fotoğrafları kullanılsın; eşleşince vitaminin vücuttaki etkisi kısa sahneyle gösterilsin. A vitamini ile havuç arasındaki aynı emoji kullanımı kaldırılsın - tek sızıntı noktası burası.",
+        "Bir besinde birden çok vitamin bulunabildiği gösterilsin.",
+        "Öğrenci bir vitamini ve kaynağını kendi cümlesiyle anlatsın."),
+"f09": ("Gerçek bir tabak çizilsin; seçilen besin tabağa yerleşsin ve tabağın dengesi (protein/karbonhidrat/sebze oranı) görsel olarak oluşsun.",
+        "Dengesiz tabak örnekleri karşılaştırılsın; eksik grup gösterilsin.",
+        "Öğrenci kendi dengeli öğününü kurup neden dengeli olduğunu açıklasın."),
+"f10": ("Gerçek vücut şeması kullanılsın; kart çevrilince içeriğin görevi ilgili organda/dokuda canlansın.",
+        "Bir içeriğin birden çok görevi olduğu gösterilsin.",
+        "Öğrenci bir besin içeriğinin görevini kendi cümlesiyle anlatsın."),
+"f11": ("Gerçek bir deney tezgâhı çizilsin; adımlar tezgâhta uygulanan işler olarak sıralansın ve roket kaldırılsın.",
+        "Değişken kavramı işlensin: hangi adımda neyi sabit tutuyoruz?",
+        "Öğrenci bir besin testi deneyini adım adım anlatsın."),
+"f12": ("Genel radar yönergesi kaldırılsın; beslenme-sağlık ilişkisi gerçek bir öncesi-sonrası sahnesiyle gösterilsin ve seçenekler sabit dursun.",
+        "Kısa ve uzun vadeli etkiler ayrı örneklerle karşılaştırılsın.",
+        "Öğrenci bir beslenme alışkanlığının sağlığa etkisini neden-sonuç kurarak anlatsın."),
+"f13": ("Gerçek bir Dünya kesiti çizilsin; öge kartı ilgili kürenin üzerine yerleşsin ve bant durdurulsun. Dört kutu etiketi kutu içinde kalsın.",
+        "Birden çok küreye ait olabilen ögeler çeldirici olsun (bulut, nehir yatağı).",
+        "Öğrenci çevresinden bir ögeyi hangi küreye koyacağını gerekçesiyle söylesin."),
+"f14": ("Gerçek bir Dünya kesit modeli çizilsin; katmanlar kesitin üzerine içten dışa yerleşsin ve roket kaldırılsın.",
+        "Katmanların kalınlık ve sıcaklık farkı gösterilsin.",
+        "Öğrenci katmanları içten dışa kendi sözcükleriyle anlatsın."),
+"f15": ("Gerçek bir Dünya-Güneş animasyonu kullanılsın; eşleşen hareket ekranda gerçekleşsin (Dünya dönerken gece-gündüz oluşsun).",
+        "Dönme ve dolanma karıştırılabilecek biçimde sunulup ayırt ettirilsin.",
+        "Öğrenci bir hareketin sonucunu gözleyerek anlatsın."),
+"f16": ("Genel radar yönergesi kaldırılsın; Dünya'nın şekline dair kanıtlar (ufukta kaybolan gemi, uydu görüntüsü, gölge) gerçek görsellerle sunulsun.",
+        "Gözleme dayalı kanıt ile duyuma dayalı iddia ayrılsın.",
+        "Öğrenci Dünya'nın şekline dair bir kanıtı kendi cümlesiyle açıklasın."),
+"f17": ("Tren-tünel sahnesi kaldırılsın; ekranda dönen bir Dünya ve saat/takvim olsun. Öğrenci süreyi bu animasyonu gözleyerek belirlesin.",
+        "Dönme (24 saat) ile dolanma (365 gün) yan yana karşılaştırılsın.",
+        "Öğrenci hangi hareketin hangi süreye karşılık geldiğini gerekçesiyle söylesin."),
+"f18": ("Gerçek Dünya kesiti kullanılsın; kart çevrilince kürenin içeriği o kesitte vurgulansın.",
+        "Küreler arası geçiş bölgeleri gösterilsin (deniz yüzeyi, atmosfer sınırı).",
+        "Öğrenci bir küreyi ve içeriğini kendi cümlesiyle tanıtsın."),
+"f19": ("Gerçek bir mutfak/laboratuvar sahnesi çizilsin; olay kısa animasyonla gösterilsin (çaydanlıktan buhar yükselsin). KRİTİK: kart hiçbir kenarda kırpılmasın - denemede “Çaydanlıktan buhar çıkar” ifadesinden yalnız “buhar” görünüyordu ve bu sözcük tek başına cevabı ele veriyordu.",
+        "Kart metinlerinde hâl değişiminin adını çağrıştıran sözcükler kullanılmasın; olay gözlemle anlatılsın.",
+        "Öğrenci evinde gözlediği bir hâl değişimini adlandırıp anlatsın."),
+"f20": ("Gerçek bir ısı akışı animasyonu kullanılsın; eşleşince ısının maddeye girdiği veya çıktığı ok olarak gösterilsin.",
+        "Isı alan ve veren değişimler yan yana karşılaştırılsın.",
+        "Öğrenci bir hâl değişiminin ısı alıp vermediğini gerekçesiyle söylesin."),
+"f21": ("KRONOMETRE kaldırılsın; ekranda gerçek ocak, kap ve madde olsun. KRİTİK: hedef sıcaklık görev metninde, “Hedef” satırında ve ölçek işaretinde olmak üzere üç yerde yazılı - hepsi kaldırılsın, öğrenci maddeye ve amaca bakarak karar versin.",
+        "Hâl değişimi sırasında sıcaklığın SABİT kaldığı gösterilsin - şu anki düz doğrusal artış bu temanın çekirdek kavramını yanlış modelliyor.",
+        "Öğrenci ısıtmayı ne zaman durduracağını maddede gördüğü değişime bakarak söylesin."),
+"f22": ("Gerçek bir su döngüsü şeması çizilsin; damla şemanın üzerinde yolculuk etsin ve roket kaldırılsın.",
+        "Her adımda hangi hâl değişiminin olduğu sorulsun.",
+        "Öğrenci su döngüsünü hâl değişimi adlarıyla anlatsın."),
+"f23": ("Tren-tünel sahnesi kaldırılsın; ekranda ısınan bir madde ve termometre olsun, sıcaklık maddeyle birlikte değişsin.",
+        "Farklı maddelerin erime/kaynama noktaları karşılaştırılsın.",
+        "Öğrenci bir maddenin hâl değiştirdiği sıcaklığı gözleyerek söylesin."),
+"f24": ("Gerçek bir deney tezgâhı çizilsin; seçilen malzeme tezgâha yerleşsin ve deney düzeneği görünür biçimde kurulsun.",
+        "Güvenlik malzemeleri (gözlük, eldiven) ayrı bir ölçüt olarak istensin.",
+        "Öğrenci kendi deneyi için malzeme listesi yazsın."),
+"f25": ("Gerçek bir mıknatıs ve malzeme kutusu çizilsin; madde kartı mıknatısa yaklaştığında çekilip çekilmediği animasyonla görünsün ve bant durdurulsun.",
+        "Metal olup çekilmeyen maddeler (alüminyum, bakır) çeldirici olsun; “her metal çekilmez” kuralı kurulsun.",
+        "Öğrenci evinden bir nesneyi tahmin edip test etsin."),
+"f26": ("Gerçek iki mıknatıs çizilsin; kutuplar yaklaştırılınca itme/çekme animasyonla gösterilsin.",
+        "Aynı ve zıt kutup eşleşmeleri örüntü olarak sunulup genelleme yaptırılsın.",
+        "Öğrenci kuralı kendi cümlesiyle ifade etsin: “Aynı kutuplar...”"),
+"f27": ("Genel radar yönergesi kaldırılsın; mıknatısın kullanıldığı gerçek nesneler (hoparlör, buzdolabı kapağı, pusula) sahnede görünsün.",
+        "Mıknatısın görünmeyen kullanımları eklensin (elektrik motoru, kart okuyucu).",
+        "Öğrenci evinde mıknatıs kullanılan bir yeri bulup anlatsın."),
+"f28": ("Gerçek kullanım sahneleri kullanılsın; kart çevrilince mıknatısın oradaki işi animasyonla gösterilsin.",
+        "Aynı kullanımın farklı yerlerde karşımıza çıktığı gösterilsin.",
+        "Öğrenci bir mıknatıs kullanımını ve nedenini anlatsın."),
+"f29": ("Gerçek bir deney tezgâhı çizilsin; adımlar tezgâhta uygulanan işler olarak sıralansın ve roket kaldırılsın.",
+        "Tahmin-test-sonuç döngüsü vurgulansın: tahmin yanlış çıkarsa ne yapılır?",
+        "Öğrenci bir mıknatıs deneyini tahminiyle birlikte anlatsın."),
+"f30": ("Gerçek bir atölye tezgâhı çizilsin; seçilen malzeme ile pusula adım adım kurulsun ve sonunda iğne kuzeyi göstersin.",
+        "Gereksiz ama cazip malzemeler çeldirici olsun.",
+        "Öğrenci pusulanın neden kuzeyi gösterdiğini açıklasın."),
+"f31": ("Gerçek bir devre şeması çizilsin; eşleşen eleman devrede yerini alsın ve görevi çalışırken görünsün (pil akım versin, ampul yansın).",
+        "Benzer görevli elemanlar çeldirici olsun (anahtar/duy).",
+        "Öğrenci bir devre elemanının görevini kendi cümlesiyle anlatsın."),
+"f32": ("Gerçek bir devre masası çizilsin; adımlar masada uygulanan işler olarak sıralansın ve son adımda devre gerçekten çalışsın. Roket kaldırılsın.",
+        "Yanlış sırada kurulan devrenin neden çalışmadığı gösterilsin.",
+        "Öğrenci devre kurma adımlarını kendi sözcükleriyle anlatsın."),
+"f33": ("Gerçek enerji kaynağı görselleri çizilsin (güneş paneli, rüzgâr türbini, kömür ocağı); kart kaynağın sahnesinde görünsün ve bant durdurulsun.",
+        "Tartışmalı örnekler eklensin (biyokütle, hidroelektrik); ölçüt savunulsun.",
+        "Öğrenci bir kaynağı neden o gruba koyduğunu açıklasın."),
+"f34": ("Gerçek bir elektrik atölyesi çizilsin; seçilen eleman tezgâha konsun ve devre görünür biçimde tamamlansın.",
+        "Eksik eleman senaryoları eklensin: pil olmadan devre çalışır mı?",
+        "Öğrenci basit bir devre için gereken elemanları kendisi sıralasın."),
+"f35": ("Genel radar yönergesi kaldırılsın; ekranda çalışmayan gerçek bir devre olsun ve öğrenci arızayı devreye bakarak bulsun.",
+        "Birden çok olası arıza verilsin; öğrenci test ederek elesin.",
+        "Öğrenci arızayı ve nasıl bulduğunu kanıtıyla anlatsın."),
+"f36": ("KRİTİK: hedef değerler ekranda görünmüyor - kaynak satırında yalnız birim açıklaması var. Veriler ya kaynak satırında okunur biçimde verilsin ya da öğrenci şehrin enerji santrallerini sayarak kendisi çıkarsın. Toplam blok sayacı gizlensin.",
+        "Grafik tamamlanınca “hangi kaynak baskın, yenilenebilir payı ne kadar?” soruları sorulsun.",
+        "Öğrenci grafiği yorumlayıp şehir için bir enerji önerisi getirsin."),
+"f37": ("Gerçek gündüz ve gece sahneleri çizilsin; ışık kaynağı kartı kendi ortamında görünsün ve bant durdurulsun.",
+        "Işık yaymayan ama parlayan cisimler (ay, ayna) çeldirici olsun; kaynak-yansıtıcı ayrımı kurulsun.",
+        "Öğrenci çevresinden bir doğal ve bir yapay kaynak söylesin."),
+"f38": ("Gerçek bir karanlık kutu deneyi çizilsin; adımlar kutuda uygulanan işler olarak sıralansın ve son adımda sonuç görülsün. Roket kaldırılsın.",
+        "Değişken kontrolü vurgulansın: ışık dışında ne sabit tutuluyor?",
+        "Öğrenci deneyin sonucunu ve nedenini anlatsın."),
+"f39": ("Genel radar yönergesi kaldırılsın; ekranda karanlık bir oda olsun ve öğrenci ışığı açıp kapayarak görmenin koşullarını gözlesin.",
+        "Işık, göz ve cisim üçlüsü ayrı ayrı test edilsin.",
+        "Öğrenci görmek için nelerin gerektiğini gözlemine dayanarak söylesin."),
+"f40": ("Gerçek bir gece şehri sahnesi çizilsin; ışık kirliliği durumu ekranda görünsün ve eşleşen etki canlılarda canlansın (kuşlar yön şaşırsın).",
+        "Farklı canlıların farklı etkilenmesi gösterilsin.",
+        "Öğrenci ışık kirliliğinin bir etkisini kendi cümlesiyle anlatsın."),
+"f41": ("Gerçek bir sokak sahnesi çizilsin; seçilen çözüm sokakta uygulansın ve gökyüzü kararıp yıldızlar görünsün.",
+        "Çözümlerin maliyet ve etkisi karşılaştırılsın; gerekçelendirme istensin.",
+        "Öğrenci kendi mahallesi için bir çözüm önerip gerekçelendirsin."),
+"f42": ("Gerçek ışık kaynağı görselleri kullanılsın; kart çevrilince kaynağın özelliği (sıcaklık, süreklilik, parlaklık) gösterilsin.",
+        "Benzer görünen kaynakların farkları karşılaştırılsın.",
+        "Öğrenci iki ışık kaynağını bir özelliğe göre karşılaştırsın."),
+"f43": ("Gerçek bir şehir sahnesi çizilsin; uygulama şehirde görünsün ve sonucu (yeşil alan artsın, hava kirlensin) canlansın. Bant durdurulsun.",
+        "Kısa vadede iyi uzun vadede kötü uygulamalar çeldirici olsun.",
+        "Öğrenci bir uygulamayı sürdürülebilirlik ölçütüyle değerlendirsin."),
+"f44": ("Gerçek bir maket tepsisi çizilsin; seçilen öge makete yerleşsin ve şehir gözle görülür biçimde kurulsun. Kazanım MODEL geliştirmeyi istiyor.",
+        "Ögeler arası ilişki sorulsun: toplu taşıma olmadan yaya bölgesi işe yarar mı?",
+        "Öğrenci kendi şehir modelini üç ögeyle kurup anlatsın."),
+"f45": ("Gerçek bir proje panosu çizilsin; adımlar panoda görselleşsin ve roket kaldırılsın.",
+        "Değerlendirme ve paylaşma adımları vurgulansın: proje bitince ne yapılır?",
+        "Öğrenci kendi projesi için adımları sırayla yazsın."),
+"f46": ("KRİTİK: altı parçanın altısında da son sözcük çipe sığmayıp kesiliyor (“...tüketimi”, “...azalması”, “...büyümesi” okunmuyor). Yazılar tam sığacak biçimde yerleşsin ve sorun-çözüm ilişkisi şehir sahnesinde canlansın.",
+        "Bir soruna birden çok çözüm önerilip karşılaştırılsın.",
+        "Öğrenci kendi çevresinden bir sorun ve çözüm önersin."),
+"f47": ("Hedef değerler ekranda görünsün ya da öğrenci anket cevaplarını sayarak veriyi kendisi çıkarsın; toplam simge sayacı gizlensin ve grafiğe ölçek eklensin.",
+        "Grafik tamamlanınca “en çok hangi ulaşım, sürdürülebilir olan hangisi?” soruları sorulsun.",
+        "Öğrenci grafiği yorumlayıp okuluna bir ulaşım önerisi getirsin."),
+"f48": ("Izgara gerçek bir şehir planına dönüşsün: sokaklar, kavşaklar, park ve okul işaretlensin. Güzergâh seçimi gerekçelendirilsin (neden ana cadde değil?).",
+        "Farklı başlangıç noktaları ve güvenlik ölçütleri verilsin.",
+        "Öğrenci çizdiği bisiklet yolunu ve neden o yolu seçtiğini anlatsın."),
 }
 
 assert set(DESIGNS) == {g["id"] for g in games}
@@ -338,71 +372,84 @@ def config_summary(game):
     n = game.get("n", {})
     t = game["type"]
     if t == "beltSort":
-        return f"Kaynakta {n.get('items','?')} kart ve {n.get('bins','')} kutuları tanımlı; yapı tek gerçek-zamanlı bant turu, yeni içerik turu üretilmiyor."
+        wh = n.get("wrongHint")
+        ek = f" {wh} kartın tamamında wrongHint metni tanımlı ve doğru kutunun adını içeriyor." if wh else ""
+        return f"Kaynakta {n.get('items','?')} kart ve {n.get('bins','')} kutuları tanımlı; yapı tek gerçek-zamanlı bant turu.{ek}"
     if t == "memoryPairs":
         return f"Kaynakta {n.get('pairs','?')} çift tanımlı; tek tur var ve kart içerikleri sabit."
     if t == "catchDrop":
         return f"Kaynakta {n.get('rounds','?')} düşen-seçenek turu var; doğru ve çeldiriciler önceden sabit, hız ile karar aynı puana bağlanıyor."
     if t == "serveOrder":
-        return f"Kaynakta {n.get('customers','?')} istek tanımlı; kart havuzu sabit."
+        return f"Kaynakta {n.get('customers','?')} istek tanımlı; kart havuzu sabit ve seçilen öge ekranda bir şey inşa etmiyor."
     if t == "sentenceBuild":
-        return f"Kaynakta {n.get('rounds','?')} cümle kurulumu var; her cümlenin tek doğru dizilişi tanımlı."
+        return f"Kaynakta {n.get('rounds','?')} cümle kurulumu var; her sorunun tek doğru dizilişi tanımlı."
     if t == "orderSequence":
-        return f"Kaynakta {n.get('items','?')} kartlık tek sıra var; doğru sıra sabit ve yeni olay turu üretilmiyor."
+        return f"Kaynakta {n.get('items','?')} kartlık tek sıra var; doğru sıra sabit ve yeni tur üretilmiyor."
     if t == "dragMatch":
         return f"Kaynakta {n.get('sources','?')} parça ve {n.get('targets','?')} hedef var; tek sabit eşleştirme turu."
-    if t == "codeGrid":
-        return f"Kaynakta {n.get('rounds','?')} görev haritası var; görev metinleri yön adlarını kullanıyor fakat düğmeler yalnız ekran yönü okları."
+    if t == "dragSlider":
+        return f"Kaynakta {n.get('rounds','?')} tur var; sabit sayı seçeneklerinden biri seçiliyor ve ölçülen olgunun animasyonu tanımlı değil."
+    if t == "holdFill":
+        return f"Kaynakta {n.get('rounds','?')} ısıtma turu var; hedef sıcaklık üç turun üçünde de görev metninde açıkça söyleniyor."
     if t == "graphBuild":
         return f"Kaynakta {n.get('categories','?')} kategori ve toplam {n.get('blocks','?')} blok tanımlı; kategori hedefleri kaynakta var ama ekranda gösterilmiyor."
-    if t == "numPad":
-        return f"Kaynakta {n.get('rounds','?')} soru var; sorular düz metin olarak veriliyor ve işlem satırı hazır yazılı."
-    if t == "dragSlider":
-        return f"Kaynakta {n.get('rounds','?')} tahmin turu var; sabit sözcük seçeneklerinden biri seçiliyor ve ölçülen kavramın görseli tanımlı değil."
-    if t == "surveyChart":
-        return f"Kaynakta {n.get('options','?')} seçenek ve {n.get('responses','?')} cevap tanımlı; cevap ifadeleri seçenek adını birebir içeriyor ve sonuç yorumu adımı tanımlı değil."
-    return f"Kaynakta {n.get('columns','?')} sütun ve {n.get('responses','?')} yanıt tanımlı; yanıt cümleleri sütun adını birebir içeriyor."
+    if t == "codeGrid":
+        return f"Kaynakta {n.get('rounds','?')} görev haritası var; program yalnız ekran yönü oklarından oluşuyor ve plan ögesi tanımlı değil."
+    return f"Kaynakta {n.get('rounds','?')} tur tanımlı."
 
 
 GROUP_FOCUS = {
-    "Alan 1 · Birlikte Yaşamak": [
-        "Kişisel değerlendirme kazanımlarında kart etiketleri kaldırılmalı; öğrenci kendisi hakkında konuşmalı.",
-        "Saygı ve birlik kazanımları gerçek okul/mahalle sahneleriyle canlandırılmalı; bant ve servis tezgâhı şablonu kaldırılmalı.",
-        "Ortak “doğru cevabı yakala” yönergesi her oyunun kendi konusuna göre yeniden yazılmalı.",
+    "Tema 1 · Bilime Yolculuk": [
+        "Bilimsel bilgi ölçütü kanıtla kurulmalı; wrongHint ipuçları doğru kutuyu söylememeli.",
+        "Kaynak güvenilirliği radar refleksinden çıkarılıp yazar-tarih-kurum bilgisiyle değerlendirilmeli.",
+        "Araştırma sorusu kazanımı son turda öğrencinin kendi sorusuna bağlanmalı.",
     ],
-    "Alan 2 · Evimiz Dünya": [
-        "Harita kazanımlarında gerçek harita ögeleri bulunmalı: renk, sembol, kuzey oku, ölçek ve harita anahtarı.",
-        "Renk oyununda kart rengin adını değil kendisini göstermeli; kırpılan bölüm tam da renk adı olduğu için karar imkânsızlaşıyor.",
-        "Navigasyon oyununda yön düğmeleri coğrafi yön adlarını taşımalı ve öğrenci yolu kendisi tarif etmeli.",
+    "Tema 2 · Sağlıklı Besleniyorum": [
+        "Besin içeriği ve vitamin kazanımları gerçek besin görselleriyle çalışmalı.",
+        "Dengeli tabak kazanımında tabak ekranda gerçekten kurulmalı; oranlar görünmeli.",
+        "Deney kazanımlarında değişken kontrolü vurgulanmalı; roket sahnesi kaldırılmalı.",
     ],
-    "Alan 3 · Ortak Mirasımız": [
-        "Kanıta dayalı sıralama kazanımlarında tarihler ilk turda gizlenmeli; sıralama nesnenin özelliğinden çıkarılmalı.",
-        "Kaynak ve miras oyunlarında gerçek görseller (fotoğraf, belge, eser) kullanılmalı.",
-        "Ürün oluşturma kazanımları gerçek üretime bağlanmalı: soy ağacı ekranda oluşmalı.",
+    "Tema 3 · Dünya'mızı Keşfedelim": [
+        "Küre ve katman kazanımları gerçek Dünya kesiti üzerinde çalışmalı.",
+        "Dünya'nın hareketleri animasyonla gözlemlenmeli; süre kararı tren-tünel yerine gözleme dayanmalı.",
+        "Şekil kanıtı gerçek gözlem görselleriyle (ufuk, gölge, uydu) sunulmalı.",
     ],
-    "Alan 4 · Yaşayan Demokrasimiz": [
-        "Cumhuriyet kazanımları öncesi-sonrası karşılaştırmasıyla somutlaştırılmalı; roket sahnesi kaldırılmalı.",
-        "Seçim oyununda oy ifadesi aday adını tekrarlamamalı; gizli oy ve sonuç yorumu eklenmeli.",
-        "Katılım kazanımı gerçek bir okul meclisi sahnesine ve öğrencinin kendi fikrine bağlanmalı.",
+    "Tema 4 · Maddenin Değişimi": [
+        "Isıtma deneyinde hedef sıcaklık söylenmemeli ve hâl değişimi sırasında sıcaklığın sabit kaldığı doğru modellenmeli.",
+        "Hâl değişimi kartlarında cevabı çağrıştıran sözcükler kullanılmamalı; olay gözlemle anlatılmalı.",
+        "Su döngüsü ve ısı alışverişi gerçek şema ve animasyonla gösterilmeli.",
     ],
-    "Alan 5 · Hayatımızdaki Ekonomi": [
-        "Karar için gereken sayısal veri ekranda bulunmalı: grafik hedefleri ve ürün fiyatları şu an eksik.",
-        "Grafik Dedektifi'nde gerçek bir grafik bulunmalı ve işlem hazır yazılmamalı.",
-        "Ekonomi köprüsünde parça yazıları kesilmemeli; üretim-dağıtım-tüketim ayrımı okunabilir olmalı.",
+    "Tema 5 · Mıknatısı Keşfediyorum": [
+        "Çekme testi animasyonla görünmeli; metal olup çekilmeyen maddeler çeldirici olarak eklenmeli.",
+        "Kutup etkileşimi iki gerçek mıknatısla gösterilip genelleme yaptırılmalı.",
+        "Pusula atölyesinde ürün ekranda gerçekten kurulmalı ve iğne kuzeyi göstermeli.",
     ],
-    "Alan 6 · Teknoloji ve Sosyal Bilimler": [
-        "Dijital güvenlik kazanımları gerçek arayüz sahneleriyle çalışmalı; gerekçelendirme adımı eklenmeli.",
-        "Siber zorbalık adımları gerçek mesajlaşma ekranında uygulanmalı ve roket sahnesi kaldırılmalı.",
-        "Ekran süresi kararı tren-tünel yerine bir günün saat çizelgesine bağlanmalı.",
+    "Tema 6 · Enerji Dedektifleri": [
+        "Devre kazanımlarında devre ekranda gerçekten kurulmalı ve çalışmalı.",
+        "Arıza teşhisi radar refleksinden çıkarılıp gerçek bir devre üzerinde yapılmalı.",
+        "Enerji grafiğinde hedef değerler ekranda okunur olmalı.",
+    ],
+    "Tema 7 · Işığın Peşinde": [
+        "Görme kazanımı karanlık oda deneyiyle gözlemlenmeli; radar yönergesi kaldırılmalı.",
+        "Işık kaynağı ile yansıtıcı cisim ayrımı çeldiricilerle kurulmalı.",
+        "Işık kirliliği kazanımı gece şehri sahnesinde canlandırılıp çözüm gerekçelendirilmeli.",
+    ],
+    "Tema 8 · Sürdürülebilir Şehirler": [
+        "Model kurma kazanımlarında maket ekranda gerçekten yükselmeli.",
+        "Çözüm köprüsünde parça yazıları kesilmemeli; sorun-çözüm ilişkisi şehir sahnesinde görünmeli.",
+        "Bisiklet yolu kazanımı labirentten çıkarılıp gerçek şehir planına ve güzergâh gerekçesine bağlanmalı.",
     ],
 }
 
-GROUP_COLORS = [CORAL, TEAL, PURPLE, GOLD, BLUE, GREEN]
+GROUP_COLORS = [CORAL, TEAL, PURPLE, GOLD, BLUE, GREEN, CORAL, PURPLE]
 
 # Kaç oyun ortak "genel yönerge" kullanıyor?
 generic_prompt = [g for g in games if "doğru cevabı yakala" in g["instruction"].lower()]
 belt_n = sum(1 for g in games if g["type"] == "beltSort")
 answer_leak = ["h02", "h09", "h10", "h26", "h29", "h05", "h18"]
+
+wrong_hint_total = sum(g["n"].get("wrongHint", 0) for g in games)
+generic_count = sum(1 for g in games if "doğru cevabı yakala" in g["instruction"].lower())
 
 doc = BaseDocTemplate(
     str(OUT), pagesize=A4, rightMargin=MX, leftMargin=MX, topMargin=TOP, bottomMargin=BOTTOM,
@@ -427,20 +474,20 @@ story += bullets([
 story += [PageBreak()]
 
 story += [P("Testten çıkan öncelikli bulgular", h1)]
-story += [box("1. Karar için gereken veri ekranda yok - iki oyun oynanamaz durumda",
-    ["Su Tüketim Grafiği'nde kaynak satırında yalnız “Bir evin günlük su tüketimi (1 damla = 10 litre)” yazıyor; hangi alanın kaç damla olduğu hiçbir yerde belirtilmemiş. Hedef değerler kaynak dosyada tanımlı (banyo 6, mutfak 4, çamaşır 5, bahçe 2) ama ekrana hiç yazılmıyor, dolayısıyla oyun ancak deneme-yanılmayla çözülebiliyor. Bilinçli Alışveriş'te müşteri “Bütçem 30 TL” diyor fakat ürün kartlarında (ekmek, süt, defter, peynir, meyve, çikolata) fiyat yazmıyor; öğrenci 30 TL'yi nasıl tuttururacağını bilemez. Üstelik sepet toplamını gösteren “tepsi boş - 0 / 30” satırı ürün kartlarının arkasında kalıp okunmuyor."],
+story += [box(f"1. Yanlış cevap verildiğinde doğru cevap ekrana yazılıyor - {wrong_hint_total} kartta",
+    [f"Sekiz bant oyununun tamamında her kart için bir wrongHint metni tanımlı ve bu metinler yanlış kutuya bırakıldığında doğru kutunun adını doğrudan söylüyor: “Kanıtsız his BİLİMSEL DEĞİLDİR!”, “Katı - sıvı = ERİME!”, “Tekrarlanabilirlik BİLİMSEL bilginin özelliğidir!”. Toplam {wrong_hint_total} bant kartının {wrong_hint_total} tanesi bu şekilde. Bir kez yanlış yapmak cevabı öğrenmek anlamına geldiği için ikinci denemede düşünmeye gerek kalmıyor; bu, oyunlarda uygulanan “yanlışta doğru cevabı açma” ilkesinin tam tersi."],
     PALE_CORAL, CORAL), Spacer(1, 1.7 * mm)]
-story += [box("2. Grafik Dedektifi'nde grafik yok, işlem hazır yazılı",
-    ["Oyunun başlığı “Grafik Dedektifi”, alt başlığı “Grafikten çıkarım yap”, kazanımı ise “tüketim oranlarını karşılaştırır ve çıkarım yapar”. Ekranda ise hiçbir grafik bulunmuyor; soru düz metin olarak veriliyor ve hemen altında “60 + 40 = ?” işlemi yazılı duruyor. Grafik olmadan grafik okuma ölçülemez; işlem de verildiği için geriye kalan tek beceri toplama yapmak oluyor. Sosyal bilgiler kazanımı bir matematik alıştırmasına dönüşmüş."],
+story += [box("2. Isıtma deneyi hâl değişimini yanlış modelliyor",
+    ["Isıtma Deneyi'nin ekranında ocak, kap veya madde yok; ortada büyük bir KRONOMETRE duruyor. Hedef sıcaklık üç ayrı yerde veriliyor: görev metni (“Termometreyi 100 °C'ye getir”), “Hedef 100 °C” satırı ve ölçek üzerindeki sarı çizgi. Bilimsel olarak daha önemlisi, gösterge sıfırdan hedefe düz doğrusal artıyor - oysa bu temanın çekirdek kavramı, hâl değişimi sırasında maddeye ısı verilmeye devam edilse bile sıcaklığın SABİT kalmasıdır. Oyun bu kavramı öğretmek yerine tersini gösteriyor."],
     PALE_GOLD, GOLD), Spacer(1, 1.7 * mm)]
-story += [box("3. Harita rengi oyununda renk gösterilmiyor, üstelik renk adı kırpılıyor",
-    ["Kazanım “harita renklerini tespit eder ve anlamlandırır” diyor, ama bant kartı rengin kendisini değil adını yazıyor - beyaz zeminde siyah yazı. Daha da kötüsü, denemede kart bandın sol kenarında kırpıldı ve “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu; yani kararın dayandığı renk bilgisi tam da kaybolan bölümdeydi. Kutuların üzerinde renk örnekleri var, kart tarafında yok."],
+story += [box("3. Grafik oyunlarında hedef değerler ekranda yok",
+    ["Enerji Grafiği'nde kaynak satırında yalnız “Şehrin elektrik üretimi (1 şimşek = %10)” yazıyor; hangi kaynağın kaç şimşek olduğu hiçbir yerde belirtilmemiş. Hedefler kaynak dosyada tanımlı (Güneş 3, Rüzgâr 2, Hidro 2, Kömür 3) ama ekrana yazılmıyor. Şehir Verisi Grafiği'nde de durum aynı (Yürüyerek 5, Bisikletle 3, Servisle 4, Özel araç 2). İki oyun da ancak deneme-yanılmayla çözülebiliyor ve “verileri analiz eder” kazanımının okuma kısmı hiç çalışmıyor. Bu, 4. sınıf sosyal bilgilerdeki Su Tüketim Grafiği'nde raporladığım kusurun aynısı."],
     PALE_BLUE, BLUE), Spacer(1, 1.7 * mm)]
-story += [box("4. Ekonomi Köprüsü'nde altı parçanın beşinde son sözcük kesiliyor",
-    ["Parça çipleri yazıya dar geldiği için “Çiftçinin domates yetiştirmesi”, “Fabrikada ayakkabı dikilmesi”, “Ailenin salata yapıp yemesi”, “Tırın sebzeyi hâle götürmesi” ve “Marketin rafa ürün dizmesi” ifadelerinin son sözcükleri okunmuyor. Öğrenci eylemin ne olduğunu tam göremeden üretim, dağıtım ve tüketim ayrımı yapmak zorunda kalıyor. Hedef kartlarındaki tanımlar (“ÜRETİM - mal veya hizmet oluşturmak”) iyi kurulmuş; sorun yalnız yerleşimde."],
+story += [box("4. Köprü ve bant oyunlarında yazılar kesiliyor",
+    ["Çözüm Köprüsü'nde altı parçanın altısında da son sözcük çipe sığmayıp kesildi: “Yüksek elektrik tüketimi”, “Su kaynaklarının azalması”, “Trafik ve hava kirliliği”, “Çöp dağlarının büyümesi” gibi ifadeler yarım okunuyordu - öğrenci sorunun ne olduğunu tam göremeden çözümünü seçmek zorunda kalıyor. Hâl Değişimi Bandı'nda ise kart bandın sol kenarında kırpıldı ve “Çaydanlıktan buhar çıkar” ifadesinden yalnız “buhar” göründü; bu sözcük tek başına BUHARLAŞMA cevabını ele veriyordu. Dört kutulu turlarda kutu etiketleri de kutu dışına taşıyor."],
     PALE_TEAL, TEAL), Spacer(1, 1.7 * mm)]
-story += [box("5. Navigasyon oyunu diğer sınıflardan daha iyi; teknik çökme yok",
-    ["Harita Navigasyonu bu dersin olumlu farkı: görev metni “kuzeye ve doğuya ilerle” diyerek gerçek yön adlarını kullanıyor ve yönerge ekran yönü ile coğrafi yön arasındaki çeviriyi açıklıyor - 2. sınıf Doğadan Yön Bulma ve 3. sınıf Kroki Rehberi'nde bu yoktu. Yine de yön düğmeleri hâlâ yalnız ok işaretleri taşıyor, haritada kuzey oku ve ölçek yok, görev metni rotayı söylüyor. sb01-sb36 arasındaki 36 oyunun tamamı yüklendi; motorlarda çökme veya konsol hatası oluşmadı."],
+story += [box("5. Emoji sızıntısı bu derste yok denecek kadar az; teknik çökme yok",
+    [f"Sekiz köprü oyunundaki 40 eşleşme tek tek karşılaştırıldı; parça ile hedefin aynı emojiyi paylaştığı yalnız 1 durum bulundu (Vitamin Köprüsü'nde havuç simgesi hem “A vitamini” parçasında hem “Havuç, ıspanak, kabak” hedefinde). Diğer derslerde bu kusur yaygındı; fen bilimlerinde neredeyse tamamen giderilmiş - bu dersin olumlu farkı. Buna karşılık {generic_count} radar oyununun tamamı aynı yönergeyi kullanıyor: “Radarı sürükleyerek doğru cevabı yakala”. f01-f48 arasındaki 48 oyunun tamamı yüklendi; motorlarda çökme veya konsol hatası oluşmadı."],
     PALE_PURPLE, PURPLE)]
 story += [PageBreak()]
 
@@ -476,13 +523,13 @@ for number, game in enumerate(games, start=1):
         group_index += 1
         accent = GROUP_COLORS[group_index]
         count = sum(1 for g in games if g["group"] == last_group)
-        theme_table = Table([[P(f"Alan {group_index + 1}", badge), P(clean(last_group), theme_title)]], colWidths=[30 * mm, 146 * mm], rowHeights=[47 * mm])
+        theme_table = Table([[P(f"Tema {group_index + 1}", badge), P(clean(last_group), theme_title)]], colWidths=[30 * mm, 146 * mm], rowHeights=[47 * mm])
         theme_table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), accent), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                                          ("ALIGN", (0, 0), (0, 0), "CENTER"), ("LEFTPADDING", (1, 0), (1, 0), 12),
                                          ("RIGHTPADDING", (1, 0), (1, 0), 12), ("ROUNDEDCORNERS", [10])]))
-        story += [Spacer(1, 20 * mm), theme_table, Spacer(1, 8 * mm), P(f"Bu alanda {count} oyun var. Ana düzeltme odağı", h2)]
+        story += [Spacer(1, 20 * mm), theme_table, Spacer(1, 8 * mm), P(f"Bu temada {count} oyun var. Ana düzeltme odağı", h2)]
         story += bullets(GROUP_FOCUS[last_group])
-        story += [Spacer(1, 5 * mm), box("Alan kabul eşiği", ["Bu alandaki her oyun üç kademeli tur ve en az bir öğrenci üretimi/uygulaması olmadan tamamlanmış sayılmayacak.", "Başlık, görünen sahne, seslendirme, kontrol ve ölçülen hayat bilgisi kazanımı aynı hedefi gösterecek."], PALE_TEAL, TEAL), PageBreak()]
+        story += [Spacer(1, 5 * mm), box("Tema kabul eşiği", ["Bu temadaki her oyun üç kademeli tur ve en az bir öğrenci üretimi/uygulaması olmadan tamamlanmış sayılmayacak.", "Başlık, görünen sahne, seslendirme, kontrol ve ölçülen hayat bilgisi kazanımı aynı hedefi gösterecek."], PALE_TEAL, TEAL), PageBreak()]
 
     scene, level2, level3 = DESIGNS[game["id"]]
     engine_name, engine_obs = ENGINE[game["type"]]
@@ -521,14 +568,15 @@ for number, game in enumerate(games, start=1):
 
 story += [P("Son kabul kontrolü", h1), P("4. sınıf fen bilimleri bölümü tamamlanmadan önce", h2)]
 story += bullets([
-    "sb01-sb36 arasındaki 36 oyun üç kademeli turla baştan sona test edilir; görünen başlık, sahne, kontrol, ses ve ölçülen kazanım kayıt altına alınır.",
-    "Su Tüketim Grafiği'nde kategori hedefleri ekranda okunur; Bilinçli Alışveriş'te her ürünün fiyatı ve kalan bütçe görünür - iki oyun da şu an veri eksikliğinden oynanamıyor.",
-    "Grafik Dedektifi'ne gerçek bir grafik eklenir; soru grafikten okunur ve işlem hazır yazılmaz.",
-    "Harita Rengi Bandı'nda kart rengin kendisini gösterir ve hiçbir kenarda kırpılmaz.",
-    "Ekonomi Köprüsü'nde parça yazıları çipe tam sığar; hiçbir sözcük kesilmez.",
-    "Harita Navigasyonu'nda yön düğmeleri kuzey/güney/doğu/batı olarak adlandırılır, haritaya kuzey oku ve ölçek eklenir, görev metni rotayı söylemez.",
-    "Roket-YAKIT sahnesi beş sıralama oyununun tamamından kaldırılır; köprü oyunlarında emoji eşleşmesi giderilir.",
-    "Her oyunda en az üç farklı içerik turu, açıklayıcı yanlış geri bildirimi ve öğrencinin kendi örneğini/gerekçesini içeren bir kapanış bulunur.",
+    "f01-f48 arasındaki 48 oyun üç kademeli turla baştan sona test edilir; görünen başlık, sahne, kontrol, ses ve ölçülen kazanım kayıt altına alınır.",
+    f"Sekiz bant oyunundaki {wrong_hint_total} wrongHint metni yeniden yazılır; hiçbiri doğru kutunun adını içermez.",
+    "Isıtma Deneyi'nde hedef sıcaklık söylenmez, kronometre yerine gerçek ocak ve madde bulunur ve hâl değişimi sırasında sıcaklığın sabit kaldığı doğru gösterilir.",
+    "Enerji Grafiği ile Şehir Verisi Grafiği'nde kategori hedefleri ekranda okunur; iki oyun da şu an veri eksikliğinden deneme-yanılmaya bağlı.",
+    "Çözüm Köprüsü'nde parça yazıları çipe tam sığar; Hâl Değişimi Bandı'nda kart hiçbir kenarda kırpılmaz ve kart metinleri cevabı çağrıştıran sözcük içermez.",
+    "Altı radar oyununun ortak yönergesi her oyunun kendi konusuna göre yeniden yazılır.",
+    "Roket-YAKIT sahnesi sekiz sıralama oyununun tamamından kaldırılır; adımlar kendi konusuna ait sahnede sıralanır.",
+    "Ürün ve model kazanımlarında (deney masası, pusula, devre, şehir maketi) seçilen öge ekranda gerçekten bir şey inşa eder.",
+    "Her oyunda en az üç farklı içerik turu, açıklayıcı yanlış geri bildirimi ve öğrencinin kendi gözlemini/gerekçesini içeren bir kapanış bulunur.",
 ])
 story += [Spacer(1, 4 * mm), box("Belge kapsamının sonu", ["Bu PDF yalnız 2. sınıf hayat bilgisi listesindeki h01-h36 oyunlarını kapsar.", "Düzeltmeler oyun kodunu değiştirmez; uygulanacak sahne, görsel kanıt, mekanik, üç tur, geri bildirim, öğrenci kanıtı ve test gereksinimlerini ayrıntılı biçimde tanımlar."], PALE_TEAL, TEAL)]
 
