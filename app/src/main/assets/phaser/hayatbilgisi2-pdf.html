@@ -106,6 +106,39 @@ svg.sahne{width:min(330px,96%);height:auto;max-height:190px;display:block}
 .tus{min-height:52px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 4px 0 rgba(35,77,108,.2);font-size:22px;font-weight:950}
 .tus:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(35,77,108,.2)}
 .tus.genis{grid-column:span 3}
+/* yön ızgarası — bloklar KUZEY/GÜNEY/DOĞU/BATI; güneşin konumu ekranda */
+.harita-sar{position:relative;width:min(310px,96%);padding:38px 46px}
+.harita{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;background:#8a7a5c;border:4px solid #6b5a44;border-radius:10px;padding:4px}
+.huc{aspect-ratio:1;border-radius:5px;background:#efe2c4;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900}
+.huc.engel{background:#6b7a68}
+.huc.hedef{background:#ffe08a;box-shadow:inset 0 0 0 3px #c9922a}
+.huc.robot{background:#bcd9ee;box-shadow:inset 0 0 0 3px #2f7fb8}
+.gunes{position:absolute;display:flex;flex-direction:column;align-items:center;gap:1px;width:46px;font-size:9px;line-height:1.05;font-weight:900;color:#8a6a12;text-align:center}
+.gunes.ust{top:0;left:50%;transform:translateX(-50%)}
+.gunes.alt{bottom:0;left:50%;transform:translateX(-50%)}
+.gunes.sol{left:0;top:50%;transform:translateY(-50%)}
+.gunes.sag{right:0;top:50%;transform:translateY(-50%)}
+.program{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:42px;width:min(320px,94%);padding:5px;background:#fff;border:3px dashed #9fb0c4;border-radius:11px}
+.blok{background:#e3f1fb;border:3px solid #7fb6de;border-radius:9px;padding:4px 8px;font-weight:950;font-size:13px;color:#1f3b52}
+.blok.hata{background:#fde8e8;border-color:#e05555;color:#8a2020}
+.yon-tus{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.yon-tus button{min-height:48px;min-width:84px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);font-weight:950;font-size:14px}
+/* musluk — gerçek musluk, kap ve akan su; gereken miktar söylenmiyor */
+.lavabo{position:relative;width:min(300px,94%);height:196px}
+.lavabo svg.arka{position:absolute;inset:0;width:100%;height:100%}
+.akis{position:absolute;left:50%;top:62px;transform:translateX(-50%);width:8px;background:linear-gradient(#9fdcf4,#3f9fd0);border-radius:4px;opacity:0;transition:opacity .1s}
+.akis.acik{opacity:1}
+.bardak{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);width:74px;height:84px;border:5px solid #8fb9d2;border-top:0;border-radius:0 0 18px 18px;background:rgba(255,255,255,.72);overflow:hidden}
+.bardak:before{content:"";position:absolute;left:-9px;right:-9px;top:-7px;height:7px;border-radius:4px;background:#8fb9d2}
+.bardak i{position:absolute;left:0;right:0;bottom:0;height:var(--su,0%);background:linear-gradient(#7fc6e8,#3f92c4);transition:height .12s}
+.tasan{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);font-size:11px;font-weight:900;color:var(--bad);background:#fff;border-radius:7px;padding:1px 6px}
+/* israf tahmini — akan musluk ve dolan kova görünür */
+.kova-sar{display:flex;align-items:flex-end;justify-content:center;gap:14px;width:100%}
+.kova{position:relative;width:92px;height:96px;border:5px solid #7b8ea1;border-top:0;border-radius:0 0 14px 14px;background:rgba(255,255,255,.6);overflow:hidden}
+.kova i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#7fc6e8,#3f92c4);transition:height .5s}
+.kova b{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:11px;font-weight:900;color:#0d3b55}
+.karsilastir{width:min(320px,94%);display:flex;flex-direction:column;gap:4px}
+.karsilastir div{display:flex;justify-content:space-between;background:#fff;border:2px solid var(--line);border-radius:10px;padding:5px 9px;font-size:13px;font-weight:900}
 /* çetele — beşinci çizgi dördünü keser; rakam sayacı değil */
 .cetele-tablo{width:min(330px,96%);display:flex;flex-direction:column;gap:6px}
 .cetele-satir{display:flex;align-items:center;gap:8px;min-height:52px;border:3px solid var(--line);border-radius:13px;background:#fff;padding:6px 9px;text-align:left}
@@ -295,6 +328,21 @@ const MEKAN={
   `<polygon points="27,14 48,30 6,30" fill="#b8543f" stroke="#8a3c2c" stroke-width="2"/>`+
   `<ellipse cx="70" cy="48" rx="20" ry="7" fill="#d9c49a" stroke="#96733f" stroke-width="2"/>`+
   `<circle cx="62" cy="42" r="5" fill="#fff" stroke="#c9bfa4" stroke-width="2"/><circle cx="78" cy="42" r="5" fill="#fff" stroke="#c9bfa4" stroke-width="2"/>`)
+};
+
+const MEVSIM={
+ ilkbahar:MINI(`<rect y="58" width="96" height="10" fill="#8fc47a"/><rect x="45" y="34" width="7" height="24" fill="#8a5f38"/>`+
+  `<circle cx="48" cy="26" r="17" fill="#9ed48a"/>`+[38,50,44,56].map((x,i)=>`<circle cx="${x}" cy="${18+i*5}" r="3" fill="#f5a8c0"/>`).join('')+
+  `<path d="M6 52 q10 -8 20 0" stroke="#79b862" stroke-width="3" fill="none"/>`),
+ yaz:MINI(`<rect y="52" width="96" height="16" fill="#e8d9a8"/><rect y="42" width="96" height="10" fill="#5fb8d8"/>`+
+  `<circle cx="72" cy="18" r="12" fill="#f7cf5a" stroke="#d6a41f" stroke-width="2"/>`+
+  `<path d="M18 52 l10 -20 l10 20z" fill="#e2705f"/><rect x="27" y="32" width="2" height="20" fill="#8a5f38"/>`),
+ sonbahar:MINI(`<rect y="58" width="96" height="10" fill="#c9a86a"/><rect x="45" y="34" width="7" height="24" fill="#8a5f38"/>`+
+  `<circle cx="48" cy="26" r="16" fill="#e0a24a"/>`+
+  [14,26,66,78].map((x,i)=>`<path d="M${x} ${44+i*3} q4 -6 8 0 q-4 6 -8 0z" fill="#c9722c"/>`).join('')),
+ kis:MINI(`<rect y="58" width="96" height="10" fill="#eef4f8"/><rect x="45" y="34" width="7" height="24" fill="#8a5f38"/>`+
+  `<circle cx="48" cy="26" r="16" fill="#dbe7ef"/>`+
+  [12,30,64,84].map((x,i)=>`<g stroke="#8fb4cd" stroke-width="2"><line x1="${x}" y1="${12+i*7}" x2="${x}" y2="${20+i*7}"/><line x1="${x-4}" y1="${16+i*7}" x2="${x+4}" y2="${16+i*7}"/></g>`).join(''))
 };
 
 /* ===== KARAR: sahneye bağlı seçim; seçenekler sabit durur, düşme/refleks yok.
@@ -582,10 +630,152 @@ function ceteleCiz(r){
   feedback('İşlendi');gecisBasla(()=>ceteleCiz(r),FAST?30:480)})}
 function renderCetele(r){state.ix=0;state.say=r.satirlar.map(()=>0);state.not='';state.sonSatir=null;ceteleCiz(r)}
 
+/* ===== YON: bloklar KUZEY/GÜNEY/DOĞU/BATI. Yön adının ekranda hangi yöne
+   karşılık geldiği YALNIZ güneşin konumundan çıkarılabilir; ekran okları yok.
+   (Şartname h27: kazanım ile mekanik kopukluğunun giderilmesi.) ===== */
+const KENAR=['ust','sag','alt','sol'];
+const PUSULA=['KUZEY','DOĞU','GÜNEY','BATI'];
+const ADIM={ust:[0,-1],sag:[1,0],alt:[0,1],sol:[-1,0]};
+function yonKenar(t){                       /* pusula adı -> ekran kenarı */
+ const gk=KENAR.indexOf(t.gunesKenar);
+ const dogu=(t.zaman==='sabah')?gk:(gk+2)%4;   /* akşam güneşi batıda */
+ const m={};PUSULA.forEach((ad,i)=>{m[ad]=KENAR[(dogu+i-1+4)%4]});
+ return m}
+function yonCiz(r){
+ const i=state.ix||0,t=r.turlar[i];if(!t)return;
+ const m=yonKenar(t),prog=state.prog||[],rp=state.robot||t.baslangic;
+ const huc=(x,y)=>{
+  const engel=t.engeller.some(e=>e[0]===x&&e[1]===y);
+  const hedef=t.hedef[0]===x&&t.hedef[1]===y, rob=rp[0]===x&&rp[1]===y;
+  return `<div class="huc ${engel?'engel':''} ${hedef?'hedef':''} ${rob?'robot':''}">${rob?'●':(hedef?'⌂':'')}</div>`};
+ $('#stage').innerHTML=
+  `<div class="konus-balon">${esc(t.t)}</div>`+
+  `<div class="harita-sar"><div class="gunes ${t.gunesKenar}">`+
+   `<svg width="30" height="30" viewBox="0 0 30 30"><circle cx="15" cy="15" r="8" fill="#f7cf5a" stroke="#d6a41f" stroke-width="2"/>`+
+   [0,45,90,135,180,225,270,315].map(a=>`<line x1="15" y1="15" x2="${15+13*Math.cos(a*Math.PI/180)}" y2="${15+13*Math.sin(a*Math.PI/180)}" stroke="#e8b93a" stroke-width="2"/>`).join('')+
+   `</svg><span>${esc(t.zaman)} güneşi</span></div>`+
+   `<div class="harita">${[0,1,2,3].map(y=>[0,1,2,3].map(x=>huc(x,y)).join('')).join('')}</div></div>`+
+  ilerleme(r.turlar.length,i)+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<div class="program">${prog.length?prog.map((b,k)=>`<span class="blok ${state.hataAdim===k?'hata':''}">${esc(b)}</span>`).join(''):'<span class="hint">Henüz blok eklemedin.</span>'}</div>`+
+  `<div class="yon-tus">${PUSULA.map(ad=>`<button data-yon="${ad}">${ad}</button>`).join('')}`+
+   `<button data-geri="1">Son bloğu sil</button><button id="calistir">Çalıştır</button></div>`+
+  `<div class="hint">${esc(r.ipucu||'Güneş sabah doğudan doğar, akşam batıdan batar.')}</div>`;
+ $$('[data-yon]').forEach(b=>b.onclick=()=>{if(locked||state.gecis)return;
+  if(prog.length>=8)return feedback('Program çok uzun');
+  state.prog=prog.concat(b.dataset.yon);state.hataAdim=null;yonCiz(r)});
+ $('[data-geri]').onclick=()=>{if(locked||state.gecis)return;state.prog=prog.slice(0,-1);state.hataAdim=null;yonCiz(r)};
+ $('#calistir').onclick=()=>{
+  if(locked||state.gecis||!prog.length)return;
+  let p=t.baslangic.slice();
+  for(let k=0;k<prog.length;k++){
+   const [dx,dy]=ADIM[m[prog[k]]];const n=[p[0]+dx,p[1]+dy];
+   const disi=n[0]<0||n[0]>3||n[1]<0||n[1]>3;
+   const engel=t.engeller.some(e=>e[0]===n[0]&&e[1]===n[1]);
+   if(disi||engel){state.robot=p;state.hataAdim=k;
+    state.not=(disi?'Robot haritadan çıkacaktı.':'Robot engele çarptı.')+' Güneşin konumuna yeniden bak: bu adım hangi yöne gidiyor?';
+    yonCiz(r);return wrong(state.not)}
+   p=n}
+  state.robot=p;
+  if(p[0]!==t.hedef[0]||p[1]!==t.hedef[1]){
+   state.hataAdim=prog.length-1;state.not='Robot kampa varamadı. Programı tümüyle silme, eksik adımı ekle.';
+   yonCiz(r);return wrong(state.not)}
+  state.ix=i+1;state.prog=[];state.robot=null;state.hataAdim=null;state.not=t.neden||'';
+  if(state.ix>=r.turlar.length){yonCiz(r);return good()}
+  feedback('Kampa vardın');gecisBasla(()=>yonCiz(r),FAST?30:640)}}
+function renderYon(r){state.ix=0;state.prog=[];state.robot=null;state.hataAdim=null;state.not='';yonCiz(r)}
+
+/* ===== MUSLUK: kronometre yok. Gerçek musluk, kap ve akan su var; gereken
+   miktar görev metninde SÖYLENMEZ, öğrenci işe bakarak karar verir. Fazlası
+   taşar ve görünür; taşırmak ceza değil, sorudur. (Şartname h29) ===== */
+function muslukCiz(r){
+ const i=state.ix||0,is=r.isler[i];if(!is)return;
+ const y=Math.min(130,state.yuzde||0),tasan=Math.max(0,y-100);
+ $('#stage').innerHTML=
+  `<div class="konus-balon">${esc(is.t)}</div>`+
+  `<div class="lavabo"><svg class="arka" viewBox="0 0 300 196" preserveAspectRatio="none">`+
+    `<rect x="206" y="2" width="16" height="32" rx="4" fill="#8f9dab"/>`+
+    `<path d="M214 34 q0 24 -28 24 h-36" fill="none" stroke="#8f9dab" stroke-width="13" stroke-linecap="round"/>`+
+    `<rect x="192" y="4" width="44" height="9" rx="4" fill="#7b8996"/>`+
+    `<circle cx="214" cy="2" r="7" fill="#7b8996"/>`+
+    `<path d="M40 132 h220 l-22 46 h-176z" fill="#e4edf2" stroke="#a9bcc8" stroke-width="4"/>`+
+    `<rect x="34" y="124" width="232" height="11" rx="5" fill="#c3d3dd"/>`+
+    `<ellipse cx="150" cy="170" rx="13" ry="4" fill="#a9bcc8"/></svg>`+
+   `<div class="akis ${state.basili?'acik':''}" style="height:${state.basili?46:0}px"></div>`+
+   `<div class="bardak"><i style="--su:${Math.min(100,y)}%"></i></div>`+
+   (tasan?`<div class="tasan">taşan su: ${Math.round(tasan)} birim</div>`:'')+
+   `</div>`+
+  ilerleme(r.isler.length,i)+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=
+  `<button class="tut ${state.basili?'basili':''}" id="musluk">Musluğu basılı tut</button>`+
+  `<div class="sure-cubuk"><i style="--w:${Math.min(100,y)}%"></i></div>`+
+  `<button class="choice" id="muslukOk">Bu kadar yeter</button>`+
+  `<div class="hint">${esc(r.ipucu||'Ne kadar gerektiğine işe bakarak sen karar ver.')}</div>`;
+ const b=$('#musluk');
+ const bas=()=>{if(locked||state.gecis)return;state.basili=true;state.bas=Date.now();state.baslangicYuzde=state.yuzde||0;muslukCiz(r);
+  state.sayac=setInterval(()=>{const v=state.baslangicYuzde+(Date.now()-state.bas)/30;
+   state.yuzde=Math.min(130,v);const c=$('.bardak i');if(c)c.style.setProperty('--su',Math.min(100,state.yuzde)+'%');
+   const s2=$('.sure-cubuk i');if(s2)s2.style.setProperty('--w',Math.min(100,state.yuzde)+'%')},70)};
+ const birak=()=>{if(!state.basili)return;state.basili=false;clearInterval(state.sayac);
+  state.yuzde=Math.min(130,state.baslangicYuzde+(Date.now()-state.bas)/30);muslukCiz(r)};
+ b.onpointerdown=e=>{e.preventDefault();bas()};
+ b.onpointerup=birak;b.onpointerleave=birak;b.onpointercancel=birak;
+ $('#muslukOk').onclick=()=>{
+  if(locked||state.gecis||state.basili)return;
+  const v=state.yuzde||0;
+  if(v>100){state.not='Su taştı. Bu iş için bu kadarı gerekiyor muydu? Yeniden dene.';
+   state.yuzde=0;muslukCiz(r);return wrong(state.not)}
+  if(v<is.enAz||v>is.enCok){state.not=v<is.enAz?'Bu iş bu kadar suyla yapılamaz.':'Bu iş için bu kadar su gerekmiyor; fazlası boşa gidiyor.';
+   state.yuzde=0;muslukCiz(r);return wrong(state.not)}
+  state.ix=i+1;state.yuzde=0;state.not=is.neden||'';
+  if(state.ix>=r.isler.length)return good();
+  feedback('Tam gerektiği kadar');gecisBasla(()=>muslukCiz(r),FAST?30:600)}}
+function renderMusluk(r){state.ix=0;state.yuzde=0;state.basili=false;state.not='';muslukCiz(r)}
+
+/* ===== TAHMIN: tren-tünel yok. Akan musluk ve dolan kova görünür; tahmin,
+   gerçek değer ve fark birlikte gösterilip karşılaştırma sorulur. (h30) ===== */
+function tahminCiz(r){
+ const i=state.ix||0,d=r.durumlar[i];if(!d)return;
+ const t=state.tahmin==null?d.enCokOlcek/2:state.tahmin;
+ const oran=v=>Math.min(100,v/d.enCokOlcek*100);
+ $('#stage').innerHTML=
+  `<div class="konus-balon">${esc(d.t)}</div>`+
+  `<div class="kova-sar">`+
+   `<div class="stack"><div class="kova"><i style="height:${oran(t)}%"></i><b>tahminim</b></div><div class="sahne-not">${t} ${esc(d.birim)}</div></div>`+
+   (state.faz===1?`<div class="stack"><div class="kova"><i style="height:${oran(d.gercek)}%;background:linear-gradient(#f0b0a0,#d0483f)"></i><b>gerçek</b></div><div class="sahne-not">${d.gercek} ${esc(d.birim)}</div></div>`:'')+
+  `</div>`+
+  (state.faz===1?`<div class="karsilastir"><div><span>Tahminin</span><span>${t} ${esc(d.birim)}</span></div>`+
+    `<div><span>Gerçek</span><span>${d.gercek} ${esc(d.birim)}</span></div>`+
+    `<div><span>Fark</span><span>${Math.abs(d.gercek-t)} ${esc(d.birim)}</span></div></div>`:'')+
+  ilerleme(r.durumlar.length,i)+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ if(state.faz===0){
+  $('#task').innerHTML=`<div class="caption soru">${esc(d.soru)}</div>`+
+   `<input class="olcek" type="range" min="0" max="${d.enCokOlcek}" step="${d.adim||1}" value="${t}" id="tahminAlan" aria-label="Tahmin ölçeri">`+
+   `<button class="choice" id="tahminOk">Tahminim bu</button>`+
+   `<div class="hint">Tahmininde doğru ya da yanlış yok; sonra gerçeğiyle karşılaştıracaksın.</div>`;
+  const al=$('#tahminAlan');
+  al.oninput=()=>{state.tahmin=+al.value;tahminCiz(r);const y=$('#tahminAlan');if(y)y.focus()};
+  $('#tahminOk').onclick=()=>{if(locked)return;state.tahmin=t;state.faz=1;
+   state.not='Şimdi gerçek değerle karşılaştır.';tahminCiz(r)};
+  return}
+ $('#task').innerHTML=`<div class="caption soru">${esc(d.yorumSoru)}</div>`+
+  `<div class="choices">${d.secenekler.map((c,j)=>`<button class="choice" data-tsec="${j}">${esc(c.label)}</button>`).join('')}</div>`;
+ $$('[data-tsec]').forEach(b=>b.onclick=()=>{
+  if(locked||state.gecis)return;
+  const c=d.secenekler[+b.dataset.tsec];
+  if(!c.correct)return wrong(c.hint||'Tabloya yeniden bak.');
+  state.ix=i+1;state.faz=0;state.tahmin=null;state.not=d.neden||'';
+  if(state.ix>=r.durumlar.length)return good();
+  feedback('Doğru');gecisBasla(()=>tahminCiz(r),FAST?30:600)})}
+function renderTahmin(r){state.ix=0;state.faz=0;state.tahmin=null;state.not='';tahminCiz(r)}
+
 function renderRound(){const r=round();if(!r)return;
  const fn={karar:renderKarar,sinifla:renderSinif,sira:renderSira,esle:renderEsle,
   yaz:renderYaz,konus:renderKonus,mesafe:renderMesafe,tus:renderTus,canta:renderCanta,
-  cetele:renderCetele}[r.kind];
+  cetele:renderCetele,yon:renderYon,musluk:renderMusluk,tahmin:renderTahmin}[r.kind];
  (fn||renderKarar)(r)}
 
 const GAMES={};
@@ -1428,6 +1618,219 @@ GAMES.h24={title:'Millî mi, Dinî mi?',theme:'sehir',
   ipucuMetin:'… bayramı … bayramıdır çünkü …',
   ornekCevap:'Otuz Ağustos millî bayramdır çünkü ülkemizin tarihindeki bir zaferi anıyoruz.',
   result:'Bayramı gruplandırdın ve ölçütünü yazdın.'}
+]};
+
+/* ---- h25 Mevsim ve Hava Olayları (hafıza kartı yerine gerçek manzaralar) ---- */
+GAMES.h25={title:'Mevsimler',theme:'doga',
+ finish:'Mevsimleri özellikleriyle eşledin, aynı hava olayının birden çok mevsimde görülebildiğini fark ettin ve bulunduğun mevsimi gözleyip anlattın.',rounds:[
+ {kind:'esle',prompt:'Her mevsimi özelliğiyle eşle.',
+  soru:'Önce alttan bir özellik seç, sonra ait olduğu mevsime dokun.',
+  ipucu:'Manzarada ağaca ve yere bak.',
+  yuvalar:[
+   {gorsel:MEVSIM.ilkbahar,hedef:'İlkbahar',dogru:0,neden:'Ağaçlar bu mevsimde çiçek açar.',hint:'Bu manzarada ağaç yeni çiçek açmış.'},
+   {gorsel:MEVSIM.yaz,hedef:'Yaz',dogru:1,neden:'Günler uzun ve sıcaktır.',hint:'Bu manzarada güneş yüksekte ve deniz var.'},
+   {gorsel:MEVSIM.sonbahar,hedef:'Sonbahar',dogru:2,neden:'Yapraklar sararıp dökülür.',hint:'Bu manzarada yapraklar yere düşüyor.'},
+   {gorsel:MEVSIM.kis,hedef:'Kış',dogru:3,neden:'Hava soğur, kar yağabilir.',hint:'Bu manzarada ağaç çıplak ve yer beyaz.'}],
+  etiketler:[
+   {t:'Ağaçlar çiçek açar, havalar ısınmaya başlar.'},
+   {t:'Günler en uzun ve en sıcaktır.'},
+   {t:'Yapraklar sararır ve dökülür.'},
+   {t:'Havalar soğur, bazı yerlerde kar yağar.'}]},
+ {kind:'karar',prompt:'Aynı hava olayı birden çok mevsimde görülebilir.',
+  sahne:`<div class="row"><div class="stack">${MEVSIM.ilkbahar}<div class="sahne-not">İlkbahar</div></div>`+
+   `<div class="stack">${MEVSIM.sonbahar}<div class="sahne-not">Sonbahar</div></div></div>`,
+  durum:'Bir hafta boyunca yağmur yağdı. Bu, hem ilkbaharda hem sonbaharda olabilecek bir durum.',
+  soru:'Yağmur için hangisi doğrudur?',
+  secenekler:[
+   {label:'Birden çok mevsimde görülebilir',correct:true},
+   {label:'Yalnız ilkbaharda görülür',hint:'Sonbaharda da yağmur yağar.'},
+   {label:'Yalnız kışta görülür',hint:'Yağmur kışa özgü değildir.'}],
+  araSoz:'Doğru. Peki mevsimi ne ayırır?',
+  neden:{soru:'Bir mevsimi hangi ölçütle tanırsın?',secenekler:[
+   {label:'O mevsimde en çok görülen özelliklerin birlikte bulunması',correct:true},
+   {label:'Tek bir hava olayının görülmesi',hint:'Tek bir olay birden çok mevsimde olabilir.'},
+   {label:'Takvimdeki ay adı',hint:'Ay adı yardımcı olur ama özellikler ölçüttür.'}]},
+  result:'Mevsimi tek bir hava olayı değil, özelliklerin birlikte görülmesi belirler.'},
+ {kind:'konus',prompt:'Bulunduğun mevsimi gözleyip anlat.',
+  sahne:`<div class="row"><div class="stack">${MEVSIM.yaz}<div class="sahne-not">Bugün</div></div></div>`,
+  gorev:'Şu anda hangi mevsimdesin? Çevrende gördüğün iki özelliği söyleyerek anlat.',
+  ornek:'Örnek: Sonbahardayız. Ağaçların yaprakları sarardı ve akşamlar erken karardı.',
+  olcutler:['Mevsimi söyledim.','Gözlediğim iki özelliği anlattım.','Kendi sözlerimi kullandım.'],
+  result:'Bulunduğun mevsimi gözleme dayanarak anlattın.'}
+]};
+
+/* ---- h26 Hava Olayı Bandı (KRİTİK: kart kırpılmıyor; kutuda emoji ipucu yok) ---- */
+GAMES.h26={title:'Hava Olayı Panosu',theme:'doga',
+ finish:'Hava olaylarını en çok görüldükleri mevsime yerleştirdin, birden çok mevsimde görülebilenleri savundun ve kendi yerinin mevsimini anlattın.',rounds:[
+ {kind:'sinifla',prompt:'Bu hava olayı en çok hangi mevsimde görülür?',
+  sahne:`<div class="row">${MEVSIM.ilkbahar}${MEVSIM.yaz}${MEVSIM.sonbahar}${MEVSIM.kis}</div>`,
+  soru:'Bu olay en çok hangi mevsimde görülür?',
+  kutular:['İLKBAHAR','YAZ','SONBAHAR','KIŞ'],
+  ipucu:'Kart tamamen görünüyor; acele etme.',
+  kartlar:[
+   {t:'Çiçeklerin açması ve arıların görünmeye başlaması',dogru:0,neden:'Çiçeklenme ilkbaharın belirgin özelliğidir.'},
+   {t:'Denize girilecek kadar sıcak ve uzun günler',dogru:1,neden:'En sıcak ve en uzun günler yazdadır.'},
+   {t:'Yaprakların sararıp yere dökülmesi',dogru:2,neden:'Yaprak dökümü sonbaharda olur.'},
+   {t:'Kar yağışı ve buz tutan gölcükler',dogru:3,neden:'Kar ve buz kışın görülür.'},
+   {t:'Kırlangıçların sürüler hâlinde göç etmesi',dogru:2,neden:'Göç, havalar soğumaya başlayınca sonbaharda olur.'},
+   {t:'Kuzuların doğması ve otların yeşermesi',dogru:0,neden:'Doğanın canlanması ilkbahardadır.'}]},
+ {kind:'karar',prompt:'Bazı olaylar birden çok mevsimde görülür.',
+  sahne:`<div class="row"><div class="stack">${MEVSIM.ilkbahar}<div class="sahne-not">İlkbahar</div></div>`+
+   `<div class="stack">${MEVSIM.yaz}<div class="sahne-not">Yaz</div></div></div>`,
+  durum:'Sağanak yağmur ve gök gürültüsü, ilkbaharda da yaz sonunda da görülebiliyor.',
+  soru:'Böyle bir olayı bir kutuya koyman gerekseydi ne yapardın?',
+  secenekler:[
+   {label:'En çok hangi mevsimde görüldüğüne bakar, ölçütümü söylerdim',correct:true},
+   {label:'Rastgele bir kutuya koyardım',hint:'Sınıflandırma bir ölçüte dayanır.'},
+   {label:'Hiçbir kutuya koymazdım',hint:'Olay bir mevsimde daha sık görülüyorsa sınıflandırılabilir.'}],
+  araSoz:'Doğru. Peki "en çok" ne demek?',
+  neden:{soru:'"En çok görülür" derken neye bakarsın?',secenekler:[
+   {label:'Hangi mevsimde daha sık tekrarlandığına',correct:true},
+   {label:'Hangi mevsimde daha güçlü olduğuna',hint:'Şiddet değil, sıklık ölçüt alınır.'},
+   {label:'Hangi mevsimi daha çok sevdiğime',hint:'Kişisel tercih sınıflandırma ölçütü olamaz.'}]},
+  result:'Sınıflandırma bir ölçüte dayanır: burada ölçüt sıklıktır.'},
+ {kind:'konus',prompt:'Yaşadığın yerin mevsimini anlat.',
+  sahne:`<div class="row">${MEVSIM.kis}${MEVSIM.ilkbahar}</div>`,
+  gorev:'Yaşadığın yerde bu mevsimde hava nasıl? Gözlediklerini anlat.',
+  ornek:'Örnek: Bizim buralarda kışın çok kar yağmaz ama çok yağmur yağar ve rüzgâr sert eser.',
+  olcutler:['Yaşadığım yeri söyledim.','Gözlediğim hava özelliklerini anlattım.','Kendi sözlerimi kullandım.'],
+  result:'Yaşadığın yerin mevsim özelliklerini gözleme dayanarak anlattın.'}
+]};
+
+/* ---- h27 Doğadan Yön Bulma (KRİTİK: yön adları + güneşin konumu) ---- */
+GAMES.h27={title:'Doğadan Yön Bulma',theme:'doga',
+ finish:'Yönleri ekran oklarıyla değil güneşin konumuna bakarak buldun, sabah ile akşamda kararın değiştiğini gördün ve bulunduğun yerde bir yön söyledin.',rounds:[
+ {kind:'yon',prompt:'Güneşe bakarak yön bloklarını diz.',
+  soru:'Robotu kampa ulaştıracak yönleri sırayla ekle, sonra Çalıştır.',
+  ipucu:'Güneş sabah doğudan doğar, akşam batıdan batar. Haritada yukarı/aşağı yazmıyor.',
+  turlar:[
+   {t:'Sabah ormanda kayboldun. Güneşi görüyorsun. Robotu kampa (⌂) ulaştır.',
+    zaman:'sabah',gunesKenar:'sag',baslangic:[0,3],hedef:[3,1],engeller:[[1,2]],
+    dogruProgram:['DOĞU','DOĞU','KUZEY','KUZEY','DOĞU'],
+    neden:'Sabah güneşi doğuda; o kenar DOĞU oldu ve diğer yönler ona göre belirlendi.'},
+   {t:'Akşam oldu, aynı orman. Güneş şimdi başka bir kenarda. Yönleri yeniden düşün.',
+    zaman:'akşam',gunesKenar:'ust',baslangic:[0,0],hedef:[2,3],engeller:[[1,1]],
+    dogruProgram:['KUZEY','KUZEY','DOĞU','DOĞU','DOĞU'],
+    neden:'Akşam güneşi batıda; bu yüzden aynı ekran yönü artık başka bir yön adına karşılık geliyor.'}]},
+ {kind:'karar',prompt:'Aynı hedef, değişen karar.',
+  sahne:SAHNE.gun,
+  durum:'Sabah kampa giderken güneşi karşına aldın. Akşam aynı yoldan dönerken güneş yine karşındaydı.',
+  soru:'Bu nasıl olabilir?',
+  secenekler:[
+   {label:'Sabah doğuya, akşam batıya doğru yürüdüğüm için',correct:true},
+   {label:'Güneş gün içinde yer değiştirmediği için',hint:'Güneş sabah bir yanda, akşam öbür yandadır.'},
+   {label:'Kamp yer değiştirdiği için',hint:'Kamp sabit; değişen güneşin konumu ve senin yönün.'}],
+  araSoz:'Doğru. Peki başka ne yardımcı olur?',
+  neden:{soru:'Güneş görünmüyorsa yönü nasıl bulursun?',secenekler:[
+   {label:'Gölgeye, ağaçların yosun tutan yüzüne bakarım',correct:true},
+   {label:'Rastgele bir yön seçerim',hint:'Yön tahminle bulunmaz.'},
+   {label:'En yakın binaya bakarım',hint:'Bina yönü göstermez.'}]},
+  result:'Yön, doğadaki işaretlerden okunur: güneş, gölge ve yosun.'},
+ {kind:'konus',prompt:'Bulunduğun yerde bir yön söyle.',sahne:SAHNE.gun,
+  gorev:'Şu an bulunduğun yerde güneşe ya da gölgene bakarak bir yön söyle ve nasıl bulduğunu anlat.',
+  ornek:'Örnek: Şu an sabah ve güneş pencereden vuruyor. Demek ki pencerenin baktığı taraf doğu.',
+  olcutler:['Bir yön söyledim.','Nasıl bulduğumu anlattım.','Güneşten ya da gölgeden yararlandım.'],
+  result:'Doğadan yararlanarak bulunduğun yerde bir yön belirledin.'}
+]};
+
+/* ---- h28 Afet Hazırlık Adımları (her adım evde somut bir iş) ---- */
+GAMES.h28={title:'Afet Hazırlığı',theme:'ev',
+ finish:'Afet hazırlığının adımlarını evde yapılacak somut işler olarak sıraladın, farklı afetlerde önlemlerin değiştiğini gördün ve ailenle yapacaklarını anlattın.',rounds:[
+ {kind:'sira',prompt:'Evde hazırlık hangi sırayla yapılır?',sahne:SAHNE.ev,
+  gorev:'Her adım evde yapılan somut bir iş. Baştan sona sırala.',
+  kartlar:[
+   {t:'Evdeki tehlikeleri gez ve gör: devrilecek dolap, düşecek raf.'},
+   {t:'Devrilebilecek dolabı ve rafı duvara sabitle.'},
+   {t:'Afet çantasını hazırlayıp kapının yanına koy.'},
+   {t:'Ailece buluşma yerini belirle ve herkesin bilmesini sağla.'},
+   {t:'Tatbikat yap: sarsıntıda nereye gireceğinizi deneyin.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Önce neyin tehlikeli olduğunu bilmek gerekir.','Tehlikeyi gördün; şimdi ne yaparsın?',
+   'Ev güvenli hâle geldi; dışarı çıkma ihtimaline ne hazırlanır?','Ayrı düşerseniz nerede buluşursunuz?','Hazırlık nasıl denenir?'],
+  result:'Önce tehlikeler görülür, sabitlenir, çanta hazırlanır, buluşma yeri belirlenir ve tatbikat yapılır.'},
+ {kind:'karar',prompt:'Her afette aynı önlem işe yaramaz.',sahne:SAHNE.ev,
+  durum:'Deprem için dolapları sabitlediniz. Ama eviniz derenin kenarında ve sel riski de var.',
+  soru:'Sel için hangi önlem gerekir?',
+  secenekler:[
+   {label:'Değerli eşyaları ve elektrikli aletleri üst kata taşımak',correct:true},
+   {label:'Dolapları daha sıkı sabitlemek',hint:'Sabitleme depremde işe yarar; su baskınında eşyayı yükseltmek gerekir.'},
+   {label:'Kapının önüne çanta koymak yeterli',hint:'Çanta gereklidir ama sel için tek başına yetmez.'}],
+  araSoz:'Doğru. Peki bu ne gösteriyor?',
+  neden:{soru:'Önlemler neye göre belirlenir?',secenekler:[
+   {label:'Beklenen afet türüne göre',correct:true},
+   {label:'Evin büyüklüğüne göre',hint:'Ev büyüklüğü önlem türünü belirlemez.'},
+   {label:'Mevsime göre',hint:'Deprem her mevsimde olabilir.'}]},
+  result:'Deprem, yangın ve selde alınacak önlemler birbirinden farklıdır.'},
+ {kind:'konus',prompt:'Ailenle yapacağın üç hazırlığı anlat.',sahne:SAHNE.ev,
+  gorev:'Ailenle yapacağın üç afet hazırlığını sırayla söyle.',
+  ornek:'Örnek: Önce kitaplığı duvara sabitleyeceğiz. Sonra çantamızı hazırlayacağız. En son buluşma yerimizi belirleyeceğiz.',
+  olcutler:['Üç hazırlık söyledim.','Sırayla anlattım.','Ailemle yapacağımı belirttim.'],
+  result:'Ailenle yapacağın hazırlıkları sırayla anlattın.'}
+]};
+
+/* ---- h29 Tasarruf Musluğu (KRONOMETRE kaldırıldı; gereken miktar söylenmiyor) ---- */
+GAMES.h29={title:'Tasarruf Musluğu',theme:'banyo',
+ finish:'Her iş için gereken suya kendin karar verdin, işler arasındaki farkı gördün ve günlük yaşamın için bir tasarruf önerisi getirdin.',rounds:[
+ {kind:'musluk',prompt:'İşe bak ve gerektiği kadar su doldur.',
+  ipucu:'Ne kadar gerektiği söylenmiyor; işe bakarak sen karar ver. Fazlası taşar.',
+  isler:[
+   {t:'Dişlerini fırçalayacaksın. Fırçayı ıslatıp ağzını çalkalaman yetiyor.',enAz:8,enCok:32,
+    neden:'Diş fırçalarken azıcık su yeter; musluğu akıtmak gerekmez.'},
+   {t:'Ellerin çamurlu; sabunlayıp durulaman gerekiyor.',enAz:33,enCok:62,
+    neden:'El yıkamak diş fırçalamaktan biraz daha fazla su ister.'}]},
+ {kind:'musluk',prompt:'İş değişti: gereken su da değişir.',
+  ipucu:'Bu iş için kabın ne kadarı dolmalı?',
+  isler:[
+   {t:'Saksıdaki çiçeğin toprağı kurumuş; kökünü ıslatacak kadar su gerekiyor.',enAz:40,enCok:70,
+    neden:'Çiçek sulamak diş fırçalamaktan çok daha fazla su ister.'},
+   {t:'Kendine içmek için bir bardak su dolduracaksın.',enAz:70,enCok:100,
+    neden:'İçilecek su bardağı doldurur; burada fazlası değil, tamamı gerekir.'}]},
+ {kind:'konus',prompt:'Günlük yaşamın için bir öneri getir.',theme:'banyo',
+  gorev:'Evinde suyun boşa gittiği bir anı söyle ve bunu azaltmak için bir öneri getir.',
+  ornek:'Örnek: Dişimi fırçalarken musluğu açık bırakıyordum. Bundan sonra fırçalarken kapatacağım.',
+  olcutler:['Suyun boşa gittiği bir an söyledim.','Bir öneri getirdim.','Kendi yaşamımdan örnek verdim.'],
+  result:'Kendi yaşamından bir tasarruf önerisi getirdin.'}
+]};
+
+/* ---- h30 İsraf Ölçeri (tren-tünel kaldırıldı; akan musluk ve dolan kova) ---- */
+GAMES.h30={title:'İsraf Ölçeri',theme:'banyo',
+ finish:'İsrafı tahmin edip gerçek değerle karşılaştırdın, iki kullanımı yan yana gördün ve bir davranış değişikliği önerdin.',rounds:[
+ {kind:'tahmin',prompt:'Ne kadarının boşa gittiğini tahmin et.',
+  durumlar:[
+   {t:'Musluk üç dakika açık kalırken dişler fırçalanıyor. Altına kova koyduk.',
+    birim:'bardak',gercek:12,enCokOlcek:20,adim:1,
+    soru:'Sence kovaya kaç bardak su birikti?',
+    yorumSoru:'Diş fırçalamak için 1 bardak su yeterken bu kadar akması ne demek?',
+    secenekler:[
+     {label:'Suyun çoğu boşa gitti',correct:true},
+     {label:'Tam gerektiği kadar su aktı',hint:'Fırçalamak için 1 bardak yeterken kovada çok daha fazlası var.'},
+     {label:'Su yetersiz kaldı',hint:'Kovada gerekenden fazlası birikti.'}],
+    neden:'Açık bırakılan musluk, işin gerektirdiğinden kat kat fazlasını akıtır.'},
+   {t:'Damlayan bir musluk bir gün boyunca kovaya damlıyor.',
+    birim:'bardak',gercek:9,enCokOlcek:20,adim:1,
+    soru:'Sence bir günde kaç bardak su damladı?',
+    yorumSoru:'Damlayan musluk için hangisi doğru?',
+    secenekler:[
+     {label:'Küçük damlalar birikince çok su eder',correct:true},
+     {label:'Damla küçük olduğu için israf sayılmaz',hint:'Kovaya bak: küçük damlalar bir günde epey su etti.'},
+     {label:'Damlayan musluk su tasarrufu sağlar',hint:'Damlayan musluk su harcar, tasarruf sağlamaz.'}],
+    neden:'Küçük ama sürekli kayıplar toplandığında büyük israf olur.'}]},
+ {kind:'tahmin',prompt:'İki kullanımı karşılaştır.',
+  durumlar:[
+   {t:'Aynı bulaşık iki türlü yıkanıyor: biri musluk sürekli açık, diğeri leğende su biriktirerek.',
+    birim:'bardak',gercek:6,enCokOlcek:30,adim:1,
+    soru:'Leğende yıkayan kaç bardak su kullanmıştır sence?',
+    yorumSoru:'Musluğu açık bırakan 24 bardak kullandı. Aradaki fark ne gösteriyor?',
+    secenekler:[
+     {label:'Aynı iş çok daha az suyla yapılabilir',correct:true},
+     {label:'İki yöntem aynı miktarda su kullanır',hint:'6 ile 24 arasında büyük bir fark var.'},
+     {label:'Leğende yıkamak daha çok su harcar',hint:'Leğende yıkayan daha az kullandı.'}],
+    neden:'Aynı işi daha az suyla yapmanın yolu varsa, fazlası israftır.'}]},
+ {kind:'konus',prompt:'Bir davranış değişikliği öner.',
+  gorev:'İsrafı azaltmak için bugünden itibaren değiştireceğin bir davranışı söyle ve nasıl yapacağını anlat.',
+  ornek:'Örnek: Bulaşıkları leğende yıkayacağız. Musluğu yalnız durularken açacağım.',
+  olcutler:['Bir davranış değişikliği söyledim.','Nasıl yapacağımı anlattım.','Kendi yaşamımdan örnek verdim.'],
+  result:'İsrafı azaltmak için somut bir davranış değişikliği önerdin.'}
 ]};
 
 /* ===== açılış ===== */
