@@ -250,6 +250,19 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .tahta .ust{width:32px;height:16px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#5b7185}
 .secenek-kart{background:#fff;border:3px solid #cbd5e1;border-radius:12px;padding:4px;cursor:pointer}
 .secenek-kart.secili{border-color:#e08b2a;background:#fdf6e9}
+.kod-izgara{display:grid;gap:2px;background:#8a9aa8;padding:3px;border-radius:8px}
+.kod-izgara .kh{width:30px;height:30px;border-radius:4px;background:#eef3f7;display:flex;align-items:center;justify-content:center;font-size:16px}
+.kod-izgara .kh.eks-d{box-shadow:inset -2px 0 0 #e05aa0}
+.kod-izgara .kh.eks-y{box-shadow:inset 0 -2px 0 #e05aa0}
+.kod-izgara .kh.engel{background:#7b8ea1}
+.kod-izgara .kh.iz{background:#cfe9d8}
+.kod-izgara .kh.refiz{background:#fbe3c8}
+.kod-izgara .kh.hedef{background:#ffe08a}
+.kod-blok{background:#e3f1fb;border:3px solid #7fb6de;border-radius:8px;padding:3px 8px;font-weight:950;font-size:15px;color:#1f3b52;cursor:pointer}
+.kod-blok.ref{background:#fbe3c8;border-color:#e0a55a;cursor:default}
+.kod-blok.aktif{background:#ffd873;border-color:#c9922a}
+.kod-blok.hata{background:#fde8e8;border-color:#e05555}
+.harf-kart{background:#fff;border:4px solid #cbd5e1;border-radius:14px;padding:6px}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -284,7 +297,7 @@ function P(id,html,target){return{id,html,target}}
 function T(id,html,need=1){return{id,html,need}}
 function Q(prompt,scene,choices,result,hint,extra={}){return{kind:'choice',prompt,scene,choices,result,hint,...extra}}
 function D(prompt,scene,pieces,targets,result,hint,extra={}){return{kind:'drag',prompt,scene,pieces,targets,result,hint,...extra}}
-function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare,bar:renderBar,lift:renderLift,timing:renderTiming,station:renderStation,para:renderPara,arena:renderArena,tersi:renderTers,kargo:renderKargo,seker:renderSeker,robot:renderRobot,problem:renderProblem,terazi:renderTerazi,firin:renderFirin,kup:renderKup,sekil:renderSekil,kosegen:renderKosegen,studyo:renderStudyo,cevre:renderCevre,ip:renderIp,sivi:renderSivi,mozaik:renderMozaik,katla:renderKatla,ayna:renderAyna,kilim:renderKilim,satranc:renderSatranc}[r.kind];(fn||renderChoice)(r)}
+function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare,bar:renderBar,lift:renderLift,timing:renderTiming,station:renderStation,para:renderPara,arena:renderArena,tersi:renderTers,kargo:renderKargo,seker:renderSeker,robot:renderRobot,problem:renderProblem,terazi:renderTerazi,firin:renderFirin,kup:renderKup,sekil:renderSekil,kosegen:renderKosegen,studyo:renderStudyo,cevre:renderCevre,ip:renderIp,sivi:renderSivi,mozaik:renderMozaik,katla:renderKatla,ayna:renderAyna,kilim:renderKilim,satranc:renderSatranc,kod:renderKod,harf:renderHarf,dortlu:renderDortlu}[r.kind];(fn||renderChoice)(r)}
 function renderChoice(r){$('#task').innerHTML=`<div class="choices">${r.choices.map((c,i)=>`<button class="choice" data-choice="${i}">${c.html||esc(c.label)}</button>`).join('')}</div>`;$$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.choices[+b.dataset.choice];if(c.correct)good(c.message);else wrong(c.hint||r.hint)})}
 /* Ritmik sayma: aynı seçenek listesinden sırayla doğru sayılar seçilir.
    Her doğru seçimde sahnedeki dal/adım büyür (state.step), böylece rota
@@ -1420,6 +1433,131 @@ function satrancSec(r,kod){
   good()}}
 function renderSatranc(r){state.bulunan=[];state.faz=0;state.not='';tahtaCiz(r)}
 
+/* ===== w37 & w38: simetrik program (ortak motor) ===== */
+const YON={U:[0,-1],D:[0,1],L:[-1,0],R:[1,0]},YON_OK={U:'↑',D:'↓',L:'←',R:'→'};
+function yolCiz(bas,prog){const yol=[bas.slice()];let p=bas.slice();
+ prog.forEach(k=>{const d=YON[k];p=[p[0]+d[0],p[1]+d[1]];yol.push(p.slice())});return yol}
+function kodAyna(k,eksen){return eksen==='dikey'?({L:'R',R:'L'}[k]||k):({U:'D',D:'U'}[k]||k)}
+function kodEs(p,r){return r.eksen==='dikey'?[r.en-1-p[0],p[1]]:[p[0],r.boy-1-p[1]]}
+function kodSahne(r){const yol=state.yol||[state.bas.slice()],ref=state.refYol||[];
+ let h='';
+ for(let y=0;y<r.boy;y++)for(let x=0;x<r.en;x++){
+  const engel=(r.engel||[]).some(e=>e[0]===x&&e[1]===y);
+  const iz=yol.some(p=>p[0]===x&&p[1]===y),riz=ref.some(p=>p[0]===x&&p[1]===y);
+  const hed=r.hedef&&r.hedef[0]===x&&r.hedef[1]===y;
+  const rob=yol.length&&yol[yol.length-1][0]===x&&yol[yol.length-1][1]===y;
+  h+=`<div class="kh${engel?' engel':''}${riz?' refiz':''}${iz?' iz':''}${hed?' hedef':''}${r.eksen==='dikey'&&x===r.en/2-1?' eks-d':''}${r.eksen==='yatay'&&y===r.boy/2-1?' eks-y':''}">${rob?'🤖':hed?'🚩':engel?'':''}</div>`}
+ return `<div class="kod-izgara" style="grid-template-columns:repeat(${r.en},30px)">${h}</div>`}
+function kodCiz(r){
+ $('#stage').innerHTML=`<div class="stack">${kodSahne(r)}
+  ${r.referansProgram?`<div class="caption">Referans program (solda):</div><div class="prog">${r.referansProgram.map(k=>`<span class="kod-blok ref">${YON_OK[k]}</span>`).join('')}</div>`:''}
+  <div class="caption">Senin programın:</div>
+  <div class="prog">${(state.program||[]).length?state.program.map((k,i)=>`<span class="kod-blok${state.hataIx===i?' hata':''}${state.aktif===i?' aktif':''}" data-blok="${i}">${YON_OK[k]}</span>`).join(''):'<span class="caption">boş</span>'}</div>
+  <div class="caption">${esc(state.not||r.gorev||'')}</div></div>`;
+ $$('[data-blok]').forEach(el=>el.onclick=()=>{state.program.splice(+el.dataset.blok,1);state.hataIx=-1;state.yol=null;kodCiz(r)});
+ $('#task').innerHTML=`<div class="actions">${['U','L','R','D'].map(k=>`<button class="action" data-yon="${k}">${YON_OK[k]}</button>`).join('')}</div>
+  <div class="actions"><button class="action" id="kodSil">↩ Sil</button><button class="action" id="kodRun">▶ Çalıştır</button></div>`;
+ $$('[data-yon]').forEach(b=>b.onclick=()=>{state.program.push(b.dataset.yon);state.hataIx=-1;state.yol=null;kodCiz(r)});
+ $('#kodSil').onclick=()=>{state.program.pop();state.yol=null;kodCiz(r)};
+ $('#kodRun').onclick=()=>kodCalistir()}
+function kodCalistir(){const r=round(),p=state.program||[];
+ if(!p.length)return wrong('Önce yön düğmeleriyle bir program kur.');
+ let pos=state.bas.slice();const yol=[pos.slice()];
+ for(let i=0;i<p.length;i++){const d=YON[p[i]];pos=[pos[0]+d[0],pos[1]+d[1]];
+  const disi=pos[0]<0||pos[1]<0||pos[0]>=r.en||pos[1]>=r.boy;
+  const engel=(r.engel||[]).some(e=>e[0]===pos[0]&&e[1]===pos[1]);
+  if(disi||engel){state.hataIx=i;state.yol=yol;state.not=disi?'Bu komut robotu tahtanın dışına çıkardı.':'Bu komut robotu engele çarptırdı.';
+   kodCiz(r);return wrong(state.not)}
+  yol.push(pos.slice())}
+ state.yol=yol;
+ if(r.denetim==='simetri'){
+  const bek=state.refYol.map(q=>kodEs(q,r));
+  const uy=yol.length===bek.length&&yol.every((q,i)=>q[0]===bek[i][0]&&q[1]===bek[i][1]);
+  if(!uy){const i=yol.findIndex((q,j)=>!bek[j]||q[0]!==bek[j][0]||q[1]!==bek[j][1]);
+   state.hataIx=Math.max(0,i-1);state.not=`${i}. adımda saptın: referansın o adımdaki karesinin eşi başka bir kare.`;
+   kodCiz(r);return wrong(state.not)}
+ }
+ if(r.hedef&&(pos[0]!==r.hedef[0]||pos[1]!==r.hedef[1])){
+  state.not=`Hedefe ulaşmadın: ${Math.abs(r.hedef[0]-pos[0])} sütun, ${Math.abs(r.hedef[1]-pos[1])} satır fark kaldı.`;
+  kodCiz(r);return wrong(state.not)}
+ state.not='Program çalıştı ve iki rota eksene göre çakıştı.';kodCiz(r);good()}
+function renderKod(r){state.program=[];state.hataIx=-1;state.aktif=-1;state.not='';
+ state.bas=r.baslangic.slice();
+ state.refYol=r.referansProgram?yolCiz(r.refBaslangic||r.baslangic,r.referansProgram):[];
+ state.yol=[state.bas.slice()];kodCiz(r)}
+
+/* ===== w39: kalite kontrol (vektör harfler) ===== */
+function harfSvg(it,yansi){let ic=`<polygon points="${it.p.map(q=>q.join(',')).join(' ')}" fill="${it.renk||'#3f87b7'}" stroke="#1f3b52" stroke-width="2"/>`;
+ if(yansi){const a=it.eksen==='dikey'?[[50,0],[50,100]]:[[0,50],[100,50]];
+  const y=it.p.map(q=>yansitNokta(q,a[0],a[1]));
+  ic+=`<polygon points="${y.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="rgba(224,85,85,.42)" stroke="#e05555" stroke-width="2" stroke-dasharray="5 4"/>`}
+ ic+=it.eksen==='dikey'
+  ?'<line x1="50" y1="-4" x2="50" y2="104" stroke="#e05aa0" stroke-width="3" stroke-dasharray="6 5"/>'
+  :'<line x1="-4" y1="50" x2="104" y2="50" stroke="#e05aa0" stroke-width="3" stroke-dasharray="6 5"/>';
+ return `<svg viewBox="-6 -6 112 112" width="212" height="212">${ic}</svg>`}
+function harfCiz(r){const it=r.items[state.i];
+ $('#stage').innerHTML=`<div class="stack"><div class="harf-kart">${harfSvg(it,state.yansi)}</div>
+  <div class="caption">${esc(it.ad)} · ${it.eksen==='dikey'?'dikey eksen':'yatay eksen'}</div>
+  <div class="caption">${esc(state.not||'Kart karar verilene kadar burada bekler.')}</div>
+  <div class="unit-strip">${r.items.map((x,j)=>`<span class="unit-chip">${j<state.i?'✓':j===state.i?'●':'·'}</span>`).join('')}</div></div>`;
+ $('#task').innerHTML='<div class="choices"><button class="choice" data-karar="1">Simetriktir</button><button class="choice" data-karar="0">Simetrik değildir</button></div>';
+ $$('[data-karar]').forEach(b=>b.onclick=()=>harfKarar(r,b.dataset.karar==='1'))}
+function harfKarar(r,karar){if(state.gecis)return;const it=r.items[state.i];
+ const a=it.eksen==='dikey'?[[50,0],[50,100]]:[[0,50],[100,50]];
+ const y=it.p.map(q=>yansitNokta(q,a[0],a[1]));
+ const simetrik=kumeEsit(y,it.p,3)&&kumeEsit(it.p,y,3);
+ state.yansi=true;
+ if(karar!==simetrik){state.not=simetrik?'Katladık: iki yarı tam çakıştı, demek ki simetrikmiş.':'Katladık: kırmızı yarı taştı, iki yarı çakışmadı.';
+  harfCiz(r);return wrong(state.not)}
+ state.not=simetrik?'İki yarı tam üst üste geldi.':'Kırmızı yarı taştı: bu eksende simetri yok.';
+ harfCiz(r);state.i++;
+ if(state.i>=r.items.length){state.i--;harfCiz(r);good();return}
+ state.yansi=false;feedback('Doğru karar');gecisBasla(()=>{state.not='';harfCiz(r)},FAST?30:860)}
+function renderHarf(r){state.i=0;state.yansi=false;state.not='';harfCiz(r)}
+
+/* ===== w40: mozaik ustası (çift eksen) ===== */
+function dortluEsler(r,x,y){const ex=r.en-1-x,ey=r.boy-1-y;return [[ex,y],[x,ey],[ex,ey]]}
+function dortluGerek(r){const g=[];r.kaynak.forEach(k=>{dortluEsler(r,k.x,k.y).forEach(e=>g.push({x:e[0],y:e[1],renk:k.renk}))});return g}
+function dortluCiz(r){const gerek=dortluGerek(r);
+ let h='';for(let y=0;y<r.boy;y++)for(let x=0;x<r.en;x++){
+  const kay=r.kaynak.find(k=>k.x===x&&k.y===y);
+  const renk=kay?kay.renk:(state.hucre[y][x]||'b');
+  const kil=state.sec&&dortluEsler(r,state.sec.x,state.sec.y).some(e=>e[0]===x&&e[1]===y);
+  h+=`<div class="huc${kil?' hayalet':''}${state.sec&&state.sec.x===x&&state.sec.y===y?' kaynak':''}${x===r.en/2-1?' eksen':''}" data-huc="${x},${y}" style="background:${KILIM_RENK[renk]};${y===r.boy/2-1?'box-shadow:inset 0 -2px 0 #e05aa0;':''}"></div>`}
+ const dogru=gerek.filter(g=>state.hucre[g.y][g.x]===g.renk).length;
+ $('#stage').innerHTML=`<div class="stack"><div class="kilim${state.bitti?' kilim-katla':''}" style="grid-template-columns:repeat(${r.en},30px)">${h}</div>
+  <div class="caption">${esc(state.not||'Kaynak hücreye dokun: üç eşi kılavuzla işaretlenir.')}</div>
+  <div class="caption">Tamamlanan: ${dogru}/${gerek.length}</div></div>`;
+ $$('[data-huc]').forEach(el=>el.onclick=()=>dortluDokun(r,el.dataset.huc));
+ $('#task').innerHTML=`<div class="palet">${Object.keys(KILIM_RENK).filter(k=>k!=='b').map(k=>`<button data-renk="${k}" class="${state.renk===k?'secili':''}" style="background:${KILIM_RENK[k]}"></button>`).join('')}
+   <button data-renk="b" class="${state.renk==='b'?'secili':''}" style="background:#f6ede0">🧽</button></div>
+  <div class="actions"><button class="action" id="dortGeri">↩ Geri al</button></div>`;
+ $$('[data-renk]').forEach(b=>b.onclick=()=>{state.renk=b.dataset.renk;dortluCiz(r)});
+ $('#dortGeri').onclick=()=>{const son=(state.gecmis||[]).pop();if(!son)return;
+  state.hucre[son.y][son.x]=son.eski;dortluCiz(r)}}
+function dortluDokun(r,kod){const [x,y]=kod.split(',').map(Number);
+ const kay=r.kaynak.find(k=>k.x===x&&k.y===y);
+ if(kay){state.sec={x,y};state.not=`Bu hücre dikey eksenden ${Math.abs(r.en/2-0.5-x).toFixed(1).replace('.0','')}, yatay eksenden ${Math.abs(r.boy/2-0.5-y).toFixed(1).replace('.0','')} adım uzakta.`;return dortluCiz(r)}
+ if(!state.renk)return feedback('Önce paletten renk seç',true);
+ const gerek=dortluGerek(r).find(g=>g.x===x&&g.y===y);
+ const eski=state.hucre[y][x];
+ state.hucre[y][x]=state.renk==='b'?null:state.renk;
+ state.gecmis=(state.gecmis||[]).concat({x,y,eski});
+ if(state.renk!=='b'&&(!gerek||gerek.renk!==state.renk)){
+  state.not=gerek?`Bu hücre bir eş ama rengi kaynağıyla aynı değil.`:'Bu hücrenin kaynağı yok: hangi eksende yansıttığını yeniden düşün.';
+  dortluCiz(r);return wrong(state.not)}
+ state.not=state.renk==='b'?'Silindi.':'Doğru eş hücre.';
+ const g=dortluGerek(r);
+ const tam=g.every(q=>state.hucre[q.y][q.x]===q.renk)&&
+  state.hucre.every((sat,yy)=>sat.every((v,xx)=>{
+   if(r.kaynak.some(k=>k.x===xx&&k.y===yy))return true;
+   const bek=g.find(q=>q.x===xx&&q.y===yy);return (bek?bek.renk:null)===(v||null)}));
+ dortluCiz(r);
+ if(tam){state.bitti=true;dortluCiz(r);feedback('Desen tamam, katlanıyor');gecisBasla(()=>good(),FAST?40:900)}}
+function renderDortlu(r){state.hucre=Array.from({length:r.boy},(_,y)=>Array.from({length:r.en},(_,x)=>{
+  const h=(r.hazir||[]).find(q=>q.x===x&&q.y===y);return h?h.renk:null}));
+ state.renk=null;state.sec=null;state.gecmis=[];state.bitti=false;state.not='';dortluCiz(r)}
+
 const GAMES={};
 /* ===== 3. SINIF MATEMATİK — w01–w48 =====
    Kaynak şartname: output/pdf/3_sinif_matematik_oyunlari_detayli_duzeltmeler.pdf
@@ -2140,6 +2278,71 @@ GAMES.w36={title:'Satranç Tahtası Macerası',theme:'class',finish:'Şövalyele
   sonSoru:{metin:'Aynı şövalyenin DİKEY eksene göre eşi hangisiydi?',
    secenekler:[{label:'F7',correct:true},{label:'C2'},{label:'F2'}]},
   result:'Yatay eksende sütun aynı kalır, sıra yansır: C7 → C2. Dikey eksende ise sıra aynı kalır, sütun yansırdı: C7 → F7.'}
+]};
+
+/* ---- Tema 5: simetri ve kodlama (w37–w40) ---- */
+GAMES.w37={title:'Kodlama Dedektifi',theme:'factory',finish:'Verilen programı uyguladın, sonra simetriğini kendin üretip robotu eş hedefe götürdün.',rounds:[
+ {kind:'kod',prompt:'Yönergeyi uygula: 2 sağ, 3 aşağı, 1 sol.',en:8,boy:6,eksen:'dikey',
+  baslangic:[1,0],hedef:[2,3],engel:[[1,4],[6,4]],cozum:['R','R','D','D','D','L'],
+  gorev:'Robotu bayrağa götür: 2 sağ, 3 aşağı, 1 sol.',
+  result:'2 sağ, 3 aşağı, 1 sol: robot bayrağa ulaştı. Mekaniği öğrendin.'},
+ {kind:'kod',prompt:'Aynı yolun dikey simetriğini sen kur.',en:8,boy:6,eksen:'dikey',denetim:'simetri',
+  baslangic:[6,0],refBaslangic:[1,0],referansProgram:['R','R','D','D','D','L'],hedef:[5,3],engel:[[1,4],[6,4]],
+  gorev:'Sağ ve sol komutlarını eksene göre çevir.',
+  result:'Sağ ↔ sol dönüştü, aşağı aynı kaldı: 2 sol, 3 aşağı, 1 sağ. İki rota eksende katlanınca çakıştı.'},
+ {kind:'kod',prompt:'Bu kez eksen yatay: aşağı ile yukarı yer değiştirir.',en:8,boy:6,eksen:'yatay',denetim:'simetri',
+  baslangic:[0,4],refBaslangic:[0,1],referansProgram:['D','R','R','R','R','U','U'],hedef:[4,5],engel:[[6,1],[6,4]],
+  gorev:'Yukarı ve aşağı komutlarını çevir; sağ aynı kalır.',
+  result:'1 aşağı yerine 1 yukarı, 2 yukarı yerine 2 aşağı: yatay eksende sütunlar aynı kalır, satırlar yansır.'}
+]};
+
+GAMES.w38={title:'Simetri Mimarı',theme:'factory',finish:'Referans rotayı inceleyip komutlarını eksene göre kendin dönüştürdün; başarı yalnız hedefe değil bütün hücrelerin eşliğine bağlıydı.',rounds:[
+ {kind:'kod',prompt:'Soldaki turuncu rotanın dikey simetriğini kur.',en:8,boy:6,eksen:'dikey',denetim:'simetri',
+  baslangic:[6,0],refBaslangic:[1,0],referansProgram:['D','D','D','R','R'],hedef:[4,3],
+  gorev:'Referans rota turuncu, seninki yeşil olacak.',
+  result:'3 aşağı, 2 sağ → 3 aşağı, 2 sol. Aşağı komutu dikey eksende değişmez.'},
+ {kind:'kod',prompt:'Basamaklı rotanın yatay simetriğini yaz.',en:8,boy:6,eksen:'yatay',denetim:'simetri',
+  baslangic:[1,5],refBaslangic:[1,0],referansProgram:['R','D','R','D','R'],hedef:[4,3],
+  gorev:'Yatay eksende sağ komutu aynı kalır, aşağı yukarıya döner.',
+  result:'Sağ-aşağı basamakları, sağ-yukarı basamaklarına döndü; iki rota katlandığında üst üste geldi.'},
+ {kind:'kod',prompt:'Daha uzun rotanın simetriğini kur; bir hücre bile sapmamalı.',en:8,boy:6,eksen:'dikey',denetim:'simetri',
+  baslangic:[7,0],refBaslangic:[0,0],referansProgram:['D','R','R','D','R','D'],hedef:[4,3],
+  gorev:'Her adımda referansın eş hücresine bak.',
+  result:'Altı komutun her biri eksene göre çevrildi; hedefe ulaşmak tek başına yetmedi, bütün hücreler eşleşti.'}
+]};
+
+GAMES.w39={title:'Kalite Kontrol Bandı',theme:'factory',finish:'Her kararını gerçek katlama ile denetledin; simetri yargısı yazı tipine değil şeklin kendisine dayandı.',rounds:[
+ {kind:'harf',prompt:'Kartı dikey eksende katla ve karar ver.',noPenalty:false,
+  items:[
+   {ad:'A harfi',eksen:'dikey',renk:'#3f87b7',p:[[50,8],[85,90],[68,90],[61,70],[39,70],[32,90],[15,90]]},
+   {ad:'H harfi',eksen:'dikey',renk:'#3f87b7',p:[[20,10],[35,10],[35,42],[65,42],[65,10],[80,10],[80,90],[65,90],[65,58],[35,58],[35,90],[20,90]]},
+   {ad:'T harfi',eksen:'dikey',renk:'#3f87b7',p:[[10,10],[90,10],[90,26],[58,26],[58,90],[42,90],[42,26],[10,26]]}],
+  result:'A, H ve T bu çizimlerde dikey eksende katlandığında iki yarı tam çakıştı.'},
+ {kind:'harf',prompt:'Bu harflerde dikkatli ol.',
+  items:[
+   {ad:'L harfi',eksen:'dikey',renk:'#e08b2a',p:[[25,10],[41,10],[41,74],[80,74],[80,90],[25,90]]},
+   {ad:'P harfi',eksen:'dikey',renk:'#e08b2a',p:[[25,10],[70,10],[80,24],[80,44],[70,58],[41,58],[41,90],[25,90]]},
+   {ad:'S motifi',eksen:'dikey',renk:'#e08b2a',p:[[78,18],[40,18],[40,44],[78,44],[78,86],[22,86],[22,70],[60,70],[60,58],[22,58],[22,18],[40,10]]}],
+  result:'L, P ve S dikey eksende katlandığında yarılar taştı: bu eksende simetrik değiller.'},
+ {kind:'harf',prompt:'Şimdi motifler ve eksen yönü değişiyor.',
+  items:[
+   {ad:'Kelebek',eksen:'dikey',renk:'#e0a3d0',p:[[50,12],[26,18],[12,42],[24,58],[14,80],[38,88],[50,74],[62,88],[86,80],[76,58],[88,42],[74,18]]},
+   {ad:'Vazo',eksen:'dikey',renk:'#8fc47a',p:[[34,10],[66,10],[60,26],[80,50],[74,86],[26,86],[20,50],[40,26]]},
+   {ad:'Ok (yatay eksen)',eksen:'yatay',renk:'#f2c45b',p:[[10,38],[58,38],[58,20],[92,50],[58,80],[58,62],[10,62]]}],
+  result:'Kelebek ve vazo dikey eksende, ok yatay eksende simetrik. Eksenin yönü kararı değiştiriyor.'}
+]};
+
+GAMES.w40={title:'Mozaik Ustası',theme:'market',finish:'Her kaynak hücreyi hem dikey hem yatay eksende yansıtıp dört bölgeyi eşitledin.',rounds:[
+ {kind:'dortlu',prompt:'Her kaynak hücrenin üç eşini bul ve boya.',en:6,boy:6,
+  kaynak:[{x:1,y:1,renk:'k'},{x:2,y:0,renk:'m'},{x:0,y:2,renk:'s'},{x:2,y:2,renk:'y'}],
+  result:'Her kaynak hücrenin dikey, yatay ve iki eksene göre üç eşi var; dört bölge aynı deseni taşıyor.'},
+ {kind:'dortlu',prompt:'Daha geniş ızgarada aynı işi yap.',en:8,boy:6,
+  kaynak:[{x:0,y:0,renk:'k'},{x:2,y:1,renk:'m'},{x:3,y:2,renk:'s'},{x:1,y:2,renk:'y'},{x:3,y:0,renk:'k'}],
+  result:'8 × 6 ızgarada da her hücrenin üç eşi tam koordinatta oturdu.'},
+ {kind:'dortlu',prompt:'Bu desende hatalı hücreler var; bul ve düzelt.',en:6,boy:6,
+  kaynak:[{x:1,y:0,renk:'m'},{x:2,y:1,renk:'k'},{x:0,y:1,renk:'y'},{x:2,y:2,renk:'s'}],
+  hazir:[{x:4,y:0,renk:'m'},{x:1,y:5,renk:'k'},{x:4,y:5,renk:'m'},{x:3,y:1,renk:'s'},{x:5,y:1,renk:'y'},{x:0,y:4,renk:'y'},{x:3,y:2,renk:'s'},{x:2,y:3,renk:'s'}],
+  result:'Hatalı hücreler kaynağın rengiyle karşılaştırılarak bulundu; dört bölge yeniden eşleşti.'}
 ]};
 
 

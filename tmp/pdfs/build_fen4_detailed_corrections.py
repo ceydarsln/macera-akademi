@@ -449,6 +449,8 @@ belt_n = sum(1 for g in games if g["type"] == "beltSort")
 answer_leak = ["h02", "h09", "h10", "h26", "h29", "h05", "h18"]
 
 wrong_hint_total = sum(g["n"].get("wrongHint", 0) for g in games)
+# 67 bant kartinin tamaminda wrongHint tanimli; olcumde 65 tanesi dogru kutunun adini iceriyor
+wrong_hint_leaks = 65
 generic_count = sum(1 for g in games if "doğru cevabı yakala" in g["instruction"].lower())
 
 doc = BaseDocTemplate(
@@ -474,8 +476,8 @@ story += bullets([
 story += [PageBreak()]
 
 story += [P("Testten çıkan öncelikli bulgular", h1)]
-story += [box(f"1. Yanlış cevap verildiğinde doğru cevap ekrana yazılıyor - {wrong_hint_total} kartta",
-    [f"Sekiz bant oyununun tamamında her kart için bir wrongHint metni tanımlı ve bu metinler yanlış kutuya bırakıldığında doğru kutunun adını doğrudan söylüyor: “Kanıtsız his BİLİMSEL DEĞİLDİR!”, “Katı - sıvı = ERİME!”, “Tekrarlanabilirlik BİLİMSEL bilginin özelliğidir!”. Toplam {wrong_hint_total} bant kartının {wrong_hint_total} tanesi bu şekilde. Bir kez yanlış yapmak cevabı öğrenmek anlamına geldiği için ikinci denemede düşünmeye gerek kalmıyor; bu, oyunlarda uygulanan “yanlışta doğru cevabı açma” ilkesinin tam tersi."],
+story += [box(f"1. Yanlış cevap verildiğinde doğru cevap ekrana yazılıyor - {wrong_hint_leaks} kartta",
+    [f"Sekiz bant oyununun tamamında her kart için bir wrongHint metni tanımlı ve bu metinler yanlış kutuya bırakıldığında doğru kutunun adını doğrudan söylüyor: “Kanıtsız his BİLİMSEL DEĞİLDİR!”, “Katı - sıvı = ERİME!”, “Tekrarlanabilirlik BİLİMSEL bilginin özelliğidir!”. Sekiz oyundaki {wrong_hint_total} bant kartının tamamında wrongHint tanımlı; bunların {wrong_hint_leaks} tanesi doğru kutunun adını açıkça içeriyor. Bir kez yanlış yapmak cevabı öğrenmek anlamına geldiği için ikinci denemede düşünmeye gerek kalmıyor; bu, oyunlarda uygulanan “yanlışta doğru cevabı açma” ilkesinin tam tersi."],
     PALE_CORAL, CORAL), Spacer(1, 1.7 * mm)]
 story += [box("2. Isıtma deneyi hâl değişimini yanlış modelliyor",
     ["Isıtma Deneyi'nin ekranında ocak, kap veya madde yok; ortada büyük bir KRONOMETRE duruyor. Hedef sıcaklık üç ayrı yerde veriliyor: görev metni (“Termometreyi 100 °C'ye getir”), “Hedef 100 °C” satırı ve ölçek üzerindeki sarı çizgi. Bilimsel olarak daha önemlisi, gösterge sıfırdan hedefe düz doğrusal artıyor - oysa bu temanın çekirdek kavramı, hâl değişimi sırasında maddeye ısı verilmeye devam edilse bile sıcaklığın SABİT kalmasıdır. Oyun bu kavramı öğretmek yerine tersini gösteriyor."],
@@ -569,7 +571,7 @@ for number, game in enumerate(games, start=1):
 story += [P("Son kabul kontrolü", h1), P("4. sınıf fen bilimleri bölümü tamamlanmadan önce", h2)]
 story += bullets([
     "f01-f48 arasındaki 48 oyun üç kademeli turla baştan sona test edilir; görünen başlık, sahne, kontrol, ses ve ölçülen kazanım kayıt altına alınır.",
-    f"Sekiz bant oyunundaki {wrong_hint_total} wrongHint metni yeniden yazılır; hiçbiri doğru kutunun adını içermez.",
+    f"Sekiz bant oyunundaki {wrong_hint_total} wrongHint metni gözden geçirilir; doğru kutunun adını içeren {wrong_hint_leaks} tanesi yeniden yazılır.",
     "Isıtma Deneyi'nde hedef sıcaklık söylenmez, kronometre yerine gerçek ocak ve madde bulunur ve hâl değişimi sırasında sıcaklığın sabit kaldığı doğru gösterilir.",
     "Enerji Grafiği ile Şehir Verisi Grafiği'nde kategori hedefleri ekranda okunur; iki oyun da şu an veri eksikliğinden deneme-yanılmaya bağlı.",
     "Çözüm Köprüsü'nde parça yazıları çipe tam sığar; Hâl Değişimi Bandı'nda kart hiçbir kenarda kırpılmaz ve kart metinleri cevabı çağrıştıran sözcük içermez.",

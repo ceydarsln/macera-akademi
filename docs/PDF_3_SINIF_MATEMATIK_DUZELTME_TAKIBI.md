@@ -50,6 +50,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w34 | Aynadaki İkizler | Simetri parçalarının eşliği | Metin düğmeleri kaldırıldı: üç seçenek de gerçek vektör parça (doğru yansıma, 180° döndürülmüş, %72 küçültülmüş) ve hepsi yarım şekilden hesaplanarak üretiliyor. Parça aynanın sağına konunca eş noktalar ince çizgilerle bağlanıyor; yanlışta iki şekil üst üste getirilip uyuşmayan kısım gösteriliyor. 3. turda iç noktalar da eşleşmek zorunda. | Uygulamada |
 | w35 | Kilim Dokuma Tezgâhı | Dikey simetri ile deseni tamamlama | Renk kalıcı kalem gibi davranıyor, silgi ve geri al eklendi. Kaynak kareye dokununca eksene uzaklık sayılıyor ve karşı hücrede hayalet hedef beliriyor. Yanlış dokunuş kalıcı değil; geri bildirim iki karenin eksene uzaklığını karşılaştırıyor, doğruyu doldurmuyor. 3. tur hatalı dokunmuş kareleri düzeltme üzerine; bitişte kilim katlanıyor. | Uygulamada |
 | w36 | Satranç Tahtası Macerası | Simetrik konum bulma | Şövalyeler ♞ taş simgesiyle çiziliyor, hedef kareler baştan işaretli değil. İpucu koordinat vermiyor, yöntemi söylüyor: "eksenden kaç sütun uzaktaysa öbür tarafta da o kadar". Yanlış karede iki karenin eksene uzaklığı sayılıp karşılaştırılıyor. 3. turda eksen yataya çevrilip iki eksen karşılaştırılıyor. | Uygulamada |
+| w37 | Kodlama Dedektifi | Simetrik yönergeyi uygulama | Simetrik program artık yönergede yazılı gelmiyor: referans program soldaki turuncu bloklarla görünüyor, çocuk sağ/sol (ya da yukarı/aşağı) dönüşümünü kendisi kuruyor. Program tek blok silinerek düzenlenebiliyor; engele çarpan ya da tahtayı taşıran komut kırmızıya dönüyor, hedefe ulaşmayan programda kalan satır/sütun farkı yazıyor. Eksen ızgarada çizili, başlangıç ve hedef birbirinin simetriği. | Uygulamada |
+| w38 | Simetri Mimarı | Simetrik yönerge kurgulama | Referans rota her turda ızgarada turuncu iz olarak görünüyor. İpucu yolu vermiyor, dönüşüm kuralını söylüyor. Başarı yalnız hedefe ulaşmaya değil, rotanın HER hücresinin referansın eş hücresi olmasına bağlı: ilk sapma adımı gösterilip düzeltiliyor. | Uygulamada |
+| w39 | Kalite Kontrol Bandı | Şekillerde simetriyi denetleme | Harfler sistem fontundan çıkarılıp sabit vektör çizimlere dönüştürüldü; her kartta denetlenen eksen pembe çizgiyle görünüyor. Karar sonrası kart gerçekten katlanıyor: yansıyan yarı saydam kopya oturursa çakışma, oturmazsa taşan bölge kırmızı görünüyor. Yargı `yansitNokta`/`kumeEsit` ile şeklin kendisinden hesaplanıyor. Kelebek, vazo ve yatay eksenli ok motifleri eklendi. | Uygulamada |
+| w40 | Mozaik Ustası | Yatay ve dikey eksende simetri | Kaynak hücreye dokununca üç eş hedef kılavuzla işaretleniyor ve iki eksene uzaklık yazılıyor. Renk kalemi kalıcı; silgi ve geri al var, yanlış dokunuş kalıcı değil. 3. turda hazır gelen hatalı hücreler düzeltiliyor. Tamamlanınca desen katlanıyor. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -128,6 +132,13 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
   geri bildirim, katlama animasyonu (w35).
 - `renderSatranc` + `satranc`: taş simgeli tahta, dikey/yatay eksen, uzaklık
   karşılaştıran geri bildirim (w36).
+- `renderKod` + `kod` (w37, w38): yön bloklu program şeridi, tek blok silme,
+  çarpışma/taşma vurgusu, `denetim:'simetri'` seçeneğiyle rotanın her hücresinin
+  referansın eşi olma koşulu.
+- `renderHarf` + `harf`: sabit vektör harf/motif geometrileri, görünür eksen ve
+  karar sonrası gerçek katlama (w39).
+- `renderDortlu` + `dortlu`: çift eksenli mozaik, üç eş hedefin kılavuzu,
+  kalem/silgi/geri al ve hatalı hücre düzeltme (w40).
 - `gecisBasla(fn,ms)`: aşama ilerledikten sonra sahne henüz yenilenmemişken
   gelen dokunuşlar bir sonraki aşamanın verisine uygulanıyordu; geçiş boyunca
   girdi kilitleniyor. (Gizli sekmede tarayıcı oyunun zamanlayıcısını kıstığı
