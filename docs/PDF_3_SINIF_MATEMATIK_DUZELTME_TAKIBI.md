@@ -42,6 +42,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w26 | Şekil Kalesi | Çokgenleri kenar sayısına göre sınıflama | Bant kaldırıldı, şekil ekranda sabit ve tam görünür. Çocuk kenarlara tek tek dokunup numaralandırıyor; kapılar ancak bütün kenarlar izlenince açılıyor. Kapılarda ad + kenar sayısı + örnek var. Düzensiz, dönmüş, içbükey çokgenler ve bir açık çizgi ("çokgen değil") kullanılıyor. Yanlış kapıda şekil kaybolmuyor, can gitmiyor. | Uygulamada |
 | w27 | Köşegen Dedektifi | Kare ve dikdörtgende köşegen | Açılış sesi sonucu vermiyor; yalnız "komşu olmayan köşeleri birleştir" diyor. İki köşe seçilince çizgi gerçekten oluşuyor, komşu seçimde çizgi kenar rengine dönüp farkı açıklıyor. İki köşegen çizilince kesişim vurgulanıyor ve uzunluklar ölçülüp karşılaştırılıyor. 3. turda üçgen karşı örneği: çocuk nedeni kendisi seçiyor. | Uygulamada |
 | w28 | Geometri Stüdyosu | Araç kullanarak şekil çizme | Hazır kenarlar kaldırıldı: köşeleri çocuk ızgarada kendi seçiyor. Cetvel kenar uzunluklarını birim cinsinden yazıyor, gönye köşelere konup dik açıyı yeşil/kırmızı halkayla gösteriyor. Karede eş kenar ve dik açı ölçütleri ayrı ayrı denetlenip hangisinin sağlanmadığı söyleniyor (dikdörtgen çeldiricisi dâhil). Son köşe silinebiliyor, bitişte kenar/köşe ve kullanılan araç raporlanıyor. | Uygulamada |
+| w29 | Çevre Avcıları | Çevreyi tahmin etme ve ölçme | Tren/tünel motoru kaldırıldı; gerçek kitap ve kenar boyunca dizilen birimler var. Tahmin aşamasında kenar uzunlukları GÖRÜNMÜYOR, çocuk göz kararı seçiyor ve ceza yok. Sonra her kenara dokunup ölçüyor, birimler boşluksuz diziliyor, en son toplam seçiliyor; tahmin-ölçüm farkı raporlanıyor. | Uygulamada |
+| w30 | İp Dolama Serüveni | Eğri çevreyi ip ile ölçme | Kronometre kadranı ve süre şeridi gitti. Kutu, başlangıç mandalı ve ip var: çocuk parmağıyla çevrede dolaşıyor, iz gerçek açıyla büyüyor, tam tura ulaşmadan ölçüme geçilmiyor. Sonra ip düzleştirilip cetvelde sıfırdan okunuyor; 2. turda iki ip alt alta karşılaştırılıyor. | Uygulamada |
+| w31 | Sıvı Laboratuvarı | Litre tahmini ve ölçme | Yatay süre şeridi kaldırıldı; dereceli sürahi ve musluk var. Önce dereceler kapalıyken çocuk tahmin çizgisini sürüklüyor, sonra dereceler açılıyor ve musluk basılı tutularak seviye yükseliyor. Taşma cezasız, geri boşaltılabiliyor. Son aşamada su 1 litrelik kaplara aktarılarak bağımsız doğrulanıyor; 3. turda dar/geniş kap karşılaştırması var. | Uygulamada |
+| w32 | Mozaik Atölyesi | Şekillerle tasarım ve çevre | Parçalar gerçekten birleşiyor: ortak kenarlar kesik çizgiyle içeride kalıyor ve dokunulamıyor. Çocuk yalnız dış sınırdaki birim kenarları izleyip sayıyor. Ayrı çevrelerin toplamı ile birleşik çevre karşılaştırılıyor (ev 7→5, petek 18→14, roket 14→8); yanlış olan "bireysel çevreleri topla" yolu artık kabul edilmiyor. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -101,6 +105,15 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
   kesişim vurgusu ve uzunluk ölçümü (w27).
 - `renderStudyo` + `studyo`: nokta ızgarasında serbest köşe seçimi, cetvel
   ölçümü, gönye ile dik açı denetimi ve ölçüte göre gerekçeli ret (w28).
+- `renderCevre` + `cevre`: tahmin (uzunluklar gizli) → kenar kenar ölçme →
+  toplam seçimi → tahmin/ölçüm/fark raporu (w29).
+- `renderIp` + `ip`: dairenin çevresinde açı biriktiren gerçek sürükleme,
+  tam tur denetimi, ipin cetvelde düzleştirilip okunması (w30).
+- `renderSivi` + `sivi`: derecesiz kapta tahmin çizgisi, basılı tutulan
+  muslukla yükselen seviye, 1 litrelik kaplarla doğrulama (w31).
+- `renderMozaik` + `mozaik`: parçaların yuvalara yerleştirilmesi,
+  `mozaikKenar()` ile ortak/dış kenar ayrımı, dış sınırın izlenerek sayılması
+  ve ayrı çevre toplamıyla karşılaştırma (w32).
 - `gecisBasla(fn,ms)`: aşama ilerledikten sonra sahne henüz yenilenmemişken
   gelen dokunuşlar bir sonraki aşamanın verisine uygulanıyordu; geçiş boyunca
   girdi kilitleniyor. (Gizli sekmede tarayıcı oyunun zamanlayıcısını kıstığı
