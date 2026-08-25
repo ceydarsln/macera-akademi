@@ -101,6 +101,18 @@ button{font:inherit;color:inherit;cursor:pointer}
 .harfler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
 .harf{min-width:48px;min-height:48px;border:3px solid #fff;border-radius:13px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);font-size:20px;font-weight:950}
 .harf.bitti{visibility:hidden}
+/* tahmin — tren-tünel yok; tahmin, gerçek değer ve fark yan yana */
+.kova-sar{display:flex;align-items:flex-end;justify-content:center;gap:14px;width:100%}
+.kova{position:relative;width:88px;height:94px;border:5px solid #7b8ea1;border-top:0;border-radius:0 0 14px 14px;background:rgba(255,255,255,.6);overflow:hidden}
+.kova i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#7fc6e8,#3f92c4);transition:height .5s}
+.kova b{position:absolute;left:0;right:0;bottom:3px;text-align:center;font-size:11px;font-weight:900;color:#0d3b55}
+.karsilastir{width:min(320px,94%);display:flex;flex-direction:column;gap:4px}
+.karsilastir div{display:flex;justify-content:space-between;background:#fff;border:2px solid var(--line);border-radius:10px;padding:5px 9px;font-size:13px;font-weight:900}
+.olcek{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:min(330px,96%);height:48px;min-height:48px;background:transparent;margin:0}
+.olcek::-webkit-slider-runnable-track{height:14px;border-radius:8px;background:#dbe7ef;border:2px solid #a8bfd0}
+.olcek::-moz-range-track{height:14px;border-radius:8px;background:#dbe7ef;border:2px solid #a8bfd0}
+.olcek::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;margin-top:-14px;border-radius:50%;background:#2c7cb6;border:4px solid #fff;box-shadow:0 2px 6px rgba(20,56,82,.35)}
+.olcek::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#2c7cb6;border:4px solid #fff}
 /* çetele — beşinci çizgi dördünü keser */
 .cetele-tablo{width:min(330px,96%);display:flex;flex-direction:column;gap:6px}
 .cetele-satir{display:flex;align-items:center;gap:8px;min-height:52px;border:3px solid var(--line);border-radius:13px;background:#fff;padding:6px 9px;text-align:left}
@@ -642,10 +654,49 @@ function ceteleCiz(r){
   feedback('İşlendi');gecisBasla(()=>ceteleCiz(r),FAST?30:460)})}
 function renderCetele(r){state.ix=0;state.say=r.satirlar.map(()=>0);state.not='';state.sonSatir=null;ceteleCiz(r)}
 
+/* ===== TAHMIN: tahmin ekrandaki bilgi metnine dayanır; tahmin, gerçek değer
+   ve fark birlikte gösterilip karşılaştırma sorulur. ===== */
+function tahminCiz(r){
+ const i=state.ix||0,d=r.durumlar[i];if(!d)return;
+ const t=state.tahmin==null?Math.round(d.enCokOlcek/2):state.tahmin;
+ const oran=v=>Math.min(100,v/d.enCokOlcek*100);
+ $('#stage').innerHTML=sahneHtml(r)+
+  (r.bilgi?`<div class="metin-kart"><div class="baslik">${esc(r.bilgiBaslik||'Bilgi metni')}</div>${esc(r.bilgi)}</div>`:'')+
+  `<div class="konus-balon">${esc(d.t)}</div>`+
+  `<div class="kova-sar">`+
+   `<div class="stack"><div class="kova"><i style="height:${oran(t)}%"></i><b>tahminim</b></div><div class="sahne-not">${t} ${esc(d.birim)}</div></div>`+
+   (state.faz===1?`<div class="stack"><div class="kova"><i style="height:${oran(d.gercek)}%;background:linear-gradient(#f0b0a0,#cd463d)"></i><b>gerçek</b></div><div class="sahne-not">${d.gercek} ${esc(d.birim)}</div></div>`:'')+
+  `</div>`+
+  (state.faz===1?`<div class="karsilastir"><div><span>Tahminin</span><span>${t} ${esc(d.birim)}</span></div>`+
+    `<div><span>Gerçek</span><span>${d.gercek} ${esc(d.birim)}</span></div>`+
+    `<div><span>Fark</span><span>${Math.abs(d.gercek-t)} ${esc(d.birim)}</span></div></div>`:'')+
+  ilerleme(r.durumlar.length,i)+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ if(state.faz===0){
+  $('#task').innerHTML=`<div class="caption soru">${esc(d.soru)}</div>`+
+   `<input class="olcek" type="range" min="0" max="${d.enCokOlcek}" step="${d.adim||1}" value="${t}" id="tahminAlan" aria-label="Tahmin ölçeri">`+
+   `<button class="choice" id="tahminOk">Tahminim bu</button>`+
+   `<div class="hint">Tahminini yukarıdaki bilgi metnine dayandır.</div>`;
+  const al=$('#tahminAlan');
+  al.oninput=()=>{state.tahmin=+al.value;tahminCiz(r);const y=$('#tahminAlan');if(y)y.focus()};
+  $('#tahminOk').onclick=()=>{if(locked)return;state.tahmin=t;state.faz=1;
+   state.not='Şimdi gerçek değerle karşılaştır.';tahminCiz(r)};
+  return}
+ $('#task').innerHTML=`<div class="caption soru">${esc(d.yorumSoru)}</div>`+
+  `<div class="choices">${d.secenekler.map((c,j)=>`<button class="choice" data-tsec="${j}">${esc(c.label)}</button>`).join('')}</div>`;
+ $$('[data-tsec]').forEach(b=>b.onclick=()=>{
+  if(locked||state.gecis)return;
+  const c=d.secenekler[+b.dataset.tsec];
+  if(!c.correct)return wrong(c.hint||'Tabloya yeniden bak.');
+  state.ix=i+1;state.faz=0;state.tahmin=null;state.not=d.neden||'';
+  if(state.ix>=r.durumlar.length)return good();
+  feedback('Doğru');gecisBasla(()=>tahminCiz(r),FAST?30:600)})}
+function renderTahmin(r){state.ix=0;state.faz=0;state.tahmin=null;state.not='';tahminCiz(r)}
+
 function renderRound(){const r=round();if(!r)return;
  const fn={kanit:renderKanit,karar:renderKarar,sinifla:renderSinif,sira:renderSira,esle:renderEsle,
   yaz:renderYaz,duzelt:renderDuzelt,dinle:renderDinle,konus:renderKonus,dikte:renderDikte,
-  yonerge:renderYonerge,cetele:renderCetele}[r.kind];
+  yonerge:renderYonerge,cetele:renderCetele,tahmin:renderTahmin}[r.kind];
  (fn||renderKarar)(r)}
 
 const GAMES={};
@@ -1272,6 +1323,310 @@ GAMES.z16={title:'Kahramanlık Diktesi',theme:'muze',
   ipucuMetin:'…',
   ornekCevap:'Törende bayrağı direğe çekerken hep birlikte İstiklal Marşı söyledik.',
   result:'Doğru yazdığın sözcüğü kendi cümlende kullandın.'}
+]};
+
+/* ---- z17 Kaynak Ayırma (bant kaldırıldı; tartışmalı örnek savunuluyor) ---- */
+GAMES.z17={title:'Kaynak Ayırma',theme:'lab',
+ finish:'Kaynakları yenilenebilirliğine göre ayırdın, tartışmalı örnekleri ölçütle savundun ve kararını gerekçeyle yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu kaynak yenilenebilir mi?',sahne:SAHNE.kalem,
+  soru:'Bu enerji kaynağı hangi gruba girer?',
+  kutular:['YENİLENEBİLİR','YENİLENEMEZ'],
+  ipucu:'Ölçüt: kullandıkça tükenir mi, kendini yeniler mi?',
+  kartlar:[
+   {t:'Güneş paneliyle üretilen elektrik',dogru:0,neden:'Güneş ışığı tükenmez, her gün yeniden gelir.'},
+   {t:'Kömür ocağından çıkarılan kömür',dogru:1,neden:'Kömür milyonlarca yılda oluşur; çıkarıldıkça azalır.'},
+   {t:'Rüzgâr türbinlerinin ürettiği enerji',dogru:0,neden:'Rüzgâr sürekli yeniden oluşur.'},
+   {t:'Yer altından çıkarılan petrol',dogru:1,neden:'Petrol sınırlıdır ve yerine yenisi gelmez.'},
+   {t:'Barajda akan suyun döndürdüğü türbin',dogru:0,neden:'Su döngüsü suyu sürekli yeniler.'},
+   {t:'Doğal gaz yatakları',dogru:1,neden:'Doğal gaz da tükenen bir yer altı kaynağıdır.'}]},
+ {kind:'karar',prompt:'Tartışmalı bir örnek: ormanı hangi kutuya koyarsın?',sahne:SAHNE.kalem,
+  durum:'Orman kesildikten sonra yeniden dikilebilir ve büyür. Ama kesim, ağaçların büyümesinden hızlı olursa orman yok olur.',
+  soru:'Orman için hangisi doğrudur?',
+  secenekler:[
+   {label:'Yenilenebilir ama tükenebilir bir kaynaktır',correct:true},
+   {label:'Tamamen yenilenebilirdir, tükenmez',hint:'Metin, hızlı kesimin ormanı yok edebileceğini söylüyor.'},
+   {label:'Yenilenemez bir kaynaktır',hint:'Metin, dikildiğinde yeniden büyüyebildiğini söylüyor.'}],
+  araSoz:'Doğru. Peki ölçütün ne oldu?',
+  neden:{soru:'Ormanı "tükenebilir" yapan nedir?',secenekler:[
+   {label:'Kullanım hızının yenilenme hızından fazla olması',correct:true},
+   {label:'Ağaçların uzun ömürlü olması',hint:'Ömür değil, kullanım ile yenilenme hızının karşılaştırması ölçüt.'},
+   {label:'Ormanın büyüklüğü',hint:'Büyüklük tek başına belirleyici değil.'}]},
+  result:'Bir kaynağın yenilenebilirliği, kullanım hızıyla yenilenme hızının karşılaştırmasıdır.'},
+ {kind:'yaz',prompt:'Kararını gerekçeyle yaz.',sahne:SAHNE.kalem,
+  gorev:'Bir enerji kaynağı seç, hangi gruba koyduğunu ve nedenini bir cümleyle yaz.',
+  enAzKelime:10,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… kaynağını … grubuna koyarım çünkü …',
+  yasak:['Güneş yenilenebilir çünkü tükenmez.'],
+  ornekCevap:'Rüzgâr enerjisini yenilenebilir grubuna koyarım çünkü rüzgâr her gün yeniden eser ve tükenmez.',
+  result:'Sınıflandırma kararını ölçütünle birlikte yazdın.'}
+]};
+
+/* ---- z18 Afet Robotu (yön okları YAZILI yönerge kartına dönüştü) ---- */
+GAMES.z18={title:'Afet Robotu',theme:'lab',
+ finish:'Yönergeleri sözcüklerle sıraladın, hatalı bir programdaki eksiği buldun ve yönergeyi kendi cümlelerinle yazdın.',rounds:[
+ {kind:'sira',prompt:'Yönerge kartlarını doğru sırayla diz.',sahne:SAHNE.kalem,
+  gorev:'Robot depoya gidip afet çantasını alacak. Yönergeleri sırayla diz; robot okurken uygulayacak.',
+  kartlar:[
+   {t:'Kapıdan çık ve koridora gir.'},
+   {t:'Koridorda üç adım ileri git.'},
+   {t:'Sağa dön ve depo kapısını aç.'},
+   {t:'Rafın alt gözünden afet çantasını al.'},
+   {t:'Geldiğin yoldan geri dön.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Robot önce nereden çıkmalı?','Koridora girdi; şimdi ne yapmalı?',
+   'İlerledi; depoya nasıl girecek?','Depoya girdi; ne alacak?','Çantayı aldı; ne yapmalı?'],
+  ipucu:'Yönerge adım adım ve eksiksiz olmalı.',
+  result:'Ayrıntılı yönerge, adımları sırayla ve eksiksiz anlatır.'},
+ {kind:'karar',prompt:'Bu programda ne eksik?',sahne:SAHNE.kalem,
+  durum:'Bir öğrenci şu yönergeyi yazdı:\n1. Koridora gir.\n2. Üç adım ileri git.\n3. Rafın alt gözünden çantayı al.\nRobot rafa ulaşamadı.',
+  soru:'Robot neden ulaşamadı?',
+  secenekler:[
+   {label:'Depoya girme adımı yazılmamış',correct:true},
+   {label:'Adım sayısı fazla yazılmış',hint:'Adım sayısı değil, bir adımın kendisi eksik.'},
+   {label:'Çantanın yeri yazılmamış',hint:'Rafın alt gözü yazılmış.'}],
+  araSoz:'Doğru. Peki iyi bir yönergeyi ne yapar?',
+  neden:{soru:'Ayrıntılı bir yönergede ne bulunmalı?',secenekler:[
+   {label:'Hiçbir adım atlanmadan, sırasıyla hepsi',correct:true},
+   {label:'Olabildiğince az cümle',hint:'Kısalık, eksik yönergeyi doğru yapmaz.'},
+   {label:'Renkli ve süslü anlatım',hint:'Yönergede süs değil, açıklık gerekir.'}]},
+  result:'Bir adım atlanırsa yönergenin tamamı işlemez.'},
+ {kind:'yonerge',prompt:'Yönergeyi kendi cümlelerinle yaz.',sahne:SAHNE.kalem,
+  gorev:'Robotun sınıftan çıkıp bahçedeki toplanma alanına gitmesi için yönergeyi adım adım sen yaz.',
+  adimlar:[
+   {soru:'1. adım: Robot sınıftan nasıl çıkacak?',
+    olcut:'"kapı" sözcüğünü kullan ve bir eylem yaz',desen:'kapı',
+    ipucuMetin:'Sınıfın kapısından çık.',ornekCevap:'Sınıfın kapısından koridora çık.',
+    hint:'Bu adımda kapıdan çıkma anlatılmalı.',neden:'İlk adım yerinde.'},
+   {soru:'2. adım: Merdiveni nasıl inecek?',
+    olcut:'"merdiven" sözcüğünü kullan',desen:'merdiven',
+    ipucuMetin:'Merdivenden aşağı in.',ornekCevap:'Merdivenden tutunarak aşağı in.',
+    hint:'Bu adımda merdiven geçmeli.',neden:'İkinci adım yerinde.'},
+   {soru:'3. adım: Bahçede nereye gidecek?',
+    olcut:'"toplanma" sözcüğünü kullan',desen:'toplanma',
+    ipucuMetin:'Bahçedeki toplanma alanına git.',ornekCevap:'Bahçedeki toplanma alanına yürüyerek git.',
+    hint:'Bu adımda toplanma alanı geçmeli.',neden:'Yönergen tamamlandı.'}],
+  result:'Ayrıntılı yönergeyi kendi cümlelerinle, adım adım yazdın.'}
+]};
+
+/* ---- z19 Eş Anlam Ormanı (hafıza kartı yerine bağlamda doğrulama) ---- */
+GAMES.z19={title:'Eş Anlam Ormanı',theme:'doga',
+ finish:'Eş anlamlı çiftleri eşledin, her bağlamda değiştirilemeyeceklerini gördün ve iki üyeyle ayrı cümleler yazdın.',rounds:[
+ {kind:'esle',prompt:'Her sözcüğü eş anlamlısıyla eşle.',sahne:SAHNE.basamak,sesliSoyle:true,
+  soru:'Önce alttan bir sözcük seç, sonra eş anlamlısına dokun.',
+  ipucu:'Eş anlamlı sözcükler aynı anlamı taşır, yazılışları farklıdır.',
+  yuvalar:[
+   {hedef:'konuk',dogru:0,neden:'İkisi de eve gelen kişiyi anlatır.',hint:'Bu sözcük eve gelen kişiyle ilgili.'},
+   {hedef:'anı',dogru:1,neden:'İkisi de geçmişte yaşanan olayı anlatır.',hint:'Bu sözcük geçmişte kalan olayla ilgili.'},
+   {hedef:'yanıt',dogru:2,neden:'İkisi de soruya verilen karşılığı anlatır.',hint:'Bu sözcük soruya verilenle ilgili.'},
+   {hedef:'öykü',dogru:3,neden:'İkisi de anlatılan kısa olayı gösterir.',hint:'Bu sözcük anlatılan olayla ilgili.'}],
+  etiketler:[{t:'misafir'},{t:'hatıra'},{t:'cevap'},{t:'hikâye'}]},
+ {kind:'karar',prompt:'Her yerde değiştirilebilir mi?',sahne:SAHNE.basamak,
+  durum:'"Kara" ve "siyah" eş anlamlı sayılır. Ama şu iki cümleye bak:\nA) "Kara bulutlar toplandı." → "Siyah bulutlar toplandı." olur.\nB) "Kara haber çabuk duyulur." → "Siyah haber çabuk duyulur." olmaz.',
+  soru:'Bundan ne çıkar?',
+  secenekler:[
+   {label:'Eş anlamlılar her cümlede birbirinin yerine geçmez',correct:true},
+   {label:'"Kara" ile "siyah" eş anlamlı değildir',hint:'A cümlesinde birbirinin yerine geçebiliyorlar.'},
+   {label:'B cümlesi yanlış kurulmuştur',hint:'B doğru bir cümle; sorun sözcüğün değiştirilememesi.'}],
+  araSoz:'Doğru. Peki neden değişmiyor?',
+  neden:{soru:'B cümlesinde "kara" ne anlatıyor?',secenekler:[
+   {label:'Rengi değil, kötülüğü',correct:true},
+   {label:'Haberin rengini',hint:'Haberin rengi olmaz; sözcük mecaz anlamda.'},
+   {label:'Haberin hızını',hint:'Hızı "çabuk" sözcüğü anlatıyor.'}]},
+  result:'Eş anlamlılık bağlama bağlıdır; mecaz anlamda sözcük değiştirilemez.'},
+ {kind:'yaz',prompt:'Bir çiftin iki üyesiyle ayrı cümleler yaz.',sahne:SAHNE.basamak,
+  gorev:'Bir eş anlamlı çift seç ("konuk-misafir", "yanıt-cevap", "öykü-hikâye") ve her biriyle bir cümle yaz.',
+  enAzKelime:10,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'…  …',
+  yasak:['Kara bulutlar toplandı.'],
+  ornekCevap:'Akşam yemeğine gelen konuklarımıza çorba ikram ettik. Kapıyı çalan misafirleri kardeşim karşıladı.',
+  result:'Aynı anlamı iki farklı sözcükle kendi cümlelerinde kullandın.'}
+]};
+
+/* ---- z20 Konuşma Çizgisi (görev metni işaretin yerini söylemez) ---- */
+GAMES.z20={title:'Doğa Güncesi',theme:'doga',
+ finish:'Konuşma çizgisi, tırnak ve üç noktayı anlamdan yola çıkarak koydun, ikisinin farkını gördün ve kendi gözlemini yazdın.',rounds:[
+ {kind:'duzelt',prompt:'Güncedeki konuşmayı doğru işaretlerle yaz.',sahne:SAHNE.kalem,
+  gorev:'Doğa güncesine yazdığın konuşma işaretsiz kalmış. Anlamına uygun işaretleri koy. Sözcükleri değiştirme.',
+  hatali:'dedem ormana bakıp şöyle dedi bu ağaçlar benden yaşlı',
+  denetim:[
+   {ad:'Cümleyi büyük harfle başlat',desen:'^[A-ZÇĞİÖŞÜ]'},
+   {ad:'Konuşmadan önce iki nokta koy',desen:':'},
+   {ad:'Konuşmayı konuşma çizgisiyle başlat',desen:'[-–—]\\s*[A-ZÇĞİÖŞÜ]'},
+   {ad:'Konuşmayı noktayla bitir',desen:'\\.\\s*$'}],
+  sozcukKorunsun:true,
+  ornekCevap:'Dedem ormana bakıp şöyle dedi:\n— Bu ağaçlar benden yaşlı.',
+  result:'Konuşma çizgisi, birinin söylediği sözü satır başında gösterir.'},
+ {kind:'karar',prompt:'Konuşma çizgisi mi, tırnak mı?',sahne:SAHNE.kalem,
+  durum:'A) Dedem: — Bu ağaçlar benden yaşlı.\nB) Dedem, "Bu ağaçlar benden yaşlı." dedi.',
+  soru:'Bu iki yazım için ne söylenebilir?',
+  secenekler:[
+   {label:'İkisi de doğru; A satır başında, B cümle içinde kullanılır',correct:true},
+   {label:'Yalnız A doğrudur',hint:'Tırnak içinde aktarma da doğru bir yoldur.'},
+   {label:'Yalnız B doğrudur',hint:'Konuşma çizgisi de doğru bir yoldur.'}],
+  araSoz:'Doğru. Peki üç nokta ne zaman kullanılır?',
+  neden:{soru:'"Bir baktım ki…" cümlesindeki üç nokta ne anlatır?',secenekler:[
+   {label:'Sözün tamamlanmadığını',correct:true},
+   {label:'Cümlenin soru olduğunu',hint:'Soru için soru işareti kullanılır.'},
+   {label:'Sesin yükseldiğini',hint:'Ses yükselmesi ünlemle gösterilir.'}]},
+  result:'Konuşma çizgisi satır başında, tırnak cümle içinde aktarır; üç nokta sözün sürdüğünü gösterir.'},
+ {kind:'yaz',prompt:'Kendi gözlemini konuşmayla yaz.',sahne:SAHNE.kalem,
+  gorev:'Doğada gördüğün bir şeyi anlat ve içinde birinin söylediği bir sözü aktar. İşaretleri sen koy.',
+  enAzKelime:12,buyukHarf:true,
+  denetim:[
+   {ad:'Konuşmayı aktarmak için tırnak ya da konuşma çizgisi kullan',desen:'["“”]|[-–—]\\s*[A-ZÇĞİÖŞÜ]'},
+   {ad:'Cümleyi noktayla bitir',desen:'\\.\\s*$'}],
+  ipucuMetin:'Bahçede … Annem, "…" dedi.',
+  yasak:['Dedem, "Bu ağaçlar benden yaşlı." dedi.'],
+  ornekCevap:'Sabah bahçede dalın ucunda kırmızı göğüslü küçük bir kuş gördüm. Annem yanıma gelip, "Bu bir ispinozdur." dedi.',
+  result:'Gözlemini yazdın ve aktardığın sözü doğru işaretlerle gösterdin.'}
+]};
+
+/* ---- z21 Su Döngüsü (roket kaldırıldı; gerçek döngü şeması) ---- */
+GAMES.z21={title:'Su Döngüsü',theme:'doga',
+ finish:'Su döngüsünü sıraladın, kar ve yer altı suyu ile genişlettin ve döngüyü kendi cümlelerinle anlattın.',rounds:[
+ {kind:'sira',prompt:'Döngüyü baştan sona sırala.',sahne:SAHNE.basamak,
+  gorev:'Su döngüsünün adımlarını sırayla diz.',
+  kartlar:[
+   {t:'Güneş denizdeki suyu ısıtır.'},
+   {t:'Isınan su buharlaşıp yükselir.'},
+   {t:'Yükselen buhar soğuyup bulutu oluşturur.'},
+   {t:'Bulut ağırlaşınca yağmur yağar.'},
+   {t:'Yağmur suyu akarsularla denize döner.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Döngüyü başlatan nedir?','Su ısındı; ne olur?','Buhar yükseldi; yukarıda ne olur?',
+   'Bulut oluştu; sonra ne olur?','Yağmur yağdı; su nereye gider?'],
+  ipucu:'Döngü sona ermez, başa döner.',
+  result:'Isınma, buharlaşma, yoğuşma, yağış ve akış: döngü başa döner.'},
+ {kind:'sira',prompt:'Kar ve yer altı suyuyla döngü.',sahne:SAHNE.basamak,
+  gorev:'Bu kez kışın olan döngüyü sırala. Aralarda bir çeldirici var.',
+  kartlar:[
+   {t:'Yükselen buhar çok soğuk havada kar tanesine dönüşür.'},
+   {t:'Kar yere yağar ve birikir.'},
+   {t:'Havalar ısınınca kar erir.'},
+   {t:'Eriyen su toprağa sızıp yer altı suyuna karışır.'},
+   {t:'Yer altı suyu kaynaklardan yeniden yüzeye çıkar.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Soğuk havada buhara ne olur?','Kar taneleri oluştu; sonra ne olur?',
+   'Kar birikti; havalar ısınınca ne olur?','Kar eridi; su nereye gider?','Yer altına indi; nasıl geri döner?'],
+  ipucu:'Suyun yolu yer üstünde bitmez.',
+  result:'Kar, erime ve yer altı suyu da aynı döngünün parçasıdır.'},
+ {kind:'konus',prompt:'Döngüyü kendi cümlelerinle anlat.',sahne:SAHNE.basamak,
+  gorev:'Su döngüsünü üç adımda kendi cümlelerinle anlat.',
+  ornek:'Örnek: Güneş denizi ısıtır ve su buharlaşır. Buhar yükselip bulut olur. Bulut ağırlaşınca yağmur yağar ve su denize döner.',
+  olcutler:['Üç adım anlattım.','Adımları doğru sırayla söyledim.','Kendi cümlelerimi kullandım.'],
+  result:'Döngüyü kendi cümlelerinle anlattın.'}
+]};
+
+/* ---- z22 Yarım Metin (önceki bölüm panelde; tamamlama kanıta bağlı) ---- */
+GAMES.z22={title:'Yarım Metin Atölyesi',theme:'masa',
+ finish:'Yarım metni tutarlılık ölçütüyle tamamladın, dayandığın ipucunu gösterdin ve devamını kendin yazdın.',rounds:[
+ {kind:'karar',prompt:'Metnin devamı hangisi olabilir?',sahne:SAHNE.masa,
+  durum:'Önceki bölüm: "Nehir, sabah erkenden bisikletine bindi. Sırt çantasında yalnız bir matara su ve bir defter vardı. Köyün çıkışındaki tepeye tırmanmak istiyordu."',
+  soru:'Metnin devamı hangisi olabilir?',
+  secenekler:[
+   {label:'Tepenin yolu dikleştikçe pedal çevirmek zorlaştı.',correct:true},
+   {label:'Nehir, denizde yüzmeye başladı.',hint:'Önceki bölümde bisiklet ve tepe var; deniz konusuyla bağdaşmıyor.'},
+   {label:'Nehir, akşam yemeğinde ödevini yaptı.',hint:'Zaman sabah; ayrıca konu tepeye tırmanmak.'}],
+  ipucu:'Kişi, zaman ve konu tutarlı olmalı.',
+  result:'Devam, önceki bölümdeki kişi, zaman ve konuyla tutarlı olmalıdır.'},
+ {kind:'kanit',prompt:'Dayandığın ipucunu işaretle, sonra seç.',sahne:SAHNE.masa,
+  baslik:'Önceki bölüm',
+  metin:[['Nehir tepenin yarısına geldiğinde ',{t:'matarası boşalmıştı',dogru:true},'. ',
+    {t:'Güneş tam tepedeydi',dogru:true},'. Cebinde ',{t:'bir kalem'},' ve ',{t:'katlanmış bir kâğıt'},' vardı.']],
+  gerekKanit:2,soru:'Devamında en olası ne olur?',
+  secenekler:[
+   {label:'Nehir susuzluktan zorlanır ve gölge arar',correct:true},
+   {label:'Nehir defterine resim çizmeye başlar',hint:'Kalem ve kâğıt var ama işaretlediğin kanıt susuzluk ve sıcak.'},
+   {label:'Nehir eve dönüp uyur',hint:'Metinde eve dönmeyi gerektiren bir kanıt yok.'}],
+  result:'Boş matara ve tepedeki güneş, susuzluğu olası kılıyor: tahmin kanıta dayanıyor.'},
+ {kind:'yaz',prompt:'Devamını kendin yaz.',sahne:SAHNE.masa,
+  gorev:'Nehir tepeye vardı. Metnin devamını iki cümleyle sen yaz; kişi, zaman ve konu tutarlı olsun.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'Nehir tepeye vardığında …',
+  yasak:['Tepenin yolu dikleştikçe pedal çevirmek zorlaştı.'],
+  ornekCevap:'Nehir tepeye vardığında bisikletini bir çamın gölgesine dayadı. Defterini açıp aşağıda uzanan köyü çizmeye başladı.',
+  result:'Yarım metni tutarlı biçimde kendi cümlelerinle tamamladın.'}
+]};
+
+/* ---- z23 Tasarruf Ölçer (tren kaldırıldı; tahmin bilgi metnine dayanıyor) ---- */
+GAMES.z23={title:'Tasarruf Ölçer',theme:'lab',
+ finish:'Tahminini bilgi metnine dayandırdın, iki kullanımı karşılaştırdın ve tasarruf öneriniyazdın.',rounds:[
+ {kind:'tahmin',prompt:'Bilgi metnine bakarak tahmin et.',sahne:SAHNE.kalem,
+  bilgiBaslik:'Bilgi metni',
+  bilgi:'Açık bırakılan bir musluk dakikada yaklaşık 6 litre su akıtır. Dişlerini fırçalamak ortalama 2 dakika sürer.',
+  durumlar:[
+   {t:'Dişlerini fırçalarken musluğu 2 dakika açık bırakan biri ne kadar su harcar?',
+    birim:'litre',gercek:12,enCokOlcek:20,adim:1,
+    soru:'Sence kaç litre su akar?',
+    yorumSoru:'Fırçalamak için 1 litre yeterken 12 litre akması ne demek?',
+    secenekler:[
+     {label:'Suyun çok büyük bölümü boşa gidiyor',correct:true},
+     {label:'Tam gerektiği kadar su akıyor',hint:'Metne göre 1 litre yeterli; 12 litre akıyor.'},
+     {label:'Su yetersiz kalıyor',hint:'Gerekenden fazlası akıyor.'}],
+    neden:'Bilgi metnindeki iki sayıyı çarparak sonuca ulaştın: 6 × 2 = 12.'}]},
+ {kind:'tahmin',prompt:'İki kullanımı karşılaştır.',sahne:SAHNE.kalem,
+  bilgiBaslik:'Bilgi metni',
+  bilgi:'Duş almak ortalama 5 dakika sürer ve duş başlığı dakikada 8 litre su akıtır. Küvet doldurmak ise yaklaşık 150 litre su gerektirir.',
+  durumlar:[
+   {t:'Beş dakikalık bir duş kaç litre su harcar?',
+    birim:'litre',gercek:40,enCokOlcek:160,adim:5,
+    soru:'Sence kaç litre?',
+    yorumSoru:'Küvet 150 litre. Duş ile küvet arasındaki fark ne gösteriyor?',
+    secenekler:[
+     {label:'Duş almak küvetten çok daha az su harcar',correct:true},
+     {label:'İkisi de aynı miktarda su harcar',hint:'40 ile 150 arasında büyük fark var.'},
+     {label:'Küvet daha az su harcar',hint:'Küvet 150, duş 40 litre.'}],
+    neden:'Metindeki sayılarla hesapladın: 8 × 5 = 40 litre.'}]},
+ {kind:'yaz',prompt:'Tasarruf önerini kalıpla yaz.',sahne:SAHNE.kalem,
+  gorev:'Bilgi metinlerine dayanarak bir tasarruf önerisi yaz. "Metne göre ... yaparsak ... litre tasarruf ederiz" kalıbını kullan.',
+  enAzKelime:12,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'"metne göre" ifadesini kullan',desen:'metne göre',bayrak:'i'},
+   {ad:'Bir sayı yaz (kaç litre)',desen:'\\d'},
+   {ad:'"litre" sözcüğünü kullan',desen:'litre',bayrak:'i'}],
+  ipucuMetin:'Metne göre … yaparsak … litre tasarruf ederiz.',
+  ornekCevap:'Metne göre küvet yerine duş alırsak yaklaşık 110 litre su tasarruf ederiz.',
+  result:'Öneriyi metindeki sayıya dayandırdın.'}
+]};
+
+/* ---- z24 Doğa Dergisi (plan bölümleri taslak sayfadaki yerine oturuyor) ---- */
+GAMES.z24={title:'Doğa Dergisi Masası',theme:'masa',
+ finish:'Yazı planının bölümlerini yerlerine yerleştirdin, amaca göre planın değiştiğini gördün ve kendi planını yazdın.',rounds:[
+ {kind:'esle',prompt:'Her bölümü taslak sayfadaki yerine koy.',sahne:SAHNE.masa,
+  soru:'Önce alttan bir içerik seç, sonra ait olduğu bölüme dokun.',
+  ipucu:'Yazı planı: başlık, giriş, gelişme, sonuç.',
+  yuvalar:[
+   {hedef:'BAŞLIK',dogru:0,neden:'Başlık konuyu kısaca duyurur.',hint:'Bu bölüm en kısa olanıdır.'},
+   {hedef:'GİRİŞ',dogru:1,neden:'Giriş konuyu tanıtır ve merak uyandırır.',hint:'Bu bölüm konuyu açar.'},
+   {hedef:'GELİŞME',dogru:2,neden:'Gelişme bilgileri ve örnekleri verir.',hint:'Bu bölüm ayrıntıları taşır.'},
+   {hedef:'SONUÇ',dogru:3,neden:'Sonuç yazıyı toparlar ve bir çağrı yapar.',hint:'Bu bölüm yazıyı bitirir.'}],
+  etiketler:[
+   {t:'Kuşların Sessiz Yolculuğu'},
+   {t:'Her sonbaharda gökyüzünde uzun bir "V" görürüz. Peki bu kuşlar nereye gider?'},
+   {t:'Leylekler binlerce kilometre uçar; yönlerini güneşe ve yıldızlara göre bulurlar.'},
+   {t:'Göç yollarını korumak, bu yolculuğun sürmesini sağlar.'}]},
+ {kind:'karar',prompt:'Amaç değişince plan da değişir.',sahne:SAHNE.masa,
+  durum:'Aynı konuyu iki türlü yazabilirsin:\nA) Bilgilendirici yazı planı: başlık, giriş, gelişme, sonuç.\nB) Öykü planı: serim, düğüm, çözüm.',
+  soru:'Kuşların göçünü bilimsel bilgilerle anlatacaksan hangi planı seçersin?',
+  secenekler:[
+   {label:'A · bilgilendirici yazı planı',correct:true},
+   {label:'B · öykü planı',hint:'Öykü planı olay anlatmak içindir; burada bilgi veriyorsun.'}],
+  araSoz:'Doğru. Peki planı ne belirler?',
+  neden:{soru:'Yazı planını ne belirler?',secenekler:[
+   {label:'Yazının amacı ve türü',correct:true},
+   {label:'Yazının uzunluğu',hint:'Uzunluk planı belirlemez.'},
+   {label:'Yazarın yaşı',hint:'Plan, amaca göre seçilir.'}]},
+  result:'Plan, yazının amacına ve türüne göre seçilir.'},
+ {kind:'yaz',prompt:'Kendi yazma planını yaz.',sahne:SAHNE.masa,
+  gorev:'"Okulumuzun bahçesindeki ağaçlar" konusu için bilgilendirici bir yazı planı yaz: başlık, giriş, gelişme ve sonuçta ne anlatacağını dört maddede belirt.',
+  enAzKelime:16,buyukHarf:true,
+  denetim:[
+   {ad:'"giriş" bölümünü belirt',desen:'giriş',bayrak:'i'},
+   {ad:'"gelişme" bölümünü belirt',desen:'gelişme',bayrak:'i'},
+   {ad:'"sonuç" bölümünü belirt',desen:'sonuç',bayrak:'i'}],
+  ipucuMetin:'Başlık: …\nGiriş: …\nGelişme: …\nSonuç: …',
+  ornekCevap:'Başlık: Bahçemizin Gölgesi. Giriş: Bahçemizde kaç ağaç olduğunu anlatacağım. Gelişme: Ağaç türlerini ve gölge alanını yazacağım. Sonuç: Ağaçlara nasıl bakmamız gerektiğini söyleyeceğim.',
+  result:'Amacına uygun bir yazma planını dört bölümde kurdun.'}
 ]};
 
 /* ===== açılış ===== */
