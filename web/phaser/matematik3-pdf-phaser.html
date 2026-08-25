@@ -42,6 +42,29 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .beanstalk{display:flex;flex-direction:column-reverse;align-items:center;gap:2px}
 .beanstalk .leaf{padding:6px 13px;border-radius:14px;background:#8ed07f;border:2px solid #4f8d43;font-weight:1000;font-size:19px}
 .beanstalk .stem{width:7px;height:15px;background:#4f8d43;display:block}
+.share-row{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;flex-wrap:nowrap}
+.plate{flex:0 0 auto;width:88px;min-height:78px;border-radius:50%/28%;background:#fdfdfb;border:3px solid #c9bfa4;padding:8px;text-align:center;font-weight:1000;font-size:17px}
+.plate div{font-size:20px;line-height:1.15;word-break:break-all}
+.basket{flex:0 0 auto;text-align:center;font-size:30px}.basket-items{font-size:17px;max-width:112px;line-height:1.1;word-break:break-all}
+.basket small{display:block;font-size:12px;font-weight:900}
+.lab-card{display:flex;align-items:center;justify-content:center;gap:11px;flex-wrap:wrap;background:#fff;border:3px solid #b9cfe0;border-radius:20px;padding:13px 15px}
+.lab-card .term{font-size:22px;font-weight:1000;display:flex;align-items:center;gap:7px}
+.lab-card .plus{font-size:26px;font-weight:1000;color:#4a7fa8}
+.dot-pairs{display:inline-flex;gap:3px;flex-wrap:wrap;max-width:96px}
+.dot-pairs .pair{width:22px;height:11px;border-radius:6px;background:#5fb0e0;border:2px solid #2d78ab}
+.dot-pairs .odd{width:11px;height:11px;border-radius:50%;background:#e8636f;border:2px solid #a83741}
+.tower-row{display:flex;align-items:flex-end;justify-content:center;gap:9px;flex-wrap:wrap}
+.tower{text-align:center;font-weight:1000}.tower b{display:block;font-size:18px}
+.tower small{font-size:11px;color:#52708b}
+.tower .blocks{display:flex;flex-direction:column-reverse;gap:2px;align-items:center;min-height:24px}
+.tower .block{width:21px;height:13px;background:#f2b83f;border:2px solid #a5751a;border-radius:3px}
+.tower.ghost .blocks{min-height:40px;border:3px dashed #9fb6c6;border-radius:8px;width:29px}
+.jar-row{display:flex;align-items:flex-end;justify-content:center;gap:16px}
+.jar{border:4px solid #9ec2d8;border-top-width:8px;border-radius:8px 8px 20px 20px;background:rgba(255,255,255,.62);padding:7px;text-align:center}
+.jar.small{width:86px;min-height:96px}.jar.big{width:132px;min-height:152px}
+.jar small{display:block;font-size:11px;font-weight:1000;margin-top:4px}
+.jar .marbles{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;align-content:flex-end;min-height:64px}
+.jar .marble{width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 32% 30%,#bfe6ff,#4f9ad6)}
 .machine{width:min(330px,96%);height:155px;border-radius:30px;background:#ef6c9a;border:8px solid #a63c68;position:relative;display:flex;align-items:center;justify-content:center}.machine:before{content:"";position:absolute;left:-30px;top:58px;width:42px;height:42px;border-radius:50%;background:#7ac1d8}.monster-face{font-size:74px}.machine-number{position:absolute;top:9px;right:16px;background:#fff4ce;border-radius:14px;padding:5px 13px;font-size:31px;font-weight:1000}.machine-lights{position:absolute;bottom:8px;display:flex;gap:5px}.machine-lights i{width:18px;height:18px;border-radius:50%;background:#8b3155;border:2px solid white}.machine-lights i.on{background:#4cdf98;box-shadow:0 0 10px #4cdf98}
 .train{display:flex;align-items:flex-end;gap:4px;width:100%;justify-content:center}.engine{font-size:58px}.wagon{min-width:100px;min-height:76px;border:5px solid #813841;border-radius:9px 9px 20px 20px;background:#d85d68;display:flex;align-content:center;justify-content:center;flex-wrap:wrap;gap:2px;padding:5px;position:relative}.wagon:after{content:"●  ●";position:absolute;bottom:-20px;color:#263746;font-size:17px;letter-spacing:30px}
 .river{width:100%;height:190px;border-radius:20px;background:linear-gradient(#7bd6e7,#278eae);display:flex;align-items:center;justify-content:space-around;position:relative}.lily{width:58px;height:43px;border-radius:50%;border:0;background:#67b85f;font-weight:950;font-size:19px;box-shadow:inset -8px -4px rgba(0,0,0,.12)}.frog{position:absolute;font-size:42px;left:1%;top:55px;transition:left .3s,top .3s;z-index:4}
@@ -100,11 +123,45 @@ function P(id,html,target){return{id,html,target}}
 function T(id,html,need=1){return{id,html,need}}
 function Q(prompt,scene,choices,result,hint,extra={}){return{kind:'choice',prompt,scene,choices,result,hint,...extra}}
 function D(prompt,scene,pieces,targets,result,hint,extra={}){return{kind:'drag',prompt,scene,pieces,targets,result,hint,...extra}}
-function renderRound(){const r=round();updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence}[r.kind];(fn||renderChoice)(r)}
+function renderRound(){const r=round();updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare}[r.kind];(fn||renderChoice)(r)}
 function renderChoice(r){$('#task').innerHTML=`<div class="choices">${r.choices.map((c,i)=>`<button class="choice" data-choice="${i}">${c.html||esc(c.label)}</button>`).join('')}</div>`;$$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.choices[+b.dataset.choice];if(c.correct)good(c.message);else wrong(c.hint||r.hint)})}
 /* Ritmik sayma: aynı seçenek listesinden sırayla doğru sayılar seçilir.
    Her doğru seçimde sahnedeki dal/adım büyür (state.step), böylece rota
    cevabı önceden söylemez — şartnamenin istediği davranış. */
+/* Paylaşım: çocuk sepetteki nesneleri İKİ tabağa kendisi dağıtır.
+   Dengesiz dağıtımda (fark 1'i aşınca) can götürmeyen uyarı gelir.
+   Sepet boşalınca ya da tek nesne artınca TEK/ÇİFT kararı sorulur. */
+function renderShare(r){
+  state.a=0;state.b=0;state.karar=false;
+  const ciz=()=>{
+    updateStage();
+    const kalan=r.total-state.a-state.b;
+    if(!state.karar && (kalan===0 || (kalan===1 && state.a===state.b))){
+      state.karar=true;
+      $('#task').innerHTML=`<div class="choices">
+        <button class="choice" data-choice="0">TEK</button>
+        <button class="choice" data-choice="1">ÇİFT</button></div>`;
+      $$('[data-choice]').forEach(b=>b.onclick=()=>{
+        const tek=(r.total%2===1);
+        const secilenTek=b.dataset.choice==='0';
+        if(secilenTek===tek) good(); else wrong(r.hint);
+      });
+      return;
+    }
+    $('#task').innerHTML=`<div class="actions">
+      <button class="action" data-share="a">⬅️ Sol tabağa</button>
+      <button class="action" data-share="b">Sağ tabağa ➡️</button></div>`;
+    $$('[data-share]').forEach(btn=>btn.onclick=()=>{
+      const hangi=btn.dataset.share;
+      const digeri=hangi==='a'?state.b:state.a;
+      const bu=hangi==='a'?state.a:state.b;
+      if(bu-digeri>=1){ wrong('Sırayla birer tane ver; tabaklar eşit ilerlemeli.'); return; }
+      if(hangi==='a')state.a++;else state.b++;
+      ciz();
+    });
+  };
+  ciz();
+}
 function renderSequence(r){
   state.step=0;
   const ciz=()=>{
@@ -305,6 +362,99 @@ GAMES.w04={title:'Sihirli Fasulye Sırığı',theme:'garden',finish:'Sekizer ile
  ritmikTur([64,56,48,40,32],-8,'Her seferinde 8 çıkar: 64, 56, 48…','64\'ten 32\'ye sekizer geri sayıldı.'),
  ritmikTur([320,420,520,620,720],100,'Yüzler basamağı birer artıyor: 320, 420…','320\'den 720\'ye yüzer sayıldı.')
 ]};
+
+/* w05 — Meyve Paylaşımı · tek ve çift sayılar
+   Şartname: "her ikisine 1 elma ver" düğmesi paylaştırmayı çocuğun yerine
+   yapıyordu ve tek sayı örneği yoktu. Artık meyveler tek tek iki tabağa
+   sürükleniyor; artan olup olmadığı sahnede görünüyor, sonra TEK/ÇİFT
+   kararı veriliyor. */
+function meyveSahne(toplam,meyve){return()=>{
+ const a=state.a||0,b=state.b||0,kalan=toplam-a-b;
+ return `<div class="share-row">
+  <div class="plate"><b>${a}</b><div>${meyve.repeat(a)}</div></div>
+  <div class="basket">🧺<div class="basket-items">${meyve.repeat(kalan)}</div><small>sepette ${kalan}</small></div>
+  <div class="plate"><b>${b}</b><div>${meyve.repeat(b)}</div></div></div>
+ <div class="caption">Toplam ${toplam} · sırayla birer tane dağıt</div>`}}
+function paylasimTur(toplam,meyve,ipucu,sonuc){
+ return{kind:'share',total:toplam,
+  prompt:`${toplam} ${meyve==='🍎'?'elmayı':'meyveyi'} iki tabağa sırayla dağıt.`,
+  scene:meyveSahne(toplam,meyve),hint:ipucu,result:sonuc}}
+GAMES.w05={title:'Meyve Paylaşımı',theme:'garden',finish:'Meyveleri iki tabağa paylaştırıp artanı görerek tek ve çift sayıları ayırt ettin.',rounds:[
+ paylasimTur(14,'🍎','Birer birer dağıt: her ikisine de eşit sayıda düşerse sayı çifttir.',
+  '14 = 7 + 7. Artan yok, 14 çifttir.'),
+ paylasimTur(13,'🍐','Bu kez sonda bir tane artacak; artan varsa sayı tektir.',
+  '13 = 6 + 6 + 1. Bir tane arttı, 13 tektir.'),
+ {kind:'choice',prompt:'Dağıtmadan tahmin et: 21 tek mi çift mi?',
+  scene:()=>`<div class="big">🍊 ×21</div><div class="caption">Son basamağa bak: 1, 3, 5, 7, 9 ile bitenler tek; 0, 2, 4, 6, 8 ile bitenler çift.</div>`,
+  choices:[{label:'TEK',correct:true},{label:'ÇİFT',correct:false}],
+  hint:'21 sayısının son basamağı 1. Bir tane artar mı?',
+  result:'21 tektir: iki eş gruba ayrılınca bir tane artar.'}
+]};
+
+/* w06 — Tek-Çift Laboratuvarı · toplamların tek-çift yapısı
+   Şartname: kartlar hareket ediyordu (süre baskısı) ve örnekler dengesizdi.
+   Artık kart sabit, sayılar nokta çiftleriyle gösteriliyor; çocuk önce
+   tahmin ediyor, sonra kural kartını kendisi yerleştiriyor. */
+function noktaCifti(n){
+ const cift=Math.floor(n/2),artan=n%2;
+ return `<span class="dot-pairs">${'<i class="pair"></i>'.repeat(cift)}${artan?'<i class="odd"></i>':''}</span>`}
+function labSahne(a,b){return()=>`<div class="lab-card"><div class="term">${a} ${noktaCifti(a)}</div>
+ <div class="plus">+</div><div class="term">${b} ${noktaCifti(b)}</div></div>
+ <div class="caption">Eşleşmeden kalan nokta sayının tek olduğunu gösterir</div>`}
+function labTur(a,b,dogru,ipucu,sonuc){
+ return{kind:'choice',prompt:`${a} + ${b} işleminin sonucu tek mi çift mi? Önce tahmin et.`,
+  scene:labSahne(a,b),
+  choices:[{label:'TEK',correct:dogru==='TEK'},{label:'ÇİFT',correct:dogru==='ÇİFT'}],
+  hint:ipucu,result:sonuc}}
+GAMES.w06={title:'Tek-Çift Laboratuvarı',theme:'lab',finish:'Tek ve çift sayıların toplamındaki üç kuralı örneklerden kendin çıkardın.',rounds:[
+ labTur(7,5,'ÇİFT','İki sayının da artan birer noktası var; bu ikisi eşleşir.',
+  'TEK + TEK = ÇİFT. 7 + 5 = 12.'),
+ labTur(8,6,'ÇİFT','İki sayıda da artan nokta yok.',
+  'ÇİFT + ÇİFT = ÇİFT. 8 + 6 = 14.'),
+ labTur(9,4,'TEK','Yalnız birinde artan nokta var; eşleşecek partner bulamaz.',
+  'TEK + ÇİFT = TEK. 9 + 4 = 13.')
+]};
+
+/* w07 — Mimarlık Akademisi · şekil-sayı örüntüsü
+   Şartname: kule ve blok görünmüyordu, örüntü yalnız metinle anlatılıyordu.
+   Artık her adımın kulesi gerçekten çiziliyor; çocuk sıradaki kuleyi seçiyor
+   ve kuralı kendisi söylüyor. */
+function kuleSahne(dizi,gorunen){return()=>`<div class="tower-row">${dizi.slice(0,gorunen).map((n,i)=>
+ `<div class="tower"><div class="blocks">${'<i class="block"></i>'.repeat(n)}</div><b>${n}</b><small>${i+1}. adım</small></div>`).join('')}
+ <div class="tower ghost"><div class="blocks"></div><b>?</b><small>${gorunen+1}. adım</small></div></div>`}
+function kuleTur(dizi,gorunen,ipucu,sonuc){
+ const dogru=dizi[gorunen];
+ const secenekler=[dogru,dogru+dizi[1]-dizi[0],dogru-1].map(v=>({label:String(v),correct:v===dogru}));
+ return{kind:'choice',prompt:`${gorunen+1}. adımda kaç blok olmalı?`,scene:kuleSahne(dizi,gorunen),
+  choices:secenekler.sort(()=>0),hint:ipucu,result:sonuc}}
+GAMES.w07={title:'Mimarlık Akademisi',theme:'city',finish:'Kuleleri blok blok büyüterek şekil örüntüsündeki sayı kuralını buldun.',rounds:[
+ kuleTur([3,6,9,12,15],3,'Her kule bir öncekinden 3 blok fazla.','3, 6, 9, 12: kural her adımda +3.'),
+ kuleTur([4,8,12,16,20],3,'Kuleler dörder dörder büyüyor.','4, 8, 12, 16: kural her adımda +4.'),
+ kuleTur([2,5,8,11,14],3,'2\'den başlayıp üçer üçer artıyor.','2, 5, 8, 11: kural her adımda +3.')
+]};
+
+/* w08 — Kavanozdaki Misketler · stratejik tahmin
+   Şartname: tren/tünel motoruyla açılıyordu, kavanoz yoktu ve referans
+   ölçü görünmüyordu. Artık küçük referans kavanozu sayılabilir hâlde
+   yanında duruyor; tahminden sonra misketler onarlı gruplara diziliyor. */
+function kavanozSahne(gercek,referans){return()=>`<div class="jar-row">
+ <div class="jar small"><div class="marbles">${'<i class="marble"></i>'.repeat(referans)}</div><small>ÖRNEK: ${referans} misket</small></div>
+ <div class="jar big"><div class="marbles">${'<i class="marble"></i>'.repeat(gercek)}</div><small>KAÇ TANE?</small></div></div>
+ <div class="caption">Soldaki kavanozdan kaç tane sığar? Ona göre tahmin et.</div>`}
+function tahminTur(gercek,referans,secenekler,ipucu,sonuc){
+ return{kind:'estimate',prompt:'Büyük kavanozda yaklaşık kaç misket var?',
+  scene:kavanozSahne(gercek,referans),
+  choices:secenekler.map(v=>({label:String(v),correct:v===gercek})),
+  hint:ipucu,result:sonuc}}
+GAMES.w08={title:'Kavanozdaki Misketler',theme:'room',finish:'Küçük kavanozu ölçü alarak üç farklı kavanozda akıllı tahmin yaptın.',rounds:[
+ tahminTur(68,10,[30,68,120],'Örnek kavanozda 10 misket var; büyükte yaklaşık 7 tanesi sığıyor.',
+  'Yaklaşık 7 onluk grup: 68 misket.'),
+ tahminTur(23,10,[23,55,90],'Bu kavanoz örnekten iki katı biraz fazla.',
+  '2 onluk grup ve 3 tek: 23 misket.'),
+ tahminTur(35,5,[15,35,80],'Örnek grup bu kez 5 misket; büyük kavanozda 7 grup var.',
+  '7 beşli grup: 35 misket.')
+]};
+
 
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Oyun bulunamadı</h2><p>${esc(GAME_ID)}</p></div></div>`}
