@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 52/90 oyun uygulandı.**
+**Durum: 60/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -79,3 +79,11 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u50 | Broşür Dedektifi | okuma | Broşürün harita/saat/hayvan bölümleri aynı sayfada; metin ile görselin tamamlandığı ve ÇELİŞTİĞİ örnekler karşılaştırılıyor. 3. turda iki bilgi kendi cümlesiyle yazılıyor. | Uygulamada |
 | u51 | Editörün Kırmızı Kalemi | yazma | Doğru biçim otomatik gelmiyor; çocuk metni satır satır kendisi düzenliyor. Yazım / büyük harf / noktalama hataları ayrı türlere ayrılıyor; 3. turda paragrafın tamamı bağımsız düzeltiliyor. | Uygulamada |
 | u52 | Tablet ve Kitap | yazma | Tablet ve basılı sözlük iki gerçek kaynak; bir sözcüğün birden çok anlamından bağlama uyanı seçiliyor. 3. turda kaynak adı, anlam ve yeni cümle birlikte yazılıyor. | Uygulamada |
+| u53 | Kitap Kapağı Yapbozu | okuma | Balık-ağ kaldırıldı; başlık, görsel ve yazar alanı sabit parçalarla tamamlanıyor. 2. turda başlığa uyan ama ayrıntısı yanlış kapak eleniyor; 3. turda alt başlık ve tahmin yazılıyor. | Uygulamada |
+| u54 | Odaklanma Ustası | dinleme | Dinleme odasındaki engeller gerçek nesnelerle düzenleniyor; dış çevre engeli ile kendi davranışı ayrı ayrı ele alınıyor. 3. turda üç maddelik kontrol listesi yazılıyor. | Uygulamada |
+| u55 | Kelime Aşçısı | yazma | Sözcük kavanozları sabit; bağlam ipucu işaretlenmeden seçenek açılmıyor. Yakın anlamlı "yemek/atıştırmak" ayrımı yapılıyor; 3. turda kendi cümlesi yazılıyor. | Uygulamada |
+| u56 | Mikrofon Sende | konuşma | Roket yakıtı yerine sabah-öğle-akşam kartları; 2. turda bugüne ait olmayan olay yerleştirilemiyor. 3. turda gün üç bağlantılı cümleyle sesli anlatılıyor. | Uygulamada |
+| u57 | Matbaa Tamircisi | yazma | Dokununca otomatik çözüm gelmiyor; metin elle düzenleniyor. Cümle başı, özel ad ve nokta hataları ayrı türlere ayrılıyor; 3. turda karışık metin bağımsız düzeltiliyor. | Uygulamada |
+| u58 | Beden Dili Orkestrası | konuşma | Robotun tam bedeni görünüyor; uygun ve aşırı beden dili karşılaştırılıyor. 3. turda cümle uygun jest ve mimikle canlandırılıyor. | Uygulamada |
+| u59 | Gerçeklik Dedektörü | dinleme | Cümleler yalnız sesli veriliyor; gerçek / mümkün / hayal ürünü üç grupta sınıflandırılıyor. 3. turda çocuk bir gerçek ve bir hayal cümlesi yazıp farkı açıklıyor. | Uygulamada |
+| u60 | Yetenek Aynası | okuma | Venn aynasında iki metnin ortak ve özgü mesajları ayrılıyor; konu benzerliği ile ileti benzerliği ayrı örnekle karşılaştırılıyor. 3. turda ortak ileti ve bir fark yazılıyor. | Uygulamada |

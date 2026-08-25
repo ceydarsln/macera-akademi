@@ -1862,6 +1862,205 @@ GAMES.u52={title:'Tablet ve Kitap',theme:'room',finish:'İki kaynaktan da sözc�
   result:'Kaynağı, anlamı ve kendi cümleni birlikte kaydettin: araştırma böyle belgelenir.'}
 ]};
 
+/* ---- Tema 5 · Yeteneklerimizi Tanıyoruz (u53–u60) ---- */
+const S6={
+ yapboz:'<div class="row"><span style="font-size:28px">🧩</span><span style="font-size:26px">📕</span></div><div class="caption">Kitap kapağı yapbozu</div>',
+ odak:'<div class="row"><span style="font-size:26px">📺</span><span style="font-size:24px">🪟</span><span style="font-size:26px">🎧</span></div><div class="caption">Dinleme odası</div>',
+ asci:'<div class="row"><span style="font-size:28px">👨‍🍳</span><span style="font-size:26px">🍲</span><span style="font-size:24px">🫙</span></div><div class="caption">Kelime mutfağı</div>',
+ mikrofon:'<div class="row"><span style="font-size:28px">🎤</span><span style="font-size:24px">🌅</span><span style="font-size:24px">🌇</span></div><div class="caption">Gün çizelgesi</div>',
+ matbaa:'<div class="row"><span style="font-size:28px">🖨️</span><span style="font-size:26px">📰</span></div><div class="caption">Matbaa bandı</div>',
+ orkestra:'<div class="row"><span style="font-size:30px">🤖</span><span style="font-size:24px">🎼</span></div><div class="caption">Prova sahnesi</div>',
+ uzayli:'<div class="row"><span style="font-size:28px">👽</span><span style="font-size:26px">🖥️</span></div><div class="caption">Uzaylı bilgi ekranı</div>',
+ yetenek:'<div class="row"><span style="font-size:26px">🪞</span><span style="font-size:24px">📄</span><span style="font-size:24px">📄</span></div><div class="caption">Yetenek aynası</div>'
+};
+
+GAMES.u53={title:'Kitap Kapağı Yapbozu',theme:'room',finish:'Başlıkla kapak ayrıntısının uyumunu denetledin ve kendi alt başlığını yazdın.',rounds:[
+ {kind:'esle',prompt:'Yapboz parçalarını doğru alana koy.',sahne:S6.yapboz,
+  gorev:'Kapakta üç alan var: başlık, görsel ve yazar adı.',
+  etiketler:[{t:'Denizin Altındaki Şehir'},{t:'balıklar ve mercanlar resmi'},{t:'Yazan: Ayla Deniz'}],
+  yuvalar:[{ad:'Başlık alanı',dogru:0},{ad:'Görsel alanı',dogru:1},{ad:'Yazar alanı',dogru:2}],
+  result:'Kapakta başlık, görsel ve yazar adı ayrı alanlarda bulunur.'},
+ {kind:'kanit',prompt:'İki kapak da başlığa uyuyor gibi: ayrıntıya bak.',sahne:S6.yapboz,
+  baslik:'Başlık: “Denizin Altındaki Şehir”',
+  metin:[['Birinci kapakta ',{t:'mercanlar arasında kuleler',dogru:true},' var.'],
+   ['İkinci kapakta ',{t:'kumsalda bir kum kalesi'},' ve ',{t:'martılar'},' var.']],
+  gerekKanit:1,soru:'Hangi kapak başlığa doğru uyuyor?',
+  secenekler:[{label:'Birinci kapak',correct:true},
+   {label:'İkinci kapak',hint:'Kum kalesi denizin altında değil, kıyıda bulunur.'},
+   {label:'İkisi de uyuyor'}],
+  result:'İkisinde de deniz var ama yalnız biri "denizin altı"nı gösteriyor.'},
+ {kind:'yaz',prompt:'Alt başlık ve tahmin cümlesi yaz.',sahne:S6.yapboz,
+  gorev:'İlk satıra kapağa uygun kısa bir alt başlık yaz. İkinci satıra kitabın ne anlatacağına dair tahminini yaz.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Kayıp Kulelerin Sırrı\nBence kitap denizin altında yaşayan insanları anlatıyor.',
+  ornekCevap:'Kayıp Kulelerin Sırrı\nBence kitap denizin altında yaşayan insanları anlatıyor.',
+  result:'Alt başlığını ve tahminini kapaktaki ayrıntılara dayandırdın.'}
+]};
+
+GAMES.u54={title:'Odaklanma Ustası',theme:'room',finish:'Dış engel ile kendi davranışını ayırdın ve iyi dinleme için kontrol listesi yazdın.',rounds:[
+ {kind:'esle',prompt:'Odayı dinlemeye hazırla.',sahne:S6.odak,
+  gorev:'Her sorunun çözümünü seç.',
+  etiketler:[{t:'televizyonu kapat'},{t:'pencereyi kapat'},{t:'sıraya dik otur'}],
+  yuvalar:[{ad:'Televizyon açık',dogru:0},{ad:'Sokaktan gürültü geliyor',dogru:1},{ad:'Masaya yatmış oturuyorum',dogru:2}],
+  result:'Bazı engeller çevrede, bazıları bizim davranışımızda.'},
+ {kind:'esle',prompt:'Bu kez engelin kaynağını ayır.',sahne:S6.odak,
+  gorev:'Engel dışarıdan mı geliyor, senin davranışından mı?',
+  etiketler:[{t:'Dış çevre engeli'},{t:'Kendi davranışım'}],
+  yuvalar:[{ad:'Yandaki sınıftan müzik sesi geliyor',dogru:0},
+   {ad:'Dinlerken arkadaşımla konuşuyorum',dogru:1,ipucu:'Bu engeli kim yaratıyor?'}],
+  result:'Dış engeli azaltmaya çalışırız; kendi davranışımızı ise doğrudan değiştirebiliriz.'},
+ {kind:'yaz',prompt:'Kontrol listesi yaz.',sahne:S6.odak,
+  gorev:'İyi dinlemek için üç maddelik kontrol listesi yaz. Her madde alt satırda olsun.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Televizyonu ve müziği kapatırım.\nKonuşan kişiye dönüp bakarım.\nSırama dik oturur, arkadaşımla konuşmam.',
+  ornekCevap:'Televizyonu ve müziği kapatırım.\nKonuşan kişiye dönüp bakarım.\nSırama dik oturur, arkadaşımla konuşmam.',
+  result:'Kendi dinleme kontrol listeni yazdın.'}
+]};
+
+GAMES.u55={title:'Kelime Aşçısı',theme:'kitchen',finish:'Yakın anlamlı sözcüklerin hangi cümleye uyduğunu ayırdın ve kendi cümlenizi kurdun.',rounds:[
+ {kind:'kanit',prompt:'Cümledeki bağlam ipucunu işaretle.',sahne:S6.asci,
+  baslik:'Cümle tenceresi',
+  metin:[['Annem çorbaya ',{t:'bir tutam tuz'},' attı; ',{t:'kaşıkla karıştırdı',dogru:true},' ve ',{t:'ocağı kıstı'},'.']],
+  gerekKanit:1,soru:'Boşluğa hangi sözcük uyar: "Annem çorbayı … ."',
+  secenekler:[{label:'karıştırdı',correct:true},
+   {label:'süpürdü',hint:'İşaretlediğin bölüm kaşıkla yapılan bir işten söz ediyor.'},
+   {label:'kesti'}],
+  result:'Kaşıkla yapılan iş karıştırmaktır; sözcük cümleye uymalı.'},
+ {kind:'esle',prompt:'Yakın anlamlı iki sözcük: hangi cümleye hangisi?',sahne:S6.asci,
+  gorev:'"Yemek" ve "atıştırmak" yakın anlamlıdır ama her cümleye uymaz.',
+  etiketler:[{t:'yedik'},{t:'atıştırdık'}],
+  yuvalar:[{ad:'Akşam sofrada hep birlikte …',dogru:0,ipucu:'Sofrada oturarak yenen öğün için hangisi uygun?'},
+   {ad:'Yolda giderken kraker …',dogru:1,ipucu:'Ayaküstü, azıcık yemek için hangisi uygun?'}],
+  result:'Yakın anlamlı sözcükler her yerde birbirinin yerine geçmez; öğün ile ayaküstü yeme farklıdır.'},
+ {kind:'yaz',prompt:'Seçtiğin sözcükle kendi cümlenizi yaz.',sahne:S6.asci,
+  gorev:'"Atıştırmak" sözcüğünü kendi cümlende kullan. Cümlede nerede ve ne zaman olduğu da anlaşılsın.',
+  enAzKelime:6,buyukHarf:true,bitis:'.',gerekli:['atıştır'],
+  yasak:['Yolda giderken kraker atıştırdık.'],
+  ipucuMetin:'Örnek: Teneffüste bahçede bir simit atıştırdım.',
+  ornekCevap:'Teneffüste okul bahçesinde arkadaşımla birlikte simit atıştırdım.',
+  bank:['atıştırdım','teneffüste','bahçede','simit'],
+  result:'Sözcüğü anlamına uygun bir durumda kullandın.'}
+]};
+
+GAMES.u56={title:'Mikrofon Sende',theme:'class',finish:'Günü zaman ifadeleriyle sıraladın, gereksiz ayrıntıyı ayıkladın ve sesli anlattın.',rounds:[
+ {kind:'sira',prompt:'Günü sırayla diz.',sahne:S6.mikrofon,
+  gorev:'Sabah, öğle ve akşam kartları sabit duruyor.',
+  kartlar:[{t:'Öğle arasında arkadaşlarımla oyun oynadım.'},{t:'Sabah kahvaltıdan sonra okula gittim.'},{t:'Akşam ödevimi bitirip erken yattım.'}],
+  dogru:[1,0,2],
+  ipucular:['Gün hangi öğünle başlar?','Okuldan sonra teneffüste ne oldu?','Günün sonunda ne yapıldı?'],
+  result:'Sabah, öğle, akşam: gün bu sırayla anlatılır.'},
+ {kind:'sira',prompt:'Dört olay var, biri konu dışı.',sahne:S6.mikrofon,
+  gorev:'Bugünü anlatıyorsun. Bugüne ait olmayan kartı yerleştirme.',
+  kartlar:[{t:'Sabah servise bindim.'},{t:'Geçen yıl deniz kenarında tatil yaptık.'},{t:'Öğleden sonra resim dersimiz vardı.'},{t:'Akşam kitabımı okudum.'}],
+  dogru:[0,2,3],
+  kartIpucu:{1:'Bu olay geçen yıla ait; bugünü anlatan bir konuşmaya girmez.'},
+  ipucular:['Güne nasıl başladın?','Öğleden sonra ne oldu?','Akşam ne yaptın?'],
+  result:'Geçen yılki tatil bugünün anlatımına girmez.'},
+ {kind:'konus',prompt:'Gününü sesli anlat.',sahne:S6.mikrofon,
+  gorev:'Bugününü üç bağlantılı cümleyle anlat. "Önce", "sonra" ve "en sonunda" sözcüklerini kullan.',
+  ornek:'Örnek: Önce sabah okula gittim. Sonra teneffüste arkadaşlarımla oynadım. En sonunda akşam ödevimi bitirdim.',
+  olcutler:['Üç cümle kurdum.','Zaman sözcükleri kullandım.','Olayları oluş sırasına göre anlattım.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Gününü zaman sözcükleriyle ve sırayla anlattın.'}
+]};
+
+GAMES.u57={title:'Matbaa Tamircisi',theme:'factory',finish:'Cümle başı, özel ad ve nokta hatalarını ayrı ayrı buldun ve metni bağımsız düzelttin.',rounds:[
+ {kind:'duzelt',prompt:'Hatalı baskıyı düzelt.',sahne:S6.matbaa,
+  gorev:'Doğru biçim otomatik gelmiyor; metni kendin düzenle.',
+  hatali:'bugün izmir’de deniz çok güzeldi',
+  denetim:[{ad:'Cümle büyük harfle başlıyor',desen:'^Bugün'},
+   {ad:'İzmir büyük harfle',desen:'İzmir'},
+   {ad:'Cümle nokta ile bitiyor',desen:'\\.\\s*$'}],
+  ornekCevap:'Bugün İzmir’de deniz çok güzeldi.',
+  result:'Cümle başı ve şehir adı büyük harfle, cümle sonu noktayla yazılır.'},
+ {kind:'esle',prompt:'Her hatayı türüne ayır.',sahne:S6.matbaa,
+  gorev:'Matbaada üç tür hata çıktı.',
+  etiketler:[{t:'cümle başı hatası'},{t:'özel ad hatası'},{t:'nokta hatası'}],
+  yuvalar:[{ad:'“bugün hava güzel.” satırı',dogru:0},
+   {ad:'“ali okula gitti.” satırı',dogru:1},
+   {ad:'“Yarın tatil” satırı',dogru:2}],
+  result:'Üç ayrı kural: cümle başı, özel ad ve cümle sonu.'},
+ {kind:'duzelt',prompt:'Karışık metni baştan sona düzelt.',sahne:S6.matbaa,
+  gorev:'Bu metinde her üç hata türü de var.',
+  hatali:'ayşe pazar günü ankara’ya gitti  orada müzeyi gezdi',
+  denetim:[{ad:'Ayşe büyük harfle',desen:'^Ayşe'},
+   {ad:'Ankara büyük harfle',desen:'Ankara'},
+   {ad:'İkinci cümle büyük harfle başlıyor',desen:'\\.\\s*Orada'},
+   {ad:'En az iki nokta var',desen:'\\.[\\s\\S]*\\.'}],
+  ornekCevap:'Ayşe pazar günü Ankara’ya gitti. Orada müzeyi gezdi.',
+  result:'Kişi ve şehir adları büyük harfle; her cümle noktayla biter ve sonraki cümle büyük harfle başlar.'}
+]};
+
+GAMES.u58={title:'Beden Dili Orkestrası',theme:'class',finish:'Uygun beden dili ile aşırısını ayırdın ve cümleyi uygun biçimde canlandırdın.',rounds:[
+ {kind:'esle',prompt:'Her söze uygun hareketi seç.',sahne:S6.orkestra,
+  gorev:'Robot provada. Hangi söz hangi hareketle desteklenir?',
+  etiketler:[{t:'elini kalbine götürmek'},{t:'avucunu ileri açmak'},{t:'başını hafifçe öne eğmek'}],
+  yuvalar:[{ad:'“Çok teşekkür ederim.”',dogru:0},
+   {ad:'“Lütfen buyurun.”',dogru:1},
+   {ad:'“Merhaba, hoş geldiniz.”',dogru:2}],
+  result:'Beden dili sözü destekler; teşekkürde el kalbe, davette avuç ileri, selamda baş hafif öne gider.'},
+ {kind:'kanit',prompt:'Uygun mu, aşırı mı?',sahne:S6.orkestra,
+  baslik:'İki prova',
+  metin:[['Birinci provada robot “teşekkür ederim” derken ',{t:'elini hafifçe kalbine götürdü'},'.'],
+   ['İkinci provada aynı sözü söylerken ',{t:'kollarını savurup masaya vurdu',dogru:true},'.']],
+  gerekKanit:1,soru:'İkinci provadaki beden dili nasıl?',
+  secenekler:[{label:'Aşırı: sözü desteklemiyor, dikkati dağıtıyor',correct:true},
+   {label:'Uygun ve etkili',hint:'İşaretlediğin hareket teşekkür etmekle uyuşuyor mu?'},
+   {label:'Yetersiz'}],
+  result:'Beden dili sözü destekleyecek kadar olmalı; abartıldığında sözün önüne geçer.'},
+ {kind:'konus',prompt:'Cümleyi uygun beden diliyle canlandır.',sahne:S6.orkestra,
+  gorev:'"Lütfen buyurun, siz geçin." cümlesini uygun jest ve mimikle söyle.',
+  ornek:'Örnek: Avucunu yukarı bakacak biçimde ileri aç, hafifçe gülümse ve sakin bir sesle söyle.',
+  olcutler:['Sözüme uygun bir el hareketi kullandım.','Yüz ifademi söze uydurdum.','Hareketi abartmadım.','Anlaşılır bir sesle söyledim.'],
+  result:'Sözü destekleyen, abartısız bir beden dili kullandın.'}
+]};
+
+GAMES.u59={title:'Gerçeklik Dedektörü',theme:'space',finish:'Gerçek, mümkün ve hayal ürünü bilgileri üç grupta ayırdın ve farkı kendi cümlelerinle yazdın.',rounds:[
+ {kind:'dinle',prompt:'Uzaylının bilgisini dinle.',sahne:S6.uzayli,
+  gorev:'Kaydı dinle; metin ekranda yazılı değil.',
+  ses:'Kediler geceleri karanlıkta insanlardan daha iyi görür.',
+  soru:'Bu bilgi hangisi?',
+  secenekler:[{label:'Gerçek',correct:true},
+   {label:'Hayal ürünü',hint:'Bir kez daha dinle: kedilerin gece görüşü bilinen bir özelliktir.'},
+   {label:'İmkânsız'}],
+  result:'Kedilerin gözü az ışıkta daha iyi görür; bu gözlemlenmiş bir gerçektir.'},
+ {kind:'esle',prompt:'Üç bilgiyi grupla.',sahne:S6.uzayli,
+  gorev:'Gerçek: kanıtlanmış. Mümkün: olabilir. Hayal ürünü: gerçekte olmaz.',
+  etiketler:[{t:'Ay, Dünya’nın uydusudur.'},{t:'Gelecek hafta kar yağabilir.'},{t:'Ağaçlar gece şarkı söyler.'}],
+  yuvalar:[{ad:'Gerçek',dogru:0},{ad:'Mümkün',dogru:1},{ad:'Hayal ürünü',dogru:2}],
+  result:'Kanıtlanan gerçek, olabilecek mümkün, olamayacak hayal ürünüdür.'},
+ {kind:'yaz',prompt:'Bir gerçek, bir hayal cümlesi yaz.',sahne:S6.uzayli,
+  gorev:'Alt alta iki cümle yaz: birincisi gerçek bir bilgi, ikincisi hayal ürünü olsun. Üçüncü satıra farkı yaz.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Su yüz derecede kaynar.\nBalıklar bisiklete biner.\nBirincisi deneyle kanıtlanır, ikincisi gerçekte olmaz.',
+  ornekCevap:'Su yüz derecede kaynar.\nBalıklar bisiklete biner.\nBirincisi deneyle kanıtlanır, ikincisi gerçekte olmaz.',
+  result:'Gerçek ile hayal ürünü arasındaki farkı örnekle açıkladın.'}
+]};
+
+GAMES.u60={title:'Yetenek Aynası',theme:'class',finish:'İki metnin ortak iletisini ve her metne özgü farkı ayırdın.',rounds:[
+ {kind:'esle',prompt:'Mesaj kartlarını doğru bölgeye koy.',sahne:S6.yetenek,
+  gorev:'Birinci metin resim yapan bir çocuğu, ikinci metin keman çalan bir çocuğu anlatıyor.',
+  etiketler:[{t:'Her gün çalışarak gelişti'},{t:'Fırça ve boyayla çalıştı'},{t:'Yayla telleri titretti'}],
+  yuvalar:[{ad:'İkisinde de var (ortak ileti)',dogru:0},
+   {ad:'Yalnız birinci metin',dogru:1},
+   {ad:'Yalnız ikinci metin',dogru:2}],
+  result:'Ortak ileti düzenli çalışmanın gelişim getirdiği; araçlar farklı.'},
+ {kind:'kanit',prompt:'Konu benzerliği mi, ileti benzerliği mi?',sahne:S6.yetenek,
+  baslik:'İki metin',
+  metin:[['Birinci metin: Bir çocuk ',{t:'her akşam keman çalıştı'},' ve ',{t:'sonunda konserde çaldı',dogru:true},'.'],
+   ['İkinci metin: Bir çocuk ',{t:'kemanı çok pahalı buldu'},' ve ',{t:'vazgeçti'},'.']],
+  gerekKanit:1,soru:'İki metin için doğru olan hangisi?',
+  secenekler:[{label:'Konuları benzer ama iletileri farklı',correct:true},
+   {label:'Hem konuları hem iletileri aynı',hint:'İkisi de kemandan söz ediyor; ama biri çalışmayı, öbürü vazgeçmeyi anlatıyor.'},
+   {label:'Konuları da iletileri de farklı'}],
+  result:'Aynı konu (keman) iki farklı ileti taşıyabilir: sürdürmek ve vazgeçmek.'},
+ {kind:'yaz',prompt:'Ortak iletiyi ve bir farkı yaz.',sahne:S6.yetenek,
+  gorev:'Alt alta iki cümle yaz: birinci cümlede iki metnin ortak iletisini, ikinci cümlede birine özgü bir farkı yaz.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'İki metin de düzenli çalışmanın insanı geliştirdiğini anlatıyor.\nBirinci metinde fırçayla, ikincisinde yayla çalışılıyor.',
+  ornekCevap:'İki metin de düzenli çalışmanın insanı geliştirdiğini anlatıyor.\nBirinci metinde fırçayla, ikincisinde yayla çalışılıyor.',
+  result:'Ortak iletiyi ve farkı ayrı cümlelerle yazdın.'}
+]};
+
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card">
  <div class="big">📖</div><h2>2. Sınıf Türkçe</h2>
