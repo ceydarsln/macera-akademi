@@ -1,0 +1,553 @@
+[
+ {
+  "id": "h01",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Arkadaşlık Bandı",
+  "sub": "Dostluğu güçlendiren mi, zedeleyen mi?",
+  "kaz": "HB.2.1.1.a / b — Arkadaşlık ilişkilerini etkileyen duygu, düşünce ve davranışları fark eder.",
+  "type": "beltSort",
+  "instruction": "Okul bahçesi bandı çalışıyor! Gelen davranış arkadaşlığı güçlendirir mi, zedeler mi?",
+  "n": {
+   "items": 8,
+   "bins": "GÜÇLENDİRİR / ZEDELER"
+  },
+  "tur1": "Gerçek bir okul bahçesi çizilsin: davranış iki çocuk arasında kısa bir sahne olarak canlansın, kart bantta akmasın ve hiçbir kenarda kırpılmasın.",
+  "tur2": "Duruma göre değişen davranışlar eklensin (şaka mı alay mı?); öğrenci ölçütü seçerek savunsun.",
+  "tur3": "Öğrenci arkadaşlığı güçlendiren kendi davranışını söylesin veya yazsın ve nedenini belirtsin."
+ },
+ {
+  "id": "h02",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Güçlü Yönler Panosu",
+  "sub": "Kendini tanı, plan yap",
+  "kaz": "HB.2.1.2.a / b / c — Güçlü ve gelişime açık olduğu alanlara ilişkin bilgi toplar, seçenek oluşturur ve değerlendirir.",
+  "type": "serveOrder",
+  "instruction": "Kendini tanıma panosu! Öğretmenin istediği kartları tepsiye koy",
+  "n": {
+   "customers": 3
+  },
+  "tur1": "Gerçek bir sınıf panosu çizilsin; kartlarda “GÜÇLÜ:”, “GELİŞİM:”, “PLAN:” etiketleri KALDIRILSIN, yalnız içerik yazsın. Öğrenci hangi kartın hangi kategoriye girdiğine kendisi karar versin.",
+  "tur2": "Aynı beceri hem güçlü hem gelişime açık olabilecek biçimde sunulsun; öğrenci kendi durumuna göre seçsin.",
+  "tur3": "Öğrenci kendi güçlü yanını ve geliştirmek istediği bir alanı kendi cümlesiyle yazsın, sonra bunun için bir adım planlasın."
+ },
+ {
+  "id": "h03",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Etkin Dinleme Radarı",
+  "sub": "İyi dinleyici davranışını yakala",
+  "kaz": "HB.2.1.3.a — Öğretmen ve arkadaşlarını etkin şekilde dinler.",
+  "type": "catchDrop",
+  "instruction": "Radarı sürükleyerek etkin dinleme davranışını yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Gerçek bir sınıf ortamı çizilsin: öğretmen anlatırken öğrencilerin duruşu, göz teması ve söz alma davranışı sahnede görünsün; kapsül-radar dili kaldırılsın.",
+  "tur2": "İyi görünen ama dinlemeyi engelleyen davranışlar çeldirici olsun (sessizce başka şeye bakmak).",
+  "tur3": "Öğrenci kısa bir dinleme denemesi yapıp duyduğunu kendi sözleriyle anlatsın."
+ },
+ {
+  "id": "h04",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Duygu Cümlesi Makinesi",
+  "sub": "Duygunu nazikçe anlat",
+  "kaz": "HB.2.1.3.b / c — İletişim sürecinde duygu ve düşüncelerini ifade eder, iletişim kurallarına uygun etkileşim kurar.",
+  "type": "sentenceBuild",
+  "instruction": "Duygu makinesi hazır! Kelime kartlarına sırayla dokunarak duygunu anlatan cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Gerçek bir sınıf durumu canlansın (sıra kapıldı, oyuna alınmadı); öğrenci duygusunu “Ben ... hissettim çünkü ...” kalıbıyla kursun ve kurulan cümle sahnedeki karaktere söylensin.",
+  "tur2": "Aynı duygunun kırıcı ve nazik iki ifadesi karşılaştırılsın.",
+  "tur3": "Öğrenci kendi yaşadığı bir durumu anlatan cümleyi hazır kart olmadan kendisi yazsın veya söylesin."
+ },
+ {
+  "id": "h05",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Sınıf Oylaması",
+  "sub": "Karar birlikte alınır",
+  "kaz": "HB.2.1.4.a / b — Sınıf içi karar alma süreçlerine katılır ve katkıda bulunur.",
+  "type": "surveyChart",
+  "instruction": "Sınıf gezisi için oylama başlıyor! Sıradaki düğmesine basarak oyları topla, sonra kararı yorumla",
+  "n": {
+   "responses": 10,
+   "options": 3
+  },
+  "tur1": "Gerçek bir sınıf oylaması sahnesi kurulsun: kürsü, öneri panosu ve el kaldıran öğrenciler görünsün. Oy ifadesi sütun adını birebir tekrar etmesin ve sayım çetele çizgisiyle görünsün.",
+  "tur2": "Berabere biten ve tek oyla kazanılan senaryolar eklensin; çoğunluk kavramı somutlaştırılsın.",
+  "tur3": "Öğrenci sonucu yorumlasın ve azınlıkta kalanların görüşüne ne olacağını bir cümleyle belirtsin."
+ },
+ {
+  "id": "h06",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Karar Adımları",
+  "sub": "Sınıf kararı nasıl alınır?",
+  "kaz": "HB.2.1.4.c — Sınıf içi karar alma sürecini değerlendirir.",
+  "type": "orderSequence",
+  "instruction": "Sınıf karar adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Karar adımları gerçek sınıf sürecinde görselleşsin (sorun söylenir, öneriler alınır, tartışılır, oylanır, uygulanır); roket-yakıt sahnesi kaldırılsın.",
+  "tur2": "Atlanan adımın sonucu gösterilsin: tartışmasız oylama neden sorunlu?",
+  "tur3": "Öğrenci sınıfında çözülecek bir sorun için adımları sırayla söylesin."
+ },
+ {
+  "id": "h07",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Alışkanlık Bandı",
+  "sub": "Sağlıklı mı, sağlıksız mı?",
+  "kaz": "HB.2.2.1.a / b / c — Sağlıklı büyüme ile alışkanlıklar arasındaki ilişkiyi çözümler.",
+  "type": "beltSort",
+  "instruction": "Sağlık bandı çalışıyor! Gelen alışkanlık sağlıklı büyümeye yardım eder mi, engel olur mu?",
+  "n": {
+   "items": 8,
+   "bins": "SAĞLIKLI / SAĞLIKSIZ"
+  },
+  "tur1": "Gerçek bir gün akışı çizilsin (kahvaltı, oyun, ekran, uyku); alışkanlık kartı bu akışın içinde bir an olarak görünsün ve bant durdurulsun.",
+  "tur2": "Miktara göre değişen alışkanlıklar eklensin (biraz ekran / çok ekran); ölçüt tartışılsın.",
+  "tur3": "Öğrenci kendi günündeki bir alışkanlığı değerlendirip iyileştirme önerisi söylesin."
+ },
+ {
+  "id": "h08",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Kişisel Alan Ölçeri",
+  "sub": "Sınırını koru",
+  "kaz": "HB.2.2.2 — Kişisel alan sınırlarını korur.",
+  "type": "dragSlider",
+  "instruction": "Kişisel alan ölçerini sürükleyerek her durum için uygun mesafeyi bul. Kişisel alan, bedenimizin çevresindeki bize ait olan alandır.",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Tren-tünel sahnesi KALDIRILSIN. Ekranda iki insan figürü olsun ve öğrenci aralarındaki mesafeyi doğrudan sürükleyerek ayarlasın; seçilen mesafe görsel olarak canlansın. Bu konu koruyucu bir kazanımdır, somut bedensel sınır deneyimi gerektirir.",
+  "tur2": "Tanıdık-yabancı, oyun-sıra bekleme gibi durumlar karşılaştırılsın; mesafenin duruma göre değiştiği gösterilsin.",
+  "tur3": "Öğrenci rahatsız olduğunda ne söyleyeceğini (“Lütfen biraz uzaklaşır mısın?”) uygulasın ve kime haber vereceğini belirtsin."
+ },
+ {
+  "id": "h09",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Trafik İşareti Köprüsü",
+  "sub": "İşareti anlamıyla eşle",
+  "kaz": "HB.2.2.3 — Temel trafik işaret ve levhalarını tanır.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her trafik işaretini doğru anlamıyla birleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "GERÇEK trafik levhası görselleri kullanılsın - kazanım levhayı TANIMAYI istiyor, yazıyı okumayı değil. Parça ve hedefteki emoji eşleşmesi kaldırılsın; karar levhanın biçim ve rengine dayansın.",
+  "tur2": "Benzer görünen levhalar çeldirici olsun (yaya geçidi / okul geçidi); ayırt edici ayrıntı işaretlensin.",
+  "tur3": "Öğrenci bir sokak sahnesinde levhaya göre nasıl davranacağını uygulasın."
+ },
+ {
+  "id": "h10",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Acil Çağrı Telefonu",
+  "sub": "112'yi tuşla",
+  "kaz": "HB.2.2.4 — Acil durumlarda yetkililerle etkili iletişim kurar.",
+  "type": "numPad",
+  "instruction": "Acil durum telefonu elinde! Her durumda aranacak tek numarayı tuşla. Türkiye'de bütün acil durumlar için tek numara vardır.",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Gerçek bir telefon ekranı ve ahize çizilsin. KRİTİK: alt başlıktaki “112'yi tuşla” ifadesi kaldırılsın - numara oyunun adında yazılıyken hatırlama ölçülemez.",
+  "tur2": "Farklı acil senaryolar verilsin (yangın, kaza, hastalık); numaranın hepsinde aynı olduğu sonucu öğrenci tarafından çıkarılsın.",
+  "tur3": "Öğrenci numarayı tuşladıktan sonra görevliye söyleyeceği bilgileri (ad, adres, olay) sırayla söylesin."
+ },
+ {
+  "id": "h11",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Acil Çağrı Adımları",
+  "sub": "Ne söyleyeceğini sırala",
+  "kaz": "HB.2.2.4.a / b — Acil durumu bildirirken ve görevliyi dinlerken dikkat edilecekleri açıklar.",
+  "type": "orderSequence",
+  "instruction": "Acil çağrı adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek bir çağrı ekranı ve görevli sesi olsun; adımlar konuşma balonları hâlinde sıralansın ve roket sahnesi kaldırılsın.",
+  "tur2": "Eksik veya yanlış sıralı bir çağrı dinletilsin; öğrenci hatayı bulsun.",
+  "tur3": "Öğrenci kurgusal bir acil durumu baştan sona bildirsin; adres ve olay bilgisi kaydedilsin."
+ },
+ {
+  "id": "h12",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Afet Çantası Atölyesi",
+  "sub": "Çantaya doğru şeyleri koy",
+  "kaz": "HB.2.2.4 — Acil durumlara hazırlıklı olur; güvenlik önlemlerini uygular.",
+  "type": "serveOrder",
+  "instruction": "Afet çantası hazırlıyoruz! Görevlinin istediği malzemeleri tepsiye koy",
+  "n": {
+   "customers": 4
+  },
+  "tur1": "Gerçek bir afet çantası ve ev sahnesi çizilsin; seçilen malzeme çantaya gerçekten girsin ve çantanın ağırlığı/doluluğu görünsün.",
+  "tur2": "Gerekli ama akla gelmeyen malzemeler (düdük, ilaç, fotokopi kimlik) ile gereksiz cazip nesneler karşılaştırılsın.",
+  "tur3": "Öğrenci kendi çantası için üç malzeme seçip nedenini söylesin."
+ },
+ {
+  "id": "h13",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Nezaket Kartları",
+  "sub": "Sözü durumuyla eşle",
+  "kaz": "HB.2.3.2 — Toplumsal yaşamda nezaket ve görgü kurallarına uygun davranır.",
+  "type": "memoryPairs",
+  "instruction": "Kartlar kapalı! Kartları çevir ve her nezaket sözünü kullanıldığı durumla eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Gerçek günlük yaşam sahneleri (otobüs, market, ziyaret) kart arkasında canlansın; eşleşen söz o sahnede sesli söylensin.",
+  "tur2": "Aynı durumda birden çok uygun nezaket sözü olabileceği gösterilsin.",
+  "tur3": "Öğrenci bir durumu canlandırıp uygun sözü kendisi söylesin."
+ },
+ {
+  "id": "h14",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Görgü Kuralları Bandı",
+  "sub": "Nezakete uygun mu?",
+  "kaz": "HB.2.3.2 — Toplumsal yaşamda nezaket ve görgü kurallarına uygun davranır.",
+  "type": "beltSort",
+  "instruction": "Toplum bandı çalışıyor! Gelen davranış nezakete uygun mu, uygun değil mi?",
+  "n": {
+   "items": 8,
+   "bins": "NEZAKETE UYGUN / UYGUN DEĞİL"
+  },
+  "tur1": "Gerçek toplumsal ortamlar çizilsin (sıra, sofra, ziyaret); davranış o ortamda kısa sahne olarak görünsün ve bant durdurulsun.",
+  "tur2": "Kültürel bağlama göre değişen durumlar eklensin; ölçüt tartışılsın.",
+  "tur3": "Öğrenci bir görgü kuralını neden uyguladığını açıklasın."
+ },
+ {
+  "id": "h15",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Aile Cümlesi Makinesi",
+  "sub": "Ailenin önemini anlat",
+  "kaz": "HB.2.3.1.a / b — Ailenin önemine ilişkin örnekleri inceler ve çıkarımlarını kendi cümleleriyle ifade eder.",
+  "type": "sentenceBuild",
+  "instruction": "Aile panosu için cümle basıyoruz! Kelime kartlarına sırayla dokunarak cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Gerçek aile sahneleri (hastalıkta bakım, birlikte sofra, destek) canlansın; kurulan cümle aile panosuna asılsın. Kartlar küçük harfle gelsin.",
+  "tur2": "Ailenin farklı işlevleri (sevgi, güven, paylaşım) ayrı örneklerle karşılaştırılsın.",
+  "tur3": "Öğrenci kendi ailesinden bir örneği kendi cümlesiyle anlatsın."
+ },
+ {
+  "id": "h16",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Görev Panosu",
+  "sub": "Sorumluluklarını seç",
+  "kaz": "HB.2.3.3.a / b — Yakın çevresinde üzerine düşen görev ve sorumlulukları gözden geçirir ve çıkarımda bulunur.",
+  "type": "serveOrder",
+  "instruction": "Ev ve okul görev panosu! Her alan için senin sorumluluğun olan kartları tepsiye koy",
+  "n": {
+   "customers": 3
+  },
+  "tur1": "Gerçek ev ve sınıf ortamı çizilsin; görev kartı o ortamda yapılacak iş olarak görünsün ve seçilen görev yerine getirilince sahne değişsin.",
+  "tur2": "Yaşa uygun olan ve olmayan sorumluluklar ayrılsın; öğrenci hangisinin kendi görevi olduğuna karar versin.",
+  "tur3": "Öğrenci bu hafta üstleneceği bir sorumluluğu seçip söylesin."
+ },
+ {
+  "id": "h17",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Aile Radarı",
+  "sub": "Ailenin önemini yakala",
+  "kaz": "HB.2.3.1.a — Ailenin önemine ilişkin verilen örnekleri inceler.",
+  "type": "catchDrop",
+  "instruction": "Radarı sürükleyerek doğru cevabı yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "“Radarı sürükleyerek doğru cevabı yakala” genel yönergesi kaldırılsın; soru ailenin işlevine dair somut bir sahneye bağlansın ve seçenekler sabit dursun.",
+  "tur2": "Ailenin farklı işlevleri karşılaştırılsın; yalnız maddi destek değil duygusal destek de vurgulansın.",
+  "tur3": "Öğrenci ailesinin kendisine nasıl destek olduğunu bir örnekle anlatsın."
+ },
+ {
+  "id": "h18",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Görev Çetelesi",
+  "sub": "Sınıf görevlerini say",
+  "kaz": "HB.2.3.3 — Görev ve sorumlulukları günlük yaşamına yansıtır.",
+  "type": "tallyChart",
+  "instruction": "Sınıf görev anketi! Gelen arkadaşının görevini doğru satıra dokunarak çeteleye işle",
+  "n": {
+   "columns": 3,
+   "responses": 10
+  },
+  "tur1": "Gerçek sınıf görev panosu çizilsin; cevap cümleleri görev adını birebir söylemesin ve işaretler çetele çizgisiyle biriksin.",
+  "tur2": "Çetele tamamlanınca sıklık tablosuna çevrilsin; “en çok/en az hangi görev” sorusu sorulsun.",
+  "tur3": "Öğrenci kendi görevini ekleyip sonucu yorumlasın."
+ },
+ {
+  "id": "h19",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Gezi Rehberi",
+  "sub": "Ziyaretçiye doğru yeri göster",
+  "kaz": "HB.2.4.1.a / b — Yakın çevresindeki tarihî mekân ve doğal güzellikleri fark eder, temel özelliklerini ifade eder.",
+  "type": "serveOrder",
+  "instruction": "Şehir gezi rehberisin! Ziyaretçinin aradığı yeri tepsiye koy",
+  "n": {
+   "customers": 4
+  },
+  "tur1": "Gerçek şehir haritası ve mekân fotoğrafları kullanılsın; ziyaretçinin isteği mekânın özelliğinden çıkarım gerektirsin ve etiket kopyası kaldırılsın.",
+  "tur2": "Tarihî mekân ile doğal güzellik ayrımı yapılsın; benzer iki mekân karşılaştırılsın.",
+  "tur3": "Öğrenci kendi çevresinden bir yeri iki cümleyle tanıtsın."
+ },
+ {
+  "id": "h20",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Çevre Radarı",
+  "sub": "Tarihî mekânı yakala",
+  "kaz": "HB.2.4.1.b — Tarihî mekân ve doğal güzelliklerin temel özelliklerini ifade eder.",
+  "type": "catchDrop",
+  "instruction": "Radarı sürükleyerek doğru cevabı yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Genel “doğru cevabı yakala” yönergesi kaldırılsın; soru gerçek mekân görselleri üzerinden sorulsun ve seçenekler sabit dursun.",
+  "tur2": "Aynı mekânın farklı özellikleri (yaşı, yapısı, kullanımı) ayrı sorularla incelensin.",
+  "tur3": "Öğrenci bir mekânın özelliğini kendi sözleriyle ifade etsin."
+ },
+ {
+  "id": "h21",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Yönetim Köprüsü",
+  "sub": "Birimi göreviyle eşle",
+  "kaz": "HB.2.4.2.a / b — Yaşadığı yerin yönetim birimleri ile ilgili kaynaklardan bilgi toplar ve kaydeder.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her yönetim birimini doğru göreviyle birleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Gerçek bir şehir sahnesi çizilsin: belediye, muhtarlık, valilik binaları görünsün ve eşleşme binanın işleviyle kurulsun. Emoji eşleşmesi kaldırılsın.",
+  "tur2": "Hangi işin hangi birime ait olduğu günlük örneklerle çalışılsın (çöp, nüfus kaydı, park).",
+  "tur3": "Öğrenci bir sorunu hangi birime iletmesi gerektiğini gerekçesiyle söylesin."
+ },
+ {
+  "id": "h22",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Atatürk'ün Okul Yılları",
+  "sub": "Anıları sırayla diz",
+  "kaz": "HB.2.4.3.a / b — Mustafa Kemal Atatürk'ün öğrencilik yıllarına ilişkin anıları inceler ve ifade eder.",
+  "type": "orderSequence",
+  "instruction": "Atatürk'ün öğrencilik yılları karıştı! En eskiden en yeniye doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek dönem görselleri ve okul sahneleri kullanılsın; roket kaldırılsın. İlk turda tarihler gizlensin, sıralama olay içeriğinden yapılsın.",
+  "tur2": "Atatürk'ün öğrencilik özellikleriyle öğrencinin kendi okul yaşamı karşılaştırılsın.",
+  "tur3": "Öğrenci en çok etkilendiği anıyı kendi cümlesiyle anlatsın."
+ },
+ {
+  "id": "h23",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Bayram Kartları",
+  "sub": "Bayramı anlamıyla eşle",
+  "kaz": "HB.2.4.4 / HB.2.4.5 — Millî ve dinî gün ile bayramların önemini yorumlar.",
+  "type": "memoryPairs",
+  "instruction": "Kartlar kapalı! Kartları çevir ve her bayramı anlamıyla eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Gerçek bayram sahneleri (tören, ziyaret, ikram) kart arkasında canlansın; eşleşen bayramın anlamı kısa bir görselle gösterilsin.",
+  "tur2": "Millî ve dinî bayramların anlam farkı örneklerle karşılaştırılsın.",
+  "tur3": "Öğrenci bir bayramın neden kutlandığını kendi sözleriyle anlatsın."
+ },
+ {
+  "id": "h24",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Bayram Ayırma Bandı",
+  "sub": "Millî mi, dinî mi?",
+  "kaz": "HB.2.4.4 / HB.2.4.5 — Millî ve dinî gün ve bayramların önemini ifade eder.",
+  "type": "beltSort",
+  "instruction": "Bayram bandı çalışıyor! Gelen bayram MİLLÎ mi, DİNÎ mi?",
+  "n": {
+   "items": 6,
+   "bins": "MİLLÎ BAYRAM / DİNÎ BAYRAM"
+  },
+  "tur1": "Gerçek bayram görselleri ve takvim kullanılsın; kart bantta akmasın ve millî/dinî ayrımı görsel kanıtla (tören mi, aile ziyareti mi) kurulsun.",
+  "tur2": "Aynı tarihte olan farklı kutlamalar ayrılsın; ölçüt tartışılsın.",
+  "tur3": "Öğrenci bir bayramı hangi gruba neden koyduğunu açıklasın."
+ },
+ {
+  "id": "h25",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Mevsim Kartları",
+  "sub": "Mevsimi hava olayıyla eşle",
+  "kaz": "HB.2.5.1.a / b / c — Hava olaylarının ve mevsimlerin özelliklerini belirler, ilişkilerini kurar.",
+  "type": "memoryPairs",
+  "instruction": "Kartlar kapalı! Kartları çevir ve her mevsimi özelliğiyle eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Gerçek mevsim manzaraları kart arkasında açılsın; eşleşen mevsimin özelliği kısa animasyonla gösterilsin (yaprak dökümü, kar yağışı).",
+  "tur2": "Aynı hava olayının farklı mevsimlerde görülebildiği durumlar eklensin.",
+  "tur3": "Öğrenci bulunduğu mevsimin özelliklerini gözleyip söylesin."
+ },
+ {
+  "id": "h26",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Hava Olayı Bandı",
+  "sub": "Hangi mevsimde görülür?",
+  "kaz": "HB.2.5.1.c — Hava olayları ile mevsimler arasındaki ilişkileri belirler.",
+  "type": "beltSort",
+  "instruction": "Hava istasyonu bandı! Gelen hava olayı hangi mevsimde en çok görülür?",
+  "n": {
+   "items": 8,
+   "bins": "İLKBAHAR / YAZ / SONBAHAR / KIŞ"
+  },
+  "tur1": "Gerçek bir hava istasyonu ve mevsim panosu çizilsin. KRİTİK: kart hiçbir kenarda kırpılmasın - denemede “Çiçeklerin açması” ifadesinin yalnız son hecesi görünüyordu. Kutulardaki mevsim emojileri cevabı vermesin.",
+  "tur2": "Birden çok mevsimde görülebilen hava olayları eklensin; öğrenci “en çok” ölçütünü savunsun.",
+  "tur3": "Öğrenci yaşadığı yerin mevsim özelliklerini gözleme dayanarak anlatsın."
+ },
+ {
+  "id": "h27",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Doğadan Yön Bulma",
+  "sub": "Güneşe göre yönü bul",
+  "kaz": "HB.2.5.2 — Doğadan yararlanarak yön belirler.",
+  "type": "codeGrid",
+  "instruction": "Ormanda kayboldun! Yön bloklarını dizerek kampa ulaş. Güneş sabah doğudan doğar, akşam batıdan batar.",
+  "n": {
+   "rounds": 2
+  },
+  "tur1": "KRİTİK: Yön blokları yukarı/aşağı/sol/sağ okları yerine KUZEY / GÜNEY / DOĞU / BATI olsun ve ekranda güneşin konumu (sabah doğuda, akşam batıda) görünsün. Rota ancak güneşe bakarak çözülebilsin; şu anki hâlinde kazanım ile mekanik tamamen kopuk.",
+  "tur2": "Sabah ve akşam senaryoları verilsin; aynı hedef için yön kararı değişsin.",
+  "tur3": "Öğrenci gölgeye veya güneşe bakarak bulunduğu yerde bir yönü söylesin."
+ },
+ {
+  "id": "h28",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Afet Hazırlık Adımları",
+  "sub": "Önlemleri sırala",
+  "kaz": "HB.2.5.3.a / b — Afetlere karşı alınacak önlemler hakkında bilgi bulur ve kaydeder.",
+  "type": "orderSequence",
+  "instruction": "Afet hazırlığı adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek bir ev ve afet hazırlığı sahnesi çizilsin; her adım evde yapılan somut bir işe dönüşsün (dolabı sabitle, çantayı hazırla, buluşma yeri belirle).",
+  "tur2": "Deprem, yangın ve sel için farklı önlem sıraları karşılaştırılsın.",
+  "tur3": "Öğrenci ailesiyle yapacağı üç hazırlığı sırayla söylesin."
+ },
+ {
+  "id": "h29",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Tasarruf Musluğu",
+  "sub": "Gereken kadar su kullan",
+  "kaz": "HB.2.5.4.a / b — Kaynak kullanımına ilişkin davranışlarını gözden geçirir, tasarruf hakkında çıkarım yapar.",
+  "type": "holdFill",
+  "instruction": "Musluğu basılı tutarak tam gereken kadar su doldur! Fazlası israf olur",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "KRONOMETRE kaldırılsın; ekranda gerçek musluk, lavabo, bardak ve diş fırçası olsun, akan su görünsün. KRİTİK: görev metni (“1 bardak su yeter”), “Hedef 1 bardak” satırı ve ölçekteki sarı çizgi cevabı üç yerde veriyor - hepsi kaldırılsın, öğrenci işe bakarak kendisi karar versin.",
+  "tur2": "Farklı işler için gereken su karşılaştırılsın (diş fırçalama, bulaşık, çiçek sulama).",
+  "tur3": "Öğrenci taşan suyu görsün ve günlük yaşamında bir tasarruf önerisi söylesin."
+ },
+ {
+  "id": "h30",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "İsraf Ölçeri",
+  "sub": "Ne kadar boşa gidiyor?",
+  "kaz": "HB.2.5.4.b — Kaynakların tasarruflu kullanılmasına ilişkin çıkarımda bulunur.",
+  "type": "dragSlider",
+  "instruction": "Ölçeri sürükleyerek israfı tahmin et, sonra gerçek değeri gör",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "Tren-tünel sahnesi kaldırılsın; ekranda akan musluk ve dolan kova gibi somut bir israf görseli olsun ve tahmin bu görsele dayansın.",
+  "tur2": "Tahmin, gerçek değer ve fark birlikte gösterilsin; iki kullanım karşılaştırılsın.",
+  "tur3": "Öğrenci israfı azaltmak için bir davranış değişikliği önersin."
+ },
+ {
+  "id": "h31",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Bilim İnsanı Köprüsü",
+  "sub": "Katkısıyla eşleştir",
+  "kaz": "HB.2.6.1.a / b — Bilim insanlarının bilime katkılarına yönelik bilgi bulur ve kaydeder.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her bilim insanını bilime katkısıyla birleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Gerçek bir bilim müzesi sahnesi çizilsin; her bilim insanının katkısı kısa bir görselle (ampul yanar, mikrop büyür) gösterilsin ve emoji eşleşmesi kaldırılsın.",
+  "tur2": "Katkının günlük yaşamdaki karşılığı sorulsun: bu buluş olmasaydı ne olurdu?",
+  "tur3": "Öğrenci bir bilim insanının katkısını kendi cümlesiyle anlatsın."
+ },
+ {
+  "id": "h32",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Teknoloji Zaman Şeridi",
+  "sub": "Eskiden yeniye sırala",
+  "kaz": "HB.2.6.2.a / b — Teknolojik bir ürünün zaman içindeki değişimini karşılaştırır.",
+  "type": "orderSequence",
+  "instruction": "Telefonun tarihi karıştı! En eskiden en yeniye doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek teknoloji müzesi vitrini çizilsin; ürünler raf üzerinde sıralansın ve roket kaldırılsın. İlk turda tarihler gizlensin, sıralama ürünün biçiminden yapılsın.",
+  "tur2": "Farklı ürün aileleri karşılaştırılsın (telefon, aydınlatma, ulaşım).",
+  "tur3": "Öğrenci bir ürünün nasıl değiştiğini üç aşamada anlatsın."
+ },
+ {
+  "id": "h33",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Eski-Yeni Bandı",
+  "sub": "Teknoloji nasıl değişti?",
+  "kaz": "HB.2.6.2.b — Teknolojik ürünlerin değişimindeki benzerlik ve farklılıkları listeler.",
+  "type": "beltSort",
+  "instruction": "Müze bandı çalışıyor! Gelen ürün ESKİ mi, YENİ teknoloji mi?",
+  "n": {
+   "items": 8,
+   "bins": "ESKİ TEKNOLOJİ / YENİ TEKNOLOJİ"
+  },
+  "tur1": "Gerçek müze vitrini ve günümüz rafı yan yana çizilsin; ürün kartı bu iki alandan birine yerleşsin ve bant durdurulsun.",
+  "tur2": "Eski-yeni ayrımının yanında benzerlik de sorulsun: ikisi de ne işe yarıyor?",
+  "tur3": "Öğrenci bir ürünün eski ve yeni hâlini karşılaştırıp farkı söylesin."
+ },
+ {
+  "id": "h34",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Sanat Kartları",
+  "sub": "Sanat dalını yeriyle eşle",
+  "kaz": "HB.2.6.3 — Sanatın günlük yaşamdaki yerini belirler.",
+  "type": "memoryPairs",
+  "instruction": "Kartlar kapalı! Kartları çevir ve her sanat dalını günlük yaşamdaki yeriyle eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Gerçek günlük yaşam sahneleri çizilsin (duvar resmi, sokak müziği, tiyatro afişi); eşleşen sanat dalı o sahnede canlansın.",
+  "tur2": "Aynı sanat dalının farklı yerlerde karşımıza çıktığı gösterilsin.",
+  "tur3": "Öğrenci çevresinde gördüğü bir sanat örneğini anlatsın."
+ },
+ {
+  "id": "h35",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Sanat Atölyesi",
+  "sub": "Sanatçıya malzeme ver",
+  "kaz": "HB.2.6.3 — Sanatın günlük yaşamdaki yerini belirler.",
+  "type": "serveOrder",
+  "instruction": "Atölyeye sanatçılar geldi! Her sanat dalı için doğru malzemeleri tepsiye koy",
+  "n": {
+   "customers": 4
+  },
+  "tur1": "Gerçek bir sanat atölyesi çizilsin; malzeme seçilince sanatçı onu kullanarak bir şey üretsin ve etiket kopyası kaldırılsın.",
+  "tur2": "Birden çok sanat dalında kullanılabilen malzemeler çeldirici olsun.",
+  "tur3": "Öğrenci bir sanat dalını seçip gerekli malzemeleri kendisi sıralasın."
+ },
+ {
+  "id": "h36",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Buluş Radarı",
+  "sub": "Buluşun faydasını yakala",
+  "kaz": "HB.2.6.1 / HB.2.6.2 — Bilim ve teknolojinin hayatımıza katkısını fark eder.",
+  "type": "catchDrop",
+  "instruction": "Radarı sürükleyerek buluşun bize sağladığı faydayı yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Genel radar yönergesi kaldırılsın; buluş ve faydası gerçek bir öncesi-sonrası sahnesiyle gösterilsin (buzdolabından önce yiyecek nasıl saklanırdı?).",
+  "tur2": "Aynı buluşun birden çok faydası ve bir olumsuz yanı karşılaştırılsın.",
+  "tur3": "Öğrenci bir buluşun hayatını nasıl kolaylaştırdığını örnekle anlatsın."
+ }
+]

@@ -27,6 +27,7 @@ const ENGINE6 = 'u01,u02,u03,u04,u05,u06,u07,u08,u09,u10,u11,u12,u13,u14,u15,u16
 const ENGINE4 = 's0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,n1,n2,n3,n4,n5,n6,n7,n8,n9'.split(',');  /* 1. sınıf sayma */
 const ENGINE3 = 'w01,w02,w03,w04,w05,w06,w07,w08,w09,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24,w25,w26,w27,w28,w29,w30,w31,w32,w33,w34,w35,w36,w37,w38,w39,w40,w41,w42,w43,w44,w45,w46,w47,w48'.split(',');   /* 3. sınıf: partiler hâlinde büyüyor */
 const ENGINE5 = Array.from({length:56},(_,i)=>'p'+String(i+1).padStart(2,'0'));   /* 4. sınıf matematik: partiler hâlinde büyüyor */
+const ENGINE7 = 'h01,h02,h03,h04,h05,h06,h07,h08,h09,h10,h11,h12'.split(',');  /* 2. sınıf hayat bilgisi: partiler hâlinde büyüyor */
 
 const panel = document.getElementById('panel');
 const cerceve = document.getElementById('cerceve');
@@ -47,6 +48,7 @@ function motorDosyasi(id){
   if (id[0] === 's' || id[0] === 'n') return '../app/src/main/assets/phaser/sayma-pdf.html';
   if (id[0] === 'u') return '../app/src/main/assets/phaser/turkce2-pdf.html';
   if (id[0] === 'p') return '../app/src/main/assets/phaser/matematik4-pdf.html';
+  if (id[0] === 'h') return '../app/src/main/assets/phaser/hayatbilgisi2-pdf.html';
   return '../app/src/main/assets/phaser/matematik-pdf.html';
 }
 
@@ -914,6 +916,79 @@ async function tur5(W){
   await sonSoruCoz(W, r);
 }
 
+/* ---------- 2. sınıf hayat bilgisi motoru ---------- */
+async function tur7(W){
+  const r = turVerisi(W);
+  switch (r.kind){
+    case 'karar':
+      await tikla(W, '[data-sec="' + r.secenekler.findIndex(c => c.correct) + '"]');
+      if (r.neden){
+        await kosul(() => !!S(W, '[data-neden]'), 15000, 'gerekçe basamağı');
+        await tikla(W, '[data-neden="' + r.neden.secenekler.findIndex(c => c.correct) + '"]');
+      }
+      break;
+    case 'sinifla':
+      for (let i = 0; i < r.kartlar.length; i++){
+        await kosul(() => Number(W.eval('String(state.ix)')) === i, 15000, 'kart ' + i);
+        await tikla(W, '[data-kutu="' + r.kartlar[i].dogru + '"]');
+        await bekle(60);
+      }
+      break;
+    case 'sira':
+      for (const i of r.dogru){ await tikla(W, '[data-kart="' + i + '"]'); await bekle(70); }
+      break;
+    case 'esle':
+      for (let i = 0; i < r.yuvalar.length; i++){
+        await tikla(W, '[data-et="' + r.yuvalar[i].dogru + '"]'); await bekle(50);
+        await tikla(W, '[data-yuva="' + i + '"]'); await bekle(70);
+      }
+      break;
+    case 'yaz':
+      await yaziYaz(W, '#yaziAlan', r.ornekCevap || r.ipucuMetin || '');
+      await bekle(120);
+      await tikla(W, '#yazOk');
+      break;
+    case 'konus':
+      await tikla(W, '#ornekDinle'); await bekle(140);
+      await tikla(W, '#konusBasla'); await bekle(140);
+      /* basılı tutma: motor en az 1,2 saniye ses üretimi istiyor */
+      W.eval('(function(){const b=document.querySelector("#konusTut");' +
+             'b.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,pointerId:1}))})()');
+      await bekle(1500);
+      W.eval('(function(){const b=document.querySelector("#konusTut");' +
+             'b.dispatchEvent(new PointerEvent("pointerup",{bubbles:true,pointerId:1}))})()');
+      await bekle(250);
+      await tikla(W, '#konusBitti'); await bekle(120);
+      for (let i = 0; i < r.olcutler.length; i++){ await tikla(W, '[data-ol="' + i + '"]'); await bekle(50); }
+      await tikla(W, '#konusOk');
+      break;
+    case 'mesafe':
+      for (let i = 0; i < r.durumlar.length; i++){
+        await kosul(() => Number(W.eval('String(state.ix)')) === i, 15000, 'mesafe durumu ' + i);
+        const d = r.durumlar[i], v = Math.round((d.enAz + d.enCok) / 2 / 5) * 5;
+        W.eval('(function(){const a=document.querySelector("#mesafeAlan");a.value=' + v +
+               ';a.dispatchEvent(new Event("input",{bubbles:true}))})()');
+        await bekle(80);
+        await tikla(W, '#mesafeOk'); await bekle(70);
+      }
+      break;
+    case 'tus':
+      for (let i = 0; i < r.senaryolar.length; i++){
+        await kosul(() => Number(W.eval('String(state.ix)')) === i, 15000, 'çağrı senaryosu ' + i);
+        for (const d of String(r.numara)){ await tikla(W, '[data-tus="' + d + '"]'); await bekle(45); }
+        await tikla(W, '#ara'); await bekle(70);
+      }
+      break;
+    case 'canta':
+      for (let j = 0; j < r.esyalar.length; j++){
+        if (!r.esyalar[j].gerekli) continue;
+        await tikla(W, '[data-esya="' + j + '"]'); await bekle(60);
+      }
+      break;
+    default: throw new Error('bilinmeyen mekanik (hayat bilgisi 2): ' + r.kind);
+  }
+}
+
 /* ---------- koşucu ---------- */
 window.SONUC = { bitti:false, gecti:[], kaldi:[], hatalar:[] };
 
@@ -934,6 +1009,7 @@ async function oyunuOyna(id){
     const gorunen = S(W,'.hud .round').textContent.trim();
     if (gorunen !== 'Tur ' + n + '/3') throw new Error('beklenen Tur '+n+'/3, görünen '+gorunen);
     if (id[0]==='u') await tur6(W);
+    else if (id[0]==='h') await tur7(W);
     else if (id[0]==='p') await tur5(W);
     else if (id[0]==='s' || id[0]==='n') await tur4(W);
     else if (id[0]==='v' || id[0]==='w') await tur2(W); else await tur1(W);
@@ -945,7 +1021,7 @@ async function oyunuOyna(id){
 
 (async () => {
   const p = new URLSearchParams(location.hash.slice(1));
-  const ids = p.get('ids') ? p.get('ids').split(',') : [...ENGINE1, ...ENGINE2, ...ENGINE3, ...ENGINE4, ...ENGINE5, ...ENGINE6];
+  const ids = p.get('ids') ? p.get('ids').split(',') : [...ENGINE1, ...ENGINE2, ...ENGINE3, ...ENGINE4, ...ENGINE5, ...ENGINE6, ...ENGINE7];
   panel.textContent = '';
   yaz('koşum: ' + ids.length + ' oyun');
   for (const id of ids){
