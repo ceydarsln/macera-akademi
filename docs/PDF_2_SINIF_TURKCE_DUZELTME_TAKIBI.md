@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 12/90 oyun uygulandı.**
+**Durum: 20/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -39,3 +39,11 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u10 | Ana Fikir Tohumu | okuma | Önce destekleyici ayrıntılar işaretleniyor, sonra ana fikir seçiliyor. 2. turda "arılar" (konu) ile "çalışmak önemlidir" (ana fikir) ayrı kutulara ayrılıyor; 3. turda çocuk yeni paragrafın ana fikrini yazıp iki ayrıntıyla destekliyor. | Uygulamada |
 | u11 | Sihirli Fosforlu Kalem | yazma | Hedef sözcük cevabı baştan söylemiyor; çocuk eş anlamlı çifti cümlede kendisi buluyor. 2. turda eş anlamlıların her cümlede yer değiştiremeyeceği gösteriliyor ("kara sular" / "siyah kalem"); 3. turda ikisi ayrı cümlelerde kullanılıyor. | Uygulamada |
 | u12 | Paragraf Asansörü | yazma | Kartlar sabit, zaman bağları görünür. 2. turda konuya uymayan dördüncü cümle yerleştirilemiyor ve nedeni söyleniyor; 3. turda çocuk giriş-gelişme-sonuç yapısında kendi paragrafını yazıyor. | Uygulamada |
+| u13 | Noktalama Akvaryumu | yazma | Baloncuklar gerçek cümle parçası; virgülün sıralama ve hitap görevleri ayrı turlarda çalışılıyor. 3. turda çocuk iki cümleyi kendi yazıp virgül ve soru işaretini kendisi koyuyor. | Uygulamada |
+| u14 | Kayıp Kitaplık | okuma | Mevsim/yer bilgisi metinde yazmıyor; çocuk iki ipucunu işaretleyip çıkarım yapıyor. 2. turda tek ipucunun yetmediği gösteriliyor; 3. turda çıkarım "Bence … çünkü metinde …" kalıbıyla yazılıyor. | Uygulamada |
+| u15 | Anlamını Bulan Işıldak | yazma | Işıldak hedef sözcüğü değil bağlam ipuçlarını aydınlatıyor; seçenekler sabit. 2. turda yakın iki anlam kanıtla ayrıştırılıyor; 3. turda tahmin-sözlük-kullanım üç adımı tamamlanıyor. | Uygulamada |
+| u16 | Hazine Haritası | okuma | Yönerge okunup sırayla uygulanıyor; 2. turda sağ-sol ve önce-sonra içeren dört adımlı rota var; 3. turda çocuk üç adımlı kendi yönergesini yazıyor. | Uygulamada |
+| u17 | Karakterlerin Sohbeti | konuşma | Aynı istek arkadaş, öğretmen ve yabancı büyük için ayrı ayrı karşılaştırılıyor. 3. turda çocuk özür-hitap-teşekkür içeren diyaloğu sesli canlandırıp rubrikle değerlendiriyor. | Uygulamada |
+| u18 | Zıt Anlamlılar Ekspresi | yazma | Köprü kutuları kaldırıldı, çiftler vagonlarda yan yana. 2. turda önce-sonra ve erken-geç gibi bağlama duyarlı çiftlere geçiliyor; 3. turda iki çift aynı paragrafta kullanılıyor. | Uygulamada |
+| u19 | Neden-Sonuç Köprüsü | okuma | Her neden sonucuna bağlanıyor; 2. turda aynı ilişki "çünkü" ve "bu yüzden" ile iki yönde kuruluyor; 3. turda biri doğa biri günlük yaşamdan iki cümle yazılıyor. | Uygulamada |
+| u20 | Zaman Şeridi | konuşma | Roket-yakıt sahnesi kaldırıldı, yatay zaman şeridi ve sabit kartlar var. 2. turda önce/ardından/daha sonra/en sonunda ayırt ediliyor; 3. turda çocuk üç cümlelik sözlü özet yapıyor. | Uygulamada |

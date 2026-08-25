@@ -861,6 +861,208 @@ GAMES.u12={title:'Paragraf Asansörü',theme:'city',finish:'Cümleleri giriş-ge
   result:'Üç katlı paragrafını kendin yazdın: giriş, gelişme ve sonuç yerli yerinde.'}
 ]};
 
+/* ---- u13 Noktalama Akvaryumu (yazma: virgül ve soru işareti) ---- */
+GAMES.u13={title:'Noktalama Akvaryumu',theme:'pond',finish:'Virgülün duraklama ve hitap görevlerini ayırt ettin, sonra iki cümleyi kendin işaretledin.',rounds:[
+ {kind:'esle',prompt:'Her cümleye uygun işareti bırak.',
+  sahne:'<div class="row"><span style="font-size:30px">🐠</span><span style="font-size:26px">🫧</span><span style="font-size:30px">🐟</span></div><div class="caption">Akvaryum baloncukları</div>',
+  gorev:'Cümleyi sesli oku. Nerede duraklıyorsun, nerede ses yükseliyor?',
+  etiketler:[{t:','},{t:'?'}],
+  yuvalar:[{ad:'Çantama defter … kalem ve silgi koydum',dogru:0,ipucu:'Burada sıralama var; her öğeden sonra kısa bir duraklama olur.'},
+   {ad:'Bu kitabı sen mi getirdin …',dogru:1,ipucu:'Bu cümle bir şey soruyor.'},
+   {ad:'Ali … kapıyı kapatır mısın',dogru:0,ipucu:'Burada birine seslenme var; seslenmeden sonra duraklanır.'}],
+  result:'Virgül sıralamada ve hitaptan sonra duraklama sağlar; soru cümlesinin sonunda soru işareti bulunur.'},
+ {kind:'kanit',prompt:'Virgülün görevini ayır: sıralama mı, hitap mı?',
+  sahne:'<div class="row"><span style="font-size:30px">🐠</span></div><div class="caption">İki cümle</div>',
+  baslik:'İki cümlede virgül',
+  metin:[['Birinci cümle: ',{t:'Elma, armut ve kiraz aldık'},'.'],
+   ['İkinci cümle: ',{t:'Deniz, biraz bekler misin',dogru:true},'?']],
+  gerekKanit:1,soru:'İşaretlediğin cümlede virgülün görevi nedir?',
+  secenekler:[{label:'Seslenilen kişiyi ayırmak (hitap)',correct:true},
+   {label:'Öğeleri sıralamak',hint:'Sıralama birinci cümlede; işaretlediğin cümlede birine sesleniliyor.'},
+   {label:'Soru sormak'}],
+  result:'Virgül bir cümlede öğeleri sıralar, başka cümlede seslenilen kişiyi ayırır.'},
+ {kind:'yaz',prompt:'İki cümle yaz: birinde virgül, birinde soru işareti olsun.',
+  sahne:'<div class="row"><span style="font-size:30px">🐠</span></div><div class="caption">Kendi cümlelerim</div>',
+  gorev:'Alt alta iki cümle yaz. Birinci cümlede sıralama için virgül kullan, ikinci cümle soru işaretiyle bitsin.',
+  enAzSatir:2,buyukHarf:true,gerekli:[',','?'],
+  ipucuMetin:'Kalem, defter ve boya aldım.\nSen de gelecek misin?',
+  ornekCevap:'Kalem, defter ve boya aldım.\nSen de gelecek misin?',
+  result:'Virgülü sıralamada, soru işaretini soru cümlesinde kullandın.'}
+]};
+
+/* ---- u14 Kayıp Kitaplık (okuma: çıkarım) ---- */
+GAMES.u14={title:'Kayıp Kitaplık',theme:'room',finish:'Tek ipucunun yetmediğini, birden çok ipucunun aynı sonuca götürdüğünü gördün ve çıkarımını yazdın.',rounds:[
+ {kind:'kanit',prompt:'Mevsim ipuçlarını işaretle, sonra kapıyı seç.',
+  sahne:'<div class="row"><span style="font-size:30px">🕯️</span><span style="font-size:28px">🚪</span></div><div class="caption">Kütüphane kapıları</div>',
+  baslik:'Can’ın günü',
+  metin:[['Can ',{t:'atkısını boynuna doladı',dogru:true},', ',{t:'çorbasını içti'},' ve dışarı çıktı. ',{t:'Ağaçların dalları çıplaktı',dogru:true},'.']],
+  gerekKanit:2,soru:'Metinde yazmıyor ama hangi mevsimdeyiz?',
+  secenekler:[{label:'Kış',correct:true},{label:'Yaz',hint:'Atkı ve çıplak dallar yazı göstermez.'},{label:'İlkbahar'}],
+  result:'Atkı ve çıplak dallar birlikte kışı gösteriyor. Metinde "kış" sözcüğü hiç geçmiyor.'},
+ {kind:'kanit',prompt:'Tek ipucu yetmez: iki ipucu birden işaretle.',
+  sahne:'<div class="row"><span style="font-size:30px">🕯️</span></div><div class="caption">İpucu mumu</div>',
+  baslik:'Nerede?',
+  metin:[['Sıralar arasında yürüdü, ',{t:'tahtaya adını yazdı',dogru:true},'. ',{t:'Zil çaldı',dogru:true},' ve herkes yerine oturdu. ',{t:'Pencere açıktı'},'.']],
+  gerekKanit:2,soru:'Bu olay nerede geçiyor?',
+  secenekler:[{label:'Sınıfta',correct:true},{label:'Parkta',hint:'Tahta ve zil parkta bulunmaz.'},{label:'Mutfakta'}],
+  result:'Tek başına "pencere açıktı" her yerde olabilir; tahta ve zil birlikte sınıfı gösteriyor.'},
+ {kind:'yaz',prompt:'Çıkarımını kalıpla yaz.',
+  sahne:'<div class="row"><span style="font-size:30px">🕯️</span></div><div class="caption">Dedektif defteri</div>',
+  gorev:'Can’ın hangi mevsimde olduğunu "Bence … çünkü metinde …" kalıbıyla yaz.',
+  enAzKelime:9,buyukHarf:true,bitis:'.',gerekli:['Bence','çünkü','metinde'],
+  ipucuMetin:'Bence mevsim … çünkü metinde … yazıyor.',
+  ornekCevap:'Bence mevsim kıştır çünkü metinde atkı ve çıplak dallar yazıyor.',
+  bank:['Bence','çünkü','metinde','atkı','çıplak dallar'],
+  result:'Çıkarımını kanıtıyla birlikte yazdın: iyi bir dedektif kanıt gösterir.'}
+]};
+
+/* ---- u15 Anlamını Bulan Işıldak (yazma: sözcük anlamı üç adım) ---- */
+GAMES.u15={title:'Anlamını Bulan Işıldak',theme:'space',finish:'Tahmin ettin, sözlükle kontrol ettin ve sözcüğü kendi cümlende kullandın.',rounds:[
+ {kind:'kanit',prompt:'Işıldağı bağlam ipucuna tut, sonra anlamı seç.',
+  sahne:'<div class="row"><span style="font-size:30px">🔦</span><span style="font-size:28px">🕳️</span></div><div class="caption">Karanlık mağara</div>',
+  baslik:'Cümle',
+  metin:[['Mağaranın girişi öyle ',{t:'dardı'},' ki içeri ancak ',{t:'emekleyerek girebildik',dogru:true},'; ',{t:'ayakta durmak imkânsızdı',dogru:true},'.']],
+  gerekKanit:2,soru:'"Emeklemek" bu cümlede ne demek?',
+  secenekler:[{label:'Eller ve dizler üstünde ilerlemek',correct:true},
+   {label:'Koşarak gitmek',hint:'İşaretlediğin kanıt ayakta durulamadığını söylüyor.'},
+   {label:'Zıplamak'}],
+  result:'Ayakta durulamayan dar bir yerde ancak eller ve dizler üstünde ilerlenir.'},
+ {kind:'kanit',prompt:'İki yakın anlam var: cümleye uygun olanı kanıtla seç.',
+  sahne:'<div class="row"><span style="font-size:30px">🔦</span></div><div class="caption">Sözlük kontrolü</div>',
+  baslik:'Cümle',
+  metin:[['Çocuk, kaybettiği oyuncağını bulunca ',{t:'sevinçten yerinde duramadı',dogru:true},'; ',{t:'gözleri parladı'},'.']],
+  gerekKanit:1,soru:'"Yerinde duramamak" hangi anlama daha yakın?',
+  secenekler:[{label:'Çok sevinip hareketlenmek',correct:true},
+   {label:'Ayakta zor durmak',hint:'Kanıt sevinçten söz ediyor, yorgunluktan değil.'},
+   {label:'Uykusu gelmek'}],
+  result:'Kalıbın anlamı bağlamla belirlendi: burada sevinçten hareketlenmek.'},
+ {kind:'yaz',prompt:'Sözcüğü kendi cümlende kullan.',
+  sahne:'<div class="row"><span style="font-size:30px">🔦</span></div><div class="caption">Üçüncü adım: kullanım</div>',
+  gorev:'Sözlük anlamı: "emeklemek = eller ve dizler üstünde ilerlemek". Bu sözcüğü kendi cümlende kullan; cümlede nerede olduğun da anlaşılsın.',
+  enAzKelime:6,buyukHarf:true,bitis:'.',gerekli:['emekle'],
+  yasak:['Mağaranın girişi dardı, emekleyerek girdik.'],
+  ipucuMetin:'Örnek: Yatağın altına emekleyerek girdim.',
+  ornekCevap:'Yatağın altındaki topu almak için emekleyerek ilerledim.',
+  bank:['emekleyerek','ilerledim','altına','girdim'],
+  result:'Tahmin, sözlük ve kullanım: üç adımı da tamamladın.'}
+]};
+
+/* ---- u16 Hazine Haritası (okuma: yönergeyi sırayla uygulama) ---- */
+GAMES.u16={title:'Hazine Haritası',theme:'pirate',finish:'Yönergeyi sırayla uyguladın, dört adımlı yeni rotayı çözdün ve kendi yönergeni yazdın.',rounds:[
+ {kind:'sira',prompt:'Mektuptaki rotayı sırayla uygula.',
+  sahne:'<div class="row"><span style="font-size:30px">🗺️</span><span style="font-size:26px">🌳</span><span style="font-size:26px">🪨</span></div><div class="caption">Hazine haritası</div>',
+  gorev:'Mektup: “Önce büyük meşe ağacına git. Oradan sağa dönüp kırmızı kayaya ulaş. Kayayı geçince hazineyi kaz.”',
+  kartlar:[{t:'Sağa dön ve kırmızı kayaya ulaş.'},{t:'Büyük meşe ağacına git.'},{t:'Kayayı geç ve hazineyi kaz.'}],
+  dogru:[1,0,2],
+  ipucular:['Mektup "önce" diyerek başlıyor: ilk hedef hangisi?','"Oradan sağa dönüp" ne yapılır?','"Kayayı geçince" ne yapılır?'],
+  result:'Meşe ağacı, sağa dönüş, kaya ve kazı: yönergeyi sırasıyla uyguladın.'},
+ {kind:'sira',prompt:'Dört adımlı yeni rota: sağ-sol ve önce-sonra.',
+  sahne:'<div class="row"><span style="font-size:30px">🗺️</span></div><div class="caption">Yeni rota</div>',
+  gorev:'Mektup: “Önce köprüden geç. Sonra sola dönüp değirmene git. Değirmenden sağa dön. En sonunda kuyuyu bul.”',
+  kartlar:[{t:'Sola dön ve değirmene git.'},{t:'Köprüden geç.'},{t:'En sonunda kuyuyu bul.'},{t:'Değirmenden sağa dön.'}],
+  dogru:[1,0,3,2],
+  ipucular:['"Önce" hangi adımı gösteriyor?','"Sonra sola dönüp" ne yapılır?','Değirmenden sonra hangi yöne dönülür?','"En sonunda" ne bulunur?'],
+  result:'Önce-sonra ve sağ-sol sözcüklerini takip ederek dört adımı da doğru uyguladın.'},
+ {kind:'yaz',prompt:'Arkadaşına üç adımlı bir yönerge yaz.',
+  sahne:'<div class="row"><span style="font-size:30px">🗺️</span></div><div class="caption">Kendi hazine yönergem</div>',
+  gorev:'Sınıfta bir yeri tarif eden üç adımlı bir yönerge yaz. Her adım alt satırda olsun ve en az bir adımda yön sözcüğü (sağa/sola) kullan.',
+  enAzSatir:3,buyukHarf:true,gerekli:['sa'],
+  ipucuMetin:'Önce kapıdan içeri gir.\nSonra sağa dön ve kitaplığa git.\nEn sonunda üçüncü rafa bak.',
+  ornekCevap:'Önce kapıdan içeri gir.\nSonra sağa dön ve kitaplığa git.\nEn sonunda üçüncü rafa bak.',
+  result:'Üç adımlı, yön sözcüğü içeren bir yönerge yazdın: arkadaşın bunu uygulayabilir.'}
+]};
+
+/* ---- u17 Karakterlerin Sohbeti (konuşma: nezaket) ---- */
+GAMES.u17={title:'Karakterlerin Sohbeti',theme:'class',finish:'Aynı isteği kime söylediğine göre nasıl değiştirdiğini gördün ve nezaket diyaloğunu sesli canlandırdın.',rounds:[
+ {kind:'esle',prompt:'Her sohbete uygun cevabı seç.',
+  sahne:'<div class="row"><span style="font-size:30px">🧒</span><span style="font-size:26px">💬</span><span style="font-size:30px">👧</span></div><div class="caption">Sohbet balonları</div>',
+  gorev:'Ali bir şey soruyor. Nezaket kurallarına uyan cevabı getir.',
+  etiketler:[{t:'Tabii, buyur.'},{t:'Ver şunu bana.'},{t:'İlgilenmiyorum.'}],
+  yuvalar:[{ad:'Ali: “Silgini bir dakika alabilir miyim?”',dogru:0,ipucu:'İzin isteyen birine nazik cevap nasıl verilir?'}],
+  result:'Nazik bir isteğe nazik bir kabulle karşılık verilir.'},
+ {kind:'esle',prompt:'Aynı istek, üç farklı kişi: hitap değişir.',
+  sahne:'<div class="row"><span style="font-size:28px">🧒</span><span style="font-size:28px">👩‍🏫</span><span style="font-size:28px">🧓</span></div><div class="caption">Arkadaş · öğretmen · yabancı büyük</div>',
+  gorev:'"Kalem istemek" aynı, ama kime söylediğine göre ifade değişir.',
+  etiketler:[{t:'Kalemini alabilir miyim?'},{t:'Öğretmenim, kaleminizi alabilir miyim?'},{t:'Affedersiniz, kaleminizi rica edebilir miyim?'}],
+  yuvalar:[{ad:'Arkadaşına',dogru:0},{ad:'Öğretmenine',dogru:1,ipucu:'Öğretmene "siz" diye hitap edilir ve unvan kullanılır.'},
+   {ad:'Tanımadığın bir büyüğe',dogru:2,ipucu:'Tanımadığımız birine önce "affedersiniz" denir.'}],
+  result:'Aynı isteği arkadaşa, öğretmene ve yabancıya farklı hitaplarla söyledik.'},
+ {kind:'konus',prompt:'Nezaket diyaloğunu sesli canlandır.',
+  sahne:'<div class="row"><span style="font-size:30px">🧒</span><span style="font-size:26px">💬</span></div><div class="caption">Sen konuşuyorsun</div>',
+  gorev:'Kalabalık bir koridorda birine çarptın. Ne söylersin? Sonra o kişi "Önemli değil" derse ne dersin? İkisini sesli söyle.',
+  ornek:'Örnek: “Özür dilerim, dikkat etmedim.” — “Önemli değil.” — “Teşekkür ederim, iyi günler.”',
+  olcutler:['Özür ifadesi kullandım.','Karşımdakine uygun hitap ettim.','Teşekkür ettim.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Özür, uygun hitap ve teşekkür: nezaket diyaloğunu sesli kurdun.'}
+]};
+
+/* ---- u18 Zıt Anlamlılar Ekspresi (yazma: zıt anlam) ---- */
+GAMES.u18={title:'Zıt Anlamlılar Ekspresi',theme:'rail',finish:'Kolay zıt çiftlerden bağlama duyarlı çiftlere geçtin ve iki çifti aynı paragrafta kullandın.',rounds:[
+ {kind:'esle',prompt:'Her vagona zıt anlamlısını getir.',sahne:SAHNE.tren,
+  gorev:'Vagondaki sözcüğün zıddını taşıyan valizi seç.',
+  etiketler:[{t:'soğuk'},{t:'karanlık'},{t:'uzun'}],
+  yuvalar:[{ad:'sıcak',dogru:0},{ad:'aydınlık',dogru:1},{ad:'kısa',dogru:2}],
+  result:'Sıcak-soğuk, aydınlık-karanlık, uzun-kısa: her çift birbirinin zıddı.'},
+ {kind:'esle',prompt:'Bu çiftler bağlama duyarlı: dikkat.',sahne:SAHNE.tren,
+  gorev:'Cümleyi oku, boşluğa hangi zıt sözcük uyar?',
+  etiketler:[{t:'sonra'},{t:'geç'}],
+  yuvalar:[{ad:'Ödevimi önce yaptım, oyunu … oynadım.',dogru:0,ipucu:'"Önce"nin zıddı zaman sırasında hangisidir?'},
+   {ad:'Servise erken bindim ama okula … kaldım.',dogru:1,ipucu:'"Erken"in zıddı hangisidir?'}],
+  result:'Önce-sonra sırayı, erken-geç zamanı gösterir. İkisi de zıt çift ama aynı cümlede kullanılmaz.'},
+ {kind:'yaz',prompt:'İki zıt çifti aynı paragrafta kullan.',sahne:SAHNE.tren,
+  gorev:'Kısa bir paragraf yaz: içinde hem "erken" ile "geç", hem de "uzun" ile "kısa" geçsin.',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['erken','geç','uzun','kısa'],
+  ipucuMetin:'Sabah erken kalktım ama okula yine de geç kaldım. Giderken yol uzun görünüyordu, dönüşte kısa geldi.',
+  ornekCevap:'Sabah erken kalktım ama okula yine de geç kaldım. Giderken yol uzun görünüyordu, dönüşte kısa geldi.',
+  result:'İki zıt çifti de aynı paragrafta anlamlı biçimde kullandın.'}
+]};
+
+/* ---- u19 Neden-Sonuç Köprüsü (okuma: neden-sonuç) ---- */
+GAMES.u19={title:'Neden-Sonuç Köprüsü',theme:'garden',finish:'Her nedeni sonucuna bağladın, aynı ilişkiyi iki yönde ifade ettin ve kendi cümlelerini yazdın.',rounds:[
+ {kind:'esle',prompt:'Her nedene doğru sonucu bağla.',sahne:SAHNE.kopru,
+  gorev:'Sol kıyıda neden, sağ kıyıda sonuç var.',
+  etiketler:[{t:'yollar ıslandı'},{t:'çiçekler soldu'},{t:'ışıklar söndü'}],
+  yuvalar:[{ad:'Sabaha kadar yağmur yağdı, bu yüzden …',dogru:0},
+   {ad:'Çiçekler günlerce sulanmadı, bu yüzden …',dogru:1},
+   {ad:'Elektrik kesildi, bu yüzden …',dogru:2}],
+  result:'Yağmur–ıslak yol, susuzluk–solmak, kesinti–karanlık: her neden kendi sonucuna bağlandı.'},
+ {kind:'esle',prompt:'Aynı ilişki iki yönde: çünkü mü, bu yüzden mi?',sahne:SAHNE.kopru,
+  gorev:'Aynı olayı iki farklı bağlaçla kurabiliriz.',
+  etiketler:[{t:'çünkü'},{t:'bu yüzden'}],
+  yuvalar:[{ad:'Yollar ıslandı … sabaha kadar yağmur yağdı.',dogru:0,ipucu:'Burada önce sonuç, sonra neden söyleniyor.'},
+   {ad:'Sabaha kadar yağmur yağdı … yollar ıslandı.',dogru:1,ipucu:'Burada önce neden, sonra sonuç söyleniyor.'}],
+  result:'"Çünkü" nedeni sonra söyler, "bu yüzden" sonucu sonra söyler. İlişki aynı, sıra farklı.'},
+ {kind:'yaz',prompt:'İki neden-sonuç cümlesi yaz.',sahne:SAHNE.kopru,
+  gorev:'Alt alta iki cümle yaz: birincisi bir doğa olayı, ikincisi günlük yaşamdan olsun. İkisinde de "çünkü" ya da "bu yüzden" kullan.',
+  enAzSatir:2,buyukHarf:true,gerekli:['çünkü'],
+  ipucuMetin:'Kar yağdı bu yüzden okullar tatil oldu.\nErken yattım çünkü sabah gezi vardı.',
+  ornekCevap:'Kar yağdı bu yüzden okullar tatil oldu.\nErken yattım çünkü sabah gezi vardı.',
+  result:'Bir doğa olayı ve bir günlük yaşam örneğiyle neden-sonuç kurdun.'}
+]};
+
+/* ---- u20 Zaman Şeridi (konuşma: olay sırası) ---- */
+GAMES.u20={title:'Zaman Şeridi',theme:'class',finish:'Olayları zaman şeridine dizdin ve sıraladığın olayları sesli olarak özetledin.',rounds:[
+ {kind:'sira',prompt:'Olayları zaman şeridine sırayla diz.',
+  sahne:'<div class="row"><span style="font-size:26px">📷</span><span style="font-size:26px">📜</span><span style="font-size:26px">🏫</span></div><div class="caption">Zaman şeridi</div>',
+  gorev:'Kartlar sabit duruyor. Hangisi önce olmuş?',
+  kartlar:[{t:'Yeni okul binası açıldı.'},{t:'Mahallede ilk okul bir odada kuruldu.'},{t:'Okulun bahçesine kütüphane eklendi.'}],
+  dogru:[1,0,2],
+  ipucular:['En eski olay hangisi? Küçük başlangıcı ara.','Bir odadan sonra ne yapıldı?','En son eklenen bölüm hangisi?'],
+  result:'Bir odalı okul, sonra yeni bina, en sonunda kütüphane.'},
+ {kind:'sira',prompt:'Dört olay: önce / daha sonra / en sonunda.',
+  sahne:'<div class="row"><span style="font-size:26px">📷</span></div><div class="caption">Dört fotoğraf</div>',
+  gorev:'Zaman sözcüklerine dikkat et.',
+  kartlar:[{t:'Daha sonra sınıflara sıra ve tahta kondu.'},{t:'Önce arsa temizlendi.'},{t:'En sonunda öğrenciler derse başladı.'},{t:'Ardından duvarlar örüldü.'}],
+  dogru:[1,3,0,2],
+  ipucular:['"Önce" hangi kartta yazıyor?','Temizlikten sonra ne yapılır? "Ardından" kartına bak.','Duvarlar örülünce içeriye ne konur?','"En sonunda" hangi kartta?'],
+  result:'Önce, ardından, daha sonra, en sonunda: zaman sözcükleri sırayı gösterdi.'},
+ {kind:'konus',prompt:'Sıraladığın olayları sesli özetle.',
+  sahne:'<div class="row"><span style="font-size:26px">📷</span></div><div class="caption">Üç cümlelik özet</div>',
+  gorev:'Okulun yapılışını üç cümleyle anlat. "Önce", "daha sonra" ve "en sonunda" sözcüklerini kullan.',
+  ornek:'Örnek: Önce arsa temizlendi. Daha sonra duvarlar örüldü ve sıralar kondu. En sonunda öğrenciler derse başladı.',
+  olcutler:['Üç cümle kurdum.','"Önce" ile başladım.','"En sonunda" ile bitirdim.','Olayları doğru sırayla anlattım.'],
+  result:'Zaman sözcükleriyle üç cümlelik sözlü özetini yaptın.'}
+]};
+
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card">
  <div class="big">📖</div><h2>2. Sınıf Türkçe</h2>
