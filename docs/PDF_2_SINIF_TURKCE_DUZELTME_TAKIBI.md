@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 28/90 oyun uygulandı.**
+**Durum: 36/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -55,3 +55,11 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u26 | Büyük Harf Kalkanı | yazma | Doğru biçim otomatik verilmiyor: çocuk telgraf metnini gerçekten düzenliyor, beş ölçüt canlı denetleniyor. 2. turda kişi/şehir/bayram/kurum adları ayrılıyor; 3. turda iki cümle klavyeyle yeniden yazılıyor. | Uygulamada |
 | u27 | Doğruluk Terazisi | dinleme | Kayıt metni ekranda yazılı değil, tekrar dinleme cezasız. 2. turda kısmen doğru bilgi ile tümüyle yanlış bilgi ayrılıyor; 3. turda karar "Biliyorum çünkü …" ile gerekçelendiriliyor. | Uygulamada |
 | u28 | Hitap Yıldızları | konuşma | Arkadaş, öğretmen ve misafir için ayrı hitaplar; 2. turda selamlaşma-hitap-vedalaşma konuşmanın farklı yerlerine yerleştiriliyor; 3. turda iki turlu diyalog sesli canlandırılıyor. | Uygulamada |
+| u29 | Örneklendirme Ağacı | yazma | Balık-ağ motoru kaldırıldı; destekleyen, ilgisiz ve ters örnekler ayrı dallara ayrılıyor. 3. turda çocuk kendi örnek cümlesini yazıyor. | Uygulamada |
+| u30 | Vurgu Stüdyosu | konuşma | Meteora nişan alma yerine iki kayıt dinlenip karşılaştırılıyor; düz/aşırı/uygun vurgu ayırt ediliyor. 3. turda çocuk dizeyi sesli okuyup vurgu-hız-duraklama rubriğiyle değerlendiriyor. | Uygulamada |
+| u31 | Kayıp İleti Şifresi | okuma | Kasa ancak ana ileti ile kanıt birlikte seçilince açılıyor; konu/ana ileti/ayrıntı üç ayrı çarka ayrılıyor. 3. turda ileti kendi cümlesiyle yazılıp kanıtla destekleniyor. | Uygulamada |
+| u32 | Orman Kâşifleri | okuma | Canlılar metindeki gözlenen eylemlere göre sınıflanıyor; 2. turda ördek örneğiyle ölçüt değişince grubun da değiştiği gösteriliyor. 3. turda çocuk yeni canlı ekleyip gerekçe yazıyor. | Uygulamada |
+| u33 | Soru Yağmuru | yazma | Edatlar aynı görünümde; seçim son ünlüye göre yapılıyor. 2. turda bitişik yazılmış edatlar çocuk tarafından ayrılıyor (doğru biçim verilmiyor). 3. turda dört edatla dört soru cümlesi yazılıyor. | Uygulamada |
+| u34 | İklim Makinesi | okuma | Etiket köprüsü yerine neden-sonuç kabloları; 2. turda tek nedenin iki sonucu gösteriliyor. 3. turda çocuk kendi gözlemini neden-sonuç cümlesine çeviriyor. | Uygulamada |
+| u35 | Bukalemunun Şiiri | yazma | Benzeyen ve benzetilen metinde işaretleniyor; uygun/uygunsuz benzetme karşılaştırılıyor. 3. turda çocuk özgün benzetme dizesi yazıyor. | Uygulamada |
+| u36 | Kayıp İzci | yazma | Hareketli uzay hedefleri kaldırıldı; izci günlüğünde bağlam ipucu işaretleniyor. Aynı sözcük iki doğa cümlesinde inceleniyor; 3. turda tahmin-sözlük-yeni cümle döngüsü bağımsız tamamlanıyor. | Uygulamada |

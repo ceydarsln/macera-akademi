@@ -1266,6 +1266,213 @@ GAMES.u28={title:'Hitap Yıldızları',theme:'class',finish:'Selamlaşma, hitap 
   result:'Selamlaşma, hitap, istek ve vedalaşmayı aynı konuşmada sırayla kullandın.'}
 ]};
 
+/* ---- Tema 3 · Doğada Neler Oluyor? (u29–u36) ---- */
+const S3={
+ agacOr:'<div class="row"><span style="font-size:34px">🌳</span><span style="font-size:24px">🍃</span></div><div class="caption">Örneklendirme ağacı</div>',
+ studyo:'<div class="row"><span style="font-size:28px">🎙️</span><span style="font-size:26px">🎚️</span><span style="font-size:26px">🎧</span></div><div class="caption">Ses stüdyosu</div>',
+ kasa:'<div class="row"><span style="font-size:30px">🔐</span><span style="font-size:26px">🎛️</span></div><div class="caption">Şifre kasası</div>',
+ orman:'<div class="row"><span style="font-size:26px">🌲</span><span style="font-size:24px">🦌</span><span style="font-size:22px">🦋</span><span style="font-size:22px">🐍</span></div><div class="caption">Orman sahnesi</div>',
+ yagmurS:'<div class="row"><span style="font-size:28px">🌧️</span><span style="font-size:24px">💧</span></div><div class="caption">Soru yağmuru</div>',
+ iklim:'<div class="row"><span style="font-size:30px">🌡️</span><span style="font-size:26px">☁️</span><span style="font-size:26px">🌊</span></div><div class="caption">İklim makinesi</div>',
+ buka:'<div class="row"><span style="font-size:30px">🦎</span><span style="font-size:26px">📜</span></div><div class="caption">Bukalemunun şiir kâğıdı</div>',
+ izci:'<div class="row"><span style="font-size:28px">🔦</span><span style="font-size:26px">📓</span><span style="font-size:26px">⛺</span></div><div class="caption">İzci günlüğü</div>'
+};
+
+GAMES.u29={title:'Örneklendirme Ağacı',theme:'garden',finish:'Ana fikri destekleyen örneği ilgisiz ve ters örnekten ayırdın, sonra kendi örneğini yazdın.',rounds:[
+ {kind:'kanit',prompt:'Ana fikri destekleyen örneği işaretle.',sahne:S3.agacOr,
+  baslik:'Ana fikir: Ağaçlar hayatımız için çok önemlidir.',
+  metin:[['Yapraklardaki olaylar: ',{t:'Ağaçlar havayı temizler',dogru:true},'; ',{t:'kediler ağaca tırmanmayı sever'},'; ',{t:'kökleri toprağın kaymasını önler',dogru:true},'.']],
+  gerekKanit:2,soru:'Bu iki örnek ana fikir için ne yapıyor?',
+  secenekler:[{label:'Ana fikri destekliyor',correct:true},{label:'Ana fikre ters düşüyor'},{label:'Konu dışı kalıyor'}],
+  result:'Havayı temizlemek ve toprağı tutmak ağaçların önemini gösteren örneklerdir.'},
+ {kind:'esle',prompt:'Her örneği doğru dala koy.',sahne:S3.agacOr,
+  gorev:'Ana fikir: "Ağaçlar hayatımız için çok önemlidir."',
+  etiketler:[{t:'Gölgesinde serinleriz'},{t:'Kedim ağaca tırmandı'},{t:'Ağaçlar kesilince sel oluyor'}],
+  yuvalar:[{ad:'Doğrudan destekleyen örnek',dogru:0},
+   {ad:'İlgisiz örnek',dogru:1,ipucu:'Kedinin tırmanması ağacın bizim için önemini anlatmıyor.'},
+   {ad:'Ters durumu gösteren örnek',dogru:2,ipucu:'Bu örnek ağaç OLMAYINCA ne olduğunu anlatıyor.'}],
+  result:'Destekleyen örnek fikri güçlendirir, ilgisiz örnek konudan uzaklaştırır, ters örnek olumsuz durumu gösterir.'},
+ {kind:'yaz',prompt:'Kendi örneğini yeni yaprağa yaz.',sahne:S3.agacOr,
+  gorev:'"Ağaçlar hayatımız için çok önemlidir." fikrini destekleyen kendi örneğini bir cümleyle yaz.',
+  enAzKelime:6,buyukHarf:true,bitis:'.',gerekli:['ağaç'],
+  yasak:['Ağaçlar havayı temizler.'],
+  ipucuMetin:'Örnek: Ağaçlar meyve vererek bizi besler.',
+  ornekCevap:'Ağaçlar meyve vererek bizi ve hayvanları besler.',
+  bank:['Ağaçlar','gölge','meyve','oksijen','besler'],
+  result:'Ana fikri kendi örneğinle destekledin: ağaca yeni bir yaprak eklendi.'}
+]};
+
+GAMES.u30={title:'Vurgu Stüdyosu',theme:'class',finish:'Düz, aşırı ve uygun vurguyu karşılaştırdın ve dizeyi kendi sesinle uygun vurguyla okudun.',rounds:[
+ {kind:'dinle',prompt:'İki kaydı dinle, farkı bul.',sahne:S3.studyo,
+  gorev:'Aynı cümle iki kez okunuyor. Dinle ve farkı seç.',
+  ses:'Birinci okuyuş: bugün hava çok güzel. İkinci okuyuş: BUGÜN hava çok güzel.',
+  soru:'İki okuyuş arasındaki fark nedir?',
+  secenekler:[{label:'İkincide "bugün" sözcüğü vurgulandı',correct:true},
+   {label:'İkincide cümle daha uzun',hint:'Sözcükler aynı; değişen tek şey sesin bir sözcükte yükselmesi.'},
+   {label:'İkincide farklı sözcükler var'}],
+  result:'Sözcükler aynıydı; ikinci okuyuşta "bugün" vurgulandığı için anlam "başka gün değil, bugün" oldu.'},
+ {kind:'dinle',prompt:'Üç okuyuş: düz, aşırı, uygun.',sahne:S3.studyo,
+  gorev:'Aynı dize üç farklı biçimde okunuyor.',
+  ses:'Birinci: bir bahar sabahı kuşlar öter. İkinci: BİR BAHAR SABAHI KUŞLAR ÖTER. Üçüncü: bir bahar sabahı, kuşlar öter.',
+  soru:'Şiir okurken hangisi uygundur?',
+  secenekler:[{label:'Üçüncü: anlam duraklarına göre vurgulu okuyuş',correct:true},
+   {label:'İkinci: her sözcüğü bağırarak okumak',hint:'Her sözcüğü yükseltmek vurgu değil bağırmaktır.'},
+   {label:'Birinci: hiç durmadan düz okumak'}],
+  result:'Uygun okuyuş anlam duraklarına göre vurgular; ne düzdür ne de bağırmadır.'},
+ {kind:'konus',prompt:'Dizeyi uygun vurguyla oku.',sahne:S3.studyo,
+  gorev:'"Bir bahar sabahı kuşlar öter." dizesini anlam duraklarına dikkat ederek yüksek sesle oku.',
+  ornek:'Örnek: “Bir bahar sabahı… kuşlar öter.” Virgülde kısa durakla ve "bahar" sözcüğünü hafif vurgulayarak.',
+  olcutler:['Anlam durağında kısa bir duraklama yaptım.','Bir sözcüğü uygun biçimde vurguladım.','Bağırmadan, yeterli sesle okudum.','Hızım ne çok yavaş ne çok hızlıydı.'],
+  result:'Vurgu, hız ve duraklamayı birlikte ayarladın.'}
+]};
+
+GAMES.u31={title:'Kayıp İleti Şifresi',theme:'room',finish:'Konu, ana ileti ve ayrıntıyı ayırdın; kasa ancak ileti ile kanıt birlikte seçilince açıldı.',rounds:[
+ {kind:'kanit',prompt:'Kanıtı işaretle, sonra ana iletiyi seç.',sahne:S3.kasa,
+  baslik:'Metin',
+  metin:[['Küçük bir kuş, kanadı kırık bir kelebeği gördü. ',{t:'Onu yaprakların arasına taşıdı',dogru:true},' ve ',{t:'iyileşene kadar yanından ayrılmadı',dogru:true},'. ',{t:'Ormanda o gün hava yağmurluydu'},'.']],
+  gerekKanit:2,soru:'Metnin ana iletisi nedir?',
+  secenekler:[{label:'Zor durumdaki canlıya yardım etmeliyiz',correct:true},
+   {label:'Ormanda hava yağmurluydu',hint:'Bu bir ayrıntı; metnin vermek istediği ileti değil.'},
+   {label:'Kuşlar kelebeklerden hızlıdır'}],
+  result:'Taşımak ve yanından ayrılmamak yardım etmeyi gösteriyor; hava durumu yalnızca bir ayrıntı.'},
+ {kind:'esle',prompt:'Konu mu, ana ileti mi, ayrıntı mı?',sahne:S3.kasa,
+  gorev:'Kasanın üç çarkı var. Her ifadeyi doğru çarka koy.',
+  etiketler:[{t:'Yardımlaşma'},{t:'Zor durumdakine yardım etmeliyiz'},{t:'Kelebeğin kanadı kırıktı'}],
+  yuvalar:[{ad:'Konu (neden söz ediyor?)',dogru:0},
+   {ad:'Ana ileti (ne demek istiyor?)',dogru:1},
+   {ad:'Ayrıntı',dogru:2}],
+  result:'Konu tek sözcükle söylenebilir; ana ileti bir cümledir; ayrıntı metnin küçük bilgisidir.'},
+ {kind:'yaz',prompt:'Ana iletiyi yaz, kanıtını ekle.',sahne:S3.kasa,
+  gorev:'Metnin ana iletisini kendi cümlenle yaz, sonra alt satıra metinden bir kanıt yaz.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Ana ileti: Zor durumdaki canlıya yardım etmeliyiz.\nKanıt: Kuş, kelebeği yaprakların arasına taşıdı.',
+  ornekCevap:'Ana ileti: Zor durumdaki canlılara yardım etmeliyiz.\nKanıt: Kuş, kelebeği yaprakların arasına taşıdı.',
+  result:'İletiyi kendi sözcüklerinle yazıp metinden kanıtla destekledin.'}
+]};
+
+GAMES.u32={title:'Orman Kâşifleri',theme:'garden',finish:'Canlıları gözlenen özelliklerine göre sınıflandırdın ve ölçüt değişince grubun da değişebileceğini gördün.',rounds:[
+ {kind:'esle',prompt:'Her canlıyı hareketine göre yerleştir.',sahne:S3.orman,
+  gorev:'Metin: “Geyik ormanda otladı, kelebek çiçeğe kondu, yılan taşın altına süzüldü.”',
+  etiketler:[{t:'geyik'},{t:'kelebek'},{t:'yılan'}],
+  yuvalar:[{ad:'Yürüyenler',dogru:0},{ad:'Uçanlar',dogru:1},{ad:'Sürünenler',dogru:2}],
+  result:'Metindeki eylemler sınıflandırmayı belirledi: otladı-yürür, kondu-uçar, süzüldü-sürünür.'},
+ {kind:'kanit',prompt:'Ölçüt değişince grup da değişir.',sahne:S3.orman,
+  baslik:'Ördek hakkında',
+  metin:[['Ördek gölde ',{t:'yüzer'},', tehlike görünce ',{t:'uçarak kaçar',dogru:true},', karada ise ',{t:'paytak paytak yürür'},'.']],
+  gerekKanit:1,soru:'"Uçabilenler" ölçütüne göre ördek hangi gruba girer?',
+  secenekler:[{label:'Uçanlar',correct:true},
+   {label:'Yalnız yüzenler',hint:'İşaretlediğin kanıt uçmaktan söz ediyor.'},
+   {label:'Hiçbir gruba girmez'}],
+  result:'Ördek hem yüzer hem uçar hem yürür. Hangi gruba gireceği seçtiğimiz ölçüte bağlıdır.'},
+ {kind:'yaz',prompt:'Yeni bir canlı ekle ve gerekçesini yaz.',sahne:S3.orman,
+  gorev:'Ormana yeni bir canlı ekle. Hangi gruba koyduğunu ve nedenini bir cümleyle yaz.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Sincabı yürüyenler grubuna koydum çünkü dallarda ayaklarıyla koşuyor.',
+  ornekCevap:'Sincabı yürüyenler grubuna koydum çünkü dallarda ayaklarıyla koşarak ilerliyor.',
+  bank:['grubuna koydum','çünkü','ayaklarıyla','kanatlarıyla'],
+  result:'Sınıflandırmanı gözlediğin bir özelliğe dayandırdın.'}
+]};
+
+GAMES.u33={title:'Soru Yağmuru',theme:'pond',finish:'Soru edatının ayrı yazıldığını ve son ünlüye göre değiştiğini öğrendin, dört edatla cümle yazdın.',rounds:[
+ {kind:'esle',prompt:'Her cümleye uygun soru edatını getir.',sahne:S3.yagmurS,
+  gorev:'Son ünlüyü dinle: kalın mı ince mi, düz mü yuvarlak mı?',
+  etiketler:[{t:'mı'},{t:'mi'},{t:'mu'},{t:'mü'}],
+  yuvalar:[{ad:'Kitabı okudun …',dogru:1,ipucu:'Son ünlü "u" değil; "okudun" sözcüğünün son ünlüsü ince mi kalın mı?'},
+   {ad:'Bahçeye çıktın …',dogru:0},
+   {ad:'Suyu içtin … (soru: su içildi mi)',dogru:2},
+   {ad:'Ödevini gördün …',dogru:3}],
+  result:'Soru edatı, kendinden önceki sözcüğün son ünlüsüne uyar: a-ı → mı, e-i → mi, o-u → mu, ö-ü → mü.'},
+ {kind:'duzelt',prompt:'Bitişik yazılmış soru edatlarını ayır.',sahne:S3.yagmurS,
+  gorev:'Soru edatı her zaman ayrı yazılır. Metni düzelt.',
+  hatali:'Bugün yağmur yağdımı? Sen şemsiyeni aldınmı?',
+  denetim:[{ad:'"yağdı mı" ayrı yazıldı',desen:'yağdı mı'},
+   {ad:'"aldın mı" ayrı yazıldı',desen:'aldın mı'},
+   {ad:'Soru işaretleri duruyor',desen:'\\?[\\s\\S]*\\?'}],
+  ornekCevap:'Bugün yağmur yağdı mı? Sen şemsiyeni aldın mı?',
+  result:'Soru edatı kendinden önceki sözcükten ayrı yazılır; ekle karıştırılmamalıdır.'},
+ {kind:'yaz',prompt:'Dört edatın her biriyle bir soru yaz.',sahne:S3.yagmurS,
+  gorev:'Alt alta dört soru cümlesi yaz: birincide mı, ikincide mi, üçüncüde mu, dördüncüde mü kullan. Hepsi ayrı yazılsın.',
+  enAzSatir:4,buyukHarf:true,gerekli:[' mı',' mi',' mu',' mü'],
+  ipucuMetin:'Bahçeye çıktın mı?\nKitabı okudun mu?\nDefterini gördün mü?\nSınıfa girdin mi?',
+  ornekCevap:'Bahçeye çıktın mı?\nSınıfa girdin mi?\nKitabı okudun mu?\nDefterini gördün mü?',
+  result:'Dört edatı da ünlü uyumuna göre ve ayrı yazarak kullandın.'}
+]};
+
+GAMES.u34={title:'İklim Makinesi',theme:'lab',finish:'Tek neden-tek sonuçtan zincirleme sonuçlara geçtin ve kendi gözlemini neden-sonuç cümlesine çevirdin.',rounds:[
+ {kind:'esle',prompt:'Her nedeni sonucuna bağla.',sahne:S3.iklim,
+  gorev:'Makinedeki kabloları doğru uçlara tak.',
+  etiketler:[{t:'deniz suyu buharlaşır'},{t:'yağmur yağar'},{t:'kar erir'}],
+  yuvalar:[{ad:'Güneş suyu ısıtınca …',dogru:0},
+   {ad:'Bulutlar ağırlaşınca …',dogru:1},
+   {ad:'Hava ısınınca …',dogru:2}],
+  result:'Isınma buharlaşmayı, ağırlaşan bulut yağmuru, ısınan hava erimeyi doğurur.'},
+ {kind:'kanit',prompt:'Bu kez bir neden iki sonuç doğuruyor.',sahne:S3.iklim,
+  baslik:'Zincir',
+  metin:[['Günlerce yağmur yağdı. ',{t:'Dereler taştı',dogru:true},' ve ',{t:'yollar çamurla kapandı',dogru:true},'. ',{t:'Çocuklar pencereden izledi'},'.']],
+  gerekKanit:2,soru:'Yağmurun sonuçları hangileri?',
+  secenekler:[{label:'Derelerin taşması ve yolların kapanması',correct:true},
+   {label:'Çocukların pencereden izlemesi',hint:'Bu bir sonuç değil, olayı izleyen bir ayrıntı.'},
+   {label:'Yalnız derelerin taşması'}],
+  result:'Tek bir neden aynı anda birden çok sonuç doğurabilir.'},
+ {kind:'yaz',prompt:'Kendi gözlemini neden-sonuç cümlesine çevir.',sahne:S3.iklim,
+  gorev:'Gördüğün bir hava olayını neden-sonuç cümlesiyle yaz. "çünkü" ya da "bu yüzden" kullan.',
+  enAzKelime:7,buyukHarf:true,bitis:'.',gerekli:['bu yüzden'],
+  ipucuMetin:'Sabah çok rüzgâr vardı bu yüzden şemsiyem ters döndü.',
+  ornekCevap:'Sabah çok rüzgâr vardı bu yüzden şemsiyem ters döndü.',
+  bank:['bu yüzden','rüzgâr','yağmur','kar','soğuk'],
+  result:'Gözlemini neden ve sonuç olarak ayırıp cümleye döktün.'}
+]};
+
+GAMES.u35={title:'Bukalemunun Şiiri',theme:'garden',finish:'Uygun benzetmeyi uygunsuzdan ayırdın ve doğadan bir varlık için kendi benzetmeni yazdın.',rounds:[
+ {kind:'kanit',prompt:'Benzeyen ile benzetileni işaretle.',sahne:S3.buka,
+  baslik:'Şiir dizesi',
+  metin:[[{t:'Bukalemun',dogru:true},' yaprakların arasında ',{t:'usta bir ressam gibi',dogru:true},' renk değiştirir. ',{t:'Sabah çiy düşmüştü'},'.']],
+  gerekKanit:2,soru:'Bu dizede bukalemun neye benzetiliyor?',
+  secenekler:[{label:'Usta bir ressama',correct:true},{label:'Yaprağa',hint:'İşaretlediğin ikinci bölüm "gibi" ile bir benzetme kuruyor.'},{label:'Çiy tanesine'}],
+  result:'"Gibi" sözcüğü benzeyeni (bukalemun) benzetilene (ressam) bağlar.'},
+ {kind:'esle',prompt:'Hangi benzetme uygun, hangisi değil?',sahne:S3.buka,
+  gorev:'Benzetme, iki şey arasında gerçek bir ortak özelliğe dayanır.',
+  etiketler:[{t:'Kar, pamuk gibi yumuşaktı.'},{t:'Taş, bulut kadar hafifti.'}],
+  yuvalar:[{ad:'Uygun benzetme',dogru:0,ipucu:'Karla pamuğun ortak özelliği var mı?'},
+   {ad:'Uygunsuz benzetme',dogru:1,ipucu:'Taş ile bulutun ağırlığı birbirine benziyor mu?'}],
+  result:'Kar ile pamuk yumuşaklıkta benzeşir; taş ile bulut ağırlıkta benzeşmez.'},
+ {kind:'yaz',prompt:'Kendi benzetme dizeni yaz.',sahne:S3.buka,
+  gorev:'Doğadan bir varlık seç ve onu bir şeye benzeten bir dize yaz. Dizede "gibi" ya da "kadar" kullan.',
+  enAzKelime:6,buyukHarf:true,bitis:'.',gerekli:['gibi'],
+  yasak:['Bukalemun usta bir ressam gibi renk değiştirir.'],
+  ipucuMetin:'Örnek: Bulutlar gökyüzünde uçuşan kuğular gibi süzülüyor.',
+  ornekCevap:'Bulutlar gökyüzünde uçuşan kuğular gibi süzülüyordu.',
+  bank:['gibi','kadar','bulutlar','yapraklar','süzülüyor'],
+  result:'Gerçek bir ortak özelliğe dayanan kendi benzetmeni kurdun.'}
+]};
+
+GAMES.u36={title:'Kayıp İzci',theme:'garden',finish:'Bağlamdan anlam çıkarma döngüsünü bağımsız tamamladın: tahmin, sözlük, yeni cümle.',rounds:[
+ {kind:'kanit',prompt:'Feneri bağlam ipucuna tut.',sahne:S3.izci,
+  baslik:'İzci günlüğü',
+  metin:[['Patika ',{t:'öyle diklendi ki',dogru:true},' son yüz metrede ',{t:'ellerimizle tutunarak çıktık'},'. Sırtımızdaki ',{t:'kumanyayı'},' akşam açtık.']],
+  gerekKanit:1,soru:'"Diklenmek" burada ne demek?',
+  secenekler:[{label:'Yokuşun sertleşmesi',correct:true},
+   {label:'Kızmak, karşı çıkmak',hint:'İşaretlediğin bölüm yolun kendisinden söz ediyor, bir kişiden değil.'},
+   {label:'Yavaşlamak'}],
+  result:'Aynı sözcük insan için "karşı çıkmak", yol için "sertleşmek" anlamına gelir. Bağlam belirledi.'},
+ {kind:'kanit',prompt:'Aynı sözcük, başka doğa cümlesi.',sahne:S3.izci,
+  baslik:'İkinci günlük sayfası',
+  metin:[['Akşam ',{t:'kumanyamızı paylaştık',dogru:true},'; ',{t:'ekmek ve peynir'},' herkese yetti. ',{t:'Ateşin başında oturduk'},'.']],
+  gerekKanit:1,soru:'"Kumanya" ne demek?',
+  secenekler:[{label:'Yolculukta yenmek üzere hazırlanan yiyecek',correct:true},
+   {label:'Çadır malzemesi',hint:'İşaretlediğin bölüm paylaşılan ve yenen bir şeyden söz ediyor.'},
+   {label:'Sırt çantası'}],
+  result:'Paylaşılan, ekmek ve peynirden oluşan şey yiyecektir: kumanya.'},
+ {kind:'yaz',prompt:'Sözlük anlamıyla kendi cümlenizi kur.',sahne:S3.izci,
+  gorev:'Sözlük: "kumanya = yolculukta yenmek için hazırlanan yiyecek". Bu sözcüğü kendi cümlende kullan.',
+  enAzKelime:6,buyukHarf:true,bitis:'.',gerekli:['kumanya'],
+  yasak:['Akşam kumanyamızı paylaştık.'],
+  ipucuMetin:'Örnek: Pikniğe giderken annem kumanya hazırladı.',
+  ornekCevap:'Pikniğe giderken annem çantamıza kumanya hazırladı.',
+  bank:['kumanya','hazırladı','yolculukta','çantamıza'],
+  result:'Tahmin, sözlük ve kendi cümlen: döngüyü bağımsız tamamladın.'}
+]};
+
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card">
  <div class="big">📖</div><h2>2. Sınıf Türkçe</h2>
