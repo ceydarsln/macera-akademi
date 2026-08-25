@@ -299,6 +299,18 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 </head>
 <body><div id="app" class="app"></div>
 <script>
+/* Sınama modunda (?test=1) tarayıcının arka plan sekme kısıntısını aş:
+   gizli sekmede setTimeout dakikada bire kadar iniyor ve oyunun kendi
+   geçişleri donuyordu. Yalnız kısa gecikmeler için, yalnız testte. */
+if(new URLSearchParams(location.search).has('test')){
+ const _st=window.setTimeout;
+ window.setTimeout=function(fn,ms){
+  if(!document.hidden||!(ms<2000))return _st(fn,ms);
+  const son=Date.now()+(ms||0),k=new MessageChannel();
+  k.port1.onmessage=()=>{Date.now()>=son?fn():k.port2.postMessage(0)};
+  k.port2.postMessage(0);return 0};
+}
+
 'use strict';
 const GAME_ID=new URLSearchParams(location.hash.slice(1)).get('oyun')||'v01';
 const FAST=new URLSearchParams(location.search).has('test');
@@ -2843,7 +2855,7 @@ GAMES.w48={title:'Veri Mimarı',theme:'class',finish:'Soruyu seçtin, veriyi top
 
 
 game=GAMES[GAME_ID];
-if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><div class="big">🧮</div><h2>3. Sınıf Matematik</h2><p style="font-size:13px">48 oyun · denemek istediğine dokun</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;max-height:64vh;overflow:auto">${Object.keys(GAMES).map(k=>`<button class="action" style="font-size:12px;padding:7px 5px;min-height:52px;line-height:1.12;display:flex;align-items:center;justify-content:center;background:#eaf2fb;border-color:#cfe0f2" onclick="location.hash='oyun=${k}';location.reload()">${esc(GAMES[k].title)}</button>`).join('')}</div></div></div>`}
+if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><div class="big">🧮</div><h2>3. Sınıf Matematik</h2><p style="font-size:13px">48 oyun · denemek istediğine dokun</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;max-height:62vh;overflow:auto">${Object.keys(GAMES).map(k=>`<button class="action" style="font-size:12px;padding:7px 5px;min-height:52px;line-height:1.12;display:flex;align-items:center;justify-content:center;background:#eaf2fb;border-color:#cfe0f2" onclick="location.hash='oyun=${k}';location.reload()">${esc(GAMES[k].title)}</button>`).join('')}</div></div></div>`}
 else if(game.rounds.length!==3){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Tur verisi eksik</h2><p>${esc(game.title)}</p></div></div>`}
 else render();
 window.__MATH3_TEST__={GAMES,solve(){good('Test çözümü')},round:()=>round(),state:()=>state};
