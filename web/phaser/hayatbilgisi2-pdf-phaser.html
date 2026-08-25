@@ -99,7 +99,11 @@ svg.sahne{width:min(330px,96%);height:auto;max-height:190px;display:block}
 .figur b{font-size:11px;font-weight:900;color:var(--muted);white-space:nowrap}
 .mesafe-bos{flex:0 0 auto;height:52px;display:flex;align-items:center;justify-content:center;position:relative}
 .mesafe-bos i{display:block;width:100%;border-top:3px dashed #e0a52c}
-.olcek{width:min(330px,96%);height:48px;accent-color:#2f7fb8}
+.olcek{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:min(330px,96%);height:48px;min-height:48px;background:transparent;margin:0}
+.olcek::-webkit-slider-runnable-track{height:14px;border-radius:8px;background:#dbe7ef;border:2px solid #a8bfd0}
+.olcek::-moz-range-track{height:14px;border-radius:8px;background:#dbe7ef;border:2px solid #a8bfd0}
+.olcek::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;margin-top:-14px;border-radius:50%;background:#2f7fb8;border:4px solid #fff;box-shadow:0 2px 6px rgba(20,56,82,.35)}
+.olcek::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#2f7fb8;border:4px solid #fff}
 /* tuş takımı — gerçek telefon; aranacak numara hiçbir yerde yazılı değil */
 .tus-ekran{width:min(240px,90%);min-height:46px;background:#12283a;color:#8df0b6;border-radius:11px;padding:8px 12px;font-size:26px;font-weight:950;letter-spacing:4px;text-align:center}
 .tus-takim{display:grid;grid-template-columns:repeat(3,minmax(64px,80px));gap:7px;justify-content:center}
@@ -345,6 +349,51 @@ const MEVSIM={
   [12,30,64,84].map((x,i)=>`<g stroke="#8fb4cd" stroke-width="2"><line x1="${x}" y1="${12+i*7}" x2="${x}" y2="${20+i*7}"/><line x1="${x-4}" y1="${16+i*7}" x2="${x+4}" y2="${16+i*7}"/></g>`).join(''))
 };
 
+/* Teknoloji ürünleri ve sanat sahneleri — sıralama tarihten değil ürünün
+   biçiminden yapılabilsin diye her ürün ayrı çiziliyor. */
+const TEK={
+ duvarTel:MINI(`<rect x="30" y="10" width="36" height="46" rx="4" fill="#7a4a2c" stroke="#5a3520" stroke-width="2"/>`+
+  `<circle cx="48" cy="24" r="7" fill="#e8d9a8" stroke="#a89a7a" stroke-width="2"/>`+
+  `<rect x="20" y="26" width="9" height="22" rx="4" fill="#4a4a4a"/><path d="M24 48 q10 12 24 8" stroke="#4a4a4a" stroke-width="3" fill="none"/>`+
+  `<rect x="38" y="40" width="20" height="6" rx="3" fill="#5a3520"/>`),
+ cevirmeli:MINI(`<path d="M18 46 h60 l-6 -18 h-48z" fill="#3d4a54" stroke="#26333c" stroke-width="2"/>`+
+  `<circle cx="48" cy="38" r="11" fill="#e8e2d4" stroke="#9aa6b4" stroke-width="2"/>`+
+  [0,60,120,180,240,300].map(a=>`<circle cx="${48+7*Math.cos(a*Math.PI/180)}" cy="${38+7*Math.sin(a*Math.PI/180)}" r="1.6" fill="#3d4a54"/>`).join('')+
+  `<rect x="20" y="18" width="56" height="9" rx="4" fill="#26333c"/>`),
+ tuslu:MINI(`<rect x="26" y="14" width="44" height="46" rx="5" fill="#4a5a66" stroke="#2e3b45" stroke-width="2"/>`+
+  `<rect x="32" y="20" width="32" height="12" rx="2" fill="#a8c8a0"/>`+
+  [0,1,2,3].map(r2=>[0,1,2].map(c=>`<rect x="${33+c*11}" y="${36+r2*6}" width="8" height="4" rx="1" fill="#c3d0d8"/>`).join('')).join('')),
+ antenliCep:MINI(`<rect x="34" y="16" width="28" height="46" rx="5" fill="#3d4a54" stroke="#26333c" stroke-width="2"/>`+
+  `<rect x="39" y="21" width="18" height="11" rx="2" fill="#a8c8a0"/>`+
+  [0,1,2,3].map(r2=>[0,1,2].map(c=>`<rect x="${40+c*6}" y="${36+r2*5}" width="4" height="3" rx="1" fill="#c3d0d8"/>`).join('')).join('')+
+  `<rect x="58" y="4" width="3" height="14" rx="1.5" fill="#26333c"/>`),
+ akilli:MINI(`<rect x="32" y="8" width="32" height="58" rx="6" fill="#26333c" stroke="#151d24" stroke-width="2"/>`+
+  `<rect x="36" y="14" width="24" height="44" rx="2" fill="#bcd9ee"/><circle cx="48" cy="62" r="2.4" fill="#7b8ea1"/>`),
+ mum:MINI(`<rect x="42" y="26" width="12" height="34" rx="3" fill="#f0e2cc" stroke="#c9bfa4" stroke-width="2"/>`+
+  `<path d="M48 12 q6 8 0 14 q-6 -6 0 -14z" fill="#f7cf5a"/><rect x="34" y="58" width="28" height="5" rx="2" fill="#a89a7a"/>`),
+ gazLambasi:MINI(`<path d="M36 28 h24 l4 30 h-32z" fill="#cfe3ee" stroke="#8fb4cd" stroke-width="2"/>`+
+  `<path d="M44 40 q4 -8 8 0 q-4 8 -8 0z" fill="#f7cf5a"/><rect x="34" y="22" width="28" height="7" rx="3" fill="#9aa6b4"/>`+
+  `<rect x="30" y="58" width="36" height="6" rx="3" fill="#7b8996"/>`),
+ ampul:MINI(`<circle cx="48" cy="30" r="16" fill="#fdf3c8" stroke="#d6bb4a" stroke-width="2"/>`+
+  `<path d="M42 30 l6 -8 l6 8" fill="none" stroke="#c9922a" stroke-width="2"/>`+
+  `<rect x="41" y="46" width="14" height="12" rx="2" fill="#a8a8a8" stroke="#7b7b7b" stroke-width="2"/>`)
+};
+const SANAT={
+ duvarResmi:MINI(`<rect x="10" y="12" width="76" height="46" fill="#dfd6c4" stroke="#a89a7a" stroke-width="3"/>`+
+  `<circle cx="34" cy="30" r="9" fill="#e2705f"/><path d="M46 46 l14 -18 l14 18z" fill="#4fa08a"/>`+
+  `<rect y="58" width="96" height="10" fill="#9aa6b4"/>`),
+ sokakMuzigi:MINI(`<rect y="58" width="96" height="10" fill="#9aa6b4"/>`+
+  `<path d="M42 22 q10 -10 16 0 l-4 26 q-8 8 -16 0z" fill="#a9764a" stroke="#7a5230" stroke-width="2"/>`+
+  `<line x1="50" y1="14" x2="50" y2="24" stroke="#7a5230" stroke-width="3"/>`+
+  `<path d="M20 26 q4 -6 8 0" stroke="#2f7fb8" stroke-width="2" fill="none"/><circle cx="18" cy="28" r="3" fill="#2f7fb8"/>`),
+ tiyatro:MINI(`<rect x="14" y="10" width="68" height="50" rx="4" fill="#f4ead6" stroke="#a89a7a" stroke-width="3"/>`+
+  `<path d="M30 30 q8 -12 16 0 q-8 12 -16 0z" fill="#7b6bb5"/><path d="M52 30 q8 -12 16 0 q-8 12 -16 0z" fill="#e2a13f"/>`+
+  `<rect x="24" y="46" width="48" height="5" rx="2" fill="#c9bfa4"/>`),
+ heykel:MINI(`<rect x="34" y="52" width="28" height="10" rx="2" fill="#a89a7a"/>`+
+  `<circle cx="48" cy="24" r="9" fill="#dfd6c4" stroke="#a89a7a" stroke-width="2"/>`+
+  `<path d="M38 52 q0 -20 10 -20 q10 0 10 20z" fill="#dfd6c4" stroke="#a89a7a" stroke-width="2"/>`)
+};
+
 /* ===== KARAR: sahneye bağlı seçim; seçenekler sabit durur, düşme/refleks yok.
    İstenirse ikinci basamakta gerekçe sorulur (şartname: karar + gerekçe). ===== */
 function kararCiz(r){
@@ -373,6 +422,7 @@ function sinifCiz(r){
  if(!k)return;
  $('#stage').innerHTML=sahneHtml(r)+
   ilerleme(r.kartlar.length,i)+
+  (k.gorsel?`<div class="row">${k.gorsel}</div>`:'')+
   `<div class="kart vurgu">${esc(k.t)}</div>`+
   (k.sahne?`<div class="sahne-not">${esc(k.sahne)}</div>`:'')+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
@@ -421,7 +471,8 @@ function esleCiz(r){
     return `<button class="yuva ${v!=null?'dolu':''}" data-yuva="${i}">`+
      (y.gorsel?y.gorsel:'')+
      `<span class="hedef">${esc(y.hedef)}</span>`+
-     (v!=null?`<span class="kondu">${esc(r.etiketler[v].t)}</span>`:'')+`</button>`}).join('')}</div>`+
+     (v!=null?`<span class="kondu">${esc(r.etiketler[v].t)}</span>`:'')+
+     (v!=null&&y.basari?y.basari:'')+`</button>`}).join('')}</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
   `<div class="etiketler">${r.etiketler.map((e,j)=>{
@@ -788,7 +839,7 @@ const GAMES={};
    son turda öğrenci kendi örneğini söyler / yazar / uygular. */
 
 /* ---- h01 Arkadaşlık Bandı (bant kaldırıldı: okul bahçesinde sabit kart) ---- */
-GAMES.h01={title:'Arkadaşlık Bandı',theme:'bahce',
+GAMES.h01={title:'Arkadaşlık Kartları',theme:'bahce',
  finish:'Davranışların arkadaşlığı nasıl etkilediğini ayırdın, tartışmalı bir durumu gerekçelendirdin ve kendi davranışını anlattın.',rounds:[
  {kind:'sinifla',prompt:'Bu davranış arkadaşlığı güçlendirir mi, zedeler mi?',sahne:SAHNE.bahce,
   soru:'Bu davranış arkadaşlığı ne yapar?',kutular:['GÜÇLENDİRİR','ZEDELER'],
@@ -995,7 +1046,7 @@ GAMES.h06={title:'Karar Adımları',theme:'sinif',
 ]};
 
 /* ---- h07 Alışkanlık Bandı (bant durduruldu: gün akışında sabit kart) ---- */
-GAMES.h07={title:'Alışkanlık Bandı',theme:'ev',
+GAMES.h07={title:'Alışkanlıklar Panosu',theme:'ev',
  finish:'Alışkanlıkların sağlıklı büyümeye etkisini ayırdın, miktarın ölçüt olduğunu gördün ve kendi günün için öneri getirdin.',rounds:[
  {kind:'sinifla',prompt:'Bu alışkanlık sağlıklı büyümeye yardım eder mi?',sahne:SAHNE.gun,
   soru:'Bu alışkanlık sağlıklı büyümeye ne yapar?',kutular:['YARDIM EDER','ENGEL OLUR'],
@@ -1636,7 +1687,7 @@ GAMES.h25={title:'Mevsimler',theme:'doga',
    {t:'Günler en uzun ve en sıcaktır.'},
    {t:'Yapraklar sararır ve dökülür.'},
    {t:'Havalar soğur, bazı yerlerde kar yağar.'}]},
- {kind:'karar',prompt:'Aynı hava olayı birden çok mevsimde görülebilir.',
+ {kind:'karar',prompt:'Bu hava olayı için ne söylersin?',
   sahne:`<div class="row"><div class="stack">${MEVSIM.ilkbahar}<div class="sahne-not">İlkbahar</div></div>`+
    `<div class="stack">${MEVSIM.sonbahar}<div class="sahne-not">Sonbahar</div></div></div>`,
   durum:'Bir hafta boyunca yağmur yağdı. Bu, hem ilkbaharda hem sonbaharda olabilecek bir durum.',
@@ -1831,6 +1882,232 @@ GAMES.h30={title:'İsraf Ölçeri',theme:'banyo',
   ornek:'Örnek: Bulaşıkları leğende yıkayacağız. Musluğu yalnız durularken açacağım.',
   olcutler:['Bir davranış değişikliği söyledim.','Nasıl yapacağımı anlattım.','Kendi yaşamımdan örnek verdim.'],
   result:'İsrafı azaltmak için somut bir davranış değişikliği önerdin.'}
+]};
+
+/* ---- h31 Bilim İnsanları (emoji eşleşmesi kaldırıldı; katkı görselle gösteriliyor) ---- */
+GAMES.h31={title:'Bilim İnsanları',theme:'muze',
+ finish:'Bilim insanlarını katkılarıyla eşledin, bir buluş olmasaydı ne olacağını düşündün ve bir katkıyı kendi cümlenle anlattın.',rounds:[
+ {kind:'esle',prompt:'Her bilim insanını katkısıyla eşle.',
+  soru:'Önce alttan bir katkı seç, sonra ait olduğu bilim insanına dokun.',
+  ipucu:'Adı bilmiyorsan katkının ne işe yaradığını düşün.',
+  yuvalar:[
+   {hedef:'Thomas Edison',dogru:0,basari:TEK.ampul,neden:'Ampul sayesinde geceleri aydınlandı.',hint:'Bu buluş karanlığı aydınlattı.'},
+   {hedef:'Louis Pasteur',dogru:1,neden:'Mikropların hastalık yaptığını gösterdi.',hint:'Bu katkı hastalıklardan korunmayı sağladı.'},
+   {hedef:'Graham Bell',dogru:2,basari:TEK.duvarTel,neden:'Uzaktaki insanlar sesle konuşabildi.',hint:'Bu buluşla uzaktaki biriyle konuşulabiliyor.'},
+   {hedef:'Aziz Sancar',dogru:3,neden:'Hücrelerin kendini nasıl onardığını araştırdı.',hint:'Bu çalışma hücrelerle ilgilidir.'}],
+  etiketler:[
+   {t:'Elektrikle çalışan aydınlatmayı geliştirdi.'},
+   {t:'Gözle görülmeyen canlıların hastalık yaptığını buldu.'},
+   {t:'Sesin uzağa iletilmesini sağlayan aleti yaptı.'},
+   {t:'Hücrenin kendini onarmasını inceleyip Nobel Ödülü aldı.'}]},
+ {kind:'karar',prompt:'Bu buluş olmasaydı ne olurdu?',
+  sahne:`<div class="row"><div class="stack">${TEK.mum}<div class="sahne-not">önce</div></div>`+
+   `<div class="stack">${TEK.ampul}<div class="sahne-not">sonra</div></div></div>`,
+  durum:'Ampul bulunmadan önce evler mum ve gaz lambasıyla aydınlatılıyordu.',
+  soru:'Ampul olmasaydı günlük yaşam nasıl olurdu?',
+  secenekler:[
+   {label:'Akşamları çalışmak ve okumak çok daha zor olurdu',correct:true},
+   {label:'Hiçbir şey değişmezdi',hint:'Mum ışığı ampul kadar aydınlatmaz; akşam işleri zorlaşırdı.'},
+   {label:'Gündüzler de kararırdı',hint:'Gündüz aydınlığı güneşten gelir; ampulle ilgisi yok.'}],
+  araSoz:'Doğru. Peki bu ne gösteriyor?',
+  neden:{soru:'Bir buluşun değeri neyle ölçülür?',secenekler:[
+   {label:'Günlük yaşamı ne kadar kolaylaştırdığıyla',correct:true},
+   {label:'Ne kadar pahalı olduğuyla',hint:'Fiyat, buluşun değerini göstermez.'},
+   {label:'Kaç yıl önce yapıldığıyla',hint:'Eski olmak tek başına değer ölçütü değildir.'}]},
+  result:'Bir buluşun değeri, günlük yaşamda neyi değiştirdiğiyle anlaşılır.'},
+ {kind:'konus',prompt:'Bir katkıyı kendi cümlenle anlat.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.muze}<div class="sahne-not">Bilim müzesi</div></div></div>`,
+  gorev:'Bir bilim insanı seç, katkısını ve bu katkının bize ne sağladığını kendi cümlelerinle anlat.',
+  ornek:'Örnek: Aziz Sancar hücrelerin kendini nasıl onardığını araştırdı. Bu çalışma hastalıkların tedavisine yardım ediyor.',
+  olcutler:['Bir bilim insanı seçtim.','Katkısını anlattım.','Bize ne sağladığını söyledim.'],
+  result:'Bir bilim insanının katkısını kendi cümlelerinle anlattın.'}
+]};
+
+/* ---- h32 Teknoloji Zaman Şeridi (roket kaldırıldı; tarih yok, biçim var) ---- */
+GAMES.h32={title:'Teknoloji Zaman Şeridi',theme:'muze',
+ finish:'Ürünleri tarihe değil biçimlerine bakarak sıraladın, farklı ürün ailelerini karşılaştırdın ve bir ürünün değişimini üç aşamada anlattın.',rounds:[
+ {kind:'sira',prompt:'Tarih yok: vitrindeki ürünlerin biçimine bak.',
+  sahne:`<div class="row">${TEK.duvarTel}${TEK.cevirmeli}${TEK.tuslu}${TEK.antenliCep}${TEK.akilli}</div>`+
+   `<div class="sahne-not">Müze vitrini · telefonun değişimi</div>`,
+  gorev:'Telefonun eskiden yeniye sırasını, ürünlerin biçimine bakarak diz.',
+  kartlar:[
+   {t:'Duvara asılan, kolu çevrilerek çalışan telefon'},
+   {t:'Masaya konan, yuvarlak kadranı çevrilen telefon'},
+   {t:'Masaya konan, düğmelere basılan telefon'},
+   {t:'Cepte taşınan, antenli ve küçük ekranlı telefon'},
+   {t:'Cepte taşınan, dokunmatik büyük ekranlı telefon'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Hangisi duvara sabit? Taşınamayan en eskisidir.','Kol gitti, kadran geldi: sırada hangisi?',
+   'Kadran gitti, düğme geldi. Şimdi ne değişir?','Masadan cebe geçildi; ilk taşınabilirde ne var?','En sonda ekran nasıl oldu?'],
+  ipucu:'Sabitten taşınabilire, koldan düğmeye, düğmeden dokunmatiğe.',
+  result:'Telefon duvardan masaya, masadan cebe indi; kol yerini kadrana, kadran düğmeye, düğme dokunmatik ekrana bıraktı.'},
+ {kind:'karar',prompt:'Başka bir ürün ailesi: aydınlatma.',
+  sahne:`<div class="row"><div class="stack">${TEK.mum}<div class="sahne-not">A</div></div>`+
+   `<div class="stack">${TEK.gazLambasi}<div class="sahne-not">B</div></div>`+
+   `<div class="stack">${TEK.ampul}<div class="sahne-not">C</div></div></div>`,
+  durum:'Aydınlatma da telefon gibi değişti. Üç ürün vitrinde yan yana duruyor.',
+  soru:'Eskiden yeniye doğru sıra hangisidir?',
+  secenekler:[
+   {label:'A → B → C',correct:true},
+   {label:'C → B → A',hint:'Elektrikli olan en yeni olandır; ilk sıraya konmaz.'},
+   {label:'B → A → C',hint:'Mum, gaz lambasından daha eskidir.'}],
+  araSoz:'Doğru. Peki bu üçünde ortak olan ne?',
+  neden:{soru:'Bu üç ürünün ortak yanı nedir?',secenekler:[
+   {label:'Üçü de aydınlatmak için kullanılır',correct:true},
+   {label:'Üçü de elektrikle çalışır',hint:'Mum ve gaz lambası elektrikle çalışmaz.'},
+   {label:'Üçü de cepte taşınır',hint:'Gaz lambası ve ampul cepte taşınmaz.'}]},
+  result:'Ürünler değişir ama işlevleri sürer: üçü de aydınlatmak içindir.'},
+ {kind:'konus',prompt:'Bir ürünün değişimini üç aşamada anlat.',
+  sahne:`<div class="row">${TEK.cevirmeli}${TEK.akilli}</div>`,
+  gorev:'Bir teknolojik ürün seç ve nasıl değiştiğini üç aşamada anlat.',
+  ornek:'Örnek: Önce müzik plaktan dinleniyordu. Sonra kasetçalar çıktı. Şimdi telefondan dinliyoruz.',
+  olcutler:['Bir ürün seçtim.','Üç aşama anlattım.','Eskiden yeniye doğru sıraladım.'],
+  result:'Bir ürünün zaman içindeki değişimini üç aşamada anlattın.'}
+]};
+
+/* ---- h33 Eski-Yeni (bant durduruldu: müze vitrini ve günümüz rafı) ---- */
+GAMES.h33={title:'Eski mi, Yeni mi?',theme:'muze',
+ finish:'Ürünleri müze vitrini ile günümüz rafına ayırdın, eski ile yeninin ortak işlevini gördün ve bir ürünün iki hâlini karşılaştırdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu ürün müze vitrinine mi, günümüz rafına mı?',
+  sahne:`<div class="row"><div class="stack">${MEKAN.muze}<div class="sahne-not">müze vitrini</div></div>`+
+   `<div class="stack">${TEK.akilli}<div class="sahne-not">günümüz rafı</div></div></div>`,
+  soru:'Bu ürün hangi rafa konur?',kutular:['MÜZE VİTRİNİ (eski)','GÜNÜMÜZ RAFI (yeni)'],
+  ipucu:'Ürünün çizimine bak: bugün hâlâ böyle mi kullanılıyor?',
+  kartlar:[
+   {gorsel:TEK.cevirmeli,t:'Kadranı elle çevrilen masa telefonu',dogru:0,neden:'Kadranlı telefon bugün kullanılmıyor.'},
+   {gorsel:TEK.akilli,t:'Dokunmatik ekranlı cep telefonu',dogru:1,neden:'Bugün en yaygın telefon budur.'},
+   {gorsel:TEK.gazLambasi,t:'Gazla yanan lamba',dogru:0,neden:'Evlerde gaz lambası yerini elektriğe bıraktı.'},
+   {gorsel:TEK.ampul,t:'Elektrikle yanan ampul',dogru:1,neden:'Ampul bugün de kullanılıyor.'},
+   {gorsel:TEK.duvarTel,t:'Duvara asılan kollu telefon',dogru:0,neden:'Kollu telefon müzelik bir üründür.'},
+   {gorsel:TEK.mum,t:'Mum',dogru:0,neden:'Mum bugün süs ve acil durum için kalsa da aydınlatmanın ana yolu değil.'}]},
+ {kind:'karar',prompt:'Eski ile yeninin ortak yanı.',
+  sahne:`<div class="row"><div class="stack">${TEK.duvarTel}<div class="sahne-not">eski</div></div>`+
+   `<div class="stack">${TEK.akilli}<div class="sahne-not">yeni</div></div></div>`,
+  durum:'Biri duvara asılıydı ve kolu çevriliyordu; diğeri cebe giriyor ve dokunmatik.',
+  soru:'İkisinin ortak yanı nedir?',
+  secenekler:[
+   {label:'İkisi de uzaktaki biriyle konuşmak içindir',correct:true},
+   {label:'İkisi de duvara asılır',hint:'Yeni telefon cepte taşınıyor.'},
+   {label:'İkisi de aynı hızda çalışır',hint:'Hızları çok farklı; ortak olan işlevleri.'}],
+  araSoz:'Doğru. Peki değişen ne?',
+  neden:{soru:'İkisi arasında değişen nedir?',secenekler:[
+   {label:'Kullanma biçimi ve taşınabilirliği',correct:true},
+   {label:'Ne işe yaradığı',hint:'İşlev aynı kaldı: konuşmak.'},
+   {label:'Kimin kullandığı',hint:'İkisini de insanlar kullanır.'}]},
+  result:'Teknoloji değişirken işlev sürer; değişen kullanma biçimidir.'},
+ {kind:'yaz',prompt:'Bir ürünün iki hâlini karşılaştır.',
+  sahne:`<div class="row">${TEK.mum}${TEK.ampul}</div>`,
+  gorev:'Bir ürünün eski ve yeni hâlini karşılaştır: aynı kalan ve değişen neyse yaz.',
+  enAzKelime:9,buyukHarf:true,bitis:'.',
+  ipucuMetin:'Eskiden … kullanılırdı, şimdi … kullanılıyor. İkisi de …',
+  ornekCevap:'Eskiden mum yakılırdı, şimdi ampul yanıyor. İkisi de karanlıkta ortalığı aydınlatıyor.',
+  result:'Eski ile yeniyi karşılaştırıp ortak işlevi buldun.'}
+]};
+
+/* ---- h34 Sanat Günlük Yaşamda (gerçek sahneler) ---- */
+GAMES.h34={title:'Sanat Günlük Yaşamda',theme:'sehir',
+ finish:'Sanat dallarını günlük yaşamdaki yerleriyle eşledin, aynı dalın farklı yerlerde karşımıza çıktığını gördün ve çevrenden bir örnek anlattın.',rounds:[
+ {kind:'esle',prompt:'Her sahnede hangi sanat dalı var?',
+  soru:'Önce alttan bir sanat dalı seç, sonra göründüğü sahneye dokun.',
+  ipucu:'Sahnede ne yapıldığına bak.',
+  yuvalar:[
+   {gorsel:SANAT.duvarResmi,hedef:'Sokaktaki bir duvar boydan boya renklendirilmiş.',dogru:0,neden:'Duvar resmi bir resim sanatı örneğidir.',hint:'Burada renk ve fırça var.'},
+   {gorsel:SANAT.sokakMuzigi,hedef:'Meydanda biri çalgısıyla parça çalıyor, insanlar duruyor.',dogru:1,neden:'Çalgıyla üretilen ses müziktir.',hint:'Burada ses üretiliyor.'},
+   {gorsel:SANAT.tiyatro,hedef:'Salonda oyuncular sahnede bir olayı canlandırıyor.',dogru:2,neden:'Sahnede canlandırma tiyatrodur.',hint:'Burada bir olay canlandırılıyor.'},
+   {gorsel:SANAT.heykel,hedef:'Parkta taştan yapılmış bir figür duruyor.',dogru:3,neden:'Taş ya da tunçtan yapılan figür heykeldir.',hint:'Burada üç boyutlu bir figür var.'}],
+  etiketler:[{t:'Resim'},{t:'Müzik'},{t:'Tiyatro'},{t:'Heykel'}]},
+ {kind:'karar',prompt:'Aynı sanat dalı başka yerlerde de karşımıza çıkar.',
+  sahne:`<div class="row"><div class="stack">${SANAT.duvarResmi}<div class="sahne-not">sokakta</div></div>`+
+   `<div class="stack">${MEKAN.muze}<div class="sahne-not">müzede</div></div></div>`,
+  durum:'Resim hem sokakta bir duvarda hem müzede çerçeve içinde karşımıza çıkıyor. Kitabın kapağında da bir resim var.',
+  soru:'Bundan ne çıkar?',
+  secenekler:[
+   {label:'Sanat yalnız müzede değil, günlük yaşamın içindedir',correct:true},
+   {label:'Sanat yalnız müzelerde bulunur',hint:'Sokaktaki duvar da kitabın kapağı da müze değil.'},
+   {label:'Sokaktaki resim sanat sayılmaz',hint:'Yeri, onu sanat olmaktan çıkarmaz.'}],
+  araSoz:'Doğru. Peki bugün nerede sanatla karşılaştın?',
+  neden:{soru:'Aşağıdakilerden hangisi günlük yaşamdaki bir sanat örneğidir?',secenekler:[
+   {label:'Defterinin kapağındaki desen',correct:true},
+   {label:'Çantandaki fermuar',hint:'Fermuar bir sanat ürünü değil, bir parçadır.'},
+   {label:'Kalemin ucu',hint:'Kalemin ucu işlevsel bir parçadır.'}]},
+  result:'Sanat müzeye sığmaz; sokakta, kitapta, evde günlük yaşamın içindedir.'},
+ {kind:'konus',prompt:'Çevrenden bir sanat örneği anlat.',
+  sahne:`<div class="row">${SANAT.duvarResmi}${SANAT.sokakMuzigi}</div>`,
+  gorev:'Çevrende gördüğün ya da duyduğun bir sanat örneğini anlat ve hangi sanat dalı olduğunu söyle.',
+  ornek:'Örnek: Okulumuzun bahçe duvarına öğrenciler deniz resmi yapmış. Bu bir resim örneği.',
+  olcutler:['Bir örnek anlattım.','Hangi sanat dalı olduğunu söyledim.','Kendi çevremden seçtim.'],
+  result:'Çevrendeki bir sanat örneğini tanımlayıp anlattın.'}
+]};
+
+/* ---- h35 Sanat Atölyesi (etiket kopyası kaldırıldı; çeldirici malzemeler) ---- */
+GAMES.h35={title:'Sanat Atölyesi',theme:'muze',
+ finish:'Sanatçının işine göre malzeme seçtin, birden çok dalda kullanılan malzemeleri ayırdın ve bir sanat dalı için gerekenleri kendin sıraladın.',rounds:[
+ {kind:'canta',prompt:'Sanatçının işine bak, malzemeyi ona göre seç.',
+  sahne:`<div class="row"><div class="stack">${SANAT.heykel}<div class="sahne-not">atölye</div></div></div>`,
+  gorev:'Atölyeye bir heykeltıraş geldi. Taştan bir figür yapacak.',
+  soru:'Bu iş için hangi malzemeler gerekir?',gerekenSayi:3,
+  ipucu:'Malzemenin üzerinde hangi dala ait olduğu yazmıyor; işe bak.',
+  esyalar:[
+   {t:'Keski',gerekli:true,neden:'Taşı biçimlendirmek için keski gerekir.'},
+   {t:'Tokmak',gerekli:true,neden:'Keskiye vurmak için tokmak kullanılır.'},
+   {t:'Taş blok',gerekli:true,neden:'Heykelin yapılacağı malzeme.'},
+   {t:'Nota defteri',gerekli:false,hint:'Nota müzik içindir; taş yontmaya yaramaz.'},
+   {t:'Sahne perdesi',gerekli:false,hint:'Perde tiyatroda kullanılır.'},
+   {t:'Yay ve tel',gerekli:false,hint:'Yay ve tel bir çalgının parçasıdır.'}]},
+ {kind:'canta',prompt:'Bu malzeme birden çok dalda kullanılabilir.',
+  sahne:`<div class="row"><div class="stack">${SANAT.tiyatro}<div class="sahne-not">atölye</div></div></div>`,
+  gorev:'Şimdi bir tiyatro topluluğu geldi. Sahneye bir oyun koyacaklar.',
+  soru:'Bu iş için hangi malzemeler gerekir?',gerekenSayi:3,
+  ipucu:'Bazı malzemeler birden çok dalda kullanılır; işi düşün.',
+  esyalar:[
+   {t:'Kostüm',gerekli:true,neden:'Oyuncular canlandırdıkları kişinin kıyafetini giyer.'},
+   {t:'Oyun metni',gerekli:true,neden:'Replikler metinden öğrenilir.'},
+   {t:'Sahne ışığı',gerekli:true,neden:'Sahnenin görünmesi için ışık gerekir.'},
+   {t:'Boya ve fırça',gerekli:false,hint:'Dekor boyamada işe yarayabilir ama oyunu sahnelemek için ilk gereken değil.'},
+   {t:'Taş blok',gerekli:false,hint:'Taş blok heykel içindir.'},
+   {t:'Kaynak makinesi',gerekli:false,hint:'Bu bir sanat malzemesi değil.'}]},
+ {kind:'konus',prompt:'Bir sanat dalı için gerekenleri sırala.',
+  sahne:`<div class="row">${SANAT.sokakMuzigi}${SANAT.duvarResmi}</div>`,
+  gorev:'Bir sanat dalı seç ve o dalda çalışmak için gereken üç şeyi sırala.',
+  ornek:'Örnek: Resim yapmak için kâğıt, boya ve fırça gerekir.',
+  olcutler:['Bir sanat dalı seçtim.','Üç malzeme sıraladım.','Malzemelerin neden gerektiğini düşündüm.'],
+  result:'Seçtiğin sanat dalı için gerekenleri kendin sıraladın.'}
+]};
+
+/* ---- h36 Buluşların Faydası (genel radar yönergesi kaldırıldı; öncesi-sonrası) ---- */
+GAMES.h36={title:'Buluşların Faydası',theme:'muze',
+ finish:'Buluşları öncesi-sonrası sahneleriyle karşılaştırdın, bir buluşun hem faydasını hem olumsuz yanını gördün ve hayatını kolaylaştıran bir buluşu anlattın.',rounds:[
+ {kind:'karar',prompt:'Bu buluştan önce ne yapılıyordu?',
+  sahne:`<div class="row"><div class="stack">${MEKAN.ziyaret}<div class="sahne-not">önce</div></div>`+
+   `<div class="stack">${TEK.ampul}<div class="sahne-not">sonra</div></div></div>`,
+  durum:'Buzdolabı yokken yiyecekler kilerde, soğuk suda ya da tuzlanarak saklanırdı ve çabuk bozulurdu.',
+  soru:'Buzdolabı hangi sorunu çözdü?',
+  secenekler:[
+   {label:'Yiyeceklerin uzun süre bozulmadan saklanmasını sağladı',correct:true},
+   {label:'Yemeklerin daha hızlı pişmesini sağladı',hint:'Pişirme işi buzdolabının işi değil.'},
+   {label:'Evlerin aydınlanmasını sağladı',hint:'Aydınlatma ampulün işi.'}],
+  ipucu:'"Önce" sahnesinde neyin zor olduğuna bak.',
+  result:'Buzdolabı, yiyeceğin bozulma sorununu çözdü.'},
+ {kind:'karar',prompt:'Aynı buluşun birden çok yanı olabilir.',
+  sahne:`<div class="row"><div class="stack">${TEK.akilli}<div class="sahne-not">bugün</div></div></div>`,
+  durum:'Cep telefonu uzaktaki aileyle konuşmayı, yol bulmayı ve acil durumda yardım istemeyi kolaylaştırdı. Ama uzun süre ekrana bakmak gözü yoruyor ve yüz yüze konuşmayı azaltıyor.',
+  soru:'Cep telefonu için hangisi doğrudur?',
+  secenekler:[
+   {label:'Hem faydaları hem dikkat edilmesi gereken yanları var',correct:true},
+   {label:'Yalnız faydası vardır',hint:'Metinde gözün yorulduğu ve yüz yüze konuşmanın azaldığı da yazıyor.'},
+   {label:'Yalnız zararı vardır',hint:'Acil durumda yardım istemeyi kolaylaştırıyor.'}],
+  araSoz:'Doğru. Peki ne yapmalı?',
+  neden:{soru:'Böyle bir buluşu nasıl kullanmalı?',secenekler:[
+   {label:'Faydasından yararlanıp süresini sınırlamalı',correct:true},
+   {label:'Hiç kullanmamalı',hint:'Faydaları da var; tümüyle bırakmak gerekmez.'},
+   {label:'Sınırsız kullanmalı',hint:'Uzun kullanım gözü yoruyor.'}]},
+  result:'Bir buluşun faydasından yararlanırken olumsuz yanına da dikkat edilir.'},
+ {kind:'konus',prompt:'Hayatını kolaylaştıran bir buluşu anlat.',
+  sahne:`<div class="row">${TEK.ampul}${TEK.akilli}</div>`,
+  gorev:'Hayatını kolaylaştıran bir buluş seç ve o buluş olmasaydı neyin zorlaşacağını anlat.',
+  ornek:'Örnek: Çamaşır makinesi olmasaydı çamaşırlar elde yıkanırdı ve çok uzun sürerdi.',
+  olcutler:['Bir buluş seçtim.','Ne kolaylaştırdığını anlattım.','Olmasaydı ne olurdu, söyledim.'],
+  result:'Bir buluşun hayatı nasıl kolaylaştırdığını örnekle anlattın.'}
 ]};
 
 /* ===== açılış ===== */

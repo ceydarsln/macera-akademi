@@ -47,44 +47,44 @@ Otuz altı oyunun tamamı yüklendi; motorlarda çökme veya konsol hatası olu�
 
 | ID | Oyun | Ana sorun | Durum |
 |---|---|---|---|
-| h01 | Arkadaşlık Bandı | Bant kırpılması; okul bahçesi sahnesi yok | PDF'de |
-| h02 | Güçlü Yönler Panosu | Kartlarda kategori etiketi yazılı; özdeğerlendirme yok | PDF'de |
-| h03 | Etkin Dinleme Radarı | Sınıf ortamı yok; karar hıza bağlı | PDF'de |
-| h04 | Duygu Cümlesi Makinesi | Duygu ifadesi hazır kart dizmeye inmiş | PDF'de |
-| h05 | Sınıf Oylaması | Oy sütun adıyla aynı; sonuç yorumu yok | PDF'de |
-| h06 | Karar Adımları | Roket-YAKIT sahnesi | PDF'de |
-| h07 | Alışkanlık Bandı | Gün akışı görselleşmiyor; bant kırpılması | PDF'de |
-| h08 | Kişisel Alan Ölçeri | Koruyucu kazanım tren-tünel oyununa indirgenmiş | PDF'de |
-| h09 | Trafik İşareti Köprüsü | Gerçek levha görseli yok; emoji eşleşmesi cevabı veriyor | PDF'de |
-| h10 | Acil Çağrı Telefonu | "112'yi tuşla" alt başlıkta yazılı; 4 tur aynı cevap | PDF'de |
-| h11 | Acil Çağrı Adımları | Roket sahnesi; gerçek çağrı ekranı yok | PDF'de |
-| h12 | Afet Çantası Atölyesi | Servis tezgâhı; çanta doluluğu görünmüyor | PDF'de |
-| h13 | Nezaket Kartları | Uzay zemini; durum sahnesi yok | PDF'de |
-| h14 | Görgü Kuralları Bandı | Toplumsal ortam görselleşmiyor | PDF'de |
-| h15 | Aile Cümlesi Makinesi | Aile sahnesi yok; kart dizme | PDF'de |
-| h16 | Görev Panosu | Etiket kopyası; gerçek sorumluluk üstlenme yok | PDF'de |
-| h17 | Aile Radarı | Ortak "doğru cevabı yakala" yönergesi | PDF'de |
-| h18 | Görev Çetelesi | Cevap sütun adını içeriyor; çetele yerine rakam | PDF'de |
-| h19 | Gezi Rehberi | Mekân fotoğrafı yok; etiket kopyası | PDF'de |
-| h20 | Çevre Radarı | Ortak "doğru cevabı yakala" yönergesi | PDF'de |
-| h21 | Yönetim Köprüsü | Emoji eşleşmesi; bina görseli yok | PDF'de |
-| h22 | Atatürk'ün Okul Yılları | Roket sahnesi; tarihler sırayı ele veriyor | PDF'de |
-| h23 | Bayram Kartları | Uzay zemini; bayram sahnesi yok | PDF'de |
-| h24 | Bayram Ayırma Bandı | Görsel kanıt yok; bant kırpılması | PDF'de |
-| h25 | Mevsim Kartları | Mevsim manzarası yok | PDF'de |
-| h26 | Hava Olayı Bandı | Kart tamamen kırpıldı; kutu emojileri cevabı veriyor | PDF'de |
-| h27 | Doğadan Yön Bulma | Kazanım-mekanik kopuk: güneş yok, yön adı yok | PDF'de |
-| h28 | Afet Hazırlık Adımları | Roket sahnesi; ev sahnesi yok | PDF'de |
-| h29 | Tasarruf Musluğu | Kronometre var musluk yok; miktar 3 yerde söyleniyor | PDF'de |
-| h30 | İsraf Ölçeri | Tren-tünel; israf görseli yok | PDF'de |
-| h31 | Bilim İnsanı Köprüsü | Emoji eşleşmesi; katkının sonucu görünmüyor | PDF'de |
-| h32 | Teknoloji Zaman Şeridi | Roket sahnesi; ürün görselleri yok | PDF'de |
-| h33 | Eski-Yeni Bandı | Müze vitrini yok; bant kırpılması | PDF'de |
-| h34 | Sanat Kartları | Günlük yaşam sahnesi yok | PDF'de |
-| h35 | Sanat Atölyesi | Etiket kopyası; üretim görünmüyor | PDF'de |
-| h36 | Buluş Radarı | Öncesi-sonrası karşılaştırması yok | PDF'de |
+| h01 | Arkadaşlık Bandı | Bant kırpılması; okul bahçesi sahnesi yok | ✔ uygulandı |
+| h02 | Güçlü Yönler Panosu | Kartlarda kategori etiketi yazılı; özdeğerlendirme yok | ✔ uygulandı |
+| h03 | Etkin Dinleme Radarı | Sınıf ortamı yok; karar hıza bağlı | ✔ uygulandı |
+| h04 | Duygu Cümlesi Makinesi | Duygu ifadesi hazır kart dizmeye inmiş | ✔ uygulandı |
+| h05 | Sınıf Oylaması | Oy sütun adıyla aynı; sonuç yorumu yok | ✔ uygulandı |
+| h06 | Karar Adımları | Roket-YAKIT sahnesi | ✔ uygulandı |
+| h07 | Alışkanlık Bandı | Gün akışı görselleşmiyor; bant kırpılması | ✔ uygulandı |
+| h08 | Kişisel Alan Ölçeri | Koruyucu kazanım tren-tünel oyununa indirgenmiş | ✔ uygulandı |
+| h09 | Trafik İşareti Köprüsü | Gerçek levha görseli yok; emoji eşleşmesi cevabı veriyor | ✔ uygulandı |
+| h10 | Acil Çağrı Telefonu | "112'yi tuşla" alt başlıkta yazılı; 4 tur aynı cevap | ✔ uygulandı |
+| h11 | Acil Çağrı Adımları | Roket sahnesi; gerçek çağrı ekranı yok | ✔ uygulandı |
+| h12 | Afet Çantası Atölyesi | Servis tezgâhı; çanta doluluğu görünmüyor | ✔ uygulandı |
+| h13 | Nezaket Kartları | Uzay zemini; durum sahnesi yok | ✔ uygulandı |
+| h14 | Görgü Kuralları Bandı | Toplumsal ortam görselleşmiyor | ✔ uygulandı |
+| h15 | Aile Cümlesi Makinesi | Aile sahnesi yok; kart dizme | ✔ uygulandı |
+| h16 | Görev Panosu | Etiket kopyası; gerçek sorumluluk üstlenme yok | ✔ uygulandı |
+| h17 | Aile Radarı | Ortak "doğru cevabı yakala" yönergesi | ✔ uygulandı |
+| h18 | Görev Çetelesi | Cevap sütun adını içeriyor; çetele yerine rakam | ✔ uygulandı |
+| h19 | Gezi Rehberi | Mekân fotoğrafı yok; etiket kopyası | ✔ uygulandı |
+| h20 | Çevre Radarı | Ortak "doğru cevabı yakala" yönergesi | ✔ uygulandı |
+| h21 | Yönetim Köprüsü | Emoji eşleşmesi; bina görseli yok | ✔ uygulandı |
+| h22 | Atatürk'ün Okul Yılları | Roket sahnesi; tarihler sırayı ele veriyor | ✔ uygulandı |
+| h23 | Bayram Kartları | Uzay zemini; bayram sahnesi yok | ✔ uygulandı |
+| h24 | Bayram Ayırma Bandı | Görsel kanıt yok; bant kırpılması | ✔ uygulandı |
+| h25 | Mevsim Kartları | Mevsim manzarası yok | ✔ uygulandı |
+| h26 | Hava Olayı Bandı | Kart tamamen kırpıldı; kutu emojileri cevabı veriyor | ✔ uygulandı |
+| h27 | Doğadan Yön Bulma | Kazanım-mekanik kopuk: güneş yok, yön adı yok | ✔ uygulandı |
+| h28 | Afet Hazırlık Adımları | Roket sahnesi; ev sahnesi yok | ✔ uygulandı |
+| h29 | Tasarruf Musluğu | Kronometre var musluk yok; miktar 3 yerde söyleniyor | ✔ uygulandı |
+| h30 | İsraf Ölçeri | Tren-tünel; israf görseli yok | ✔ uygulandı |
+| h31 | Bilim İnsanı Köprüsü | Emoji eşleşmesi; katkının sonucu görünmüyor | ✔ uygulandı |
+| h32 | Teknoloji Zaman Şeridi | Roket sahnesi; ürün görselleri yok | ✔ uygulandı |
+| h33 | Eski-Yeni Bandı | Müze vitrini yok; bant kırpılması | ✔ uygulandı |
+| h34 | Sanat Kartları | Günlük yaşam sahnesi yok | ✔ uygulandı |
+| h35 | Sanat Atölyesi | Etiket kopyası; üretim görünmüyor | ✔ uygulandı |
+| h36 | Buluş Radarı | Öncesi-sonrası karşılaştırması yok | ✔ uygulandı |
 
-"PDF'de" = düzeltme şartnamesi yazıldı, uygulamaya henüz aktarılmadı.
+"✔ uygulandı" = düzeltme yeni motora aktarıldı, tarayıcıda oynanarak doğrulandı.
 
 ## Uygulama sırası önerisi
 
@@ -94,3 +94,47 @@ Bulguların çoğu motor düzeyinde. Sırasıyla:
 3. Cevabı sızdıran başlık/görev metni/kart etiketi (7 oyun) — içerik düzeltmesi, motor değişikliği gerektirmez
 4. Tren-tünel ve kronometre motorlarının konuya uygun sahnelerle değiştirilmesi (3 oyun)
 5. h27'nin yön adlarıyla ve güneşle yeniden kurulması (tek oyun ama kazanım şu an hiç ölçülmüyor)
+
+## Uygulama (26 Ağustos 2026)
+
+Otuz altı oyunun tamamı `web/phaser/hayatbilgisi2-pdf-phaser.html` içindeki yeni
+sahne motoruna taşındı. Kaldırılan ortak şablonlar: bant (beltSort), radar-kapsül
+(catchDrop), servis tezgâhı (serveOrder), roket-yakıt (orderSequence),
+tren-tünel (dragSlider), hafıza kartı (memoryPairs), kronometre (holdFill),
+rakam sayacı (tallyChart/surveyChart) ve ekran oklu ızgara (codeGrid).
+
+Yerlerine konan mekanikler: `sinifla`, `karar` (+ gerekçe basamağı), `sira`,
+`esle`, `mesafe`, `tus`, `canta`, `cetele`, `yon`, `musluk`, `tahmin`, `yaz`,
+`konus`. Tanıma gerektiren kazanımlarda gerçek çizim kullanıldı: trafik levhaları
+(sekizgen DUR, kırmızı yuvarlak girilmez, mavi kare yaya geçidi, kırmızı üçgen
+okul geçidi), mekânlar, yönetim binaları, mevsim manzaraları, teknoloji ürünleri
+ve sanat sahneleri.
+
+### Doğrulanmış öncelikli hataların karşılığı
+
+| # | Hata | Nasıl giderildi |
+|---|---|---|
+| 1 | Yön kazanımı ile mekanik kopuk (h27) | Bloklar KUZEY/GÜNEY/DOĞU/BATI oldu; hangi ekran kenarının hangi yön olduğu yalnız güneşin konumundan çıkarılıyor. Sabah turunda doğu sağda, akşam turunda batı yukarıda; aynı ekran yönü iki turda farklı yön adına karşılık geliyor |
+| 2 | Cevap ekranda yazılı (h02, h05, h09, h10, h18, h26, h29) | Kart kategori etiketleri, "112'yi tuşla" alt başlığı, "Hedef 1 bardak" satırı ve ölçek çizgisi kaldırıldı; oy ve çetele cümleleri artık sütun adını içermiyor |
+| 3 | Emoji/renk eşleşmesi (h09, h21, h31, h26) | Parça ve hedeflerde emoji kalmadı; karar levhanın biçim-rengine, binanın işlevine, katkının içeriğine dayanıyor |
+| 4 | Tanıma kazanımında görsel yok (h09, h19, h20, h32) | Gerçek levha, mekân ve ürün çizimleri eklendi |
+| 5 | Koruyucu kazanım tren oyununa inmiş (h08, h30) | h08'de iki figür arasındaki boşluk gerçekten ayarlanıyor ve ekranda canlanıyor; h30'da akan musluk ve dolan kova görünüyor |
+| 6 | Kart kenarda kırpılıyor (6 bant oyunu) | Bant kaldırıldı; kart sabit, sarmalanıyor. 320x568 ve 390x844'te kırpılma yok |
+| 7 | Ortak şablon yönerge (h17, h20) | Genel "doğru cevabı yakala" yönergesi kaldırıldı, her oyun kendi konusunu anlatıyor. Katalogdaki "Radar"/"Bant" adları da hizalandı |
+
+### Doğrulama
+
+- `tools/dom_kosum.html#ids=h01,...,h36` — 36 oyun, 108 tur, **36/36 geçiyor**
+- `tools/hb2_denetim.html` — 108 turun her birinde kırpılma, dokunma alanı (>=44 px,
+  elementFromPoint ile isabet), etiket emojisi ve cevap sızıntısı taraması
+- Tarayıcıda gerçek etkileşim: yanlış cevap, üst üste yanlışla can bitmesi, hızlı
+  art arda tıklama, boş/kısa/çok uzun yazı girişi, örnek cümleyi kopyalama,
+  yanlış yön programı, taşan musluk; 390x844, 320x568 ve 1280x800 görünümleri;
+  uygulama içinde oyun açma, bitirme, ← ile çıkma ve sayfa yenileme
+
+### Denetimde kalan iki bulgu (incelendi, tasarım gereği)
+
+- **h19 tur 2** ve **h21 tur 2**: doğru seçeneğin metni sahnede de görünüyor
+  ("A · Kale", "Belediye"). Bu iki turda öğrenciye adı verilmiş iki seçenek
+  karşılaştırılıyor; ölçülen şey adın kendisi değil, hangisinin tarihî mekân
+  olduğu ve hangi birimin o hizmeti yürüttüğü. Ad gizlenirse soru sorulamaz.
