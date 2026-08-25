@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 6/90 oyun uygulandı.**
+**Durum: 12/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -33,3 +33,9 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u04 | Noktalama Yağmuru | yazma | Sarı nokta-kapsül dili kaldırıldı; cümleler sabit ve tonuyla okunuyor. 2. turda aynı cümle gövdesi üç işaretle karşılaştırılıyor. 3. turda çocuk iki cümleyi kendi yazıp soru işareti ve ünlemi kendisi koyuyor. | Uygulamada |
 | u05 | Sihirli Erdem Ağacı | okuma | Cevap elması ancak olay kanıtı işaretlendikten sonra seçilebiliyor. 2. turda saygı ile yardımlaşma iki kısa olayla ayrıştırılıyor. 3. turda çocuk kendi yaşamından örnek cümle yazıyor. | Uygulamada |
 | u06 | Robotun Nezaket Yolu | yazma | Komut kartları sabit; robot gerçek kaldırım ve yaya geçidinde ilerliyor. 2. turda iki komut dizisinden güvenli ve nazik olanı, tehlikeli adım işaretlenerek seçiliyor. 3. turda çocuk dört adımlı yeni bir yönerge yazıyor. | Uygulamada |
+| u07 | Kırık Köprü | yazma | Köprünün eksik tahtaları anlam bağını temsil ediyor; 2. turda iki yakın tamamlama metindeki ipucu (buz) işaretlenerek ayrıştırılıyor; 3. turda çocuk yeni bir cümleyi "çünkü" ile kendi sözüyle tamamlıyor. | Uygulamada |
+| u08 | 5N1K Dedektifi | okuma | Büyüteç kaldırıldı; metin geniş satır aralığıyla sabit duruyor. Kim/ne zaman/nerede/niçin ayrı kutulara metnin kendi sözcükleriyle taşınıyor. 2. turda açık bilgi ile çıkarım ayrıştırılıyor; 3. turda beş bilgilik tablo bağımsız dolduruluyor. | Uygulamada |
+| u09 | Duygu Aynası | okuma | Karakterin yüzü hazır emojiyle verilmiyor; beden dili ve olay ipuçları ayrı ayrı işaretleniyor. 2. turda aynı olayda iki karakterin farklı duygusu nedenleriyle karşılaştırılıyor; 3. turda çocuk duyguyu iki kanıtla birlikte yazıyor. | Uygulamada |
+| u10 | Ana Fikir Tohumu | okuma | Önce destekleyici ayrıntılar işaretleniyor, sonra ana fikir seçiliyor. 2. turda "arılar" (konu) ile "çalışmak önemlidir" (ana fikir) ayrı kutulara ayrılıyor; 3. turda çocuk yeni paragrafın ana fikrini yazıp iki ayrıntıyla destekliyor. | Uygulamada |
+| u11 | Sihirli Fosforlu Kalem | yazma | Hedef sözcük cevabı baştan söylemiyor; çocuk eş anlamlı çifti cümlede kendisi buluyor. 2. turda eş anlamlıların her cümlede yer değiştiremeyeceği gösteriliyor ("kara sular" / "siyah kalem"); 3. turda ikisi ayrı cümlelerde kullanılıyor. | Uygulamada |
+| u12 | Paragraf Asansörü | yazma | Kartlar sabit, zaman bağları görünür. 2. turda konuya uymayan dördüncü cümle yerleştirilemiyor ve nedeni söyleniyor; 3. turda çocuk giriş-gelişme-sonuç yapısında kendi paragrafını yazıyor. | Uygulamada |

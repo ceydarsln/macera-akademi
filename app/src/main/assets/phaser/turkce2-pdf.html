@@ -494,7 +494,7 @@ function siraCiz(r){
  $$('[data-kart]').forEach(b=>b.onclick=()=>{const i=+b.dataset.kart;
   if((state.dizi||[]).indexOf(i)>=0)return;
   const yer=(state.dizi||[]).length;
-  if(r.dogru[yer]!==i){state.not=r.ipucular&&r.ipucular[yer]?r.ipucular[yer]:'Zaman bağlarına bak: bundan önce ne oldu?';
+  if(r.dogru[yer]!==i){state.not=(r.kartIpucu&&r.kartIpucu[i])||(r.ipucular&&r.ipucular[yer])||'Zaman bağlarına bak: bundan önce ne oldu?';
    siraCiz(r);return wrong(state.not)}
   state.dizi=(state.dizi||[]).concat(i);state.not='Doğru sıra.';siraCiz(r);
   if(state.dizi.length>=r.dogru.length){
@@ -706,6 +706,159 @@ GAMES.u06={title:'Robotun Nezaket Yolu',theme:'city',finish:'Komutları güvenli
   ornekCevap:'Yanına git.\n“Hoş geldin, yardım edebilir miyim?” de.\nSırasını göster.\nBirlikte oturun.',
   bank:['Yanına git','Hoş geldin','yardım edebilir miyim','göster','birlikte'],
   result:'Dört adımlı, nazik bir yönerge yazdın: robot bu yönergeyi uygulayabilir.'}
+]};
+
+/* ---- u07 Kırık Köprü (yazma: bağlamla tamamlama + üretim) ---- */
+GAMES.u07={title:'Kırık Köprü',theme:'garden',finish:'Cümleleri bağlama uygun tamamladın ve son turda kendi tamamlamanı nedeniyle yazdın.',rounds:[
+ {kind:'esle',prompt:'Her eksik tahtaya uygun tamamlamayı getir.',sahne:SAHNE.kopru,
+  gorev:'Cümleyi oku, anlamı tamamlayan parçayı seç. Tahta yerine oturunca köprü onarılır.',
+  etiketler:[{t:'şemsiyesini aldı'},{t:'ışıkları söndürdü'},{t:'sırasını bekledi'}],
+  yuvalar:[{ad:'Dışarıda yağmur vardı, bu yüzden Ela …',dogru:0,ipucu:'Yağmurla ilgili olan hangisi?'},
+   {ad:'Odadan çıkarken elektrik boşa gitmesin diye …',dogru:1,ipucu:'Elektrikle ilgili olan hangisi?'},
+   {ad:'Kantinde kalabalık vardı, Ali sabırla …',dogru:2}],
+  result:'Her tamamlama cümlenin anlam bağıyla eşleşti: yağmur–şemsiye, elektrik–ışık, kalabalık–sıra beklemek.'},
+ {kind:'kanit',prompt:'İki tamamlama da doğruya yakın: ipucunu işaretle.',sahne:SAHNE.kopru,
+  baslik:'Metin',
+  metin:[['Sabah ',{t:'kar yağmıştı'},' ve yollar ',{t:'buz tutmuştu',dogru:true},'. Ali okula giderken ',{t:'çok dikkatli yürüdü'},'.']],
+  gerekKanit:1,soru:'"Ali okula giderken …" cümlesini hangisi daha iyi tamamlar?',
+  secenekler:[{label:'adımlarını yavaş ve dikkatli attı',correct:true},
+   {label:'şemsiyesini açtı',hint:'İşaretlediğin kanıt buzdan söz ediyor, yağmurdan değil.'},
+   {label:'terliklerini giydi'}],
+  result:'Buz tutan yolda dikkatli yürümek gerekir. İki seçenek de kışa uygun görünse de kanıt buzu gösteriyordu.'},
+ {kind:'yaz',prompt:'Yeni cümleyi kendi sözünle tamamla ve nedenini söyle.',sahne:SAHNE.kopru,
+  gorev:'"Kütüphanede yüksek sesle konuşmadım çünkü …" cümlesini kendi sözcüklerinle tamamla.',
+  ornek:'Örnek biçim: "… çünkü … ." Nedeni açıkça yaz.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  yasak:['Kütüphanede yüksek sesle konuşmadım çünkü kütüphanede sessiz olmak gerekir.'],
+  ipucuMetin:'Kütüphanede yüksek sesle konuşmadım çünkü …',
+  ornekCevap:'Kütüphanede yüksek sesle konuşmadım çünkü yanımdaki arkadaşım ders çalışıyordu.',
+  bank:['çünkü','arkadaşım','ders','çalışıyordu','rahatsız'],
+  result:'Tamamlamanı nedenle birlikte yazdın: köprünün son tahtası yerine oturdu.'}
+]};
+
+/* ---- u08 5N1K Dedektifi (okuma: bilgi bulma) ---- */
+GAMES.u08={title:'5N1K Dedektifi',theme:'room',finish:'Kim, ne zaman, nerede ve niçin bilgilerini metinden tek tek bulup işaretledin.',rounds:[
+ {kind:'esle',prompt:'Her soru kutusuna metinden doğru bilgiyi getir.',sahne:SAHNE.dedektif,
+  gorev:'Metin: “Dün akşam Zeynep, kardeşi hastalandığı için eczaneye gitti.”',
+  etiketler:[{t:'Zeynep'},{t:'dün akşam'},{t:'eczaneye'},{t:'kardeşi hastalandığı için'}],
+  yuvalar:[{ad:'Kim?',dogru:0},{ad:'Ne zaman?',dogru:1},{ad:'Nerede?',dogru:2},{ad:'Niçin?',dogru:3}],
+  result:'Kim: Zeynep, ne zaman: dün akşam, nerede: eczane, niçin: kardeşi hastalandığı için.'},
+ {kind:'kanit',prompt:'Açık bilgi mi, çıkarım mı? Kanıtı işaretle.',sahne:SAHNE.dedektif,
+  baslik:'İki cümlelik metin',
+  metin:[[{t:'Ali sabah şemsiyesini alıp çıktı'},'. ',{t:'Eve döndüğünde ayakkabıları çamurluydu',dogru:true},'.']],
+  gerekKanit:1,soru:'Metne göre hangisi ÇIKARIMDIR (metinde açıkça yazmaz)?',
+  secenekler:[{label:'Dışarıda yağmur yağmıştır',correct:true},
+   {label:'Ali şemsiyesini almıştır',hint:'Bu bilgi metinde açıkça yazıyor; çıkarım değil.'},
+   {label:'Ali eve dönmüştür'}],
+  result:'Çamurlu ayakkabı yağmuru düşündürür ama metin "yağmur yağdı" demiyor: bu bir çıkarımdır.'},
+ {kind:'esle',prompt:'5N1K tablosunu bağımsız doldur.',sahne:SAHNE.dedektif,
+  gorev:'Metin: “Geçen cumartesi mahallemizdeki çocuklar, parkı temiz tutmak için sokakta çöp topladı.”',
+  etiketler:[{t:'mahallemizdeki çocuklar'},{t:'geçen cumartesi'},{t:'sokakta'},{t:'parkı temiz tutmak için'},{t:'çöp topladı'}],
+  yuvalar:[{ad:'Kim?',dogru:0},{ad:'Ne zaman?',dogru:1},{ad:'Nerede?',dogru:2},{ad:'Niçin?',dogru:3},{ad:'Ne yaptı?',dogru:4}],
+  result:'Beş bilgiyi de metnin kendi sözcükleriyle işaretledin.'}
+]};
+
+/* ---- u09 Duygu Aynası (okuma: duygu çıkarımı) ---- */
+GAMES.u09={title:'Duygu Aynası',theme:'room',finish:'Karakterin duygusunu yüz ifadesinden değil, beden dili ve olay kanıtlarından çıkardın.',rounds:[
+ {kind:'kanit',prompt:'Beden dili ve olay ipuçlarını işaretle, sonra duyguyu seç.',
+  sahne:'<div class="row"><span style="font-size:34px">🧍</span><span style="font-size:26px">🎒</span></div><div class="caption">Yüzü görünmüyor</div>',
+  baslik:'Sınıf kapısında',
+  metin:[['Yeni okuluna ilk gün gelen Mert, kapıda durdu. ',{t:'Çantasının askısını sıkı sıkı tutuyordu',dogru:true},' ve ',{t:'içeri girmeye çekiniyordu',dogru:true},'. ',{t:'Zil çalmıştı'},'.']],
+  gerekKanit:2,soru:'Mert ne hissediyor?',
+  secenekler:[{label:'Heyecanlı ve çekingen',correct:true},{label:'Öfkeli',hint:'İşaretlediğin ipuçlarında öfke belirtisi yok; tutunma ve çekinme var.'},{label:'Uykulu'}],
+  result:'Askıyı sıkı tutmak ve içeri girmeye çekinmek heyecanı ve çekingenliği gösteriyor. Yüz ifadesine gerek kalmadı.'},
+ {kind:'esle',prompt:'Aynı olay, iki farklı duygu: kime hangisi?',
+  sahne:'<div class="row"><span style="font-size:30px">🧒</span><span style="font-size:30px">👧</span></div><div class="caption">İki arkadaş</div>',
+  gorev:'Metin: “Öğretmen sürpriz sınav dedi. Efe defterini hemen açtı, çünkü bütün konuları tekrar etmişti. Nil ise sırasına baktı, ödevini evde bırakmıştı.”',
+  etiketler:[{t:'kendine güvenen'},{t:'endişeli'},{t:'kızgın'}],
+  yuvalar:[{ad:'Efe',dogru:0,ipucu:'Efe konuları tekrar etmişti; bu onu nasıl hissettirir?'},
+   {ad:'Nil',dogru:1,ipucu:'Nil ödevini evde bırakmış; bu onu nasıl hissettirir?'}],
+  result:'Aynı olay iki çocukta farklı duygu yarattı çünkü hazırlıkları farklıydı.'},
+ {kind:'yaz',prompt:'Duyguyu ve iki kanıtını bir cümlede yaz.',
+  sahne:'<div class="row"><span style="font-size:34px">🧍</span></div><div class="caption">Duygu aynası</div>',
+  gorev:'Mert’in duygusunu ve metindeki iki kanıtını tek cümlede yaz.',
+  enAzKelime:10,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Mert … hissediyor çünkü … ve … .',
+  ornekCevap:'Mert çekingen hissediyor çünkü çantasının askısını sıkı tutuyor ve içeri girmeye çekiniyor.',
+  bank:['Mert','çekingen','heyecanlı','çünkü','askısını','çekiniyor'],
+  result:'Duyguyu iki kanıta bağlayarak yazdın: çıkarımını metinle destekledin.'}
+]};
+
+/* ---- u10 Ana Fikir Tohumu (okuma: konu ve ana fikir) ---- */
+GAMES.u10={title:'Ana Fikir Tohumu',theme:'garden',finish:'Önce destekleyici ayrıntıları buldun, sonra konu ile ana fikri ayırdın ve kendi ana fikrini yazdın.',rounds:[
+ {kind:'kanit',prompt:'Destekleyici ayrıntıları işaretle, sonra ana fikri seç.',sahne:SAHNE.agac,
+  baslik:'Arılar',
+  metin:[['Arılar sabahtan akşama kadar ',{t:'durmadan çalışır',dogru:true},'. Her arı ',{t:'kendi işini eksiksiz yapar',dogru:true},'. Kovanda ',{t:'binlerce arı'},' yaşar.']],
+  gerekKanit:2,soru:'Metnin ANA FİKRİ hangisi?',
+  secenekler:[{label:'Çalışmak ve görevini yapmak önemlidir',correct:true},
+   {label:'Kovanda binlerce arı yaşar',hint:'Bu bir ayrıntı; metnin vermek istediği ders değil.'},
+   {label:'Bal tatlıdır'}],
+  result:'Ayrıntılar arıların çalışmasını anlatıyor; metnin verdiği ders çalışmanın önemi.'},
+ {kind:'esle',prompt:'Konu mu, ana fikir mi?',sahne:SAHNE.agac,
+  gorev:'Aynı metin için: konu metnin NEDEN söz ettiğidir, ana fikir metnin NE demek istediğidir.',
+  etiketler:[{t:'Arılar'},{t:'Çalışmak önemlidir'},{t:'Bal kavanozda durur'}],
+  yuvalar:[{ad:'Konu',dogru:0,ipucu:'Metin kimden/neden söz ediyor?'},
+   {ad:'Ana fikir',dogru:1,ipucu:'Metin bize hangi dersi veriyor?'}],
+  result:'"Arılar" konu, "çalışmak önemlidir" ana fikirdir. İkisi aynı şey değil.'},
+ {kind:'yaz',prompt:'Yeni paragrafın ana fikrini yaz, iki ayrıntıyla destekle.',sahne:SAHNE.agac,
+  gorev:'Paragraf: “Deniz her akşam kitap okur. Okuduklarını kardeşine anlatır. Yeni sözcükleri defterine yazar.” Ana fikri yaz, sonra alt satırlara iki destekleyici ayrıntı yaz.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Ana fikir: Okumak insanı geliştirir.\nAyrıntı: Deniz her akşam kitap okur.\nAyrıntı: Yeni sözcükleri defterine yazar.',
+  ornekCevap:'Ana fikir: Düzenli okumak insanı geliştirir.\nAyrıntı: Deniz her akşam kitap okur.\nAyrıntı: Yeni sözcükleri defterine yazar.',
+  result:'Ana fikri kendi cümlenle yazdın ve metinden iki ayrıntıyla destekledin.'}
+]};
+
+/* ---- u11 Sihirli Fosforlu Kalem (yazma: eş anlamlılar) ---- */
+GAMES.u11={title:'Sihirli Fosforlu Kalem',theme:'class',finish:'Eş anlamlı sözcükleri bağlam içinde buldun, her yerde yer değiştiremeyeceklerini gördün ve ikisini kendi cümlelerinde kullandın.',rounds:[
+ {kind:'kanit',prompt:'Aynı anlama gelen iki sözcüğü işaretle.',
+  sahne:'<div class="row"><span style="font-size:30px">🖍️</span><span style="font-size:28px">📒</span></div><div class="caption">Fosforlu kalem ve defter</div>',
+  baslik:'Defterdeki cümle',
+  metin:[['Bahçedeki ',{t:'ihtiyar'},' çınar ağacının altında oturduk. Dedem, ',{t:'yaşlı',dogru:true},' ağacın gölgesini severdi; o da artık ',{t:'ihtiyar',dogru:true},' sayılırdı.']],
+  gerekKanit:2,soru:'İşaretlediğin iki sözcük için ne söylenir?',
+  secenekler:[{label:'Eş anlamlıdır (aynı anlama gelir)',correct:true},
+   {label:'Zıt anlamlıdır',hint:'İkisi de aynı yaşlılık anlamını taşıyor; birbirinin zıddı değil.'},
+   {label:'Sesteştir'}],
+  result:'"Yaşlı" ve "ihtiyar" eş anlamlı: ikisi de aynı anlamı taşıyor.'},
+ {kind:'esle',prompt:'Eş anlamlı sözcük her cümleye uymayabilir.',
+  sahne:'<div class="row"><span style="font-size:30px">🖍️</span></div><div class="caption">İki cümle</div>',
+  gorev:'"Kara" ve "siyah" eş anlamlı sayılır ama her cümlede yer değiştiremez.',
+  etiketler:[{t:'siyah'},{t:'kara'}],
+  yuvalar:[{ad:'Yeni … kalemimi kaybettim.',dogru:0,ipucu:'Renk için günlük dilde hangisi daha uygun?'},
+   {ad:'Gemi … sulara açıldı.',dogru:1,ipucu:'Burada renk değil, denizden söz ediliyor.'}],
+  result:'Eş anlamlı sözcükler çoğu yerde birbirinin yerine geçer ama bazı kalıplarda geçmez.'},
+ {kind:'yaz',prompt:'İki eş anlamlıyı ayrı cümlelerde kullan.',
+  sahne:'<div class="row"><span style="font-size:30px">🖍️</span></div><div class="caption">Kendi cümlelerim</div>',
+  gorev:'Alt alta iki cümle yaz: birincide "yaşlı", ikincide "ihtiyar" sözcüğünü kullan. Anlam ikisinde de aynı kalsın.',
+  enAzSatir:2,buyukHarf:true,gerekli:['yaşlı','ihtiyar'],
+  ipucuMetin:'Yaşlı komşumuza çantasını taşıdım.\nİhtiyar komşumuz bana teşekkür etti.',
+  ornekCevap:'Yaşlı komşumuza çantasını taşıdım.\nİhtiyar komşumuz bana teşekkür etti.',
+  result:'İki eş anlamlıyı da doğru bağlamda kullandın; anlam korundu.'}
+]};
+
+/* ---- u12 Paragraf Asansörü (yazma: giriş-gelişme-sonuç) ---- */
+GAMES.u12={title:'Paragraf Asansörü',theme:'city',finish:'Cümleleri giriş-gelişme-sonuç sırasına dizdin, konuya uymayan ayrıntıyı ayıkladın ve kendi paragrafını yazdın.',rounds:[
+ {kind:'sira',prompt:'Cümleleri giriş → gelişme → sonuç sırasına diz.',
+  sahne:'<div class="row"><span style="font-size:32px">🛗</span></div><div class="caption">Asansör katları: giriş · gelişme · sonuç</div>',
+  gorev:'Kartlar yerinde duruyor. Hangi cümle paragrafı başlatır?',
+  kartlar:[{t:'Ağaçları suladık ve çöpleri topladık.'},{t:'Geçen hafta sınıfça okul bahçesine gittik.'},{t:'Bahçe akşama kadar pırıl pırıl oldu.'}],
+  dogru:[1,0,2],
+  ipucular:['Paragrafı başlatan cümle olayı tanıtır: kim, nerede, ne zaman?','Ortada yapılan işler anlatılır.','Sonuç cümlesi işin sonunu söyler.'],
+  result:'Giriş olayı tanıttı, gelişme yapılanları anlattı, sonuç işin sonucunu söyledi.'},
+ {kind:'sira',prompt:'Bir cümle konuya uymuyor: onu bırakıp diğerlerini sırala.',
+  sahne:'<div class="row"><span style="font-size:32px">🛗</span></div><div class="caption">Dört cümle, üç kat</div>',
+  gorev:'Dört kart var ama asansörün üç katı var. Konuya uymayan kartı yerleştirmeye çalışma.',
+  kartlar:[{t:'Tohumları saksıya ektik.'},{t:'Kardeşim dün maç izledi.'},{t:'Fen dersinde fasulye tohumu getirdik.'},{t:'Bir hafta sonra filizler çıktı.'}],
+  dogru:[2,0,3],
+  kartIpucu:{1:'Bu cümle maçtan söz ediyor; paragrafın konusu tohum ekmek. Bu ayrıntı konuya uymuyor.'},
+  ipucular:['Giriş cümlesi konuyu tanıtır: derste ne getirildi?','Gelişmede ne yapıldı?','Sonuçta ne oldu?'],
+  result:'Maçla ilgili cümle konu dışıydı; kalan üç cümle paragrafı kurdu.'},
+ {kind:'yaz',prompt:'Kendi üç cümleli paragrafını yaz.',
+  sahne:'<div class="row"><span style="font-size:32px">🛗</span></div><div class="caption">Kendi paragrafım</div>',
+  gorev:'Alt alta üç cümle yaz: birinci satır giriş, ikinci satır gelişme, üçüncü satır sonuç olsun.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Dün annemle pazara gittik.\nSebze ve meyve seçtik.\nEve dönünce hepsini birlikte yerleştirdik.',
+  ornekCevap:'Dün annemle pazara gittik.\nSebze ve meyve seçtik.\nEve dönünce hepsini birlikte yerleştirdik.',
+  result:'Üç katlı paragrafını kendin yazdın: giriş, gelişme ve sonuç yerli yerinde.'}
 ]};
 
 game=GAMES[GAME_ID];
