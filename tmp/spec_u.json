@@ -1,0 +1,1352 @@
+[
+ {
+  "id": "u01",
+  "title": "Kapak Dedektifi",
+  "sub": "Görselden konu tahmini",
+  "kaz": "T.O.2.2 — Başlık ve görsellerden metnin konusunu tahmin eder.",
+  "type": "dragMatch",
+  "grp": "Tema 1 · Değerlerimizle Varız",
+  "yonerge": "Gizemli kütüphaneye hoş geldin! Kitabın başlığı silinmiş. Kapaktaki resme bak ve doğru konu etiketini kitaba sürükle.",
+  "kip": "okuma",
+  "turlar": [
+   "Gerçek bir kütüphane rafı ve başlığı kapalı üç kitap kapağı kullan; kapaktaki olay, karakter ve mekân ayrıntıları tıklanabilir olsun.",
+   "İki benzer kapakta konu ile ayrıntıyı ayır; öğrenci seçimini kapaktaki iki kanıtla doğrulasın.",
+   "Başlık ve kapak bazen uyumlu bazen çelişkili gelsin; öğrenci tahminini bir cümleyle yazsın."
+  ]
+ },
+ {
+  "id": "u02",
+  "title": "Masal Treni",
+  "sub": "Olayları sıraya koyma",
+  "kaz": "T.K.2.2 — Olayları oluş sırasına göre sıralar.",
+  "type": "orderSequence",
+  "grp": "Tema 1 · Değerlerimizle Varız",
+  "yonerge": "Masal treni yola çıkmaya hazır ama hikâye karışmış! Olayları oluş sırasına göre vagonlara diz.",
+  "kip": "konusma",
+  "turlar": [
+   "Roket yerine gerçek lokomotif ve üç sabit vagon çiz; olay kartları okunurken zaman bağları görünür fakat doğru sıra gizli olsun.",
+   "Dört olaylı bir masalda ortadaki iki adım yakın anlamlı çeldiricilerle karıştırılsın.",
+   "Görselsiz kısa metinden beş olayı sırala ve 'çünkü/sonunda' bağıyla anlat."
+  ]
+ },
+ {
+  "id": "u03",
+  "title": "Kelime Ormanı",
+  "sub": "Bağlamdan anlam çıkarma",
+  "kaz": "T.Y.2.2 — Bilinmeyen sözcüğün anlamını bağlamdan tahmin eder.",
+  "type": "choiceQuestion",
+  "grp": "Tema 1 · Değerlerimizle Varız",
+  "yonerge": "Ormandaki tabelayı oku. Parlayan sözcük bu cümlede hangi anlama geliyor?",
+  "kip": "yazma",
+  "turlar": [
+   "Uzay yerine sözcüğün geçtiği cümleyi taşıyan orman tabelaları kullan; hedef sözcük seçilebilir ama anlam seçeneği sabit dursun.",
+   "Aynı sözcüğü iki farklı cümlede göstererek bağlam değişince anlamın nasıl değiştiğini karşılaştır.",
+   "Öğrenci tahmini seçtikten sonra kendi kısa cümlesini yazıp sözlük anlamıyla kontrol etsin."
+  ]
+ },
+ {
+  "id": "u04",
+  "title": "Noktalama Yağmuru",
+  "sub": "Şemsiyeyle işaret yakalama",
+  "kaz": "T.Y.2.3 — Nokta, soru işareti ve ünlemi kuralına uygun kullanır.",
+  "type": "catchDrop",
+  "grp": "Tema 1 · Değerlerimizle Varız",
+  "yonerge": "Cümlelerin sonundaki noktalama işaretleri kayboldu! Doğru işareti taşıyan yağmur damlasını şemsiyenle yakala.",
+  "kip": "yazma",
+  "turlar": [
+   "Gerçek yağmur damlaları ve hareket ettirilen şemsiye kullan; sarı nokta-kapsül dili kaldırılıp cümlenin ses tonu duyulsun.",
+   "Nokta, soru ve ünlem aynı cümle gövdesinde anlam/ton değiştirerek karşılaştırılsın.",
+   "Öğrenci iki cümleyi kendi yazsın, son işareti eklesin ve uygun tonla okusun."
+  ]
+ },
+ {
+  "id": "u05",
+  "title": "Sihirli Erdem Ağacı",
+  "sub": "Metnin konusunu bulma",
+  "kaz": "T.O.2.3 — Metnin ana konusunu (değeri) belirler.",
+  "type": "dragMatch",
+  "grp": "Tema 1 · Değerlerimizle Varız",
+  "yonerge": "Hikâyeyi dinle: “Ayşe sabahları yatağını kendi toplar, okul çantasını akşamdan hazırlardı.” Şimdi doğru elmayı ağaca sürükle!",
+  "kip": "okuma",
+  "turlar": [
+   "Erdem ağacında hikâye yaprak yaprak açılsın; cevap elması yalnız olay kanıtı seçildikten sonra sürüklenebilsin.",
+   "Sorumluluk-saygı-yardımlaşma gibi yakın değerler iki kısa olayla karşılaştırılsın.",
+   "Öğrenci seçtiği değeri kendi yaşamından bir örnek cümleyle ağacın yeni yaprağına yazsın."
+  ]
+ },
+ {
+  "id": "u06",
+  "title": "Robotun Nezaket Yolu",
+  "sub": "Yönergeleri sıraya dizme",
+  "kaz": "T.Y.2.2 — Basit yönergeler oluşturur ve uygular.",
+  "type": "orderSequence",
+  "grp": "Tema 1 · Değerlerimizle Varız",
+  "yonerge": "Robot, karşıdan karşıya geçmek isteyen teyzeye yardım edecek. Komutları doğru sıraya diz!",
+  "kip": "yazma",
+  "turlar": [
+   "Robotu gerçek kaldırım ve yaya geçidinde adım adım yürüt; komut kartları sabit ve nezaket ifadesi ayrı söz balonu olsun.",
+   "Aynı hedefe ulaşan iki komut dizisinden güvenli ve nazik olanı seçtir.",
+   "Öğrenci yeni bir yardım durumu için dört adımlı yönerge yazıp robota uygulasın."
+  ]
+ },
+ {
+  "id": "u07",
+  "title": "Kırık Köprü",
+  "sub": "Eksik cümleyi tamamlama",
+  "kaz": "T.Y.2.2.a — Eksik bırakılan kısmı bağlamı kullanarak tamamlar.",
+  "type": "choiceQuestion",
+  "grp": "Tema 1 · Değerlerimizle Varız",
+  "yonerge": "Karşıya geçmek için cümleyi doğru tamamlayıp köprüyü onarmalısın!",
+  "kip": "yazma",
+  "turlar": [
+   "Köprünün her eksik tahtası cümlenin anlam bağlantısını temsil etsin; tamamlanan cümle sahnede kısa animasyonla gerçekleşsin.",
+   "İki doğruya yakın tamamlamadan bağlama en uygun olanı metindeki ipucuyla ayırt ettir.",
+   "Öğrenci yeni bir başlangıç cümlesini kendi sözüyle tamamlasın ve nedeni açıklasın."
+  ]
+ },
+ {
+  "id": "u08",
+  "title": "5N1K Dedektifi",
+  "sub": "Metinde bilgi bulma",
+  "kaz": "T.O.2.1 — Metindeki kim, ne zaman, nerede, niçin bilgilerini bulur.",
+  "type": "wordHighlight",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Dedektif, ipuçlarını bulmalıyız! Sorulan bilgiyi metinde bulup üzerine dokun.",
+  "kip": "okuma",
+  "turlar": [
+   "Dedektif tutanağını satır aralığı geniş, büyüteç metni örtmeyecek biçimde kur; kim-ne zaman-nerede-niçin renk kodları ayrı olsun.",
+   "İki cümlelik metinde açık bilgi ile çıkarıma dayalı bilgiyi ayır.",
+   "Kısa paragraftan 5N1K tablosunu bağımsız doldur ve her cevabın geçtiği bölümü işaretle."
+  ]
+ },
+ {
+  "id": "u09",
+  "title": "Duygu Aynası",
+  "sub": "Metinden çıkarım ve empati",
+  "kaz": "T.O.2.3 — Karakterin duygusunu bağlamdan çıkarır.",
+  "type": "choiceQuestion",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Karakterimizin ne hissettiğini metinden bulabilir misin? Doğru duygu maskesini seç!",
+  "kip": "okuma",
+  "turlar": [
+   "Karakterin yüzü hazır emojiyle verilmesin; beden dili ve olay ipuçları sahnede ayrı ayrı görünsün.",
+   "Aynı olayda iki karakterin farklı duygusunu nedenleriyle karşılaştır.",
+   "Öğrenci karakterin duygusunu ve metindeki iki kanıtını bir cümleyle ifade etsin."
+  ]
+ },
+ {
+  "id": "u10",
+  "title": "Ana Fikir Tohumu",
+  "sub": "Metnin özünü kavrama",
+  "kaz": "T.O.2.3 — Metnin ana fikrini belirler.",
+  "type": "choiceQuestion",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Bu hikâyenin bize vermek istediği asıl dersi bul ve doğru tohumu ek!",
+  "kip": "okuma",
+  "turlar": [
+   "Tohumların üzerinde ana fikirler; yapraklarda destekleyici ayrıntılar olsun. Önce ayrıntılar, sonra ana fikir eşleşsin.",
+   "Konu ile ana fikir seçenekleri özellikle karşılaştırılsın; 'arılar' konu, 'çalışmak önemlidir' ana fikir olarak ayrıştırılsın.",
+   "Yeni paragraf için öğrenci ana fikri kendi cümlesiyle yazıp iki ayrıntıyla desteklesin."
+  ]
+ },
+ {
+  "id": "u11",
+  "title": "Sihirli Fosforlu Kalem",
+  "sub": "Eş anlamlıları bulma",
+  "kaz": "T.Y.2.2 — Sözcüklerin eş anlamlılarını bağlam içinde bulur.",
+  "type": "wordHighlight",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Defterdeki cümleyi oku. İstenen kelimelerin eş anlamlılarını bulup üzerine dokun!",
+  "kip": "yazma",
+  "turlar": [
+   "Fosforlu kalem aynı anlamlı sözcük çiftlerini cümlede renklendirsin; hedef sözcük baştan cevabı söylemesin.",
+   "Eş anlamlı sözcüklerin her cümlede birebir yer değiştiremeyebileceğini basit bağlamlarla göster.",
+   "Öğrenci iki eş anlamlıyı farklı cümlelerde kullanıp anlamın korunduğunu kontrol etsin."
+  ]
+ },
+ {
+  "id": "u12",
+  "title": "Paragraf Asansörü",
+  "sub": "Giriş - gelişme - sonuç",
+  "kaz": "T.Y.2.2 — Cümleleri mantıksal sıraya koyarak metin oluşturur.",
+  "type": "orderSequence",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Asansörün katları karışmış! Cümleleri Giriş → Gelişme → Sonuç sırasına diz.",
+  "kip": "yazma",
+  "turlar": [
+   "Asansörün katları giriş-gelişme-sonuç olsun; cümleler sabit kartlarda ve zaman bağları görünür durumda sıralansın.",
+   "Dört cümleli metinde uygun olmayan bir ayrıntıyı çıkarıp kalanları sırala.",
+   "Öğrenci üç cümlelik bir paragraf yazsın ve her cümleyi ilgili kata yerleştirsin."
+  ]
+ },
+ {
+  "id": "u13",
+  "title": "Noktalama Akvaryumu",
+  "sub": "Duraklama ve tonlama",
+  "kaz": "T.Y.2.3 — Virgül ve soru işaretini yerinde kullanır.",
+  "type": "dragMatch",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Baloncukları oku! Duraklaman gereken yerlere doğru noktalama yemini bırak.",
+  "kip": "yazma",
+  "turlar": [
+   "Akvaryum baloncukları gerçek cümle parçaları olsun; virgül ve soru işareti yemleri doğru boşluğa bırakıldığında cümle sesli okunsun.",
+   "Virgülün hitap ve sıralama görevleri ayrı örneklerle çalışılsın.",
+   "Öğrenci iki cümleye işaret ekleyip tonlama farkını sesli okumayla kanıtlasın."
+  ]
+ },
+ {
+  "id": "u14",
+  "title": "Kayıp Kitaplık",
+  "sub": "Satır arasını okuma",
+  "kaz": "T.O.2.3 — İpuçlarından çıkarım yapar.",
+  "type": "choiceQuestion",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Metni iyi oku! Mevsimin ne olduğu yazmıyor ama ipuçları var. Can hangi kapıdan çıkacak?",
+  "kip": "okuma",
+  "turlar": [
+   "Kütüphane kapılarında mevsim, zaman ve hava seçenekleri olsun; metindeki ipuçları mum ışığıyla tek tek bulunabilsin.",
+   "Birden çok ipucunun aynı sonuca götürdüğü ve tek ipucunun yetersiz olduğu örnekler kullan.",
+   "Öğrenci çıkarımını 'Bence... çünkü metinde...' kalıbıyla yazsın."
+  ]
+ },
+ {
+  "id": "u15",
+  "title": "Anlamını Bulan Işıldak",
+  "sub": "Bilinmeyen kelime tahmini",
+  "kaz": "T.Y.2.2 — Yeni sözcüğün anlamını cümleden tahmin eder.",
+  "type": "choiceQuestion",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Karanlık mağaradaki gizemli kelimeyi bul! Sence bu cümlede ne anlama geliyor?",
+  "kip": "yazma",
+  "turlar": [
+   "Işıldak hedef sözcük yerine bağlam ipuçlarını aydınlatsın; seçenekler hareket etmeden sabit bilgi kartlarında dursun.",
+   "Yakın anlamlı iki seçenek arasında cümleye en uygun olanı kanıtla seçtir.",
+   "Tahmin, sözlük kontrolü ve yeni cümlede kullanım üç adımlı olarak tamamlanmalı."
+  ]
+ },
+ {
+  "id": "u16",
+  "title": "Hazine Haritası",
+  "sub": "Yönergeleri sırayla uygulama",
+  "kaz": "T.O.2.1 — Okuduğu yönergeleri sırasıyla uygular.",
+  "type": "orderSequence",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Mektubu oku: “Önce büyük meşe ağacına git. Oradan sağa dönüp kırmızı kayaya ulaş. Kayayı geçince hazineyi kaz.” Şimdi rotayı sırayla seç!",
+  "kip": "okuma",
+  "turlar": [
+   "Harita üzerinde gerçek meşe, sağ dönüş, kaya ve kazı noktası bulunsun; yönerge okunduktan sonra metin isteğe bağlı küçülsün.",
+   "Sağ-sol ve önce-sonra içeren dört adımlı yeni rota uygulat.",
+   "Öğrenci arkadaşına üç adımlı bir hazine yönergesi yazıp başka bir rotada test etsin."
+  ]
+ },
+ {
+  "id": "u17",
+  "title": "Karakterlerin Sohbeti",
+  "sub": "Nezaket kurallarına uygun cevap",
+  "kaz": "T.K.2.3 — İletişimde nezaket ifadeleri kullanır.",
+  "type": "choiceQuestion",
+  "grp": "Okuma-Anlama Atölyesi",
+  "yonerge": "Ali’ye nezaket kurallarına uygun bir cevap vermeliyiz. Doğru mesaj balonunu seç!",
+  "kip": "konusma",
+  "turlar": [
+   "Sohbet balonları gerçek karakterlerin yanında açılıp uygun hitap ve cevap seçildikten sonra diyalog devam etsin.",
+   "Aynı isteğe arkadaş, öğretmen ve yabancı yetişkin için farklı uygun cevaplar karşılaştırılsın.",
+   "Öğrenci kısa bir nezaket diyaloğunu sesli canlandırsın veya iki balon yazsın."
+  ]
+ },
+ {
+  "id": "u18",
+  "title": "Zıt Anlamlılar Ekspresi",
+  "sub": "Zıt anlamlı sözcükler",
+  "kaz": "T.Y.2.2 — Okuduğu metindeki zıt anlamlı sözcükleri bulur.",
+  "type": "dragMatch",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Cumhuriyet Ekspresi yola çıkacak! Vagondaki kelimenin zıt anlamlısını taşıyan valizi doğru vagona sürükle.",
+  "kip": "yazma",
+  "turlar": [
+   "Gerçek tren vagonlarında sözcükler, valizlerde zıtları bulunsun; köprü kutuları kaldırılıp çiftler yan yana seyahat etsin.",
+   "Sıcak-soğuk gibi kolay çiftlerden önce-sonra ve erken-geç gibi bağlama duyarlı çiftlere geç.",
+   "Öğrenci iki zıt çifti aynı kısa paragrafta kullanarak anlam farkını yazsın."
+  ]
+ },
+ {
+  "id": "u19",
+  "title": "Neden-Sonuç Köprüsü",
+  "sub": "Neden-sonuç ilişkisi",
+  "kaz": "T.O.2.3 — Metindeki neden-sonuç ilişkisini kurar.",
+  "type": "dragMatch",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Karşıya geçmek için köprüyü tamamla! Her nedenin doğru sonucunu taşıyan kalası yerine sürükle.",
+  "kip": "okuma",
+  "turlar": [
+   "Köprünün sol kıyısı neden, sağ kıyısı sonuç olsun; her kalas bağlantı sözcüğüyle birlikte yerleşsin.",
+   "Çünkü ve bu yüzden kullanılarak aynı ilişki iki yönde ifade edilsin.",
+   "Öğrenci bir doğa ve bir günlük yaşam neden-sonuç cümlesi yazsın."
+  ]
+ },
+ {
+  "id": "u20",
+  "title": "Zaman Şeridi",
+  "sub": "Olayları sıraya koyma",
+  "kaz": "T.K.2.2 — Görsellerden hareketle olayların oluş sırasını belirler.",
+  "type": "orderSequence",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Tarihi fotoğraflar karışmış! Olayların oluş sırasına göre zaman şeridine diz.",
+  "kip": "konusma",
+  "turlar": [
+   "Gerçek yatay zaman şeridi ve tarihî görsel kartlar kullan; roket-yakıt sahnesini kaldır.",
+   "Dört olayda 'önce/daha sonra/en sonunda' ipuçlarını ayırt ettir.",
+   "Öğrenci sıraladığı olayları üç cümlelik sözlü anlatımla özetlesin."
+  ]
+ },
+ {
+  "id": "u21",
+  "title": "İstiklâl Kâşifi",
+  "sub": "Bağlamdan anlam çıkarma",
+  "kaz": "T.Y.2.2 — Sözcüğün anlamını bağlamdan yararlanarak tahmin eder.",
+  "type": "choiceQuestion",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "El yazması defteri oku. Parlayan sözcük bu cümlede hangi anlama geliyor?",
+  "kip": "yazma",
+  "turlar": [
+   "El yazması defter sabit sayfa olarak açılsın; parlayan sözcük ve bağlam ipuçları aynı görüş alanında kalsın.",
+   "Bir sözcüğün iki yakın anlamını farklı tarihî cümlelerde karşılaştır.",
+   "Öğrenci tahminini sözlükle kontrol edip yeni cümle kurarak yazsın."
+  ]
+ },
+ {
+  "id": "u22",
+  "title": "Noktalama Muhafızları",
+  "sub": "Paraşütle işaret yakalama",
+  "kaz": "T.Y.2.3 — Ünlem, soru işareti ve noktayı kuralına uygun kullanır.",
+  "type": "catchDrop",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Pankarttaki noktalama işaretleri kayboldu! Doğru işareti taşıyan paraşütü kalkanınla yakala.",
+  "kip": "yazma",
+  "turlar": [
+   "Paraşütler gerçekten gökyüzünden insin; kalkan kontrolü belirgin olsun ve kapsül/radar terimleri görünmesin.",
+   "Aynı cümlenin işaret değişince tonunun ve anlamının nasıl değiştiğini dinlet.",
+   "Öğrenci törenle ilgili üç cümleyi yazıp nokta-soru-ünlemle tamamlasın."
+  ]
+ },
+ {
+  "id": "u23",
+  "title": "Yarım Kalan Mektup",
+  "sub": "Tahminle metin tamamlama",
+  "kaz": "T.Y.2.2.a — Eksik bırakılan metni tahminleriyle tamamlar.",
+  "type": "choiceQuestion",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Cephe mektubunun sonu yırtılmış! Metnin başını okuyup devamını tahmin et.",
+  "kip": "yazma",
+  "turlar": [
+   "Yırtık mektup görseli ve önceki cümleleri taşıyan sabit kâğıt kullan; devam seçeneği metnin üslubuna uysun.",
+   "İki makul devam arasından kişi, zaman ve duygu tutarlılığına göre seçim yaptır.",
+   "Öğrenci mektuba kendi iki cümlelik sonunu yazıp metinle bağını açıklasın."
+  ]
+ },
+ {
+  "id": "u24",
+  "title": "Karakter Aynası",
+  "sub": "Benzerlik ve farklılıklar",
+  "kaz": "T.K.2.3 — Metindeki kişilerin benzer ve farklı yönlerini açıklar.",
+  "type": "dragMatch",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Metindeki çocukluk çağındaki Atatürk ile kendini karşılaştır! Ortak özellikleri ortaya, farklı olanları kendi tarafına sürükle.",
+  "kip": "konusma",
+  "turlar": [
+   "Gerçek Venn aynası kullan; Atatürk'ün çocukluğu ve öğrencinin yaşamı için kanıt kartları ayrı bölgelerde toplansın.",
+   "Benzerlik ile aynı olma kavramlarını ayıran yeni özellikler ekle.",
+   "Öğrenci bir benzer ve bir farklı yönü tam cümleyle yazsın."
+  ]
+ },
+ {
+  "id": "u25",
+  "title": "Tabela Avcısı",
+  "sub": "Farklı yazı tiplerini okuma",
+  "kaz": "T.O.2.1 — Farklı yazı karakterleriyle yazılmış yazıları okur.",
+  "type": "tapSelect",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Tarihi sokakta geziyoruz! Hedef kelime <b>EGEMENLİK</b>. Aynısını farklı yazı tipleriyle yazılmış tabelalar arasından bul.",
+  "kip": "okuma",
+  "turlar": [
+   "Tarihî sokak ve farklı gerçek tabela yüzeyleri kullan; su altı balıkları ile ağ tamamen kaldır.",
+   "Aynı kelimeyi matbaa, el yazısı ve sade okul yazısında; benzer sözcük çeldiricileriyle ayırt ettir.",
+   "Öğrenci seçtiği tabelayı yüksek sesle okuyup harf biçimi değişse de sözcüğün aynı kaldığını açıklasın."
+  ]
+ },
+ {
+  "id": "u26",
+  "title": "Büyük Harf Kalkanı",
+  "sub": "Büyük harf kuralları",
+  "kaz": "T.Y.2.3 — Büyük harfleri kuralına uygun kullanır.",
+  "type": "wordHighlight",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Telgraftaki mesajda büyük harf hataları var! Büyük yazılması gereken kelimeye dokun, harf büyüsün.",
+  "kip": "yazma",
+  "turlar": [
+   "Telgraf metninde cümle başı ve özel adlar sabit satırlarda dursun; dokununca yalnız ilk harf düzeltilsin.",
+   "Kişi, şehir, bayram ve kurum adlarını ayrı örneklerde çalıştır.",
+   "Öğrenci iki cümleyi klavyeyle yeniden yazıp büyük harfleri bağımsız kullansın."
+  ]
+ },
+ {
+  "id": "u27",
+  "title": "Doğruluk Terazisi",
+  "sub": "Bilgiyi ön bilgiyle karşılaştırma",
+  "kaz": "T.D.2.3 — Dinlediği iletileri doğruluk açısından karşılaştırır.",
+  "type": "choiceQuestion",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Gramofondan duyduğun bilgi öğrendiklerinle uyuşuyor mu? Doğru ağırlığı teraziye koy.",
+  "kip": "dinleme",
+  "turlar": [
+   "Gerçek gramofon kaydı dinlet; terazide 'doğru/yanlış' seçmeden önce öğrencinin bildiği kanıtı seçmesini iste.",
+   "Kısmen doğru fakat eksik bilgilerle bütünüyle yanlış bilgileri ayır.",
+   "Öğrenci kararını 'Biliyorum çünkü...' cümlesiyle sesli veya yazılı gerekçelendirsin."
+  ]
+ },
+ {
+  "id": "u28",
+  "title": "Hitap Yıldızları",
+  "sub": "Selamlaşma ve hitap",
+  "kaz": "T.K.2.1 — Selamlaşma ve hitap ifadelerini uygun bağlamda kullanır.",
+  "type": "choiceQuestion",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "23 Nisan töreninde karşılaştığın kişilere nasıl hitap edeceksin? Uygun mesajı seç.",
+  "kip": "konusma",
+  "turlar": [
+   "23 Nisan tören alanında öğretmen, arkadaş ve misafir karakterleri görünsün; hitap seçilince kısa diyalog devam etsin.",
+   "Selamlaşma, hitap ve vedalaşmayı aynı konuşmanın farklı yerlerinde uygulat.",
+   "Öğrenci seçilen kişiyle iki turlu uygun diyaloğu sesli canlandırsın."
+  ]
+ },
+ {
+  "id": "u29",
+  "title": "Örneklendirme Ağacı",
+  "sub": "Ana fikri örnekle destekleme",
+  "kaz": "T.Y.2.2 — Yazılarında örneklendirmeye yer verir.",
+  "type": "tapSelect",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Ağacın gövdesindeki ana fikri destekleyen örnekleri bul: “Atatürk çocukları çok sever ve onlara değer verirdi.” Doğru yaprakları topla!",
+  "kip": "yazma",
+  "turlar": [
+   "Ağacın gövdesinde ana fikir, yapraklarda etiket taşımayan olay örnekleri olsun; balık-ağ motoru kaldır.",
+   "Doğrudan destekleyen, ilgisiz ve ana fikre ters örnekleri ayrı dallara yerleştir.",
+   "Öğrenci ana fikri destekleyen kendi örnek cümlesini yeni yaprağa yazsın."
+  ]
+ },
+ {
+  "id": "u30",
+  "title": "Vurgu Stüdyosu",
+  "sub": "Vurgu ve tonlama",
+  "kaz": "T.K.2.3 — Konuşmalarında vurgu ve tonlamaya dikkat eder.",
+  "type": "choiceQuestion",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Şiiri okurken vatanseverlik coşkusu duyulmalı. Hangi okuma vurgu ve tonlamaya uygun?",
+  "kip": "konusma",
+  "turlar": [
+   "Stüdyoda ses dalgası, vurgu düğmesi ve iki gerçek ses kaydı kullan; meteorlara nişan alma yerine dinleyip karşılaştır.",
+   "Aynı dizeyi düz, aşırı ve uygun vurguyla dinletip farkı buldur.",
+   "Öğrenci dizeyi kaydedip vurgu, hız ve tonlama rubriğiyle öz değerlendirsin."
+  ]
+ },
+ {
+  "id": "u31",
+  "title": "Kayıp İleti Şifresi",
+  "sub": "Metnin ana iletisini bulma",
+  "kaz": "T.O.2.3 — Okuduğu metnin konusunu ve ana iletisini bulur.",
+  "type": "choiceQuestion",
+  "grp": "Tema 2 · Atatürk ve Millî Değerlerimiz",
+  "yonerge": "Şifre kasasını açmak için metnin ana iletisini bulmalısın! Doğru kelimeyi çarkta seç.",
+  "kip": "okuma",
+  "turlar": [
+   "Şifre kasasında konu, ana fikir ve ayrıntı için ayrı çarklar olsun; kasa yalnız ana ileti ve kanıt birlikte seçilince açılsın.",
+   "Aynı konudaki iki metnin farklı ana iletilerini karşılaştır.",
+   "Öğrenci ana iletiyi kendi cümlesiyle yazıp metinden bir kanıt eklesin."
+  ]
+ },
+ {
+  "id": "u32",
+  "title": "Orman Kâşifleri",
+  "sub": "Canlıları sınıflandırma",
+  "kaz": "T.O.2.2 — Metindeki canlıları özelliklerine göre sınıflandırır.",
+  "type": "dragMatch",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Ormanın derinliklerine hoş geldin! Hikâyedeki canlıları hareket özelliklerine göre doğru sepetlere sürükle.",
+  "kip": "okuma",
+  "turlar": [
+   "Gerçek orman sahnesinde canlılar yürüyen-uçan-sürünen bölgelerine gözlenen özellikleriyle yerleşsin.",
+   "Aynı canlının birden çok özelliğini ve sınıflandırma ölçütünün değişebileceğini göster.",
+   "Öğrenci yeni bir canlı ekleyip hangi gruba neden koyduğunu yazsın."
+  ]
+ },
+ {
+  "id": "u33",
+  "title": "Soru Yağmuru",
+  "sub": "Soru edatı (mı/mi/mu/mü)",
+  "kaz": "T.Y.2.3 — Soru edatını kuralına uygun (ayrı) yazar.",
+  "type": "catchDrop",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Doğa soruları yarım kaldı! Cümleye uyan soru edatını taşıyan damlayı yakala. Kalın ünlüye kalın, ince ünlüye ince edat gelir.",
+  "kip": "yazma",
+  "turlar": [
+   "Yağmur damlalarında mı/mi/mu/mü ayrı renk değil aynı görünümde olsun; seçim son ünlü dinlenip bulunarak yapılsın.",
+   "Soru edatının ayrı yazımı ve ünlü uyumu birlikte çalışılsın.",
+   "Öğrenci dört edatın her biriyle bir soru cümlesi yazsın ve sesli okusun."
+  ]
+ },
+ {
+  "id": "u34",
+  "title": "İklim Makinesi",
+  "sub": "Neden-sonuç ilişkisi",
+  "kaz": "T.O.2.3 — Metindeki neden-sonuç ilişkisini bulur.",
+  "type": "dragMatch",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "İklim makinesi bozuldu! Doğadaki olayların nedenlerini doğru sonuçlarına bağla.",
+  "kip": "okuma",
+  "turlar": [
+   "İklim makinesinde neden ve sonuç kabloları gerçek hava olaylarını bağlasın; etiket köprüsü yerine süreç animasyonu kullan.",
+   "Tek neden-tek sonuçtan zincirleme iki sonuca geç.",
+   "Öğrenci gözlediği bir hava olayı için neden-sonuç cümlesi kursun."
+  ]
+ },
+ {
+  "id": "u35",
+  "title": "Bukalemunun Şiiri",
+  "sub": "Benzetme kullanma",
+  "kaz": "T.Y.2.2 — Yazılarında benzetmelere yer verir.",
+  "type": "choiceQuestion",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Bukalemun şiir yazmak istiyor ama benzetmeleri unutmuş! Boşluğa en uygun benzetmeyi seç.",
+  "kip": "yazma",
+  "turlar": [
+   "Bukalemun şiir kâğıdında benzetilen ve benzeyen renkli ipuçlarıyla görünsün; seçenekler sabit dursun.",
+   "Gibi ve kadar kullanılan uygun/uygunsuz benzetmeleri karşılaştır.",
+   "Öğrenci doğadan bir varlık için özgün benzetme dizesi yazıp okusun."
+  ]
+ },
+ {
+  "id": "u36",
+  "title": "Kayıp İzci",
+  "sub": "Bağlamdan anlam çıkarma",
+  "kaz": "T.Y.2.2 — Sözcüğün anlamını bağlamdan tahmin eder.",
+  "type": "choiceQuestion",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Fenerini parlayan kelimeye tut! Sence bu sözcük cümlede ne anlama geliyor?",
+  "kip": "yazma",
+  "turlar": [
+   "İzci günlüğü ve fenerle bağlam ipuçları aydınlatılsın; hareketli uzay hedefleri kaldır.",
+   "Aynı sözcüğü iki farklı doğa cümlesinde anlam değişimiyle incele.",
+   "Tahmin-sözlük-yeni cümle döngüsünü öğrenci bağımsız tamamlasın."
+  ]
+ },
+ {
+  "id": "u37",
+  "title": "Doğa Fotoğrafçısı",
+  "sub": "Görseli cümlelerle anlatma",
+  "kaz": "T.Y.2.2 — Mesajını birden çok cümleyle açık şekilde ifade eder.",
+  "type": "tapSelect",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Fotoğrafı çektin: 🦌 Ormanda su içen bir geyik. Şimdi bu fotoğrafı anlatan cümleleri seç — birden çok cümle gerekiyor!",
+  "kip": "yazma",
+  "turlar": [
+   "Gerçek fotoğraf kadrajı sabit kalsın; cümleler balık değil fotoğraf alt yazısı kartları olsun.",
+   "Görseli anlatan doğru cümleler olay, yer ve ayrıntı olarak sınıflansın.",
+   "Öğrenci fotoğraf için en az iki bağlantılı cümle yazıp başlık eklesin."
+  ]
+ },
+ {
+  "id": "u38",
+  "title": "Bilmece Kutusu",
+  "sub": "Başlıktan konu tahmini",
+  "kaz": "T.O.2.2 — Başlık ve görselden metnin konusunu tahmin eder.",
+  "type": "choiceQuestion",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Kitabı açmadan, sadece başlığına ve kapağına bakarak ne anlattığını tahmin et!",
+  "kip": "okuma",
+  "turlar": [
+   "Kitap kapağı ve başlık büyük gösterilsin; konu seçenekleri ancak öğrenci iki görsel ipucunu işaretleyince açılsın.",
+   "Aynı başlığa uyan iki kapaktan daha güçlü olanı kanıtla seçtir.",
+   "Öğrenci yeni başlık için kapak taslağını seçip tahmin cümlesi yazsın."
+  ]
+ },
+ {
+  "id": "u39",
+  "title": "Fikir Terazisi",
+  "sub": "Okuduğunu değerlendirme",
+  "kaz": "T.O.2.3 — Metindeki iletiye katılıp katılmadığını belirtir.",
+  "type": "choiceQuestion",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Okuduğun cümleye katılıyor musun? Fikrini belirten ağırlığı teraziye koy.",
+  "kip": "okuma",
+  "turlar": [
+   "Terazide görüşün iki yanında katılıyorum/katılmıyorum alanları ve gerekçe ağırlıkları olsun.",
+   "Aynı görüş için güçlü-zayıf gerekçeleri karşılaştır.",
+   "Öğrenci kendi kararını ve nedenini tam cümleyle sesli veya yazılı ifade etsin."
+  ]
+ },
+ {
+  "id": "u40",
+  "title": "Hata Avcısı Papağan",
+  "sub": "Okuma hızı ve anlaşılırlık",
+  "kaz": "T.K.2.3 — Konuşma hızını ve anlaşılırlığını değerlendirir.",
+  "type": "choiceQuestion",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Papağan cümleyi hatalı okudu! Hangi okuma doğru? Ona doğrusunu öğret.",
+  "kip": "konusma",
+  "turlar": [
+   "Papağanın gerçek ses kayıtlarını yavaş, çok hızlı, duraksamalı ve uygun biçimde dinlet; yazılı etiket cevabı vermesin.",
+   "Hız, ses yüksekliği ve anlaşılırlığı ayrı ölçütlerle ayırt ettir.",
+   "Öğrenci aynı cümleyi kaydedip papağanla karşılaştırarak öz düzeltme yapsın."
+  ]
+ },
+ {
+  "id": "u41",
+  "title": "Sınıflandırma Fabrikası",
+  "sub": "Geri dönüşüm ve sınıflandırma",
+  "kaz": "T.O.2.2 — Metindeki nesneleri özelliklerine göre sınıflandırır.",
+  "type": "dragMatch",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Kamp günlüğünü oku: “Kampçılar plastik şişeleri, cam kavanozları ve elma kabuklarını ayrı ayrı topladı.” Nesneleri doğru kutulara sürükle!",
+  "kip": "okuma",
+  "turlar": [
+   "Geri dönüşüm fabrikasında nesneler bant üzerinde sabit karar noktalarına gelsin; metindeki nesne ile kutu rengi tutarlı olsun.",
+   "Malzeme türü ile atık/yeniden kullanım amacını ayrı sınıflandırmalarla göster.",
+   "Öğrenci yeni üç nesneyi tabloya yazıp sınıflandırma gerekçesi eklesin."
+  ]
+ },
+ {
+  "id": "u42",
+  "title": "Orman Postacısı",
+  "sub": "Mesajı cümlelerle genişletme",
+  "kaz": "T.Y.2.2 — Mesajını birden çok cümleyle açık ve anlaşılır ifade eder.",
+  "type": "tapSelect",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Mektupta sadece “Ormanlar yanmasın.” yazıyor. Amacı daha açık anlatmak için ekleyeceğin cümleleri seç!",
+  "kip": "yazma",
+  "turlar": [
+   "Orman postacısı gerçek mektup kartlarını yuvalara götürsün; kısa mesaj ayrıntı kartlarıyla genişletilsin.",
+   "Kim-nerede-ne yaptı ayrıntılarıyla tek cümleyi iki bağlantılı cümleye dönüştür.",
+   "Öğrenci kısa bir posta mesajını üç cümle olarak yazsın."
+  ]
+ },
+ {
+  "id": "u43",
+  "title": "Dinleyici Karşısında",
+  "sub": "Konuşma kuralları",
+  "kaz": "T.K.2.3 — Konuşurken dinleyiciyle göz teması kurar, beden dilini kullanır.",
+  "type": "tapSelect",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Orman hayvanlarına doğa şiirini okuyacaksın. Doğru davranışları seç!",
+  "kip": "konusma",
+  "turlar": [
+   "Konuşmacı ve dinleyici hayvanlar sahnede görünsün; doğru davranışlar hareketli balık değil sabit sahne ayrıntıları olsun.",
+   "Göz teması, ses yüksekliği, sıra ve beden dili ayrı örneklerle değerlendirilir.",
+   "Öğrenci 30 saniyelik konuşma yapıp basit dinleyici rubriğiyle geri bildirim alsın."
+  ]
+ },
+ {
+  "id": "u44",
+  "title": "Sözlük Kâşifi",
+  "sub": "Sözlük sırasına dizme",
+  "kaz": "T.Y.2.3 — Bilinmeyen sözcüğü kaynaklardan araştırır (sözlük sırası).",
+  "type": "orderSequence",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Sözlükte kelime bulmak için alfabe sırası gerekir! Kelimeleri sözlükteki sıraya diz.",
+  "kip": "yazma",
+  "turlar": [
+   "Gerçek sözlük sayfaları ve alfabetik ayraçlar kullan; roket yerine sözcük kartları sayfaya yerleşsin.",
+   "İlk harf eşit olduğunda ikinci harfe bakarak sıralama yaptır.",
+   "Öğrenci beş yeni sözcüğü bağımsız sözlük sırasına yazsın."
+  ]
+ },
+ {
+  "id": "u45",
+  "title": "Sessiz Okuma Dedektifi",
+  "sub": "Sessiz okuma ve anlama",
+  "kaz": "T.O.2.1 — Kuralına uygun sessiz okuma yapar ve okuduğunu anlar.",
+  "type": "choiceQuestion",
+  "grp": "Tema 3 · Doğada Neler Oluyor?",
+  "yonerge": "Kış uykusundaki ayıyı uyandırmamalıyız! Metni sessizce, sadece gözlerinle oku — sonra sorulara cevap ver.",
+  "kip": "okuma",
+  "turlar": [
+   "Sessiz okuma ekranında süre yalnız başlangıç-bitiş arasında ölçülsün; metin bitince anlam soruları sabit kartlarda açılsın.",
+   "Kısa metinde açık bilgi, çıkarım ve ana fikir sorularını ayır.",
+   "Öğrenci okuma stratejisini ve zorlandığı bölümü öz değerlendirme kutusuna işaretlesin."
+  ]
+ },
+ {
+  "id": "u46",
+  "title": "Kitap Kurdunun Odası",
+  "sub": "Okuma ortamını düzenleme",
+  "kaz": "T.O.2.1 — Okuma yapacağı ortamın uygunluğunu gözden geçirir.",
+  "type": "tapSelect",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Kitap Kurdu okumaya başlamak istiyor ama oda hiç uygun değil! Düzeltilmesi gereken şeyleri seç.",
+  "kip": "okuma",
+  "turlar": [
+   "Kitap kurdunun odasında ışık, masa, ses ve oturuş gerçek nesneler olarak düzenlensin; balık ağı kaldır.",
+   "Birden çok uygun düzen arasından neden daha iyi olduğunu seçtir.",
+   "Öğrenci kendi okuma köşesi için üç maddelik plan yazsın."
+  ]
+ },
+ {
+  "id": "u47",
+  "title": "Gerçeklik Tarayıcısı",
+  "sub": "Bilgiyi gerçeklik açısından değerlendirme",
+  "kaz": "T.D.2.3 — Dinlediği bilgileri doğruluk ve gerçeklik açısından karşılaştırır.",
+  "type": "choiceQuestion",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Ses dalgalarından gelen bilgileri değerlendir: gerçek mi, hayal ürünü mü?",
+  "kip": "dinleme",
+  "turlar": [
+   "Gerçeklik tarayıcısı her cümlede kanıt düğmesi açsın; doğru/yanlış seçmeden önce güvenilir bilgi kaynağı seçilsin.",
+   "Olası, gerçek ve hayal ürünü ifadeleri ayrı kategorilerde çalıştır.",
+   "Öğrenci seçtiği bir bilginin neden gerçekçi olduğunu cümleyle açıklasın."
+  ]
+ },
+ {
+  "id": "u48",
+  "title": "Tiyatro Sahnesi",
+  "sub": "Jest ve mimik seçme",
+  "kaz": "T.K.2.3 — Konuşmasını jest, mimik ve beden diliyle destekler.",
+  "type": "choiceQuestion",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Karakterimizin konuşmasını uygun mimikle desteklemeliyiz. Bu cümleyi söylerken bedeni nasıl görünmeli?",
+  "kip": "konusma",
+  "turlar": [
+   "Tiyatro sahnesinde karakter yüzü ve bedeni görünür olsun; jest-mimik seçenekleri hareketli meteor yerine canlandırılsın.",
+   "Aynı cümlenin sevinç, korku ve şaşkınlıkla farklı beden dilini karşılaştır.",
+   "Öğrenci cümleyi seçilen duyguya uygun biçimde canlandırıp kaydetsin."
+  ]
+ },
+ {
+  "id": "u49",
+  "title": "Kısaltma Postanesi",
+  "sub": "Kısaltmaları kuralına uygun yazma",
+  "kaz": "T.Y.2.3 — Kısaltmaları kuralına uygun yazar.",
+  "type": "dragMatch",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Mektupların hızlıca ulaşması için zarflardaki kelimeleri doğru kısaltma mührüyle eşleştir!",
+  "kip": "yazma",
+  "turlar": [
+   "Postane zarflarında tam adlar, damgalarda kısaltmalar bulunsun; eşleşince gerçek posta damgası basılsın.",
+   "Noktalı ve noktasız kısaltmaları yaş düzeyine uygun örneklerle ayır.",
+   "Öğrenci üç kısaltmayı cümle içinde doğru yazsın."
+  ]
+ },
+ {
+  "id": "u50",
+  "title": "Broşür Dedektifi",
+  "sub": "Görsel ile metin ilişkisi",
+  "kaz": "T.O.2.2 — Metindeki içerik ile görsel arasındaki ilişkiyi belirler.",
+  "type": "dragMatch",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Hayvanat bahçesi broşürünü incele. Her cümleyi broşürdeki doğru bilgiyle eşleştir!",
+  "kip": "okuma",
+  "turlar": [
+   "Broşürün gerçek bölümleri - harita, saat, hayvan bilgisi - aynı sayfada görünür olsun; cümleler ilgili alana bağlansın.",
+   "Metin ile görselin birbirini tamamladığı ve çeliştiği örnekleri karşılaştır.",
+   "Öğrenci broşürden iki bilgi bulup kendi cümlesiyle yazsın."
+  ]
+ },
+ {
+  "id": "u51",
+  "title": "Editörün Kırmızı Kalemi",
+  "sub": "Yazı hatalarını düzeltme",
+  "kaz": "T.Y.2.4 — Yazısındaki hataları bulur ve düzeltir.",
+  "type": "wordHighlight",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Yazar aceleyle yazarken hata yapmış! Hatalı kelimeye dokun, kırmızı kalem onu düzeltsin.",
+  "kip": "yazma",
+  "turlar": [
+   "Editör masasında metin satır satır düzenlenebilsin; hatalı kelimeye dokununca doğru biçim otomatik gelmesin, seçenek veya klavye açılsın.",
+   "Yazım, büyük harf ve noktalama hatalarını ayrı renk kodlarıyla buldur.",
+   "Öğrenci kısa paragrafı yeniden okuyup bütün hataları bağımsız düzeltsin."
+  ]
+ },
+ {
+  "id": "u52",
+  "title": "Tablet ve Kitap",
+  "sub": "Sözcük anlamını araştırma",
+  "kaz": "T.Y.2.3 — Anlamını bilmediği sözcüğü kaynaklardan araştırır.",
+  "type": "choiceQuestion",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Dijital sözlükte araştırdın. “Eşsiz” kelimesinin bu cümledeki anlamı hangisi?",
+  "kip": "yazma",
+  "turlar": [
+   "Tablet ve basılı sözlük iki gerçek kaynak olarak açılsın; öğrenci kelimeyi arama kutusuna yazıp anlamı cümleyle eşleştirsin.",
+   "Bir sözcüğün birden çok anlamından bağlama uyanı seçtir.",
+   "Öğrenci kaynak adını, bulduğu anlamı ve yeni cümlesini yazsın."
+  ]
+ },
+ {
+  "id": "u53",
+  "title": "Kitap Kapağı Yapbozu",
+  "sub": "Başlıktan tahmin etme",
+  "kaz": "T.O.2.2 — Başlıktan metnin konusu hakkında tahminde bulunur.",
+  "type": "tapSelect",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Kitabın kapağı kaybolmuş! Başlık: “Ormandaki Büyük Yarış”. Kapağa uygun çıkartmaları seç.",
+  "kip": "okuma",
+  "turlar": [
+   "Kitap kapağı yapbozu sabit parçalarla başlık, görsel ve yazar alanını tamamlasın; balık-ağ görünmesin.",
+   "Başlığa uygun fakat ayrıntısı yanlış iki kapağı karşılaştır.",
+   "Öğrenci seçtiği kapağa bir alt başlık ve tahmin cümlesi yazsın."
+  ]
+ },
+ {
+  "id": "u54",
+  "title": "Odaklanma Ustası",
+  "sub": "Dinleme ortamını düzeltme",
+  "kaz": "T.D.2.1 — Dinleme sürecindeki hataları belirler ve düzeltir.",
+  "type": "tapSelect",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Sesli kitabı hiç anlayamıyoruz! Dikkatimizi dağıtan engelleri bulup kapat.",
+  "kip": "dinleme",
+  "turlar": [
+   "Dinleme odasında kapatılabilir televizyon, açık pencere, konuşan kişiler ve uygun oturuş nesneleri olsun.",
+   "Dış çevre engeli ile öğrencinin kendi davranışını ayır.",
+   "Öğrenci iyi dinleme ortamı için üç maddelik kontrol listesi yazsın."
+  ]
+ },
+ {
+  "id": "u55",
+  "title": "Kelime Aşçısı",
+  "sub": "Sözcüğü anlamına uygun kullanma",
+  "kaz": "T.Y.2.2 — Sözcükleri yerinde ve anlamına uygun kullanır.",
+  "type": "choiceQuestion",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Sihirli cümle çorbasının bir kelimesi eksik! Anlam bozulmasın diye doğru kavanozu seç.",
+  "kip": "yazma",
+  "turlar": [
+   "Kelime aşçısında sözcük kavanozları sabit; cümle tenceresinde bağlam ipuçları renklenmeden okunabilir olsun.",
+   "Yakın anlamlı iki sözcüğün hangi cümlede uygun olduğunu karşılaştır.",
+   "Öğrenci seçilen sözcükle yeni bir cümle yazıp anlamını doğrulasın."
+  ]
+ },
+ {
+  "id": "u56",
+  "title": "Mikrofon Sende",
+  "sub": "Günlük olayları sıraya koyma",
+  "kaz": "T.K.2.2 — Günlük olayları oluş sırasına göre anlatır.",
+  "type": "orderSequence",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Yayındayız! Dinleyicilere günün nasıl geçtiğini anlatmak için olayları doğru sıraya diz.",
+  "kip": "konusma",
+  "turlar": [
+   "Mikrofon ve yatay gün çizelgesi kullan; olaylar roket yakıtı değil sabah-öğle-akşam kartları olsun.",
+   "Dört olayı zaman ifadeleriyle sırala ve gereksiz ayrıntıyı çıkar.",
+   "Öğrenci gününü üç bağlantılı cümleyle sesli anlatıp kayıt alsın."
+  ]
+ },
+ {
+  "id": "u57",
+  "title": "Matbaa Tamircisi",
+  "sub": "Büyük harf ve nokta",
+  "kaz": "T.Y.2.3 — Büyük harf ve noktayı kuralına uygun kullanır.",
+  "type": "wordHighlight",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Matbaa makinesi hatalı basıyor! Kâğıtlar çıkmadan önce hatalı kelimelere dokunup düzelt.",
+  "kip": "yazma",
+  "turlar": [
+   "Matbaa bandında hatalı baskı sabitlenebilsin; dokununca otomatik çözüm yerine ilk harf/son işaret düzenleyici açılsın.",
+   "Cümle başı, özel ad ve nokta hatalarını karışık metinde buldur.",
+   "Öğrenci iki cümleyi klavyeyle doğru biçimde yeniden yazsın."
+  ]
+ },
+ {
+  "id": "u58",
+  "title": "Beden Dili Orkestrası",
+  "sub": "Cümleyi hareketle eşleştirme",
+  "kaz": "T.K.2.3 — Beden dilini yerinde kullanır.",
+  "type": "dragMatch",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Robot konuşurken beden dilini bilmiyor! Her cümleyi uygun hareket kartıyla eşleştir.",
+  "kip": "konusma",
+  "turlar": [
+   "Robotun tam bedeninin görüldüğü prova sahnesi kullan; hareket kartı seçildiğinde jest gerçek animasyonla gösterilsin.",
+   "Aynı söz için uygun ve aşırı beden dilini karşılaştır.",
+   "Öğrenci seçilen cümleyi uygun beden diliyle canlandırıp değerlendirsin."
+  ]
+ },
+ {
+  "id": "u59",
+  "title": "Gerçeklik Dedektörü",
+  "sub": "Gerçek dışı bilgileri bulma",
+  "kaz": "T.D.2.3 — Bilgileri gerçeklik açısından karşılaştırır.",
+  "type": "tapSelect",
+  "grp": "Tema 4 · Okuma Serüvenimiz",
+  "yonerge": "Uzaylılar Dünya hakkında bazı şeyler duymuş. Gerçek OLMAYAN cümleleri seç!",
+  "kip": "dinleme",
+  "turlar": [
+   "Uzaylı bilgi ekranında cümleler sabit veri kartları olarak dursun; gerçek dışı olan için kanıt görseli açılsın.",
+   "Gerçek, mümkün ve hayal ürünü ifadeleri üç grupta sınıflandır.",
+   "Öğrenci bir gerçek ve bir hayal cümlesi yazıp aralarındaki farkı açıklar."
+  ]
+ },
+ {
+  "id": "u60",
+  "title": "Yetenek Aynası",
+  "sub": "İki metnin benzer ve farklı yönleri",
+  "kaz": "T.O.2.3.c — Okuduğu metinlerdeki iletilerin benzerlik ve farklılıklarını belirler.",
+  "type": "dragMatch",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "İki yetenek okudun: ahşap oymacılığı yapan çocuk ve dijital oyun tasarlayan çocuk. Etiketleri Venn şemasına yerleştir!",
+  "kip": "okuma",
+  "turlar": [
+   "Gerçek Venn aynasında iki metnin mesaj kartları ortak ve farklı bölgelere yerleşsin.",
+   "Konu benzerliği ile ileti benzerliğini ayrı örneklerde karşılaştır.",
+   "Öğrenci ortak iletiyi ve her metne özgü bir farkı cümleyle yazsın."
+  ]
+ },
+ {
+  "id": "u61",
+  "title": "Dijital Mektup Arkadaşım",
+  "sub": "Yazışmayı başlatma ve bitirme",
+  "kaz": "T.Y.2.1.c/ç — Yazışmalarını uygun selamlaşma ve kapanış ifadeleriyle düzenler.",
+  "type": "dragMatch",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Mektubun gövdesi hazır ama başı ve sonu eksik! Uygun ifadeleri doğru yerlere sürükle.",
+  "kip": "yazma",
+  "turlar": [
+   "Dijital mektup ekranında hitap, gövde ve kapanış için gerçek yazı alanları olsun; hazır parçalar yalnız ilk turda destek versin.",
+   "Arkadaş ve öğretmene yazışmada üslup farkını uygulat.",
+   "Öğrenci kısa mektubu baştan sona kendi yazar; gönderme eylemi yok, yalnız ön izleme yapılır."
+  ]
+ },
+ {
+  "id": "u62",
+  "title": "Maceranı Seç Kütüphanesi",
+  "sub": "İlgi alanına göre metin seçme",
+  "kaz": "T.O.2.1.b — Okuyacağı metni ilgi alanına göre seçer.",
+  "type": "dragMatch",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Üç arkadaşın farklı ilgi alanları var. Her birine kendi ilgisine uygun kitabı ver!",
+  "kip": "okuma",
+  "turlar": [
+   "Kütüphane raflarında kitap kapakları ve çocukların ilgi kartları birlikte görünsün; seçim gerekçesi ayrı alan olsun.",
+   "Bir çocuğun birden çok ilgisine uyan iki metni amaç açısından karşılaştır.",
+   "Öğrenci kendi ilgisini yazıp uygun metni seçerek nedenini açıklar."
+  ]
+ },
+ {
+  "id": "u63",
+  "title": "Film Şeridi",
+  "sub": "Olayları oluş sırasına koyma",
+  "kaz": "T.Y.2.2.g — Metindeki olayları oluş sırasına göre yazar.",
+  "type": "orderSequence",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Yetenek yolculuğunun filmi karışmış! Kareleri oluş sırasına göre diz.",
+  "kip": "yazma",
+  "turlar": [
+   "Gerçek film şeridinde olay kareleri sabit olsun; her kare altında kısa açıklama alanı bulunsun.",
+   "Beş olay içinde geri dönüş veya aynı anda olma ipucunu ayırt ettir.",
+   "Öğrenci sıralanan filmi üç cümlelik özet olarak yazar."
+  ]
+ },
+ {
+  "id": "u64",
+  "title": "Kürsü Heyecanı",
+  "sub": "Konuşma planı hazırlama",
+  "kaz": "T.K.2.1.f — Belirlenen bir konuda konuşma planı hazırlar.",
+  "type": "orderSequence",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Sahneye çıkmadan önce notlarını doğru sıraya koy: Giriş → Gelişme → Sonuç.",
+  "kip": "konusma",
+  "turlar": [
+   "Kürsü öncesi not kartları giriş-gelişme-sonuç panosuna yerleşsin; roket sahnesi kaldır.",
+   "Ana fikir, örnek ve kapanış cümlesini uygun bölüme seçtir.",
+   "Öğrenci bir dakikalık konuşma planını kendi üç maddesiyle yazar ve sunar."
+  ]
+ },
+ {
+  "id": "u65",
+  "title": "Yazarın Çalışma Masası",
+  "sub": "Yazma ortamını düzenleme",
+  "kaz": "T.Y.2.4.a — Yazma yapacağı ortamın uygunluğunu gözden geçirir.",
+  "type": "tapSelect",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Hikâye yazmak üzeresin ama oda hiç uygun değil! Düzeltilmesi gerekenleri seç.",
+  "kip": "yazma",
+  "turlar": [
+   "Yazarın odasında masa, ışık, oturuş, ses ve araçlar gerçek nesneler olarak düzenlensin.",
+   "Fiziksel düzen ile planlama/odaklanma davranışlarını ayır.",
+   "Öğrenci kendi yazma ortamı için düzenleme planı ve kontrol listesi yazar."
+  ]
+ },
+ {
+  "id": "u66",
+  "title": "Ses Dedektifi",
+  "sub": "İki metnin ortak iletisi",
+  "kaz": "T.D.2.3.c — Dinlediği farklı metinlerdeki iletilerin benzerliklerini belirler.",
+  "type": "choiceQuestion",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "İki kaseti dinledin: A kasetinde şarkı söyleyen bir kız, B kasetinde koşu yapan bir çocuk. İkisinin ortak mesajı ne?",
+  "kip": "dinleme",
+  "turlar": [
+   "İki gerçek ses kaseti sırayla dinlet; ortak ileti seçenekleri sesler bitmeden görünmesin.",
+   "Ortak konu ile ortak mesajı farklı örneklerle ayır.",
+   "Öğrenci iki kaydın ortak iletisini kendi cümlesiyle sesli söyler."
+  ]
+ },
+ {
+  "id": "u67",
+  "title": "Yetenek Galerisi",
+  "sub": "Başlıktan kapak tahmini",
+  "kaz": "T.O.2.2.b — Başlıktan metnin konusu hakkında tahminde bulunur.",
+  "type": "dragMatch",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Galeride kitapların kapak resimleri silinmiş! Başlıklara bakarak doğru görseli her çerçeveye sürükle.",
+  "kip": "okuma",
+  "turlar": [
+   "Yetenek galerisi çerçevelerinde başlık ve etiket taşımayan kapak görselleri kullan.",
+   "Aynı başlığa uyan iki kapakta güçlü-zayıf kanıtları karşılaştır.",
+   "Öğrenci yeni bir yetenek başlığına kapak ve kısa tanıtım cümlesi tasarlar."
+  ]
+ },
+ {
+  "id": "u68",
+  "title": "Olay Baloncukları",
+  "sub": "Metindeki olayları belirleme",
+  "kaz": "T.D.2.3.a — Dinlediği metindeki olayları belirler.",
+  "type": "tapSelect",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Hikâyeyi dinledin: “Elif resim yarışmasına hazırlandı. Fırçasını kaybetti ama arkadaşı ona fırça verdi. Yarışmada birinci oldu.” Gerçekten geçen olayların baloncuklarını patlat!",
+  "kip": "dinleme",
+  "turlar": [
+   "Hikâye sesli dinletildikten sonra olay baloncukları sabit kalsın; yazılı hikâye ilk turda görünmesin.",
+   "Geçen olay, çıkarılabilecek olay ve hiç geçmeyen olayı ayır.",
+   "Öğrenci dinlediği üç olayı oluş sırasıyla anlatır veya yazar."
+  ]
+ },
+ {
+  "id": "u69",
+  "title": "Ön Bilgi Köprüsü",
+  "sub": "Ön bilgiyle birleştirme",
+  "kaz": "T.K.2.2.a — Dinlediklerini ifade ederken ön bilgilerini kullanır.",
+  "type": "choiceQuestion",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Geleneksel sanatlar videosunu izledin. Şimdi bildiklerinle birleştirip en doğru cümleyi kur!",
+  "kip": "konusma",
+  "turlar": [
+   "Ön bilgi köprüsünün bir yanında dinlenen bilgi, diğer yanında öğrencinin bildiği görsel/not kartları olsun.",
+   "Yeni bilgi ile ön bilginin uyuştuğu ve çeliştiği durumları karşılaştır.",
+   "Öğrenci 'Önceden..., şimdi...' kalıbıyla iki cümle kurar."
+  ]
+ },
+ {
+  "id": "u70",
+  "title": "Dijital Sözlük Avı",
+  "sub": "Bilinmeyen sözcüğü araştırma",
+  "kaz": "T.Y.2.3.b — Anlamını bilmediği sözcüğü kaynaklardan araştırarak yazar.",
+  "type": "choiceQuestion",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Sözlükte araştırdın. Parlayan kelimenin bu cümledeki anlamı hangisi?",
+  "kip": "yazma",
+  "turlar": [
+   "Dijital sözlükte arama, madde başı ve anlam seçimi gerçekten uygulanmalı; uzay meteoru kullanılmamalı.",
+   "Birden çok anlam içinden cümleye uygun olanı seç.",
+   "Öğrenci sözcüğü arar, anlamı yazar ve yeni cümlede kullanır."
+  ]
+ },
+ {
+  "id": "u71",
+  "title": "Notalı Noktalama",
+  "sub": "Virgül, iki nokta, tırnak",
+  "kaz": "T.Y.2.3.ğ — Virgül, iki nokta ve tırnak işaretini kuralına uygun kullanır.",
+  "type": "choiceQuestion",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Cümlenin eksik notasını (noktalama işaretini) bul ve doğru piyano tuşuna bas!",
+  "kip": "yazma",
+  "turlar": [
+   "Piyano tuşları gerçek noktalama işaretlerini taşısın; basınca cümle uygun tonla seslendirilsin.",
+   "Virgül, iki nokta ve tırnağın farklı görevlerini ayrı örneklerle çalıştır.",
+   "Öğrenci eksik işaretleri klavyeyle ekleyip cümleyi sesli okur."
+  ]
+ },
+ {
+  "id": "u72",
+  "title": "Sahne Kuralları",
+  "sub": "Sahnede beden dili",
+  "kaz": "T.K.2.3.h — Konuşma sürecinde beden dilini yerinde kullanır.",
+  "type": "tapSelect",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Tiyatro kulübünde sahneye çıkıyorsun. Sahnede YAPILMAMASI gerekenleri seç!",
+  "kip": "konusma",
+  "turlar": [
+   "Tiyatro sahnesinde doğru/yanlış davranışlar kısa animasyon olarak dursun; balık kartı yerine beden bütünlüğü görülsün.",
+   "Göz teması, duruş, el hareketi ve sahne alanı kullanımını ayrı değerlendir.",
+   "Öğrenci kısa sahne denemesi yapıp iki ölçütle öz değerlendirme gerçekleştirir."
+  ]
+ },
+ {
+  "id": "u73",
+  "title": "Vurgu Avcısı",
+  "sub": "Cümlede vurgulanacak kelime",
+  "kaz": "T.K.2.3.c — Konuşmalarında vurgu ve tonlamaya dikkat eder.",
+  "type": "wordHighlight",
+  "grp": "Tema 5 · Yeteneklerimizi Tanıyoruz",
+  "yonerge": "Aynı cümle, farklı vurgularla farklı anlamlar taşır! İstenen anlamı veren kelimeye dokun.",
+  "kip": "konusma",
+  "turlar": [
+   "Vurgu stüdyosunda cümle sabit ve her sözcük ayrı ses düğmesiyle erişilebilir olsun; büyüteç metni örtmesin.",
+   "Aynı cümlede vurgu yeri değişince anlamın nasıl değiştiğini karşılaştır.",
+   "Öğrenci istenen anlama göre cümleyi kaydedip vurguyu öz değerlendirir."
+  ]
+ },
+ {
+  "id": "u74",
+  "title": "Zaman Makinesi",
+  "sub": "Olayın öncesi ve sonrası",
+  "kaz": "T.D.2.2.c/ç — Olayların öncesi ve sonrası hakkında tahminde bulunur.",
+  "type": "choiceQuestion",
+  "grp": "Tema 6 · Mucit Çocuk",
+  "yonerge": "Hikâyenin sadece ortasını duyduk: “Robot aniden durdu ve gözlerindeki ışıklar söndü.” Öncesini ve sonrasını tahmin et!",
+  "kip": "dinleme",
+  "turlar": [
+   "Zaman makinesinde önce-şimdi-sonra pencereleri olsun; ortadaki olay sabit, tahmin kartları zaman yerine yerleşsin.",
+   "Birden çok olası tahminden metinle tutarlı olanı gerekçeyle ayır.",
+   "Öğrenci olayın öncesi ve sonrası için birer cümle yazar."
+  ]
+ },
+ {
+  "id": "u75",
+  "title": "Hologram Laboratuvarı",
+  "sub": "Söylem ile görsel ilişkisi",
+  "kaz": "T.D.2.3.ç — Dinlediğindeki söylem ile görsel arasındaki ilişkiyi belirler.",
+  "type": "dragMatch",
+  "grp": "Tema 6 · Mucit Çocuk",
+  "yonerge": "Yapay zekâ asistanının kafası karıştı! Her hologram görselini onu anlatan doğru ses kaydıyla eşleştir.",
+  "kip": "dinleme",
+  "turlar": [
+   "Hologram görselleri sabit, ses kayıtları ayrı oynatılabilir olsun; doğru eşleşme görsel ayrıntıya dayanmalı.",
+   "Bir ses kaydına uyan iki görselde ayırt edici ayrıntıyı seçtir.",
+   "Öğrenci bir hologramı iki cümleyle sözlü betimler."
+  ]
+ },
+ {
+  "id": "u76",
+  "title": "Manyetik Zıtlık Deneyi",
+  "sub": "Metinde zıt anlamlıyı bulma",
+  "kaz": "T.K.2.2.d — Zıt anlamlı sözcükleri bulur ve kullanır.",
+  "type": "wordHighlight",
+  "grp": "Tema 6 · Mucit Çocuk",
+  "yonerge": "Mıknatısı çalıştırmak için zıt kutupları eşleştir! Deney raporunda istenen kelimenin zıt anlamlısına dokun.",
+  "kip": "konusma",
+  "turlar": [
+   "Deney raporunda hedef ve zıt sözcükler sabit satırda dursun; mıknatıs seçilen çifti gerçek kutuplara çeksin.",
+   "Bağlama göre zıtlık oluşturan ve yalnız ilgisiz olan sözcükleri ayır.",
+   "Öğrenci iki zıt çifti kullanarak karşılaştırma cümleleri kurar."
+  ]
+ },
+ {
+  "id": "u77",
+  "title": "Devre Tamircisi",
+  "sub": "Bağlama ögeleri (ve, ama, çünkü, ile)",
+  "kaz": "T.K.2.3.f — Bağlama ögelerini (ile, ve, ama, çünkü) doğru kullanır.",
+  "type": "choiceQuestion",
+  "grp": "Tema 6 · Mucit Çocuk",
+  "yonerge": "Robotun devreleri koptu! İki cümleyi birleştirmek için en uygun bağlama çipini seç.",
+  "kip": "konusma",
+  "turlar": [
+   "Devre uçları iki cümle parçası, çipler ve/ama/çünkü/ile olsun; seçilince anlam ilişkisi animasyonla doğrulansın.",
+   "Aynı iki cümlede farklı bağlaçların anlamı nasıl değiştirdiğini karşılaştır.",
+   "Öğrenci dört bağlama ögesinden ikisiyle kendi cümlelerini kurar."
+  ]
+ },
+ {
+  "id": "u78",
+  "title": "Gözlem Kulesi",
+  "sub": "Verilerden çıkarım yapma",
+  "kaz": "T.O.2.2.ç — Metindeki verilerden yararlanarak çıkarım yapar.",
+  "type": "choiceQuestion",
+  "grp": "Tema 6 · Mucit Çocuk",
+  "yonerge": "Astronotun seyir defterini oku. Verilerden yararlanarak gezegen hakkında çıkarım yap!",
+  "kip": "okuma",
+  "turlar": [
+   "Seyir defteri, sıcaklık/ışık/yüzey verileri ve gezegen görseli aynı ekranda sabit dursun.",
+   "Doğrudan veri ile veriden yapılan çıkarımı ayrı sütunlarda sınıflandır.",
+   "Öğrenci iki veriye dayanarak bir çıkarım cümlesi yazar."
+  ]
+ },
+ {
+  "id": "u79",
+  "title": "Karşılaştırma Matrisi",
+  "sub": "Benzerlik ve farklılıkları bulma",
+  "kaz": "T.Y.2.2.d — Kişi ve nesneleri benzerlik/farklılık bakımından karşılaştırır.",
+  "type": "tapSelect",
+  "grp": "Tema 6 · Mucit Çocuk",
+  "yonerge": "Mucitler doğadan ilham alır! Kuş ile uçağın ORTAK özelliklerini seç.",
+  "kip": "yazma",
+  "turlar": [
+   "Kuş ve uçak yan yana sabit şemada gösterilsin; ortak ve farklı özellikler hareketli balık yerine işaretlenebilir olsun.",
+   "Görünüş, hareket ve yapı ölçütlerini ayrı ayrı karşılaştır.",
+   "Öğrenci bir ortak ve iki farklı özelliği tam cümleyle yazar."
+  ]
+ },
+ {
+  "id": "u80",
+  "title": "Geri Dönüşüm Bandı",
+  "sub": "Nesneleri özelliğine göre sınıflandırma",
+  "kaz": "T.Y.2.2.e — Nesneleri benzer özelliklerine göre sınıflandırarak yazar.",
+  "type": "dragMatch",
+  "grp": "Tema 6 · Mucit Çocuk",
+  "yonerge": "Atölye dağıldı! Banttan gelen nesneleri hareket özelliklerine göre doğru kutulara sınıflandır.",
+  "kip": "yazma",
+  "turlar": [
+   "Gerçek atölye bandında hareket eden/duran, elektrikli/elektriksiz gibi açık ölçüt kutuları olsun.",
+   "Aynı nesneyi farklı ölçütle yeniden sınıflandır.",
+   "Öğrenci seçtiği ölçütü başlık olarak yazıp yeni üç nesneyi sınıflandırır."
+  ]
+ },
+ {
+  "id": "u81",
+  "title": "Kültür Sözlüğü",
+  "sub": "Bilinmeyen sözcüğü araştırma",
+  "kaz": "T.Y.2.3.b — Anlamını bilmediği sözcüğün anlamını kaynaklardan araştırarak yazar.",
+  "type": "choiceQuestion",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Sözlükte araştırdın. Parlayan sözcüğün bu cümledeki anlamı hangisi?",
+  "kip": "yazma",
+  "turlar": [
+   "Kültür sözlüğünde gerçek madde başı, görsel ve örnek cümle bulunsun; uzay lazeri kaldır.",
+   "Geleneksel sözcüğün tahmini ile sözlük anlamını karşılaştır.",
+   "Öğrenci anlamı kendi sözüyle yazar ve yeni cümlede kullanır."
+  ]
+ },
+ {
+  "id": "u82",
+  "title": "Tarihî Mekân Rehberi",
+  "sub": "Başlık ve görselden tahmin",
+  "kaz": "T.O.2.2.c — Başlık ve görsellerden metinde geçen bilgiler hakkında tahminde bulunur.",
+  "type": "dragMatch",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Rehber kitabındaki yazılar karışmış! Her tarihî mekânı onu anlatan cümleyle eşleştir.",
+  "kip": "okuma",
+  "turlar": [
+   "Tarihî mekân fotoğrafları ve rehber cümleleri aynı kitap sayfasında eşleştirilsin; köprü kutuları kullanılmasın.",
+   "Benzer iki mekânda mimari ipuçlarıyla doğru bilgiyi ayır.",
+   "Öğrenci seçtiği mekân için bir rehber cümlesi yazar."
+  ]
+ },
+ {
+  "id": "u83",
+  "title": "Bayram Sabahı Yönergesi",
+  "sub": "Basit yönerge oluşturma",
+  "kaz": "T.Y.2.2.ğ — Basit yönergeler yazar.",
+  "type": "orderSequence",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Bayram sabahı ne yapılır? Yönergeleri doğru sıraya diz.",
+  "kip": "yazma",
+  "turlar": [
+   "Bayram sabahı ev içi zaman şeridi kullan; adımlar roket yerine sabah rutini görselleri olsun.",
+   "Nazik ve kültürel olarak uygun sıralama ile rastgele sırayı karşılaştır.",
+   "Öğrenci kendi ailesi için üç adımlı bayram yönergesi yazar."
+  ]
+ },
+ {
+  "id": "u84",
+  "title": "Kimlik Formu",
+  "sub": "Yönergeye uygun form doldurma",
+  "kaz": "T.Y.2.2.ğ — Yönergelerine uygun olarak form doldurur.",
+  "type": "dragMatch",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Müze üyelik formunu dolduruyoruz. Ali’nin bilgilerini doğru kutulara yerleştir. (Kendi bilgilerini yazma, bu kurgu bir karakter!)",
+  "kip": "yazma",
+  "turlar": [
+   "Gerçek form alanları ve Ali'nin bilgi kartı yan yana dursun; sürükleme sonrası alan etiketleri okunabilir kalsın.",
+   "Ad-soyad, yaş, sınıf ve tarih alanlarını farklı bilgi türleri olarak ayır.",
+   "Öğrenci kurgusal ikinci karakterin formunu klavyeyle bağımsız doldurur; kişisel veri istenmez."
+  ]
+ },
+ {
+  "id": "u85",
+  "title": "Nedenini Söyle",
+  "sub": "Görüşe katılma ve nedeni",
+  "kaz": "T.K.2.2.f / T.Y.2.2.h — Görüşlere katılıp katılmadığını nedenleriyle ifade eder.",
+  "type": "choiceQuestion",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Okuduğun görüşe katılıyor musun? Önce kararını ver, sonra nedenini seç!",
+  "kip": "yazma",
+  "turlar": [
+   "Karar ve neden iki ayrı adım olsun; neden seçenekleri ilk karar verilmeden görünmesin.",
+   "Aynı görüş için ilgili, ilgisiz ve çelişkili gerekçeleri ayır.",
+   "Öğrenci yeni bir görüşe katılımını kendi nedeni ile sözlü/yazılı ifade eder."
+  ]
+ },
+ {
+  "id": "u86",
+  "title": "Benzetme Halısı",
+  "sub": "Konuşmada benzetme kullanma",
+  "kaz": "T.K.2.2.g — Konuşmalarında benzetmelere yer verir.",
+  "type": "choiceQuestion",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Dokumacı halıya benzetmeler işleyecek! Cümleye en uygun benzetmeyi seç.",
+  "kip": "konusma",
+  "turlar": [
+   "Halı desenlerinde benzeyen-benzetilen çiftleri görselleştir; seçenekler sabit dursun.",
+   "Gibi/kadar ile uygun ve anlamsız benzetmeleri karşılaştır.",
+   "Öğrenci kültürel bir nesne için özgün benzetme cümlesi söyleyip yazar."
+  ]
+ },
+ {
+  "id": "u87",
+  "title": "Okuma Hatası Dedektifi",
+  "sub": "Okuma hatalarını belirleme",
+  "kaz": "T.O.2.5.a/b — Okuma sürecindeki hatalarını belirler ve düzeltir.",
+  "type": "tapSelect",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Arkadaşın bayram şiirini okudu. Yaptığı HATALARI seç!",
+  "kip": "okuma",
+  "turlar": [
+   "Bayram şiirinin gerçek ses kaydı ve satırları senkron ilerlesin; hatalar balık kartı değil zaman çizgisinde işaretlensin.",
+   "Atlama, yanlış okuma, aşırı hız ve uygunsuz duraklamayı ayrı örneklerle buldur.",
+   "Öğrenci şiiri yeniden okuyup kendi kaydındaki bir hatayı düzeltir."
+  ]
+ },
+ {
+  "id": "u88",
+  "title": "Söz Alma Sırası",
+  "sub": "Dinleme ve söz alma kuralları",
+  "kaz": "T.D.2.1.c / T.K.2.1.d — Dinleme esnasında uygun zamanda söz alır.",
+  "type": "tapSelect",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Sınıfta kültürel miras sohbeti var. DOĞRU davranışları seç!",
+  "kip": "konusma",
+  "turlar": [
+   "Sınıf sohbetinde konuşan kişi, el kaldıranlar ve dinleyenler tam sahne olarak görünsün.",
+   "Söz alma zamanı, dinleme duruşu ve söz kesmeme ayrı durumlarda seçilsin.",
+   "Öğrenci gerçek mini sohbette bir kez uygun zamanda söz alıp öz değerlendirir."
+  ]
+ },
+ {
+  "id": "u89",
+  "title": "Hazine Kutusu: Konu Bulma",
+  "sub": "Metnin konusunu bulma",
+  "kaz": "T.O.2.3.b / T.D.2.3.b — Okuduğu ve dinlediği metnin konusunu bulur.",
+  "type": "choiceQuestion",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Metni oku ve hazine kutusundaki doğru konu etiketini seç!",
+  "kip": "dinleme",
+  "turlar": [
+   "Hazine kutusunda metin, konu etiketi ve kanıt anahtarı üç adımda açılmalı; hareketli meteorlar kaldır.",
+   "Konu ile ana fikir ve ayrıntıyı karşılaştıran iki metin kullan.",
+   "Öğrenci metnin konusunu kendi sözüyle yazıp bir kanıt işaretler."
+  ]
+ },
+ {
+  "id": "u90",
+  "title": "Üslup Seçici",
+  "sub": "Konuşma üslubunu belirleme",
+  "kaz": "T.K.2.1.a — Konunun ve kişinin özelliğine göre konuşma üslubunu belirler.",
+  "type": "dragMatch",
+  "grp": "Tema 7 · Kültür Hazinemiz",
+  "yonerge": "Müze gezisindesin. Her kişiye uygun konuşma üslubunu eşleştir!",
+  "kip": "konusma",
+  "turlar": [
+   "Müze gezisinde görevli, arkadaş ve nine gerçek karakterler olarak görünsün; konuşma balonları uygun kişiye sürüklensin.",
+   "Aynı isteği resmî, samimi ve saygılı aile üslubuyla yeniden kur.",
+   "Öğrenci seçilen bir kişi için iki cümlelik uygun konuşmayı sesli canlandırır."
+  ]
+ }
+]
