@@ -54,6 +54,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w38 | Simetri Mimarı | Simetrik yönerge kurgulama | Referans rota her turda ızgarada turuncu iz olarak görünüyor. İpucu yolu vermiyor, dönüşüm kuralını söylüyor. Başarı yalnız hedefe ulaşmaya değil, rotanın HER hücresinin referansın eş hücresi olmasına bağlı: ilk sapma adımı gösterilip düzeltiliyor. | Uygulamada |
 | w39 | Kalite Kontrol Bandı | Şekillerde simetriyi denetleme | Harfler sistem fontundan çıkarılıp sabit vektör çizimlere dönüştürüldü; her kartta denetlenen eksen pembe çizgiyle görünüyor. Karar sonrası kart gerçekten katlanıyor: yansıyan yarı saydam kopya oturursa çakışma, oturmazsa taşan bölge kırmızı görünüyor. Yargı `yansitNokta`/`kumeEsit` ile şeklin kendisinden hesaplanıyor. Kelebek, vazo ve yatay eksenli ok motifleri eklendi. | Uygulamada |
 | w40 | Mozaik Ustası | Yatay ve dikey eksende simetri | Kaynak hücreye dokununca üç eş hedef kılavuzla işaretleniyor ve iki eksene uzaklık yazılıyor. Renk kalemi kalıcı; silgi ve geri al var, yanlış dokunuş kalıcı değil. 3. turda hazır gelen hatalı hücreler düzeltiliyor. Tamamlanınca desen katlanıyor. | Uygulamada |
+| w41 | Dedektif Bürosu | Araştırma sorusunu ayırt etme | Bant kaldırıldı, soru kartı sabit ve tam görünür. Karar öncesi çocuk hedef grubu ve değişkeni belirliyor; kutular "istatistiksel araştırma sorusu" ve "tek, sabit bilgi sorusu" olarak yeniden adlandırıldı. Tartışmalı "Ali bugün ne yedi?" maddesi çıkarıldı, yerine hedef grup ve değişken taşıyan sorular kondu. 3. turda çocuk konu + grup + değişken kartlarıyla kendi sorusunu kuruyor. | Uygulamada |
+| w42 | Sınıf Anketi | Çetele ile veri toplama | Harçlık konusu nötr sınıf verisiyle değiştirildi (okunan kitap, sevilen meyve, okula geliş). Anket öncesi soru + hedef grup + yöntem kartı gösteriliyor. Çeteleler standart beşli grup (4 dik + çapraz) çiziliyor, beşincide "beş" seslendiriliyor. Geri al düğmesi var, yanlış sütun can götürmüyor ve düzeltilebiliyor; toplam çetele sayısı katılımcı sayısıyla sürekli karşılaştırılıyor. | Uygulamada |
+| w43 | Sıklık Tablosu Fabrikası | Çeteleyi sıklığa dönüştürme | Düz çizgi dizileri kaldırıldı: bütün çeteleler standart beşli gruplama ile çiziliyor. Yanlış eşlemede kart kaybolmuyor, satırdaki beşli grup ve kalan çizgi sayısı söyleniyor. Kart sırası her açılışta karışıyor; bitişte toplam veri sayısı gösteriliyor. | Uygulamada |
+| w44 | Nokta Grafiği Laboratuvarı | Her nokta bir veriyi temsil eder | Hazır sayılar kaldırıldı: kaynak veri standart çetele olarak veriliyor ve sıklık oradan okunuyor. Bütün işaretler aynı boyda tek renk daire; "1 nokta = 1 kişi" anahtarı grafiğin üstünde sabit. Noktalar tabandan başlayıp boşluksuz diziliyor, fazla nokta kırmızı görünüyor ve sütun başına eksiltilebiliyor. Grafik bitince en çok/en az/toplam/fark soruları geliyor. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -139,6 +143,16 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
   karar sonrası gerçek katlama (w39).
 - `renderDortlu` + `dortlu`: çift eksenli mozaik, üç eş hedefin kılavuzu,
   kalem/silgi/geri al ve hatalı hücre düzeltme (w40).
+- `ceteleSvg(n)`: standart beşli çetele çizimi (dört dik + çapraz), w42–w44
+  tarafından ortak kullanılıyor.
+- `renderArastirma` + `arastirma`: hedef grup / değişken belirleme, iki kutulu
+  sınıflama ve konu+grup+değişken kartlarıyla soru kurgulama (w41).
+- `renderAnket` + `anket`: yanıt yanıt çetele, beşinci işarette çapraz ve ses,
+  geri alma, toplam tutarlılık denetimi (w42).
+- `renderSiklik` + `siklik`: çetele okuma ve sıklık kartı eşleme, karışık kart
+  sırası, kart kaybolmadan geri bildirim (w43).
+- `renderNokta` + `nokta`: çeteleden nokta grafiğine dönüşüm, birim anahtarı,
+  fazla nokta uyarısı, sütun başına eksiltme ve yorum soruları (w44).
 - `gecisBasla(fn,ms)`: aşama ilerledikten sonra sahne henüz yenilenmemişken
   gelen dokunuşlar bir sonraki aşamanın verisine uygulanıyordu; geçiş boyunca
   girdi kilitleniyor. (Gizli sekmede tarayıcı oyunun zamanlayıcısını kıstığı
