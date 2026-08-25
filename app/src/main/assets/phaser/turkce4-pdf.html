@@ -2571,6 +2571,296 @@ GAMES.z48={title:'Bilimsel Araştırma',theme:'lab',
   result:'Bilimsel araştırmanın beş adımını kendi sorunla kurdun.'}
 ]};
 
+/* ---- z49 Müze Rehberi (istek çıkarım gerektiriyor; simge kopyası yok) ---- */
+GAMES.z49={title:'Müze Rehberi',theme:'muze',
+ finish:'Ziyaretçinin isteğinden hangi eseri aradığını çıkardın, somut ve somut olmayan mirası ayırdın ve bir mirası tanıttın.',rounds:[
+ {kind:'esle',prompt:'Ziyaretçinin aradığı eseri bul.',sahne:SAHNE.sozluk,
+  soru:'Önce alttan bir eser seç, sonra isteyen ziyaretçiye dokun.',
+  ipucu:'Ziyaretçi eserin adını söylemiyor; ne aradığına bak.',
+  yuvalar:[
+   {hedef:'"Yüzlerce yıl önce yazılmış, elle süslenmiş sayfaları görmek istiyorum."',dogru:0,
+    neden:'Elle süslenmiş sayfalar el yazması eserlerdir.',hint:'Bu ziyaretçi yazılı bir eser arıyor.'},
+   {hedef:'"Dokunmuş desenleri ve doğal boyaları incelemek isterim."',dogru:1,
+    neden:'Dokuma ve doğal boya halı sanatına aittir.',hint:'Bu ziyaretçi dokunmuş bir eser arıyor.'},
+   {hedef:'"Toprakla yapılmış, fırında pişmiş kapları merak ediyorum."',dogru:2,
+    neden:'Topraktan yapılıp pişirilen kaplar çinidir.',hint:'Bu ziyaretçi topraktan yapılan bir eser arıyor.'},
+   {hedef:'"Yüzyıllar önce kullanılmış madeni paraları görmek istiyorum."',dogru:3,
+    neden:'Eski madeni paralar sikkedir.',hint:'Bu ziyaretçi madeni bir eser arıyor.'}],
+  etiketler:[{t:'El yazması kitap'},{t:'Dokuma halı'},{t:'Çini tabak'},{t:'Sikke koleksiyonu'}]},
+ {kind:'sinifla',prompt:'Somut mu, somut olmayan mı?',sahne:SAHNE.sozluk,
+  soru:'Bu miras hangi gruba girer?',
+  kutular:['SOMUT MİRAS','SOMUT OLMAYAN MİRAS'],
+  ipucu:'Ölçüt: elle tutulup gözle görülebiliyor mu, yoksa yaşayarak mı aktarılıyor?',
+  kartlar:[
+   {t:'Selimiye Camisi',dogru:0,neden:'Bir yapıdır; elle tutulur, gözle görülür.'},
+   {t:'Âşıklık geleneği',dogru:1,neden:'Ustadan çırağa aktarılan bir gelenektir.'},
+   {t:'Karagöz ve Hacivat gölge oyunu',dogru:1,neden:'Oynanarak yaşatılan bir sanattır.'},
+   {t:'Topkapı Sarayı',dogru:0,neden:'Bir yapıdır.'},
+   {t:'Geleneksel çini işçiliği bilgisi',dogru:1,neden:'Bilgi ve beceri olarak aktarılır.'},
+   {t:'Divriği Ulu Camii taş işlemeleri',dogru:0,neden:'Taşa işlenmiş, görülebilen eserlerdir.'}]},
+ {kind:'yaz',prompt:'Bir mirası tanıt.',sahne:SAHNE.sozluk,
+  gorev:'Bildiğin bir mirası iki cümleyle tanıt: ne olduğunu ve günlük yaşamla bağını yaz.',
+  enAzKelime:16,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'…  Bugün …',
+  ornekCevap:'Karagöz ve Hacivat, perde arkasından oynatılan bir gölge oyunudur. Bugün hâlâ bayramlarda çocuklara sahnelenerek yaşatılıyor.',
+  result:'Bir mirası tanıtıp bugünle bağını kurdun.'}
+]};
+
+/* ---- z50 "ki" Bandı (bant durduruldu; üç ayrı "ki" karşılaştırılıyor) ---- */
+GAMES.z50={title:'"ki" Bandı',theme:'atolye',
+ finish:'Üç ayrı "ki"yi ayırdın, örneklerle karşılaştırdın ve ikisini de kendi cümlelerinde yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu «ki» hangi görevde?',sahne:SAHNE.kalem,
+  soru:'İşaretli «ki» hangi görevde kullanılmış?',
+  kutular:['BAĞLAÇ (ayrı)','İLGİ EKİ (bitişik)'],
+  ipucu:'Bağlaç iki cümle bağlar; ilgi eki bir adı niteler.',
+  kartlar:[
+   {t:'Baktım «ki» kapı açık kalmış.',dogru:0,neden:'İki cümle bağlanıyor.'},
+   {t:'Yandaki masaya oturalım mı?',dogru:1,neden:'"Yan" adını niteliyor.'},
+   {t:'O kadar güldük «ki» karnımız ağrıdı.',dogru:0,neden:'İki cümle bağlanıyor.'},
+   {t:'Cebimdeki para yetmedi.',dogru:1,neden:'"Cep" adını niteliyor.'},
+   {t:'Anladım «ki» bu iş kolay değilmiş.',dogru:0,neden:'İki cümle bağlanıyor.'},
+   {t:'Geçen haftaki sınav zordu.',dogru:1,neden:'"Hafta" adını niteliyor.'}]},
+ {kind:'karar',prompt:'Üç örnek, üç farklı "ki".',sahne:SAHNE.kalem,
+  durum:'A) "Duydum ki tatil uzayacak."\nB) "Masadaki kalem senin mi?"\nC) "Bahçedeki ağaçlar çiçek açtı."',
+  soru:'Hangisinde "ki" ayrı yazılır?',
+  secenekler:[
+   {label:'Yalnız A',correct:true},
+   {label:'A ve B',hint:'B\'de "-ki" masayı niteleyen ektir; bitişik yazılır.'},
+   {label:'Üçü de',hint:'B ve C\'de "ki" bir adı niteliyor.'}],
+  araSoz:'Doğru. Peki ayırt etme yolu?',
+  neden:{soru:'"ki"nin ayrı yazılacağını nasıl anlarsın?',secenekler:[
+   {label:'Kendisinden sonra yeni bir cümle geliyorsa',correct:true},
+   {label:'Sözcük uzunsa',hint:'Uzunluk ölçüt değil.'},
+   {label:'Cümlenin başındaysa',hint:'"ki" cümle başında bulunmaz.'}]},
+  result:'Ardından yeni bir cümle geliyorsa bağlaçtır ve ayrı yazılır.'},
+ {kind:'yaz',prompt:'İkisini de kendi cümlelerinde kullan.',sahne:SAHNE.kalem,
+  gorev:'Bir cümlede bağlaç "ki"yi ayrı, bir cümlede ilgi eki "-ki"yi bitişik yaz.',
+  enAzKelime:12,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'Bağlaç "ki"yi ayrı yaz',desen:'\\ski\\s',bayrak:'i'},
+   {ad:'İlgi eki "-ki"yi bitişik yaz',desen:'[a-zçğıöşü]ki\\b',bayrak:'i'}],
+  ipucuMetin:'… ki …  …deki …',
+  yasak:['Baktım ki kapı açık kalmış.'],
+  ornekCevap:'Sabah perdeyi açınca baktım ki hava çok güzel açmış. Bahçedeki kiraz çiçekleri yeni açmıştı.',
+  result:'Bağlaç ile eki kendi cümlelerinde doğru yazdın.'}
+]};
+
+/* ---- z51 Miras Panosu (kesme ve büyük harf birlikte; çeldirici cins adlar) ---- */
+GAMES.z51={title:'Miras Panosu Dizgisi',theme:'muze',
+ finish:'Özel adları büyük harfle yazdın, eklerini kesmeyle ayırdın ve kendi tanıtım cümleni yazdın.',rounds:[
+ {kind:'duzelt',prompt:'Pano yazısını doğru yaz.',sahne:SAHNE.masa,
+  gorev:'Müze panosuna asılacak yazıda büyük harfler ve ekler yanlış. Düzelt.',
+  hatali:'selimiye camisi edirnede bulunur ve mimar sinanın eseridir',
+  sozcukKorunsun:false,
+  denetim:[
+   {ad:'Yapı adını büyük harfle yaz',desen:'Selimiye Camisi'},
+   {ad:'Şehir adını büyük harfle yaz ve ekini kesmeyle ayır',desen:"Edirne'de"},
+   {ad:'Kişi adını büyük harfle yaz ve ekini kesmeyle ayır',desen:"Mimar Sinan'ın"},
+   {ad:'Cümleyi noktayla bitir',desen:'\\.\\s*$'}],
+  ornekCevap:"Selimiye Camisi Edirne'de bulunur ve Mimar Sinan'ın eseridir.",
+  result:'Özel adlar büyük harfle başlar, çekim ekleri kesmeyle ayrılır.'},
+ {kind:'sinifla',prompt:'Bu ad özel mi, cins mi?',sahne:SAHNE.masa,
+  soru:'Bu sözcük hangi gruba girer?',
+  kutular:['ÖZEL AD (büyük harf + kesme)','CİNS AD (küçük harf, kesme yok)'],
+  ipucu:'Özel ad tek bir varlığın adıdır; cins ad tür adıdır.',
+  kartlar:[
+   {t:'Anadolu (… bölgesinde yaşadık)',dogru:0,neden:'Belli bir yerin adı: özel ad.'},
+   {t:'cami (… avlusunda oturduk)',dogru:1,neden:'Tür adıdır; belli bir yapıyı göstermez.'},
+   {t:'Kapadokya (… gezisine gittik)',dogru:0,neden:'Belli bir yörenin adı.'},
+   {t:'halı (… tezgâhında dokundu)',dogru:1,neden:'Tür adıdır.'},
+   {t:'Mimar Sinan (… eseridir)',dogru:0,neden:'Belli bir kişinin adı.'},
+   {t:'saray (… bahçesini gezdik)',dogru:1,neden:'Tür adıdır; hangi saray belli değil.'}]},
+ {kind:'yaz',prompt:'Pano için kendi cümleni yaz.',sahne:SAHNE.masa,
+  gorev:'Bir tarihî yapı ya da yöre için pano cümlesi yaz. Özel adı büyük harfle yaz ve ekini kesmeyle ayır.',
+  enAzKelime:9,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'Özel ada gelen eki kesmeyle ayır',desen:"[A-ZÇĞİÖŞÜ][a-zçğıöşü]+'[a-zçğıöşü]"}],
+  ipucuMetin:"… 'da/'de …",
+  yasak:["Selimiye Camisi Edirne'de bulunur."],
+  ornekCevap:"Sümela Manastırı Trabzon'da, sarp bir kayalığın üzerinde yükselmektedir.",
+  result:'Özel ad kurallarını kendi tanıtım cümlende uyguladın.'}
+]};
+
+/* ---- z52 Miras Haritası (hafıza kartı yerine bilgi cümlesiyle kanıtlama) ---- */
+GAMES.z52={title:'Miras Haritası',theme:'muze',
+ finish:'Mirasları şehirleriyle eşledin, benzer örnekleri ayırdın ve bildiğin bir mirası tanıttın.',rounds:[
+ {kind:'esle',prompt:'Her mirası şehriyle eşle.',sahne:SAHNE.sozluk,
+  soru:'Önce alttan bir şehir seç, sonra ait olduğu mirasa dokun.',
+  ipucu:'Bilgi cümlesindeki ipucuna bak.',
+  yuvalar:[
+   {hedef:'Selimiye Camisi — Mimar Sinan\'ın ustalık eseri sayılır.',dogru:0,
+    neden:'Selimiye Camisi Edirne\'dedir.',hint:'Bu yapı Trakya\'daki bir şehirdedir.'},
+   {hedef:'Peribacaları — Volkanik kayaların aşınmasıyla oluşmuştur.',dogru:1,
+    neden:'Peribacaları Nevşehir çevresindedir.',hint:'Bu oluşum İç Anadolu\'dadır.'},
+   {hedef:'Sümela Manastırı — Sarp bir kayalığa oyulmuştur.',dogru:2,
+    neden:'Sümela Manastırı Trabzon\'dadır.',hint:'Bu yapı Karadeniz kıyısındaki bir şehirdedir.'},
+   {hedef:'Efes Antik Kenti — Kütüphanesi ve tiyatrosuyla ünlüdür.',dogru:3,
+    neden:'Efes İzmir\'dedir.',hint:'Bu kent Ege kıyısındadır.'}],
+  etiketler:[{t:'Edirne'},{t:'Nevşehir'},{t:'Trabzon'},{t:'İzmir'}]},
+ {kind:'karar',prompt:'Benzer örnekleri ayır.',sahne:SAHNE.sozluk,
+  durum:'İki bilgi:\nA) "Bu yapı sarp bir kayalığa oyulmuş bir manastırdır."\nB) "Bu oluşum, volkanik kayaların rüzgâr ve suyla aşınmasıyla ortaya çıkmıştır."',
+  soru:'Hangisi insan eliyle yapılmıştır?',
+  secenekler:[
+   {label:'A',correct:true},
+   {label:'B',hint:'B\'de aşınma anlatılıyor; bu doğal bir oluşum.'}],
+  araSoz:'Doğru. Peki B ne tür bir değerdir?',
+  neden:{soru:'B\'deki oluşum nasıl adlandırılır?',secenekler:[
+   {label:'Doğal miras',correct:true},
+   {label:'Somut olmayan miras',hint:'Somut olmayan miras gelenek ve becerilerdir.'},
+   {label:'Yapı mirası',hint:'Bu oluşumu insan yapmadı.'}]},
+  result:'Miras insan eliyle yapılmış olabilir, doğanın oluşturduğu da olabilir.'},
+ {kind:'yaz',prompt:'Bildiğin bir mirası tanıt.',sahne:SAHNE.sozluk,
+  gorev:'Bildiğin bir mirası tanıt: hangi şehirde olduğunu ve bir özelliğini yaz.',
+  enAzKelime:11,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'Şehir adını büyük harfle yaz ve ekini kesmeyle ayır',desen:"[A-ZÇĞİÖŞÜ][a-zçğıöşü]+'[a-zçğıöşü]"}],
+  ipucuMetin:"Bu miras … 'dadır ve …",
+  yasak:['Sümela Manastırı Trabzon\'dadır.'],
+  ornekCevap:"Efes Antik Kenti İzmir'dedir ve mermer kütüphanesiyle bütün dünyada tanınır.",
+  result:'Bir mirası yeri ve özelliğiyle tanıttın.'}
+]};
+
+/* ---- z53 Miras Zinciri (roket kaldırıldı; usta-çırak atölyesi) ---- */
+GAMES.z53={title:'Miras Zinciri',theme:'muze',
+ finish:'Ustadan çırağa aktarımı sıraladın, kesintiye uğrayıp yeniden canlanan adımları gördün ve zinciri kendi cümlelerinle anlattın.',rounds:[
+ {kind:'sira',prompt:'Aktarımı baştan sona sırala.',sahne:SAHNE.masa,
+  gorev:'Bir el sanatının kuşaklar arası yolculuğunu sırayla diz.',
+  kartlar:[
+   {t:'Usta, tezgâhında yıllardır aynı deseni dokur.'},
+   {t:'Yanına bir çırak alır ve önce izlemesini ister.'},
+   {t:'Çırak, ustanın gözetiminde ilk dokumasını yapar.'},
+   {t:'Çırak ustalaşır ve kendi tezgâhını kurar.'},
+   {t:'Artık o da yanına bir çırak alır.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Zincir kimden başlar?','Usta bilgiyi aktarmak için ne yapar?',
+   'Çırak izledi; sırada ne var?','İlk dokumasını yaptı; sonra ne olur?','Zincir nasıl sürer?'],
+  ipucu:'Zincirin sürmesi için son halka yeni bir halka eklemeli.',
+  result:'Miras, ustadan çırağa aktarılarak kuşaktan kuşağa sürer.'},
+ {kind:'karar',prompt:'Zincir kopunca ne olur?',sahne:SAHNE.masa,
+  durum:'Bir köyde çömlekçilik yüz yıl sürdü. Sonra gençler şehre gitti ve otuz yıl kimse çömlek yapmadı. Yakın zamanda belediye bir atölye açtı, yaşlı ustalar gençlere yeniden öğretmeye başladı.',
+  soru:'Bu miras için ne söylenir?',
+  secenekler:[
+   {label:'Zincir bir süre koptu ama yeniden kuruldu',correct:true},
+   {label:'Miras tamamen yok oldu',hint:'Yaşlı ustalar yeniden öğretmeye başladı.'},
+   {label:'Zincir hiç kopmadı',hint:'Otuz yıl kimse çömlek yapmadı.'}],
+  araSoz:'Doğru. Peki yeniden kurulmasını ne sağladı?',
+  neden:{soru:'Zincirin yeniden kurulmasını ne sağladı?',secenekler:[
+   {label:'Bilgiyi hâlâ bilen ustaların aktarması',correct:true},
+   {label:'Atölyenin binası',hint:'Bina tek başına bilgiyi aktarmaz.'},
+   {label:'Gençlerin şehre gitmesi',hint:'Bu, zincirin kopma nedeniydi.'}]},
+  result:'Somut olmayan miras, bilen biri aktardığı sürece yaşar.'},
+ {kind:'yaz',prompt:'Zinciri kendi cümlelerinle anlat.',sahne:SAHNE.masa,
+  gorev:'Bir el sanatının kuşaklar arası yolculuğunu üç cümleyle anlat.',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,bitis:'.',
+  ipucuMetin:'Önce … Sonra … Böylece …',
+  ornekCevap:'Dedem bakır işlemeyi kendi ustasından öğrenmiş. Sonra bu işi babama sabırla öğretmiş. Böylece aynı desenler bugün bizim evimizde de yaşıyor.',
+  result:'Aktarım zincirini kendi cümlelerinle anlattın.'}
+]};
+
+/* ---- z54 Eş Anlam Makinesi (kartlar küçük harfle; anlam korunuyor mu) ---- */
+GAMES.z54={title:'Eş Anlam Makinesi',theme:'atolye',
+ finish:'Eş anlamlı sözcüğün cümlede anlamı koruduğunu gördün, korumadığı durumları ayırdın ve kendi cümleni yazdın.',rounds:[
+ {kind:'sira',prompt:'Cümleyi kur, sonra eş anlamlısıyla dene.',sahne:SAHNE.matbaa,
+  gorev:'Kartlar küçük harfle geliyor. Anlamlı bir cümle kur.',
+  kartlar:[{t:'öğretmenimiz'},{t:'sorumuza'},{t:'hemen'},{t:'yanıt verdi'}],
+  dogru:[0,1,2,3],
+  ipucular:['İşi kim yaptı?','Neye yanıt verdi?','Ne zaman?','Yüklem hangisi?'],
+  ipucu:'"Yanıt" yerine "cevap" konsa da anlam değişmez.',
+  result:'"Öğretmenimiz sorumuza hemen yanıt verdi." — "yanıt" yerine "cevap" da olurdu.'},
+ {kind:'karar',prompt:'Her zaman değiştirilebilir mi?',sahne:SAHNE.matbaa,
+  durum:'"Kara" ve "siyah" eş anlamlıdır.\nA) "Siyah kalemi ver." → "Kara kalemi ver." olur.\nB) "Kara kışta yollar kapandı." → "Siyah kışta yollar kapandı." olmaz.',
+  soru:'B\'de neden değiştirilemiyor?',
+  secenekler:[
+   {label:'"Kara" burada renk değil, zor ve çetin anlamında',correct:true},
+   {label:'"Siyah" yanlış bir sözcük',hint:'"Siyah" doğru bir sözcük; sorun anlamın değişmesi.'},
+   {label:'Cümlede yazım hatası var',hint:'Yazım doğru; sorun anlam.'}],
+  araSoz:'Doğru. Peki kural ne?',
+  neden:{soru:'Eş anlamlı sözcükler ne zaman değiştirilebilir?',secenekler:[
+   {label:'Sözcük gerçek anlamıyla kullanıldığında',correct:true},
+   {label:'Her zaman',hint:'Mecaz kullanımda değiştirilemiyor.'},
+   {label:'Hiçbir zaman',hint:'A cümlesinde değiştirilebiliyor.'}]},
+  result:'Eş anlamlı sözcükler gerçek anlamda birbirinin yerini tutar; mecazda tutmaz.'},
+ {kind:'yaz',prompt:'Eş anlamlı içeren kendi cümleni yaz.',sahne:SAHNE.matbaa,
+  gorev:'İçinde bir eş anlamlı sözcük bulunan bir cümle yaz, sonra o sözcüğün eş anlamlısını parantez içinde göster.',
+  enAzKelime:9,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'Eş anlamlısını yay ayraç içinde göster',desen:'\\([^)]+\\)'}],
+  ipucuMetin:'… ( … ) …',
+  yasak:['Öğretmenimiz sorumuza hemen yanıt verdi.'],
+  ornekCevap:'Dün akşam yemeğine gelen konuklarımıza (misafirlerimize) sıcacık mercimek çorbası ikram ettik.',
+  result:'Eş anlamlı çifti kendi cümlende gösterdin.'}
+]};
+
+/* ---- z55 Türkçe Karşılık (büyüteç kaldırıldı; karşılığı öğrenci seçiyor) ---- */
+GAMES.z55={title:'Türkçe Karşılık',theme:'kutuphane',
+ finish:'Yabancı sözcüklerin Türkçe karşılıklarını buldun, bağlama uygun olanı seçtin ve cümleyi Türkçesiyle yeniden yazdın.',rounds:[
+ {kind:'esle',prompt:'Her sözcüğü Türkçe karşılığıyla eşle.',sahne:SAHNE.sozluk,
+  soru:'Önce alttan bir Türkçe karşılık seç, sonra ait olduğu sözcüğe dokun.',
+  ipucu:'Karşılığı olan sözcükleri Türkçesiyle kullanmak dilimizi güçlendirir.',
+  yuvalar:[
+   {hedef:'ekip (takım anlamında kullanılan sözcük: "team")',dogru:0,neden:'"Takım" yaygın Türkçe karşılıktır.',hint:'Bu sözcük birlikte çalışan grupla ilgili.'},
+   {hedef:'okey',dogru:1,neden:'"Tamam" günlük dilde tam karşılığıdır.',hint:'Bu sözcük onay bildirir.'},
+   {hedef:'departman',dogru:2,neden:'"Bölüm" tam karşılığıdır.',hint:'Bu sözcük bir kurumun parçasıyla ilgili.'},
+   {hedef:'link',dogru:3,neden:'"Bağlantı" tam karşılığıdır.',hint:'Bu sözcük internetle ilgili.'}],
+  etiketler:[{t:'takım'},{t:'tamam'},{t:'bölüm'},{t:'bağlantı'}]},
+ {kind:'karar',prompt:'Bağlama uygun karşılığı seç.',sahne:SAHNE.sozluk,
+  durum:'Cümle: "Öğretmenimiz bize dersin linkini gönderdi."',
+  soru:'"Link" yerine hangisi uygun düşer?',
+  secenekler:[
+   {label:'bağlantı',correct:true},
+   {label:'zincir',hint:'"Zincir" sözcüğün başka bir anlamı; burada internet adresi kastediliyor.'},
+   {label:'halka',hint:'Bu da başka bir anlam; cümledeki kullanıma uymaz.'}],
+  araSoz:'Doğru. Peki her sözcüğün karşılığı var mı?',
+  neden:{soru:'Türkçe karşılığı bulunmayan sözcükler için ne yapılır?',secenekler:[
+   {label:'Dilimize yerleşmiş biçimiyle kullanılabilir',correct:true},
+   {label:'O sözcük hiç kullanılmaz',hint:'Karşılığı yoksa kullanmamak iletişimi zorlaştırır.'},
+   {label:'Uydurma bir karşılık kullanılır',hint:'Anlaşılmayan bir karşılık işe yaramaz.'}]},
+  result:'Karşılığı olan sözcükleri Türkçesiyle kullanmak, dili korumanın bir yoludur.'},
+ {kind:'yaz',prompt:'Cümleyi Türkçesiyle yeniden yaz.',sahne:SAHNE.sozluk,
+  gorev:'Şu cümleyi Türkçe karşılıklarıyla yeniden yaz: "Okulun departmanı bize dersin linkini gönderdi, okey mi?"',
+  enAzKelime:9,buyukHarf:true,
+  denetim:[
+   {ad:'"bölüm" sözcüğünü kullan',desen:'bölüm',bayrak:'i'},
+   {ad:'"bağlantı" sözcüğünü kullan',desen:'bağlantı',bayrak:'i'},
+   {ad:'Yabancı biçimleri kullanma',desen:'^(?!.*(departman|link|okey)).*$',bayrak:'is'}],
+  ipucuMetin:'Okulun … bize dersin … gönderdi, … mı?',
+  ornekCevap:'Okulun ilgili bölümü bize bugünkü dersin bağlantısını gönderdi, tamam mı?',
+  result:'Cümleyi Türkçe karşılıklarıyla yeniden kurdun.'}
+]};
+
+/* ---- z56 Miras Bekçisi (yakalama kaldırıldı; niyet ile etki ayrılıyor) ---- */
+GAMES.z56={title:'Miras Bekçisi',theme:'muze',
+ finish:'Mirası koruyan ve zarar veren davranışları ayırdın, iyi niyetli ama zararlı olanı fark ettin ve kendi önerini yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu davranış mirası korur mu?',sahne:SAHNE.sozluk,
+  soru:'Bu davranış mirasa ne yapar?',
+  kutular:['KORUR','ZARAR VERİR'],
+  ipucu:'Davranışın sonucuna bak.',
+  kartlar:[
+   {t:'Tarihî duvara adını kazımak',dogru:1,neden:'Kazımak eseri kalıcı olarak bozar.'},
+   {t:'Müzede eserlere dokunmadan incelemek',dogru:0,neden:'Dokunmamak eserin ömrünü uzatır.'},
+   {t:'Antik kentte taş parçası hatıra olarak almak',dogru:1,neden:'Her alınan parça kenti küçültür.'},
+   {t:'Yöresel bir oyunu öğrenip bayramda oynamak',dogru:0,neden:'Yaşatmak, somut olmayan mirası korur.'},
+   {t:'Höyükte izinsiz kazı yapmak',dogru:1,neden:'İzinsiz kazı katmanları geri dönülmez biçimde bozar.'},
+   {t:'Ustadan geleneksel dokumayı öğrenmek',dogru:0,neden:'Aktarım zinciri sürer.'}]},
+ {kind:'karar',prompt:'İyi niyet her zaman korumaz.',sahne:SAHNE.sozluk,
+  durum:'Bir kişi, tarihî bir çeşmenin taşları kararmış diye onu çamaşır suyuyla fırçaladı. Taşların yüzeyindeki yüzyıllık işlemeler aşındı.',
+  soru:'Bu davranış için ne söylenir?',
+  secenekler:[
+   {label:'Niyeti iyiydi ama sonucu zarar verdi',correct:true},
+   {label:'Hem niyeti hem sonucu iyiydi',hint:'İşlemeler aşındı; sonuç zararlı.'},
+   {label:'Niyeti de kötüydü',hint:'Kişi çeşmeyi temizlemek istiyordu.'}],
+  araSoz:'Doğru. Peki ne yapmalıydı?',
+  neden:{soru:'Doğru davranış hangisi olurdu?',secenekler:[
+   {label:'Uzmanlara ya da ilgili kuruma haber vermek',correct:true},
+   {label:'Daha yumuşak bir fırça kullanmak',hint:'Sorun fırça değil, uzman olmadan müdahale etmek.'},
+   {label:'Hiçbir şey yapmamak ve kimseye söylememek',hint:'Haber vermek de korumanın parçasıdır.'}]},
+  result:'Mirası korumak, iyi niyetle değil doğru bilgiyle olur.'},
+ {kind:'yaz',prompt:'Koruma önerini nedeniyle yaz.',sahne:SAHNE.sozluk,
+  gorev:'Mirası korumak için bir davranış önerisi yaz ve nedenini belirt.',
+  enAzKelime:12,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… yapmalıyız çünkü …',
+  yasak:['Müzede eserlere dokunmamalıyız çünkü zarar verir.'],
+  ornekCevap:'Antik kentlerden taş parçası almamalıyız çünkü her alınan parça o kentten bir daha geri gelmez.',
+  result:'Koruma önerini gerekçesiyle birlikte yazdın.'}
+]};
+
 /* ===== ÖZ DENETİM =====
    Her yazma/düzeltme/yönerge turunun örnek cevabı kendi ölçütlerini geçiyor mu?
    Motorla birlikte taşındığı için içerik eklendikçe kural setiyle birlikte
