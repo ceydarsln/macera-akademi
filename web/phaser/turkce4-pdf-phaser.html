@@ -188,14 +188,17 @@ function good(message){if(locked)return;locked=true;score+=10;const r=round();
 function ertele(fn,ms){const t=roundIndex;setTimeout(()=>{if(roundIndex===t&&!locked)fn()},ms)}
 function gecisBasla(fn,ms){state.gecis=true;ertele(()=>{state.gecis=false;fn()},ms)}
 const TRUP=s=>String(s||'').toLocaleUpperCase('tr');
+/* Cihaz klavyeleri kesme işaretini ’ olarak üretebiliyor; desenler ' arıyor.
+   Ölçüt sınamadan önce bütün kesme biçimleri tek biçime getiriliyor. */
+const kesmeDuz=t=>String(t||'').replace(/[\u2018\u2019\u02bc\u00b4`]/g,"'");
 function sadelestir(s){return String(s||'').toLocaleLowerCase('tr').replace(/[^\wçğıöşü\s]/g,' ').replace(/\s+/g,' ').trim()}
 function kelimeSay(s){const t=sadelestir(s);return t?t.split(' ').length:0}
 function ilerleme(n,i){return `<div class="ilerleme">${Array.from({length:n},(_,k)=>`<i class="${k<i?'ok':(k===i?'simdi':'')}"></i>`).join('')}</div>`}
 function sahneHtml(r){return typeof r.sahne==='function'?r.sahne(state):(r.sahne||'')}
 /* Cihaz klavyesinde Türkçe harf bulunmayabilir; ölçütler yazıma bakıyor.
    İmleç konumuna harf ekleyen küçük bir şerit her yazma alanının altında durur. */
-const TRKUCUK=['ç','ğ','ı','i','ö','ş','ü'];
-const TRBUYUK=['Ç','Ğ','I','İ','Ö','Ş','Ü'];
+const TRKUCUK=['ç','ğ','ı','i','ö','ş','ü',"'"];
+const TRBUYUK=['Ç','Ğ','I','İ','Ö','Ş','Ü',"'"];
 function trSerit(){const b=!!state.trBuyuk;
  return `<div class="trharf">${(b?TRBUYUK:TRKUCUK).map(h=>`<button data-tr="${h}">${h}</button>`).join('')}`+
   `<button data-trsw="1" title="büyük/küçük">${b?'küçük':'BÜYÜK'}</button></div>`}
@@ -427,7 +430,7 @@ function olcutDurum(r,t){
  if(r.buyukHarf)d.push({ad:'Büyük harfle başla',tam:/^[A-ZÇĞİÖŞÜ]/.test(ham)});
  if(r.bitis)d.push({ad:`Sonuna "${r.bitis}" koy`,tam:ham.endsWith(r.bitis)});
  (r.gerekli||[]).forEach(g=>d.push({ad:`"${g}" sözcüğünü kullan`,tam:sadelestir(t).includes(sadelestir(g))}));
- (r.denetim||[]).forEach(dn=>d.push({ad:dn.ad,tam:new RegExp(dn.desen,dn.bayrak||'').test(ham)}));
+ (r.denetim||[]).forEach(dn=>d.push({ad:dn.ad,tam:new RegExp(dn.desen,dn.bayrak||'').test(kesmeDuz(ham))}));
  return d}
 function yazCiz(r){
  const t=state.yazi||'',d=olcutDurum(r,t),tam=d.every(x=>x.tam);
@@ -463,7 +466,7 @@ function renderYaz(r){state.yazi=r.baslangicMetni||'';state.not='';yazCiz(r)}
    kendisi düzenler, ölçütler desenle sınanır. Sayaç hamle sayısı vermez. ===== */
 function duzeltCiz(r){
  const t=state.yazi!=null?state.yazi:r.hatali;
- const d=(r.denetim||[]).map(x=>({ad:x.ad,tam:new RegExp(x.desen,x.bayrak||'').test(t)}));
+ const d=(r.denetim||[]).map(x=>({ad:x.ad,tam:new RegExp(x.desen,x.bayrak||'').test(kesmeDuz(t))}));
  const tam=d.every(x=>x.tam);
  $('#stage').innerHTML=sahneHtml(r)+
   `<div class="konus-balon">${esc(r.gorev)}</div>`+
@@ -484,7 +487,7 @@ function duzeltCiz(r){
   if(sadelestir(state.yazi)!==sadelestir(r.hatali) && r.sozcukKorunsun!==false){
    /* sözcükler korunmalı: yalnız yazım/noktalama değişebilir */
    state.not='Sözcükleri değiştirme; yalnız yazım ve noktalamayı düzelt.';duzeltCiz(r);return wrong(state.not)}
-  const eksik=(r.denetim||[]).map(x=>({ad:x.ad,tam:new RegExp(x.desen,x.bayrak||'').test(state.yazi)})).find(x=>!x.tam);
+  const eksik=(r.denetim||[]).map(x=>({ad:x.ad,tam:new RegExp(x.desen,x.bayrak||'').test(kesmeDuz(state.yazi))})).find(x=>!x.tam);
   if(eksik)return wrong('Eksik: '+eksik.ad);
   good()}}
 function renderDuzelt(r){state.yazi=r.hatali;state.not='';duzeltCiz(r)}
@@ -607,7 +610,7 @@ function yonergeCiz(r){
   ilerleme(r.adimlar.length,i)+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  const t=state.taslak||'';
- const uygun=new RegExp(a.desen,a.bayrak||'i').test(t.trim());
+ const uygun=new RegExp(a.desen,a.bayrak||'i').test(kesmeDuz(t).trim());
  $('#task').innerHTML=`<div class="caption soru">${esc(a.soru)}</div>`+
   `<textarea class="yazi-alan" id="yonergeAlan" placeholder="${esc(a.ipucuMetin||'Adımı bir cümleyle yaz.')}">${esc(t)}</textarea>`+
   `<div class="olcut"><div class="${uygun?'tam':''}">${uygun?'✓':'○'} ${esc(a.olcut)}</div></div>`+
@@ -617,7 +620,7 @@ function yonergeCiz(r){
   const y=$('#yonergeAlan');y.focus();try{y.setSelectionRange(c,c)}catch(e){}};
  $('#yonergeOk').onclick=()=>{
   if(locked||state.gecis)return;
-  if(!new RegExp(a.desen,a.bayrak||'i').test((state.taslak||'').trim()))
+  if(!new RegExp(a.desen,a.bayrak||'i').test(kesmeDuz(state.taslak||'').trim()))
    return wrong(a.hint||'Bu adım aradığımızı anlatmıyor.');
   state.yazilan=yazilan.concat(state.taslak.trim());state.taslak='';state.ix=i+1;state.not=a.neden||'';
   if(state.ix>=r.adimlar.length){yonergeCiz(r);return good()}
@@ -2255,6 +2258,350 @@ GAMES.z40={title:'Ayrı mı, Birleşik mi?',theme:'atolye',
   ornekCevap:'Ben de bu maceralı kitabı okumak istiyorum. Sen bugün benimle kütüphaneye gelir misin?',
   result:'Ayrı yazılan "de" ile soru ekini kendi cümlelerinde doğru kullandın.'}
 ]};
+
+/* ---- z41 "de/da" Denetimi (bant durduruldu; kart tam görünür) ---- */
+GAMES.z41={title:'"de/da" Denetimi',theme:'atolye',
+ finish:'"de" bağlacı ile "-de" ekini ayırdın, dahi/bile testini uyguladın ve ikisini de kendi cümlelerinde yazdın.',rounds:[
+ {kind:'sinifla',prompt:'İşaretli «de» ayrı mı, bitişik mi?',sahne:SAHNE.kalem,
+  soru:'Bu cümledeki «de» nasıl yazılmalı?',
+  kutular:['AYRI (de bağlacı)','BİTİŞİK (-de eki)'],
+  ipucu:'Kural: "de" sözcüğü çıkarıldığında cümle bozulmuyorsa ayrı yazılır.',
+  kartlar:[
+   {t:'Kardeşim «de» bizimle parka geldi.',dogru:0,
+    neden:'"Kardeşim bizimle parka geldi." anlamlı kalıyor: ayrı yazılır.'},
+   {t:'Anahtar kapı«da» unutulmuş.',dogru:1,
+    neden:'"Anahtar kapı unutulmuş." bozuluyor: ek, bitişik yazılır.'},
+   {t:'Bu kitabı ben «de» okumak istiyorum.',dogru:0,
+    neden:'Çıkarınca cümle bozulmuyor.'},
+   {t:'Çocuklar bahçe«de» oynuyor.',dogru:1,
+    neden:'Nerede olduğunu bildiriyor: ektir.'},
+   {t:'Sen «de» yarın geliyor musun?',dogru:0,
+    neden:'"Sen yarın geliyor musun?" anlamlı: ayrı.'},
+   {t:'Kalemim çanta«da» kaldı.',dogru:1,
+    neden:'Bulunma bildiriyor: bitişik.'}]},
+ {kind:'karar',prompt:'"dahi/bile" testini uygula.',sahne:SAHNE.kalem,
+  durum:'Cümle: "Ali de bugün okula gelmedi."\nTest: "de" yerine "dahi" koyalım → "Ali dahi bugün okula gelmedi."',
+  soru:'Test sonucuna göre "de" nasıl yazılmalı?',
+  secenekler:[
+   {label:'Ayrı, çünkü "dahi" ile değiştirilebiliyor',correct:true},
+   {label:'Bitişik, çünkü kişi adından sonra geliyor',hint:'Kişi adı olması bitişik yazmayı gerektirmez; test ayrı yazılacağını gösterdi.'},
+   {label:'İkisi de olur',hint:'Yazım kuralında iki seçenek yoktur; test sonucu belirler.'}],
+  araSoz:'Doğru. Peki test ne zaman işe yaramaz?',
+  neden:{soru:'"Ali evde yok." cümlesinde test ne gösterir?',secenekler:[
+   {label:'"Ali evdahi yok" anlamsız olur, demek ki ektir',correct:true},
+   {label:'Test yine ayrı yazılacağını gösterir',hint:'Değiştirince cümle anlamsızlaşıyor.'},
+   {label:'Test bu cümlede uygulanamaz',hint:'Test her "de" için uygulanabilir; sonucu farklı çıkar.'}]},
+  result:'"Dahi/bile" ile değiştirilebiliyorsa ayrı, değiştirilemiyorsa bitişik yazılır.'},
+ {kind:'yaz',prompt:'İkisini de kendi cümlelerinde kullan.',sahne:SAHNE.kalem,
+  gorev:'Bir cümlede ayrı yazılan "de" bağlacını, bir cümlede bitişik yazılan "-de" ekini kullan.',
+  enAzKelime:12,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'Ayrı yazılan "de/da" kullan',desen:'\\b(ben|sen|o|biz|siz|onlar|[a-zçğıöşü]+m|[A-ZÇĞİÖŞÜ][a-zçğıöşü]+)\\s+d[ae]\\b',bayrak:''},
+   {ad:'Bitişik yazılan "-de/-da" eki kullan',desen:'[a-zçğıöşü]d[ae]\\b',bayrak:'i'}],
+  ipucuMetin:'Ben de …  … evde …',
+  yasak:['Kardeşim de bizimle parka geldi.'],
+  ornekCevap:'Ben de bu akşam kardeşimle sinemaya gelmek istiyorum. Okuduğum kitabım şu anda masada duruyor.',
+  result:'Bağlaç ile eki kendi cümlelerinde doğru yazdın.'}
+]};
+
+/* ---- z42 "ki" Denetimi (büyüteç kaldırıldı; kural kutusu sabit) ---- */
+GAMES.z42={title:'"ki" Denetimi',theme:'atolye',
+ finish:'Bağlaç "ki" ile ilgi eki "-ki"yi ayırdın, aynı metinde karşılaştırdın ve bağlaç "ki" ile kendi cümleni yazdın.',rounds:[
+ {kind:'sinifla',prompt:'İşaretli «ki» ayrı mı, bitişik mi?',sahne:SAHNE.kalem,
+  soru:'Bu cümledeki «ki» nasıl yazılmalı?',
+  kutular:['AYRI (ki bağlacı)','BİTİŞİK (-ki eki)'],
+  ipucu:'Kural: iki cümleyi bağlıyorsa ayrı, bir adı niteliyorsa bitişik yazılır.',
+  kartlar:[
+   {t:'Duydum «ki» yarın gezimiz varmış.',dogru:0,neden:'İki cümleyi bağlıyor: ayrı.'},
+   {t:'Sabah«ki» dersimiz beden eğitimiydi.',dogru:1,neden:'"Sabah" adını niteliyor: bitişik.'},
+   {t:'O kadar yoruldum «ki» hemen uyudum.',dogru:0,neden:'İki cümleyi bağlıyor.'},
+   {t:'Masadaki kitap kimin?',dogru:1,neden:'"Masa" adını niteliyor.'},
+   {t:'Sanırım «ki» bu soru daha kolay.',dogru:0,neden:'Cümleleri bağlıyor.'},
+   {t:'Dünkü maçı izleyebildin mi?',dogru:1,neden:'"Dün" adını niteliyor.'}]},
+ {kind:'kanit',prompt:'Metinde yanlış yazılmış "ki"yi bul.',sahne:SAHNE.kalem,
+  baslik:'Denetlenecek metin',
+  metin:[['Sabahki toplantıda öğretmenimiz dedi ',{t:'ki',dogru:true},' gezi ertelenmiş. Akşamki haberde de aynı şey söylendi. Öyle üzüldüm ',{t:'ki',dogru:true},' hiç konuşmak istemedim.']],
+  gerekKanit:2,soru:'Metindeki iki ayrı "ki" hangi görevde?',
+  secenekler:[
+   {label:'İkisi de bağlaç; ayrı yazılmışlar ve doğrular',correct:true},
+   {label:'İkisi de ek; bitişik yazılmalıydı',hint:'İşaretlediklerin bir adı nitelemiyor, iki cümleyi bağlıyor.'},
+   {label:'Biri bağlaç biri ek',hint:'İkisi de "dedi ki", "üzüldüm ki" biçiminde cümle bağlıyor.'}],
+  araSoz:'Doğru. Peki "sabahki" ve "akşamki" ne?',
+  neden:{soru:'"Sabahki" ve "akşamki" sözcüklerindeki "ki" ne görevde?',secenekler:[
+   {label:'İlgi eki; bitişik yazılırlar',correct:true},
+   {label:'Bağlaç; ayrı yazılmalıydılar',hint:'Bunlar "toplantı" ve "haber" adlarını niteliyor.'},
+   {label:'Soru eki',hint:'Soru eki "mi"dir.'}]},
+  result:'Bağlaç "ki" cümle bağlar ve ayrı yazılır; ilgi eki "-ki" adı niteler ve bitişik yazılır.'},
+ {kind:'yaz',prompt:'Bağlaç "ki" ile kendi cümleni yaz.',sahne:SAHNE.kalem,
+  gorev:'Bağlaç olan "ki"yi ayrı yazarak bir cümle kur.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'"ki" sözcüğünü ayrı yaz',desen:'\\ski\\s',bayrak:'i'}],
+  ipucuMetin:'… ki …',
+  yasak:['Duydum ki yarın gezimiz varmış.'],
+  ornekCevap:'Kitabı öyle çok sevdim ki bir günde okuyup bitirdim.',
+  result:'Bağlaç "ki"yi ayrı yazarak kendi cümleni kurdun.'}
+]};
+
+/* ---- z43 Kodlama Laboratuvarı (yön blokları yazılı yönergeye dönüştü) ---- */
+GAMES.z43={title:'Kodlama Laboratuvarı',theme:'lab',
+ finish:'Yazılı yönergeleri sıraladın, hatalı programdaki adımı buldun ve yönergeyi kendin yazdın.',rounds:[
+ {kind:'sira',prompt:'Yönergeleri doğru sırayla diz.',sahne:SAHNE.kalem,
+  gorev:'Robot deney masasına gidip mikroskobu getirecek. Yönergeleri sırayla diz.',
+  kartlar:[
+   {t:'Laboratuvar kapısını aç ve içeri gir.'},
+   {t:'Dolaba kadar iki adım ilerle.'},
+   {t:'Dolabın camlı kapağını aç.'},
+   {t:'İkinci raftaki mikroskobu iki elinle al.'},
+   {t:'Kapağı kapat ve masaya geri dön.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Robot önce nereden girmeli?','İçeri girdi; nereye gitmeli?',
+   'Dolaba vardı; ne yapmalı?','Kapak açıldı; ne alacak?','Aletini aldı; son adım ne?'],
+  ipucu:'Her adım bir öncekini gerektirir.',
+  result:'Ayrıntılı yönerge, adımları eksiksiz ve sırayla verir.'},
+ {kind:'karar',prompt:'Hatalı programı bul.',sahne:SAHNE.kalem,
+  durum:'Bir öğrenci şu programı yazdı:\n1. Laboratuvar kapısını aç ve içeri gir.\n2. Dolabın camlı kapağını aç.\n3. Dolaba kadar iki adım ilerle.\n4. İkinci raftaki mikroskobu al.\nRobot kapağı açamadı.',
+  soru:'Hangi adımlar yer değiştirmiş?',
+  secenekler:[
+   {label:'2 ile 3',correct:true},
+   {label:'1 ile 2',hint:'Kapıdan girmek her zaman ilk adımdır.'},
+   {label:'3 ile 4',hint:'Önce dolaba varmak, sonra almak doğru sıra.'}],
+  araSoz:'Doğru. Peki neden sorun çıktı?',
+  neden:{soru:'Neden robot kapağı açamadı?',secenekler:[
+   {label:'Dolabın yanına gitmeden kapağı açmaya çalıştı',correct:true},
+   {label:'Kapağı açma adımı hiç yazılmamıştı',hint:'Yazılmıştı, ama yanlış sırada.'},
+   {label:'Mikroskop rafta değildi',hint:'Rafta olduğu yazılı.'}]},
+  result:'Yönergede adımların sırası, adımların kendisi kadar önemlidir.'},
+ {kind:'yonerge',prompt:'Yönergeyi kendin yaz.',sahne:SAHNE.kalem,
+  gorev:'Robotun masadaki bardağa su doldurması için yönergeyi adım adım sen yaz.',
+  adimlar:[
+   {soru:'1. adım: Robot suyu nereden alacak?',
+    /* ünsüz yumuşaması: musluk -> musluğun */
+    olcut:'"musluk" ya da "sürahi" sözcüğünü kullan',desen:'muslu[kğ]|sürahi',
+    ipucuMetin:'Musluğun yanına git.',ornekCevap:'Lavabodaki musluğun yanına git.',
+    hint:'Bu adımda suyun kaynağı geçmeli.',neden:'İlk adım yerinde.'},
+   {soru:'2. adım: Bardağı ne yapacak?',
+    olcut:'"bardak" sözcüğünü kullan',desen:'bardağ|bardak',
+    ipucuMetin:'Bardağı musluğun altına tut.',ornekCevap:'Bardağı musluğun altına tut.',
+    hint:'Bu adımda bardak geçmeli.',neden:'İkinci adım yerinde.'},
+   {soru:'3. adım: Ne kadar dolduracak?',
+    olcut:'Bir miktar belirt ("yarıya kadar", "üçte iki" gibi)',desen:'yarı|dolu|kadar|çeyrek',
+    ipucuMetin:'Bardağı yarıya kadar doldur.',ornekCevap:'Bardağı yarıya kadar yavaşça doldur.',
+    hint:'Bu adımda ne kadar doldurulacağı belli olmalı.',neden:'Yönergen ayrıntılı oldu.'}],
+  result:'Ayrıntılı yönergeyi adım adım ve miktar belirterek yazdın.'}
+]};
+
+/* ---- z44 Mucit Atölyesi (simge kopyası kaldırıldı; amaç-araç planı) ---- */
+GAMES.z44={title:'Mucit Atölyesi',theme:'lab',
+ finish:'Amaca uygun araçları seçtin, uymayanı gerekçesiyle eledin ve bir deneyin adımlarını örnekle yazdın.',rounds:[
+ {kind:'esle',prompt:'Her amaca uygun aracı ver.',sahne:SAHNE.kalem,
+  soru:'Önce alttan bir araç seç, sonra ait olduğu amaca dokun.',
+  ipucu:'Aracın adına değil, ne işe yaradığına bak.',
+  yuvalar:[
+   {hedef:'AMAÇ: Sıvının ne kadar olduğunu ölçmek',dogru:0,neden:'Dereceli silindir hacim ölçer.',hint:'Bu amaç miktarla ilgili.'},
+   {hedef:'AMAÇ: Çok küçük şeyleri büyütüp görmek',dogru:1,neden:'Mikroskop küçük yapıları büyütür.',hint:'Bu amaç görmekle ilgili.'},
+   {hedef:'AMAÇ: Bir cismin ağırlığını bulmak',dogru:2,neden:'Terazi kütle ölçer.',hint:'Bu amaç ağırlıkla ilgili.'},
+   {hedef:'AMAÇ: Sıcaklığı ölçmek',dogru:3,neden:'Termometre sıcaklık ölçer.',hint:'Bu amaç sıcaklıkla ilgili.'}],
+  etiketler:[{t:'Dereceli silindir'},{t:'Mikroskop'},{t:'Terazi'},{t:'Termometre'}]},
+ {kind:'karar',prompt:'Cazip ama amaca uymayan araç.',sahne:SAHNE.kalem,
+  durum:'Deneyin amacı: bir taşın kütlesini bulmak. Masada terazi, büyüteç ve rengârenk bir kaleydoskop var.',
+  soru:'Hangi araçları elemelisin?',
+  secenekler:[
+   {label:'Büyüteç ve kaleydoskop; ikisi de kütle ölçmez',correct:true},
+   {label:'Yalnız kaleydoskopu',hint:'Büyüteç de kütle ölçmez, yalnız büyütür.'},
+   {label:'Hiçbirini; hepsi işe yarar',hint:'Deneyin amacı kütle ölçmek; büyütmek ya da renk görmek değil.'}],
+  araSoz:'Doğru. Peki eleme ölçütün ne?',
+  neden:{soru:'Bir aracı elerken neye bakarsın?',secenekler:[
+   {label:'Deneyin amacına hizmet edip etmediğine',correct:true},
+   {label:'Aracın ilgi çekiciliğine',hint:'İlgi çekicilik amaca hizmet etmez.'},
+   {label:'Aracın büyüklüğüne',hint:'Boyut amaçla ilgili değildir.'}]},
+  result:'Araç, deneyin amacına göre seçilir; cazip olması yetmez.'},
+ {kind:'yaz',prompt:'Bir deneyin adımlarını örnekle yaz.',sahne:SAHNE.kalem,
+  gorev:'Basit bir deneyin adımlarını yaz ve içine bir örnek ekle ("örneğin" sözcüğünü kullan).',
+  enAzKelime:16,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'"örneğin" sözcüğünü kullan',desen:'örneğin',bayrak:'i'}],
+  bank:['örneğin','önce','sonra'],
+  ipucuMetin:'Önce … Sonra … Örneğin …',
+  ornekCevap:'Önce bardağa su koydum ve içine farklı cisimler bıraktım. Örneğin mantar yüzdü ama taş hemen dibe battı.',
+  result:'Deney adımlarını örnek vererek anlattın.'}
+]};
+
+/* ---- z45 Deney Raporu (görev metni işaretin yerini SÖYLEMİYOR) ---- */
+GAMES.z45={title:'Deney Raporu Dizgisi',theme:'lab',
+ finish:'İki nokta, yay ayraç ve eğik çizgiyi görevlerine göre kullandın, farklarını ayırdın ve kendi gözlem cümleni yazdın.',rounds:[
+ {kind:'duzelt',prompt:'Rapordaki işaretleri anlamına göre koy.',sahne:SAHNE.kalem,
+  gorev:'Deney raporunda işaretler eksik. Anlamına uygun olanları sen koy. Sözcükleri değiştirme.',
+  hatali:'Kullandığımız araçlar terazi dereceli silindir ve termometre. Suyun sıcaklığı 24 derece santigrat oldu',
+  denetim:[
+   {ad:'Sıralamadan önce iki nokta koy',desen:':'},
+   {ad:'Sıralanan araçları virgülle ayır',desen:','},
+   {ad:'Cümleyi noktayla bitir',desen:'\\.\\s*$'}],
+  ornekCevap:'Kullandığımız araçlar: terazi, dereceli silindir ve termometre. Suyun sıcaklığı 24 derece santigrat oldu.',
+  result:'İki nokta bir açıklama ya da sıralama getirir.'},
+ {kind:'karar',prompt:'Üç işaret, üç ayrı görev.',sahne:SAHNE.kalem,
+  durum:'A) "Su (H₂O) iki elementten oluşur."\nB) "Hız 60 km/sa olarak ölçüldü."\nC) "Ankara - İzmir arası uçakla kısa sürer."',
+  soru:'Yay ayraç hangi cümlede ve ne yapıyor?',
+  secenekler:[
+   {label:'A\'da; araya açıklama ekliyor',correct:true},
+   {label:'B\'de; birim gösteriyor',hint:'B\'de eğik çizgi var, yay ayraç değil.'},
+   {label:'C\'de; iki yeri bağlıyor',hint:'C\'de kısa çizgi var.'}],
+  araSoz:'Doğru. Peki eğik çizgi ne yapıyor?',
+  neden:{soru:'"km/sa" ifadesindeki eğik çizgi ne gösterir?',secenekler:[
+   {label:'Birimlerin oranını (saatte kaç kilometre)',correct:true},
+   {label:'İki yer arasındaki bağı',hint:'Bunu kısa çizgi yapar.'},
+   {label:'Araya giren açıklamayı',hint:'Bunu yay ayraç yapar.'}]},
+  result:'Yay ayraç açıklar, eğik çizgi oran gösterir, kısa çizgi arada bağ kurar.'},
+ {kind:'yaz',prompt:'Kendi gözlem cümleni yaz.',sahne:SAHNE.kalem,
+  gorev:'Bir gözlemini yaz: iki nokta ile bir sıralama yap ve yay ayraç içinde bir açıklama ekle.',
+  enAzKelime:11,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'İki nokta kullan',desen:':'},
+   {ad:'Yay ayraç kullan',desen:'\\([^)]+\\)'}],
+  ipucuMetin:'Gözlemim: … ( … ) …',
+  yasak:['Kullandığımız araçlar: terazi, dereceli silindir ve termometre.'],
+  ornekCevap:'Deneyde şunları gözlemledim: buz eridi, su ısındı ve buhar (gaz hâli) yükseldi.',
+  result:'İki noktayı ve yay ayracı kendi gözlem cümlende kullandın.'}
+]};
+
+/* ---- z46 Terim Köprüsü (simge eşleşmesi kaldırıldı) ---- */
+GAMES.z46={title:'Terim Köprüsü',theme:'lab',
+ finish:'Terimleri tanımlarıyla eşledin, günlük anlamla terim anlamı ayırdın ve bir terimi kendi cümlende kullandın.',rounds:[
+ {kind:'esle',prompt:'Her terimi tanımıyla eşle.',sahne:SAHNE.kalem,
+  soru:'Önce alttan bir tanım seç, sonra ait olduğu terime dokun.',
+  ipucu:'Terimler bir bilim dalına aittir.',
+  yuvalar:[
+   {hedef:'kütle',dogru:0,neden:'Kütle, bir cismin madde miktarıdır.',hint:'Bu terim madde miktarıyla ilgili.'},
+   {hedef:'çözelti',dogru:1,neden:'Çözelti, bir maddenin başka bir madde içinde çözünmesiyle oluşur.',hint:'Bu terim karışımla ilgili.'},
+   {hedef:'buharlaşma',dogru:2,neden:'Buharlaşma, sıvının gaz hâline geçmesidir.',hint:'Bu terim hâl değişimiyle ilgili.'},
+   {hedef:'gölge',dogru:3,neden:'Gölge, ışığın engellenmesiyle oluşan karanlık alandır.',hint:'Bu terim ışıkla ilgili.'}],
+  etiketler:[
+   {t:'Bir cismin içindeki madde miktarı'},
+   {t:'Bir maddenin başka madde içinde çözünmesiyle oluşan karışım'},
+   {t:'Sıvının ısınarak gaz hâline geçmesi'},
+   {t:'Işığın bir cisimle engellenmesi sonucu oluşan karanlık alan'}]},
+ {kind:'karar',prompt:'Günlük anlam mı, terim anlam mı?',sahne:SAHNE.kalem,
+  durum:'A) "Bu çantanın maddesi çok sağlam."\nB) "Fen dersinde maddenin hâllerini öğrendik."',
+  soru:'Hangisinde "madde" terim anlamdadır?',
+  secenekler:[
+   {label:'B',correct:true},
+   {label:'A',hint:'A\'da kumaş, malzeme anlamında günlük kullanım var.'}],
+  araSoz:'Doğru. Peki nereden anladın?',
+  neden:{soru:'Bir sözcüğün terim anlamda olduğunu ne gösterir?',secenekler:[
+   {label:'Bir bilim ya da sanat dalına özel anlam taşıması',correct:true},
+   {label:'Uzun bir sözcük olması',hint:'Uzunluk terim yapmaz.'},
+   {label:'Az bilinen bir sözcük olması',hint:'Terimler yaygın da olabilir; ölçüt alana ait anlamıdır.'}]},
+  result:'Terim anlam, sözcüğün bir bilim dalına özel karşılığıdır.'},
+ {kind:'yaz',prompt:'Bir terimi tanımıyla kullan.',sahne:SAHNE.kalem,
+  gorev:'Bir bilim terimi seç, tanımını yaz ve onu kendi cümlende kullan.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'… demek … demektir. …',
+  ornekCevap:'Buharlaşma, sıvının ısınarak gaz hâline geçmesi demektir. Yaz sıcağında gölete koyduğumuz su hızla buharlaştı.',
+  result:'Terimi tanımıyla birlikte kendi cümlende kullandın.'}
+]};
+
+/* ---- z47 Yönerge Makinesi (eksik ile ayrıntılı yönerge karşılaştırılıyor) ---- */
+GAMES.z47={title:'Yönerge Makinesi',theme:'lab',
+ finish:'Yönergeyi kurdun, eksik ile ayrıntılı yönergenin farkını gördün ve üç adımlı deney yönergeni yazdın.',rounds:[
+ {kind:'sira',prompt:'Yönerge cümlesini sırayla kur.',sahne:SAHNE.matbaa,
+  gorev:'Kartlar küçük harfle geliyor. Ayrıntılı bir yönerge cümlesi kur.',
+  kartlar:[{t:'bardağa'},{t:'yarıya kadar'},{t:'ılık su'},{t:'doldur'}],
+  dogru:[0,1,2,3],
+  ipucular:['Su nereye konacak?','Ne kadar konacak?','Nasıl bir su konacak?','Eylem hangi kartta?'],
+  ipucu:'Ayrıntılı yönergede yer, miktar ve nitelik bulunur.',
+  result:'"Bardağa yarıya kadar ılık su doldur." — yer, miktar ve nitelik birlikte.'},
+ {kind:'karar',prompt:'Hangi yönerge ayrıntılı?',sahne:SAHNE.matbaa,
+  durum:'A) "Suyu koy."\nB) "Bardağa yarıya kadar ılık su doldur."',
+  soru:'Hangisi bir robotun ya da bir arkadaşının hatasız uygulayabileceği yönergedir?',
+  secenekler:[
+   {label:'B',correct:true},
+   {label:'A',hint:'"Suyu koy" nereye, ne kadar ve nasıl olduğunu söylemiyor.'}],
+  araSoz:'Doğru. Peki A\'da ne eksik?',
+  neden:{soru:'A yönergesinde eksik olan nedir?',secenekler:[
+   {label:'Yer, miktar ve nitelik bilgisi',correct:true},
+   {label:'Eylem bildiren sözcük',hint:'"koy" eylemi var; eksik olan ayrıntılar.'},
+   {label:'Büyük harf',hint:'Sorun yazımda değil, bilgide.'}]},
+  result:'Ayrıntılı yönerge; nereye, ne kadar ve nasıl sorularını yanıtlar.'},
+ {kind:'yaz',prompt:'Üç adımlı deney yönergesi yaz.',sahne:SAHNE.matbaa,
+  gorev:'Basit bir deney için üç adımlı ayrıntılı yönerge yaz. Her adımda miktar ya da nitelik belirt.',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,
+  denetim:[{ad:'En az bir miktar ya da ölçü belirt',desen:'yarı|kaşık|bardak|dakika|santimetre|derece|\\d',bayrak:'i'}],
+  ipucuMetin:'1. … 2. … 3. …',
+  yasak:['Bardağa yarıya kadar ılık su doldur.'],
+  ornekCevap:'Bardağa üçte iki oranında soğuk su doldur. İçine bir çay kaşığı tuz ekle. Kaşıkla otuz saniye boyunca karıştır.',
+  result:'Üç adımlı, ölçülü ve uygulanabilir bir yönerge yazdın.'}
+]};
+
+/* ---- z48 Bilimsel Araştırma Adımları (roket kaldırıldı; bilim panosu) ---- */
+GAMES.z48={title:'Bilimsel Araştırma',theme:'lab',
+ finish:'Bilimsel araştırma adımlarını sıraladın, atlanan adımı buldun ve kendi araştırma adımlarını yazdın.',rounds:[
+ {kind:'sira',prompt:'Bilimsel araştırma hangi sırayla yapılır?',sahne:SAHNE.kalem,
+  gorev:'Bilim panosundaki adımları sırayla diz.',
+  kartlar:[
+   {t:'Merak ettiğin bir soru sor.'},
+   {t:'Sorunun yanıtı için bir tahmin (hipotez) kur.'},
+   {t:'Tahminini sınayacak bir deney tasarla ve yap.'},
+   {t:'Deney sırasında olanları gözle ve not al.'},
+   {t:'Gözlemlerine bakarak bir sonuca var.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Bilim neyle başlar?','Soru soruldu; sıradaki adım ne?',
+   'Tahmin kuruldu; nasıl sınanır?','Deney yapılıyor; ne yaparsın?','Gözlemler tamam; son adım ne?'],
+  ipucu:'Soru → tahmin → deney → gözlem → sonuç.',
+  result:'Bilimsel araştırma soruyla başlar, sonuçla biter.'},
+ {kind:'karar',prompt:'Hangi adım atlanmış?',sahne:SAHNE.kalem,
+  durum:'Bir öğrenci "bitkiler karanlıkta büyür mü?" diye sordu. Hemen iki saksıyı karanlığa koydu, sonra "bitkiler karanlıkta büyümez" dedi. Ama hiçbir not almadı ve saksıları hiç izlemedi.',
+  soru:'Hangi adım atlanmış?',
+  secenekler:[
+   {label:'Gözlem ve not alma',correct:true},
+   {label:'Soru sorma',hint:'Soruyu sordu: "bitkiler karanlıkta büyür mü?"'},
+   {label:'Deney yapma',hint:'Saksıları karanlığa koyarak deneyi kurdu.'}],
+  araSoz:'Doğru. Peki gözlem olmadan sonuç neden geçersiz?',
+  neden:{soru:'Gözlem olmadan varılan sonuç niçin güvenilmez?',secenekler:[
+   {label:'Sonucu destekleyecek hiçbir kanıt yoktur',correct:true},
+   {label:'Deney çok kısa sürmüştür',hint:'Süre değil, kanıtın olmaması sorun.'},
+   {label:'Saksı sayısı azdır',hint:'Asıl eksik, hiç gözlem yapılmaması.'}]},
+  result:'Sonuç, gözlemle toplanan kanıta dayanmalıdır.'},
+ {kind:'yaz',prompt:'Kendi araştırma adımlarını yaz.',sahne:SAHNE.kalem,
+  gorev:'Merak ettiğin bir soru için beş adımı sırayla yaz: soru, tahmin, deney, gözlem, sonuç.',
+  enAzKelime:20,enAzCumle:3,buyukHarf:true,
+  denetim:[
+   {ad:'"tahmin" ya da "hipotez" sözcüğünü kullan',desen:'tahmin|hipotez',bayrak:'i'},
+   {ad:'"gözlem" sözcüğünü kullan',desen:'gözlem',bayrak:'i'},
+   {ad:'"sonuç" sözcüğünü kullan',desen:'sonuç',bayrak:'i'}],
+  ipucuMetin:'Sorum: … Tahminim: … Deneyim: … Gözlemim: … Sonuç: …',
+  ornekCevap:'Sorum tuzlu suda buz daha yavaş mı erir. Tahminim daha yavaş eriyeceği. Deneyimde iki bardağa buz koyacağım. Gözlemimi her beş dakikada bir not alacağım. Sonuç olarak hangisinin önce eridiğini yazacağım.',
+  result:'Bilimsel araştırmanın beş adımını kendi sorunla kurdun.'}
+]};
+
+/* ===== ÖZ DENETİM =====
+   Her yazma/düzeltme/yönerge turunun örnek cevabı kendi ölçütlerini geçiyor mu?
+   Motorla birlikte taşındığı için içerik eklendikçe kural setiyle birlikte
+   sınanır; koşumdaki opak "zaman aşımı" hatalarını önler.
+   Kullanım: konsolda __TEST__.olcutDenetimi()  */
+window.__TEST__={
+ olcutDenetimi(){
+  const kusur=[];
+  Object.keys(GAMES).forEach(id=>GAMES[id].rounds.forEach((r,ti)=>{
+   const et=id+' tur'+(ti+1), c=r.ornekCevap||'';
+   if(r.kind==='yaz'||r.kind==='duzelt'){
+    if(!c)return kusur.push(et+': ornekCevap yok');
+    const eksik=(r.kind==='yaz'?olcutDurum(r,c)
+      :(r.denetim||[]).map(x=>({ad:x.ad,tam:new RegExp(x.desen,x.bayrak||'').test(kesmeDuz(c))})))
+      .filter(x=>!x.tam).map(x=>x.ad);
+    if(eksik.length)kusur.push(et+' ['+kelimeSay(c)+' sözcük]: '+eksik.join(' | '));
+    (r.yasak||[]).forEach(y=>{
+     if(sadelestir(c)===sadelestir(y)||sadelestir(c).includes(sadelestir(y)))
+      kusur.push(et+': ornekCevap yasak metni içeriyor')});
+    if(r.kind==='duzelt'&&r.sozcukKorunsun!==false&&sadelestir(c)!==sadelestir(r.hatali))
+     kusur.push(et+': sözcük kilidi ihlali');
+   }
+   if(r.kind==='yonerge')r.adimlar.forEach((a,ai)=>{
+    if(!new RegExp(a.desen,a.bayrak||'i').test(kesmeDuz(a.ornekCevap||'')))
+     kusur.push(et+' adım'+(ai+1)+': ornekCevap deseni geçmiyor')});
+   if(r.kind==='dikte')r.sozcukler.forEach(sz=>{
+    const havuz=sz.t.split('').concat(sz.celdirici||[]);
+    sz.t.split('').forEach(ch=>{if(havuz.indexOf(ch)<0)kusur.push(et+': harf havuzunda yok "'+ch+'"')})});
+  }));
+  return {oyun:Object.keys(GAMES).length,kusur};
+ }};
 
 /* ===== açılış ===== */
 game=GAMES[GAME_ID]||GAMES.z01;
