@@ -1669,6 +1669,199 @@ GAMES.u44={title:'Sözlük Kâşifi',theme:'class',finish:'Sözcükleri alfabeti
   result:'martı, masa, mavi, mektup, mum: hepsi "m" ile başlıyordu, sırayı ikinci ve üçüncü harfler belirledi.'}
 ]};
 
+/* ---- Tema 4 devamı · Okuma Serüvenimiz (u45–u52) ---- */
+const S5={
+ sessiz:'<div class="row"><span style="font-size:30px">🤫</span><span style="font-size:26px">📖</span></div><div class="caption">Sessiz okuma köşesi</div>',
+ oda:'<div class="row"><span style="font-size:26px">💡</span><span style="font-size:26px">🪑</span><span style="font-size:26px">🐛</span></div><div class="caption">Kitap kurdunun odası</div>',
+ tarayici:'<div class="row"><span style="font-size:30px">🛰️</span><span style="font-size:26px">🔍</span></div><div class="caption">Gerçeklik tarayıcısı</div>',
+ tiyatro:'<div class="row"><span style="font-size:28px">🎭</span><span style="font-size:26px">🎬</span></div><div class="caption">Tiyatro sahnesi</div>',
+ postane:'<div class="row"><span style="font-size:28px">🏤</span><span style="font-size:26px">✉️</span><span style="font-size:24px">🔖</span></div><div class="caption">Kısaltma postanesi</div>',
+ brosur:'<div class="row"><span style="font-size:28px">🗺️</span><span style="font-size:24px">🕐</span><span style="font-size:26px">🦁</span></div><div class="caption">Hayvanat bahçesi broşürü</div>',
+ editor:'<div class="row"><span style="font-size:28px">✍️</span><span style="font-size:26px">🖍️</span></div><div class="caption">Editör masası</div>',
+ tablet:'<div class="row"><span style="font-size:28px">📱</span><span style="font-size:26px">📚</span></div><div class="caption">Tablet ve basılı sözlük</div>'
+};
+
+GAMES.u45={title:'Sessiz Okuma Dedektifi',theme:'room',finish:'Sessiz okuduktan sonra açık bilgi, çıkarım ve ana fikri ayırdın ve okuma stratejini değerlendirdin.',rounds:[
+ {kind:'kanit',prompt:'Metni sessizce oku, sonra kanıtı işaretle.',sahne:S5.sessiz,
+  baslik:'Kısa metin',
+  metin:[['Elif kütüphaneye girdiğinde ',{t:'sesini alçalttı',dogru:true},'. ',{t:'Çantasını sıraya bıraktı'},' ve ',{t:'kitabını sessizce okumaya başladı'},'.']],
+  gerekKanit:1,soru:'Metinde AÇIKÇA yazan bilgi hangisi?',
+  secenekler:[{label:'Elif kütüphanede sesini alçalttı',correct:true},
+   {label:'Elif kütüphaneyi çok seviyor',hint:'Bu bir tahmin; metinde böyle bir cümle yok.'},
+   {label:'Elif her gün kütüphaneye gider'}],
+  result:'Açık bilgi metinde yazılı olandır; sevmek ya da her gün gitmek metinde yazmıyor.'},
+ {kind:'esle',prompt:'Soruları türlerine ayır.',sahne:S5.sessiz,
+  gorev:'Aynı metin için üç farklı soru türü var.',
+  etiketler:[{t:'Elif nereye girdi?'},{t:'Elif neden sesini alçalttı?'},{t:'Metin bize ne öğütlüyor?'}],
+  yuvalar:[{ad:'Açık bilgi sorusu',dogru:0},{ad:'Çıkarım sorusu',dogru:1},{ad:'Ana fikir sorusu',dogru:2}],
+  result:'Açık bilgi metinde yazar, çıkarım ipuçlarından bulunur, ana fikir metnin verdiği derstir.'},
+ {kind:'yaz',prompt:'Okuma stratejini değerlendir.',sahne:S5.sessiz,
+  gorev:'Alt alta iki satır yaz. Birinci satırda sessiz okurken ne yaptığını, ikinci satırda zorlandığın yeri yaz.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Okurken parmağımla satırı takip ettim.\nUzun cümlelerde zorlandım, onları ikinci kez okudum.',
+  ornekCevap:'Okurken parmağımla satırı takip ettim.\nUzun cümlelerde zorlandım, onları ikinci kez okudum.',
+  result:'Kendi okuma yöntemini ve zorlandığın yeri fark ettin.'}
+]};
+
+GAMES.u46={title:'Kitap Kurdunun Odası',theme:'room',finish:'Okuma ortamını ışık, ses ve oturuş bakımından düzenledin ve kendi okuma köşen için plan yazdın.',rounds:[
+ {kind:'esle',prompt:'Her ögeyi uygun seçenekle düzenle.',sahne:S5.oda,
+  gorev:'Kitap kurdunun odasını okumaya hazırla.',
+  etiketler:[{t:'pencereden gelen gündüz ışığı'},{t:'sessiz ortam'},{t:'sırtı dik sandalye'}],
+  yuvalar:[{ad:'Işık',dogru:0},{ad:'Ses',dogru:1},{ad:'Oturuş',dogru:2}],
+  result:'İyi bir okuma ortamı: yeterli ışık, sessizlik ve dik oturuş.'},
+ {kind:'kanit',prompt:'İki düzen de uygun görünüyor: hangisi daha iyi?',sahne:S5.oda,
+  baslik:'İki oda',
+  metin:[['Birinci oda: ',{t:'masa lambası açık'},', ',{t:'televizyon kapalı',dogru:true},'.'],
+   ['İkinci oda: masa lambası açık, ',{t:'televizyon sesi kısık ama açık'},'.']],
+  gerekKanit:1,soru:'Hangi oda okumak için daha uygun?',
+  secenekler:[{label:'Birinci oda',correct:true},
+   {label:'İkinci oda',hint:'Kısık da olsa açık bir ses dikkati böler.'},
+   {label:'İkisi de aynı'}],
+  result:'Işık ikisinde de yeterli; farkı sesin tamamen kapalı olması yarattı.'},
+ {kind:'yaz',prompt:'Kendi okuma köşen için plan yaz.',sahne:S5.oda,
+  gorev:'Alt alta üç madde yaz: ışık, ses ve oturuş için ne yapacağını söyle.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Masamı pencere kenarına çekeceğim.\nOkurken televizyonu kapatacağım.\nSandalyede dik oturacağım.',
+  ornekCevap:'Masamı pencere kenarına çekeceğim.\nOkurken televizyonu kapatacağım.\nSandalyede dik oturacağım.',
+  result:'Üç maddelik okuma köşesi planını kendin yazdın.'}
+]};
+
+GAMES.u47={title:'Gerçeklik Tarayıcısı',theme:'space',finish:'Gerçek, olası ve hayal ürünü bilgileri ayırdın ve kararını gerekçelendirdin.',rounds:[
+ {kind:'dinle',prompt:'Cümleyi dinle, sonra değerlendir.',sahne:S5.tarayici,
+  gorev:'Tarayıcıdan gelen kaydı dinle. Metin ekranda yazılı değil.',
+  ses:'Dünya, Güneş’in çevresinde döner.',
+  soru:'Bu bilgi hangisi?',
+  secenekler:[{label:'Gerçek (kanıtlanmış bilgi)',correct:true},
+   {label:'Hayal ürünü',hint:'Bir kez daha dinle: bu bilgi fen kitabında yazan bir gerçektir.'},
+   {label:'Sadece bir görüş'}],
+  result:'Dünya’nın Güneş çevresinde dönmesi gözlemle kanıtlanmış bir gerçektir.'},
+ {kind:'esle',prompt:'Üç ifadeyi kategorilere ayır.',sahne:S5.tarayici,
+  gorev:'Gerçek: kanıtlanmıştır. Olası: olabilir ama kesin değildir. Hayal ürünü: gerçekte olmaz.',
+  etiketler:[{t:'Su yüz derecede kaynar.'},{t:'Yarın hava yağmurlu olabilir.'},{t:'Kediler uçarak okula gider.'}],
+  yuvalar:[{ad:'Gerçek',dogru:0},{ad:'Olası',dogru:1},{ad:'Hayal ürünü',dogru:2}],
+  result:'Kanıtlanan gerçek, olabilecek olan olası, olamayacak olan hayal ürünüdür.'},
+ {kind:'yaz',prompt:'Neden gerçekçi olduğunu açıkla.',sahne:S5.tarayici,
+  gorev:'"Bitkiler büyümek için suya ihtiyaç duyar." bilgisinin neden gerçekçi olduğunu bir cümleyle yaz.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Bu bilgi gerçekçidir çünkü …',
+  ornekCevap:'Bu bilgi gerçekçidir çünkü sulamadığımız çiçeğin kuruduğunu kendim gördüm.',
+  bank:['gerçekçidir','çünkü','gözlemledim','kurudu','deneyde'],
+  result:'Kararını kendi gözlemine dayandırdın: gerçeklik kanıtla sınanır.'}
+]};
+
+GAMES.u48={title:'Tiyatro Sahnesi',theme:'class',finish:'Aynı cümlenin duyguya göre değişen beden dilini ayırdın ve seçtiğin duyguyla canlandırdın.',rounds:[
+ {kind:'esle',prompt:'Her duyguya uygun beden dilini seç.',sahne:S5.tiyatro,
+  gorev:'Cümle aynı: “Kapı açıldı.” Duygu değişince beden dili de değişir.',
+  etiketler:[{t:'Gözler büyür, eller havaya kalkar'},{t:'Omuzlar çekilir, geri adım atılır'},{t:'Kaşlar yukarı kalkar, ağız açılır'}],
+  yuvalar:[{ad:'Sevinç',dogru:0},{ad:'Korku',dogru:1},{ad:'Şaşkınlık',dogru:2}],
+  result:'Aynı sözcükler, farklı jest ve mimikle üç ayrı duyguyu anlatır.'},
+ {kind:'kanit',prompt:'Bu sahnede hangi duygu var?',sahne:S5.tiyatro,
+  baslik:'Sahne yönergesi',
+  metin:[['Oyuncu ',{t:'ellerini göğsüne bastırdı',dogru:true},', ',{t:'bir adım geri çekildi'},' ve ',{t:'sesi titredi',dogru:true},'.']],
+  gerekKanit:2,soru:'Oyuncu hangi duyguyu canlandırıyor?',
+  secenekler:[{label:'Korku',correct:true},{label:'Sevinç',hint:'Sevinçte beden geri çekilmez, sesi titremez.'},{label:'Öfke'}],
+  result:'Geri çekilme, elleri göğse bastırma ve titreyen ses korkuyu gösterir.'},
+ {kind:'konus',prompt:'Cümleyi seçtiğin duyguyla canlandır.',sahne:S5.tiyatro,
+  gorev:'"Kapı açıldı." cümlesini önce sevinçle, sonra korkuyla söyle. Yüz ifadeni ve ellerini de kullan.',
+  ornek:'Örnek: Sevinçle yüksek ve hızlı; korkuyla alçak, yavaş ve titrek bir sesle.',
+  olcutler:['Cümleyi iki farklı duyguyla söyledim.','Ses tonumu duyguya göre değiştirdim.','Yüz ifademi kullandım.','Ellerimi/bedenimi kullandım.'],
+  result:'Sesini, yüzünü ve bedenini duyguya göre birlikte kullandın.'}
+]};
+
+GAMES.u49={title:'Kısaltma Postanesi',theme:'city',finish:'Kısaltmaları tam adlarıyla eşleştirdin, noktalı ve noktasız olanları ayırdın ve cümlede kullandın.',rounds:[
+ {kind:'esle',prompt:'Her zarfa doğru damgayı bas.',sahne:S5.postane,
+  gorev:'Tam adı okuyup kısaltmasını seç.',
+  etiketler:[{t:'Dr.'},{t:'TBMM'},{t:'cm'}],
+  yuvalar:[{ad:'Doktor',dogru:0},{ad:'Türkiye Büyük Millet Meclisi',dogru:1},{ad:'santimetre',dogru:2}],
+  result:'Doktor → Dr., Türkiye Büyük Millet Meclisi → TBMM, santimetre → cm.'},
+ {kind:'esle',prompt:'Noktalı mı, noktasız mı?',sahne:S5.postane,
+  gorev:'Bazı kısaltmalar nokta alır, bazıları almaz.',
+  etiketler:[{t:'Dr. · Prof.'},{t:'TBMM · TRT'},{t:'cm · kg'}],
+  yuvalar:[{ad:'Unvan kısaltmaları: nokta alır',dogru:0},
+   {ad:'Kurum kısaltmaları: nokta almaz',dogru:1},
+   {ad:'Ölçü birimleri: nokta almaz',dogru:2}],
+  result:'Unvanlar nokta alır; kurum adları ve ölçü birimleri nokta almaz.'},
+ {kind:'yaz',prompt:'Üç kısaltmayı cümle içinde yaz.',sahne:S5.postane,
+  gorev:'Alt alta üç cümle yaz. Birinci cümlede Dr., ikincide cm, üçüncüde TBMM geçsin.',
+  enAzSatir:3,buyukHarf:true,gerekli:['Dr.','cm','TBMM'],
+  ipucuMetin:'Dr. Ayşe Hanım bizi muayene etti.\nKalemim 15 cm uzunluğunda.\nTBMM Ankara’da bulunur.',
+  ornekCevap:'Dr. Ayşe Hanım bizi muayene etti.\nKalemim 15 cm uzunluğunda.\nTBMM Ankara’da bulunur.',
+  result:'Üç kısaltmayı da kuralına uygun biçimde cümle içinde kullandın.'}
+]};
+
+GAMES.u50={title:'Broşür Dedektifi',theme:'city',finish:'Metin ile görselin birbirini tamamladığı ve çeliştiği yerleri ayırdın.',rounds:[
+ {kind:'esle',prompt:'Her cümleyi broşürün ilgili bölümüne bağla.',sahne:S5.brosur,
+  gorev:'Broşürde harita, ziyaret saatleri ve hayvan bilgisi bölümleri var.',
+  etiketler:[{t:'Aslanlar bölümü girişin solundadır.'},{t:'Hafta içi 09.00–17.00 arası açıktır.'},{t:'Zürafalar yaprak yer.'}],
+  yuvalar:[{ad:'Harita bölümü',dogru:0},{ad:'Saat bölümü',dogru:1},{ad:'Hayvan bilgisi bölümü',dogru:2}],
+  result:'Her bilgi broşürün kendi bölümüne aittir.'},
+ {kind:'kanit',prompt:'Metin ile görsel çelişiyor mu?',sahne:S5.brosur,
+  baslik:'Broşür sayfası',
+  metin:[['Metinde ',{t:'“Penguen gösterisi saat 14.00’te”',dogru:true},' yazıyor. Görselde ise ',{t:'saat 11.00’i gösteren bir tabela'},' var. Ayrıca ',{t:'penguen resmi'},' bulunuyor.']],
+  gerekKanit:1,soru:'Bu sayfada ne var?',
+  secenekler:[{label:'Metin ile görsel çelişiyor',correct:true},
+   {label:'Metin ile görsel birbirini tamamlıyor',hint:'İşaretlediğin saat ile tabeladaki saat aynı mı?'},
+   {label:'Görsel metni açıklıyor'}],
+  result:'İki farklı saat verilmiş: metinle görsel çelişiyor. Böyle durumda hangisinin doğru olduğu sorulmalı.'},
+ {kind:'yaz',prompt:'Broşürden iki bilgi yaz.',sahne:S5.brosur,
+  gorev:'Broşürden iki bilgi bul ve kendi cümlelerinle alt alta yaz.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Hayvanat bahçesi hafta içi saat dokuzda açılıyor.\nAslanlar bölümü girişin solunda bulunuyor.',
+  ornekCevap:'Hayvanat bahçesi hafta içi saat dokuzda açılıyor.\nAslanlar bölümü girişin solunda bulunuyor.',
+  result:'Broşürdeki bilgileri kendi cümlelerinle aktardın.'}
+]};
+
+GAMES.u51={title:'Editörün Kırmızı Kalemi',theme:'class',finish:'Yazım, büyük harf ve noktalama hatalarını ayrı ayrı buldun ve paragrafı bağımsız düzelttin.',rounds:[
+ {kind:'duzelt',prompt:'Cümledeki yazım hatalarını düzelt.',sahne:S5.editor,
+  gorev:'Doğru biçim sana verilmiyor; metni kendin düzenle.',
+  hatali:'yarın sabah okula gidicem ve arkadaşımla bulusacağım',
+  denetim:[{ad:'"gideceğim" doğru yazıldı',desen:'gideceğim'},
+   {ad:'"buluşacağım" doğru yazıldı',desen:'buluşacağım'},
+   {ad:'Cümle büyük harfle başlıyor',desen:'^Yarın'},
+   {ad:'Cümle nokta ile bitiyor',desen:'\\.\\s*$'}],
+  ornekCevap:'Yarın sabah okula gideceğim ve arkadaşımla buluşacağım.',
+  result:'"Gidicem" konuşma dilidir, yazıda "gideceğim" olur; "buluşacağım" ş ile yazılır.'},
+ {kind:'esle',prompt:'Her hatayı türüne ayır.',sahne:S5.editor,
+  gorev:'Editör üç renk kullanır: yazım, büyük harf, noktalama.',
+  etiketler:[{t:'yazım hatası'},{t:'büyük harf hatası'},{t:'noktalama hatası'}],
+  yuvalar:[{ad:'“gidicem” yazılmış',dogru:0},
+   {ad:'“ankara” küçük harfle yazılmış',dogru:1},
+   {ad:'Cümlenin sonunda nokta yok',dogru:2}],
+  result:'Yazım sözcüğün harflerini, büyük harf özel adları, noktalama cümlenin sonunu ilgilendirir.'},
+ {kind:'duzelt',prompt:'Paragrafın tamamını düzelt.',sahne:S5.editor,
+  gorev:'Üç tür hata da var: yazım, büyük harf ve noktalama. Hepsini bul ve düzelt.',
+  hatali:'dün ankara ya gittik  müzeyi gezdik çok güzeldi',
+  denetim:[{ad:'Cümle büyük harfle başlıyor',desen:'^Dün'},
+   {ad:'Ankara büyük harfle',desen:'Ankara'},
+   {ad:'“Ankara’ya” bitişik/kesmeli yazıldı',desen:'Ankara[’\']?ya'},
+   {ad:'En az iki nokta kullanıldı',desen:'\\.[\\s\\S]*\\.'}],
+  ornekCevap:'Dün Ankara’ya gittik. Müzeyi gezdik, çok güzeldi.',
+  result:'Cümle başı ve özel ad büyük harfle, cümle sonu noktayla yazılır; ek kesme işaretiyle ayrılır.'}
+]};
+
+GAMES.u52={title:'Tablet ve Kitap',theme:'room',finish:'İki kaynaktan da sözcük anlamı aradın, bağlama uyan anlamı seçtin ve kaynağını yazdın.',rounds:[
+ {kind:'esle',prompt:'Her kaynağı özelliğiyle eşle.',sahne:S5.tablet,
+  gorev:'Aynı sözcüğü iki kaynaktan da arayabilirsin.',
+  etiketler:[{t:'Arama kutusuna yazılır, hızlı bulunur'},{t:'Alfabetik sırayla sayfa çevrilir'}],
+  yuvalar:[{ad:'Tablet sözlüğü',dogru:0},{ad:'Basılı sözlük',dogru:1}],
+  result:'İki kaynak da doğru anlamı verir; arama biçimleri farklıdır.'},
+ {kind:'kanit',prompt:'Sözcüğün birden çok anlamı var: bağlama uyanı seç.',sahne:S5.tablet,
+  baslik:'Cümle ve sözlük',
+  metin:[['Cümle: Dedem ',{t:'bahçedeki yüzü suladı',dogru:true},'.'],
+   ['Sözlük: "yüz" 1) insanın ön kısmı 2) sayı 3) ',{t:'bahçede sebze ekilen alan'},'.']],
+  gerekKanit:1,soru:'Cümledeki "yüz" hangi anlamda?',
+  secenekler:[{label:'Bahçede sebze ekilen alan',correct:true},
+   {label:'İnsanın ön kısmı',hint:'İşaretlediğin bölüm sulama işinden söz ediyor.'},
+   {label:'Yüz sayısı'}],
+  result:'Sulanan bir şey bahçedeki alandır; aynı sözcüğün üç anlamından biri bağlama uydu.'},
+ {kind:'yaz',prompt:'Kaynağını, anlamı ve cümleni yaz.',sahne:S5.tablet,
+  gorev:'Alt alta üç satır yaz: hangi kaynağa baktın, bulduğun anlam ne, ve sözcüğü kullandığın kendi cümlen.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Kaynak: basılı sözlük\nAnlam: kumanya, yolculukta yenmek için hazırlanan yiyecek\nCümlem: Geziye giderken kumanyamızı çantaya koyduk.',
+  ornekCevap:'Kaynak: basılı sözlük\nAnlam: kumanya, yolculukta yenmek için hazırlanan yiyecek\nCümlem: Geziye giderken kumanyamızı çantaya koyduk.',
+  result:'Kaynağı, anlamı ve kendi cümleni birlikte kaydettin: araştırma böyle belgelenir.'}
+]};
+
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card">
  <div class="big">📖</div><h2>2. Sınıf Türkçe</h2>

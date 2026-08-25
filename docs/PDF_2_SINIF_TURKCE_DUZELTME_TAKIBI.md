@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 44/90 oyun uygulandı.**
+**Durum: 52/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -71,3 +71,11 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u42 | Orman Postacısı | yazma | Kısa mesaj kim-nerede-ne yaptı kartlarıyla genişletiliyor; 3. turda üç cümlelik posta yazılıyor. | Uygulamada |
 | u43 | Dinleyici Karşısında | konuşma | Göz teması, ses, sıra ve beden dili ayrı ölçüt; hangi kuralın bozulduğu metinden bulunuyor. 3. turda 30 saniyelik konuşma yapılıp rubrikle değerlendiriliyor. | Uygulamada |
 | u44 | Sözlük Kâşifi | yazma | Roket motoru kaldırıldı, sözcük kartları sözlük sayfasına diziliyor. 2. turda ilk harf aynıyken ikinci harfe bakılıyor; 3. turda beş sözcük bağımsız sıralanıyor. | Uygulamada |
+| u45 | Sessiz Okuma Dedektifi | okuma | Süre baskısı yok; anlam soruları sabit kartlarda. Açık bilgi / çıkarım / ana fikir soruları ayrıştırılıyor. 3. turda çocuk okuma stratejisini ve zorlandığı yeri yazıyor. | Uygulamada |
+| u46 | Kitap Kurdunun Odası | okuma | Balık ağı kaldırıldı; ışık, ses ve oturuş gerçek nesnelerle düzenleniyor. 2. turda iki uygun düzenden daha iyisi gerekçeyle seçiliyor; 3. turda üç maddelik plan yazılıyor. | Uygulamada |
+| u47 | Gerçeklik Tarayıcısı | dinleme | Cümle yalnız sesli veriliyor; gerçek / olası / hayal ürünü ayrı kategorilerde çalışılıyor. 3. turda gerekçe yazılıyor. | Uygulamada |
+| u48 | Tiyatro Sahnesi | konuşma | Meteor yerine karakterin yüzü ve bedeni; aynı cümlenin sevinç, korku ve şaşkınlık beden dili karşılaştırılıyor. 3. turda çocuk iki duyguyla canlandırıyor. | Uygulamada |
+| u49 | Kısaltma Postanesi | yazma | Tam ad ↔ kısaltma eşleşmesi; noktalı (unvan) ve noktasız (kurum, ölçü) kısaltmalar ayrılıyor. 3. turda üç kısaltma cümle içinde yazılıyor. | Uygulamada |
+| u50 | Broşür Dedektifi | okuma | Broşürün harita/saat/hayvan bölümleri aynı sayfada; metin ile görselin tamamlandığı ve ÇELİŞTİĞİ örnekler karşılaştırılıyor. 3. turda iki bilgi kendi cümlesiyle yazılıyor. | Uygulamada |
+| u51 | Editörün Kırmızı Kalemi | yazma | Doğru biçim otomatik gelmiyor; çocuk metni satır satır kendisi düzenliyor. Yazım / büyük harf / noktalama hataları ayrı türlere ayrılıyor; 3. turda paragrafın tamamı bağımsız düzeltiliyor. | Uygulamada |
+| u52 | Tablet ve Kitap | yazma | Tablet ve basılı sözlük iki gerçek kaynak; bir sözcüğün birden çok anlamından bağlama uyanı seçiliyor. 3. turda kaynak adı, anlam ve yeni cümle birlikte yazılıyor. | Uygulamada |

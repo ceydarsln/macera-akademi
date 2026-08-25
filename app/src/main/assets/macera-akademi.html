@@ -11931,7 +11931,7 @@ const HB2_ALAN2 = [
                {id:'m5', label:'⏸️ Tamamen durup kontrol et',      need:1}],
       speak:'Trafik işaretleri bizi korumak için vardır.'}},
 
-{id:'h10', grp:'Alan 2 · Sağlığım ve Güvenliğim', title:'Acil Çağrı Telefonu', sub:'112’yi tuşla', emo:'📞',
+{id:'h10', grp:'Alan 2 · Sağlığım ve Güvenliğim', title:'Acil Çağrı Telefonu', sub:'Yardımı doğru numaradan iste', emo:'📞',
  kaz:'HB.2.2.4 — Acil durumlarda yetkililerle etkili iletişim kurar.',
  type:'numPad',
  cfg:{instruction:'Acil durum telefonu elinde! Her durumda aranacak <b>tek numarayı</b> tuşla 📞<br><span style="font-size:12px">📏 Türkiye’de bütün acil durumlar için <b>tek numara</b> vardır.</span>',
@@ -20749,7 +20749,8 @@ function autoSpeak(game){
            PHASER_OYUNLAR[game.id] === 'matematik3-pdf' ||
            PHASER_OYUNLAR[game.id] === 'matematik4-pdf' ||
              PHASER_OYUNLAR[game.id] === 'sayma-pdf' ||
-             PHASER_OYUNLAR[game.id] === 'turkce2-pdf') text = '';
+             PHASER_OYUNLAR[game.id] === 'turkce2-pdf' ||
+             PHASER_OYUNLAR[game.id] === 'hayatbilgisi2-pdf') text = '';
   else if (phaserOyunuMu(game)) text = game.cfg.speak || game.cfg.instruction;
   else text = getCurrentPrompt(game);
   if(text && text !== gs.spokenKey){
@@ -21278,6 +21279,7 @@ const PHASER_OYUNLAR = {
   u21:'turkce2-pdf', u22:'turkce2-pdf', u23:'turkce2-pdf', u24:'turkce2-pdf', u25:'turkce2-pdf', u26:'turkce2-pdf', u27:'turkce2-pdf', u28:'turkce2-pdf',
   u29:'turkce2-pdf', u30:'turkce2-pdf', u31:'turkce2-pdf', u32:'turkce2-pdf', u33:'turkce2-pdf', u34:'turkce2-pdf', u35:'turkce2-pdf', u36:'turkce2-pdf',
   u37:'turkce2-pdf', u38:'turkce2-pdf', u39:'turkce2-pdf', u40:'turkce2-pdf', u41:'turkce2-pdf', u42:'turkce2-pdf', u43:'turkce2-pdf', u44:'turkce2-pdf',
+  u45:'turkce2-pdf', u46:'turkce2-pdf', u47:'turkce2-pdf', u48:'turkce2-pdf', u49:'turkce2-pdf', u50:'turkce2-pdf', u51:'turkce2-pdf', u52:'turkce2-pdf',
   s0:'sayma-pdf', s1:'sayma-pdf', s2:'sayma-pdf', s3:'sayma-pdf', s4:'sayma-pdf', s5:'sayma-pdf',
   s6:'sayma-pdf', s7:'sayma-pdf', s8:'sayma-pdf', s9:'sayma-pdf', s10:'sayma-pdf',
   n1:'sayma-pdf', n2:'sayma-pdf', n3:'sayma-pdf', n4:'sayma-pdf', n5:'sayma-pdf',
@@ -21301,6 +21303,19 @@ const PHASER_OYUNLAR = {
   p45:'matematik4-pdf', p46:'matematik4-pdf', p47:'matematik4-pdf', p48:'matematik4-pdf',
   p49:'matematik4-pdf', p50:'matematik4-pdf', p51:'matematik4-pdf', p52:'matematik4-pdf',
   p53:'matematik4-pdf', p54:'matematik4-pdf', p55:'matematik4-pdf', p56:'matematik4-pdf',
+  /* 2. sınıf hayat bilgisi PDF motoru — h01-h36.
+     Şartname: output/pdf/2_sinif_hayat_bilgisi_oyunlari_detayli_duzeltmeler.pdf
+     Bant, radar-kapsül, roket-yakıt, tren-tünel ve kronometre ortak
+     motorlarına düşmez; her oyun kendi konusunun gerçek sahnesinde. */
+  h01:'hayatbilgisi2-pdf', h02:'hayatbilgisi2-pdf', h03:'hayatbilgisi2-pdf', h04:'hayatbilgisi2-pdf',
+  h05:'hayatbilgisi2-pdf', h06:'hayatbilgisi2-pdf', h07:'hayatbilgisi2-pdf', h08:'hayatbilgisi2-pdf',
+  h09:'hayatbilgisi2-pdf', h10:'hayatbilgisi2-pdf', h11:'hayatbilgisi2-pdf', h12:'hayatbilgisi2-pdf',
+  h13:'hayatbilgisi2-pdf', h14:'hayatbilgisi2-pdf', h15:'hayatbilgisi2-pdf', h16:'hayatbilgisi2-pdf',
+  h17:'hayatbilgisi2-pdf', h18:'hayatbilgisi2-pdf', h19:'hayatbilgisi2-pdf', h20:'hayatbilgisi2-pdf',
+  h21:'hayatbilgisi2-pdf', h22:'hayatbilgisi2-pdf', h23:'hayatbilgisi2-pdf', h24:'hayatbilgisi2-pdf',
+  h25:'hayatbilgisi2-pdf', h26:'hayatbilgisi2-pdf', h27:'hayatbilgisi2-pdf', h28:'hayatbilgisi2-pdf',
+  h29:'hayatbilgisi2-pdf', h30:'hayatbilgisi2-pdf', h31:'hayatbilgisi2-pdf', h32:'hayatbilgisi2-pdf',
+  h33:'hayatbilgisi2-pdf', h34:'hayatbilgisi2-pdf', h35:'hayatbilgisi2-pdf', h36:'hayatbilgisi2-pdf',
 
   /* İki kullanıcı PDF'inde ayrıntılandırılan 49 matematik oyunu.
      Her biri üç turlu, hikâyeye özel sahneye gider; genel uzay/kepçe
