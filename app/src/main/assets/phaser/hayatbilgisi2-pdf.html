@@ -104,6 +104,14 @@ svg.sahne{width:min(330px,96%);height:auto;max-height:190px;display:block}
 .tus{min-height:52px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 4px 0 rgba(35,77,108,.2);font-size:22px;font-weight:950}
 .tus:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(35,77,108,.2)}
 .tus.genis{grid-column:span 3}
+/* çetele — beşinci çizgi dördünü keser; rakam sayacı değil */
+.cetele-tablo{width:min(330px,96%);display:flex;flex-direction:column;gap:6px}
+.cetele-satir{display:flex;align-items:center;gap:8px;min-height:52px;border:3px solid var(--line);border-radius:13px;background:#fff;padding:6px 9px;text-align:left}
+.cetele-satir .ad{flex:0 0 96px;font-size:12px;font-weight:950;line-height:1.15;overflow-wrap:break-word}
+.cetele-satir .isaret{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:26px}
+.cetele-satir.vurgu{border-color:var(--ok);background:#eaf8f1}
+.sik-tablo{width:min(330px,96%);display:flex;flex-direction:column;gap:4px}
+.sik-tablo div{display:flex;justify-content:space-between;gap:8px;background:#fff;border:2px solid var(--line);border-radius:10px;padding:5px 9px;font-size:13px;font-weight:900}
 /* afet çantası — seçilen malzeme çantaya gerçekten girer, doluluk görünür */
 .canta-kutu{width:min(320px,94%);min-height:84px;border:4px solid #8a5f38;border-radius:12px 12px 18px 18px;background:#e6d3ba;padding:8px;display:flex;flex-wrap:wrap;gap:4px;align-content:flex-start;justify-content:center}
 .canta-kutu .icerik{background:#fff;border:2px solid #b79f79;border-radius:9px;padding:3px 7px;font-size:12px;font-weight:900;line-height:1.15;max-width:150px;overflow-wrap:break-word}
@@ -339,7 +347,9 @@ function esleCiz(r){
   if(state.secEt!==r.yuvalar[i].dogru){
    state.not=r.yuvalar[i].hint||'Bu kart bu satıra ait değil. Ne işe yaradığını düşün.';
    state.secEt=null;esleCiz(r);return wrong(state.not)}
-  state.yerlesen[i]=state.secEt;state.secEt=null;state.not=r.yuvalar[i].neden||'';
+  state.yerlesen[i]=state.secEt;state.not=r.yuvalar[i].neden||'';
+  if(r.sesliSoyle)speak(r.etiketler[state.secEt].t);
+  state.secEt=null;
   esleCiz(r);
   if(state.yerlesen.every(v=>v!=null))good()})}
 function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secEt=null;state.not='';esleCiz(r)}
@@ -500,9 +510,41 @@ function cantaCiz(r){
   if(state.alinan.length>=r.gerekenSayi)good()})}
 function renderCanta(r){state.alinan=[];state.not='';cantaCiz(r)}
 
+/* ===== CETELE: rakam sayacı yok — işaretler çetele çizgisiyle birikir ve
+   beşinci çizgi dördünü keser. Yanıt cümlesi satır adını birebir söylemez. ===== */
+function ceteleSvg(n){
+ const tam=Math.floor(n/5),kalan=n%5,g=[];
+ const grup=(k,cizik)=>`<svg width="${k*7+(cizik?10:0)}" height="24" viewBox="0 0 ${k*7+(cizik?10:0)} 24">`+
+  Array.from({length:k},(_,i)=>`<line x1="${3+i*7}" y1="3" x2="${3+i*7}" y2="21" stroke="#2f5fa8" stroke-width="3" stroke-linecap="round"/>`).join('')+
+  (cizik?`<line x1="0" y1="20" x2="${k*7+6}" y2="4" stroke="#c8342b" stroke-width="3" stroke-linecap="round"/>`:'')+`</svg>`;
+ for(let i=0;i<tam;i++)g.push(grup(4,true));
+ if(kalan)g.push(grup(kalan,false));
+ return g.join('')||'<span style="font-size:12px;color:#8aa0b2">—</span>'}
+function ceteleCiz(r){
+ const i=state.ix||0,o=r.oylar[i],say=state.say||r.satirlar.map(()=>0);
+ $('#stage').innerHTML=sahneHtml(r)+
+  (o?`<div class="konus-balon">${esc(o.t)}</div>`:'')+
+  ilerleme(r.oylar.length,i)+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<div class="cetele-tablo">${r.satirlar.map((sa,j)=>
+    `<button class="cetele-satir ${state.sonSatir===j?'vurgu':''}" data-satir="${j}">`+
+    `<span class="ad">${esc(sa)}</span><span class="isaret">${ceteleSvg(say[j])}</span></button>`).join('')}</div>`+
+  `<div class="hint">${esc(r.ipucu||'Beşinci çizgi dördünü keser.')}</div>`;
+ $$('[data-satir]').forEach(b=>b.onclick=()=>{
+  if(locked||state.gecis||!o)return;
+  const j=+b.dataset.satir;
+  if(j!==o.dogru){state.not=o.hint||'Söylenene yeniden bak: hangi görevi anlatıyor?';
+   ceteleCiz(r);return wrong(state.not)}
+  state.say=say.slice();state.say[j]++;state.sonSatir=j;state.ix=i+1;state.not=o.neden||'';
+  if(state.ix>=r.oylar.length){ceteleCiz(r);return good()}
+  feedback('İşlendi');gecisBasla(()=>ceteleCiz(r),FAST?30:480)})}
+function renderCetele(r){state.ix=0;state.say=r.satirlar.map(()=>0);state.not='';state.sonSatir=null;ceteleCiz(r)}
+
 function renderRound(){const r=round();if(!r)return;
  const fn={karar:renderKarar,sinifla:renderSinif,sira:renderSira,esle:renderEsle,
-  yaz:renderYaz,konus:renderKonus,mesafe:renderMesafe,tus:renderTus,canta:renderCanta}[r.kind];
+  yaz:renderYaz,konus:renderKonus,mesafe:renderMesafe,tus:renderTus,canta:renderCanta,
+  cetele:renderCetele}[r.kind];
  (fn||renderKarar)(r)}
 
 const GAMES={};
@@ -919,6 +961,209 @@ GAMES.h12={title:'Afet Çantası',theme:'ev',
   ornek:'Örnek: Su alırım çünkü susuz kalınmaz. El feneri alırım çünkü elektrik kesilebilir. İlacımı alırım çünkü her gün kullanıyorum.',
   olcutler:['Üç malzeme söyledim.','Her biri için neden söyledim.','Anlaşılır konuştum.'],
   result:'Kendi çantanı gerekçeleriyle kurdun.'}
+]};
+
+/* ---- h13 Nezaket Sözleri (hafıza kartı yerine durum-söz eşlemesi) ---- */
+GAMES.h13={title:'Nezaket Sözleri',theme:'sehir',
+ finish:'Nezaket sözlerini gerçek durumlarla eşledin, bir durumda birden çok uygun söz olabileceğini gördün ve bir durumu canlandırıp kendin söyledin.',rounds:[
+ {kind:'esle',prompt:'Her durumda hangi söz söylenir?',sahne:SAHNE.sokak,sesliSoyle:true,
+  soru:'Önce alttan bir söz seç, sonra söyleneceği duruma dokun.',
+  ipucu:'Sözü seçince o durumda sesli söylenecek.',
+  yuvalar:[
+   {hedef:'Otobüste yaşlı bir teyze bindi, oturacak yer yok.',dogru:0,neden:'Yer vermek nezakettir.',hint:'Bu durumda önce bir şey teklif edilir.'},
+   {hedef:'Markette dar bir koridorda birinin önünden geçmen gerekiyor.',dogru:1,neden:'Geçerken izin istenir.',hint:'Birinin önünden geçerken izin istenir.'},
+   {hedef:'Komşunuz kapıya gelip sana pasta getirdi.',dogru:2,neden:'İkram edene teşekkür edilir.',hint:'Sana bir şey verildiğinde ne söylenir?'},
+   {hedef:'Sıradayken arkadaşının ayağına yanlışlıkla bastın.',dogru:3,neden:'Hata yapınca özür dilenir.',hint:'Yanlışlıkla da olsa birini incitince ne denir?'}],
+  etiketler:[{t:'Buyurun, siz oturun.'},{t:'Affedersiniz, geçebilir miyim?'},
+   {t:'Çok teşekkür ederim.'},{t:'Özür dilerim, istemeden oldu.'}]},
+ {kind:'karar',prompt:'Aynı durumda birden çok uygun söz olabilir.',sahne:SAHNE.sokak,
+  durum:'Arkadaşın sana kalemini ödünç verdi ve sen işini bitirdin.',
+  soru:'Kalemi geri verirken hangisi uygun olur?',
+  secenekler:[
+   {label:'"Teşekkür ederim, çok yardımı oldu."',correct:true},
+   {label:'"Sağ ol, iyi ki vardın."',correct:true},
+   {label:'Hiçbir şey söylemeden sıraya bırakmak',hint:'Yardım eden birine karşılık verilir.'}],
+  araSoz:'Doğru. İkisi de uygundu; peki ölçüt ne?',
+  neden:{soru:'Bir sözün nezakete uygun olduğunu nereden anlarsın?',secenekler:[
+   {label:'Karşımdakinin emeğini gördüğümü belli ediyorsa',correct:true},
+   {label:'Ezberlediğim kalıplardan biriyse',hint:'Nezaket ezber değil; duruma uyması gerekir.'},
+   {label:'Kısa bir söz ise',hint:'Uzunluk ölçüt değildir.'}]},
+  result:'Bir durumda birden çok uygun nezaket sözü bulunabilir; önemli olan karşındakini görmendir.'},
+ {kind:'konus',prompt:'Bir durumu canlandır ve sözü sen söyle.',sahne:SAHNE.sokak,
+  gorev:'Günlük hayatından bir durum seç, anlat ve o durumda söyleyeceğin nezaket sözünü kendi sesinle söyle.',
+  ornek:'Örnek: Kapıdan çıkarken arkamdan biri geliyordu. Kapıyı tuttum ve "buyurun, önce siz geçin" dedim.',
+  olcutler:['Bir durum anlattım.','Nezaket sözünü söyledim.','Anlaşılır ve içten konuştum.'],
+  result:'Bir durumu canlandırıp uygun sözü kendin söyledin.'}
+]};
+
+/* ---- h14 Görgü Kuralları (bant durduruldu: gerçek toplumsal ortamlar) ---- */
+GAMES.h14={title:'Görgü Kuralları',theme:'sehir',
+ finish:'Davranışların görgü kurallarına uygunluğunu ayırdın, kuralın ortama göre değişebildiğini gördün ve neden uyguladığını açıkladın.',rounds:[
+ {kind:'sinifla',prompt:'Bu davranış nezakete uygun mu?',sahne:SAHNE.sokak,
+  soru:'Bu davranış görgü kurallarına uyuyor mu?',kutular:['UYGUN','UYGUN DEĞİL'],
+  ipucu:'Kartın altında davranışın geçtiği ortam yazıyor.',
+  kartlar:[
+   {t:'Ağzı doluyken konuşmadan, yutkunup öyle konuşur.',sahne:'sofrada',dogru:0,neden:'Sofrada ağız dolu konuşulmaz.'},
+   {t:'Sıranın en önüne geçip "ben acelesiyim" der.',sahne:'markette sırada',dogru:1,neden:'Sıra beklemek herkes için geçerlidir.'},
+   {t:'Kapıyı çalıp beklemeden içeri girer.',sahne:'komşu ziyaretinde',dogru:1,neden:'İzin verilmeden girilmez.'},
+   {t:'Otobüste telefonunu kulaklıkla dinler.',sahne:'otobüste',dogru:0,neden:'Başkalarını rahatsız etmemek nezakettir.'},
+   {t:'Konuşan birinin sözünü keserek araya girer.',sahne:'sınıfta',dogru:1,neden:'Söz sırası beklenir.'},
+   {t:'Selam verip elini uzatan büyüğünün elini sıkar.',sahne:'ziyarette',dogru:0,neden:'Selamlaşmaya karşılık verilir.'}]},
+ {kind:'karar',prompt:'Aynı davranış, farklı ortam.',sahne:SAHNE.sokak,
+  durum:'Ayşe maçta arkadaşlarıyla yüksek sesle tezahürat yaptı. Ertesi gün kütüphanede de aynı sesle arkadaşına seslendi ve okuyanlar rahatsız oldu.',
+  soru:'Yüksek sesle konuşmak için ne söylenebilir?',
+  secenekler:[
+   {label:'Ortama göre uygun ya da uygunsuz olabilir',correct:true},
+   {label:'Her zaman uygunsuzdur',hint:'Maçta tezahürat kimseyi rahatsız etmedi.'},
+   {label:'Her zaman uygundur',hint:'Kütüphanede okuyanlar rahatsız oldu.'}],
+  araSoz:'Doğru. Peki ölçüt ne?',
+  neden:{soru:'Bir davranışın o ortama uyup uymadığını ne belirler?',secenekler:[
+   {label:'Çevredekileri rahatsız edip etmediği',correct:true},
+   {label:'Benim canımın istemesi',hint:'Görgü kuralları yalnız kendi isteğimize göre belirlenmez.'},
+   {label:'Ortamda kaç kişi olduğu',hint:'Kişi sayısı değil, etkilenme durumu ölçüttür.'}]},
+  result:'Görgü kuralları ortama göre değişir; ölçüt çevredekileri rahatsız etmemektir.'},
+ {kind:'konus',prompt:'Bir görgü kuralını neden uyguluyorsun?',sahne:SAHNE.sokak,
+  gorev:'Uyguladığın bir görgü kuralını söyle ve neden uyguladığını açıkla.',
+  ornek:'Örnek: Otobüste yaşlılara yer veriyorum çünkü ayakta durmak onlar için zor.',
+  olcutler:['Bir görgü kuralı söyledim.','Neden uyguladığımı açıkladım.','Anlaşılır konuştum.'],
+  result:'Bir kuralı ezberden değil, nedeniyle anlattın.'}
+]};
+
+/* ---- h15 Aile Cümlesi (kartlar küçük harfle; kalıp ele vermiyor) ---- */
+GAMES.h15={title:'Aile Cümlesi',theme:'ev',
+ finish:'Ailenin önemini anlatan cümleyi kurdun, ailenin farklı desteklerini ayırdın ve kendi ailenden bir örneği yazdın.',rounds:[
+ {kind:'sira',prompt:'Aile panosu için cümleyi sırayla kur.',sahne:SAHNE.ev,
+  gorev:'Kartlar küçük harfle geliyor; baş harf ve nokta senin kararın.',
+  kartlar:[{t:'ailem'},{t:'hastalandığımda'},{t:'bana'},{t:'bakar'}],
+  dogru:[0,1,2,3],
+  ipucular:['Cümle kimden söz ediyor?','Ne zaman olduğunu hangi kart söylüyor?','Kime yapılıyor?','Ne yapıyor?'],
+  ipucu:'Anlamlı bir cümle kurmaya çalış.',
+  result:'"Ailem hastalandığımda bana bakar." — ailenin bir işlevini anlattın.'},
+ {kind:'karar',prompt:'Ailenin desteği yalnız maddi değildir.',sahne:SAHNE.ev,
+  durum:'Deniz sınav sonucunu duyunca ağladı. Annesi yanına oturdu, dinledi ve "yanındayım, birlikte çalışırız" dedi. Deniz kendini daha iyi hissetti.',
+  soru:'Ailesi Deniz’e nasıl destek oldu?',
+  secenekler:[
+   {label:'Duygusal destek verdi',correct:true},
+   {label:'Maddi destek verdi',hint:'Para ya da eşya verilmedi; yanında olundu ve dinlendi.'},
+   {label:'Hiç destek olmadı',hint:'Deniz kendini daha iyi hissetti; destek işe yaradı.'}],
+  araSoz:'Doğru. Peki bu neden önemli?',
+  neden:{soru:'Ailenin duygusal desteği ne sağlar?',secenekler:[
+   {label:'Zorlukta yalnız olmadığımı hissettirir',correct:true},
+   {label:'Sınav sonucunu değiştirir',hint:'Sonuç değişmedi; değişen Deniz’in hissettiği oldu.'},
+   {label:'Ödevimi benim yerime yapar',hint:'Destek, işi yerine yapmak değildir.'}]},
+  result:'Aile yalnız maddi değil, duygusal olarak da destek olur.'},
+ {kind:'yaz',prompt:'Kendi ailenden bir örnek yaz.',sahne:SAHNE.ev,
+  gorev:'Ailenin sana destek olduğu bir anı bir cümleyle yaz ve nedenini "çünkü" ile açıkla.',
+  enAzKelime:7,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Ailem … çünkü …',
+  yasak:['Ailem hastalandığımda bana bakar çünkü beni seviyor.'],
+  ornekCevap:'Ailem ödevimi anlamadığımda bana yardım ediyor çünkü yalnız kalmamı istemiyor.',
+  result:'Ailenin önemini kendi örneğinle anlattın.'}
+]};
+
+/* ---- h16 Görev Panosu (hazır kart seçmek yerine gerçek sorumluluk kararı) ---- */
+GAMES.h16={title:'Görev Panosu',theme:'ev',
+ finish:'Kendi sorumluluğun olan işleri ayırdın, yaşına uygun olmayanı fark ettin ve bu hafta üstleneceğin görevi söyledin.',rounds:[
+ {kind:'sinifla',prompt:'Bu iş senin sorumluluğun mu?',sahne:SAHNE.ev,
+  soru:'Bu iş 2. sınıf bir öğrencinin sorumluluğu olabilir mi?',
+  kutular:['BENİM SORUMLULUĞUM','BANA GÖRE DEĞİL'],
+  ipucu:'Yapabileceğin ve güvenli olan işler senin sorumluluğundur.',
+  kartlar:[
+   {t:'Yatağımı toplamak',dogru:0,neden:'Kendi eşyanın düzeni senin sorumluluğundur.'},
+   {t:'Ocakta yemek pişirmek',dogru:1,neden:'Ateşle çalışmak bir yetişkinin işidir.'},
+   {t:'Çantamı akşamdan hazırlamak',dogru:0,neden:'Kendi okul hazırlığı senin işindir.'},
+   {t:'Elektrik prizini tamir etmek',dogru:1,neden:'Elektrik işi tehlikelidir, uzmanı yapar.'},
+   {t:'Sıramı ve sınıf panosunu düzenli tutmak',dogru:0,neden:'Ortak alanın düzeni de senin sorumluluğun.'},
+   {t:'Küçük kardeşimi tek başıma parka götürmek',dogru:1,neden:'Başkasının güvenliğinden bir çocuk tek başına sorumlu tutulamaz.'}]},
+ {kind:'karar',prompt:'Sorumluluk almak ile fazlasını üstlenmek aynı değil.',sahne:SAHNE.ev,
+  durum:'Kerem "ben büyüdüm" diyerek akşam yemeğini tek başına pişirmeye kalktı. Annesi evde değildi. Tencere devrildi ve Kerem elini yaktı.',
+  soru:'Kerem burada ne yapmalıydı?',
+  secenekler:[
+   {label:'Yapabileceği bir işi seçip yetişkinden yardım istemeliydi',correct:true},
+   {label:'Hiçbir sorumluluk almamalıydı',hint:'Sorumluluk almak iyidir; sorun işin yaşına uygun olmamasıydı.'},
+   {label:'Daha dikkatli davranıp yine tek başına pişirmeliydi',hint:'Dikkat, işi yaşına uygun hâle getirmez.'}],
+  araSoz:'Doğru. Peki nasıl karar verirsin?',
+  neden:{soru:'Bir işin sana uygun olup olmadığını ne belirler?',secenekler:[
+   {label:'Güvenli mi ve tek başıma yapabilir miyim',correct:true},
+   {label:'İstiyor muyum',hint:'İstemek tek başına yeterli ölçüt değildir.'},
+   {label:'Büyükler yapıyor mu',hint:'Büyüklerin yaptığı her iş çocuğa uygun olmaz.'}]},
+  result:'Sorumluluk, yapabileceğin ve güvenli olan işi üstlenmektir.'},
+ {kind:'konus',prompt:'Bu hafta hangi sorumluluğu üstleneceksin?',sahne:SAHNE.ev,
+  gorev:'Bu hafta evde ya da sınıfta üstleneceğin bir sorumluluğu söyle ve nasıl yapacağını anlat.',
+  ornek:'Örnek: Bu hafta her akşam çantamı ben hazırlayacağım. Yatmadan önce ders programına bakıp kitapları koyacağım.',
+  olcutler:['Bir sorumluluk seçtim.','Nasıl yapacağımı anlattım.','Anlaşılır konuştum.'],
+  result:'Üstleneceğin sorumluluğu ve nasıl yapacağını anlattın.'}
+]};
+
+/* ---- h17 Aile Desteği (genel "doğru cevabı yakala" yönergesi kaldırıldı) ---- */
+GAMES.h17={title:'Aile Desteği',theme:'ev',
+ finish:'Ailenin desteğini somut sahnelerden okudun, maddi ile duygusal desteği ayırdın ve kendi örneğini anlattın.',rounds:[
+ {kind:'karar',prompt:'Sahneye bak: ailenin hangi desteği görünüyor?',sahne:SAHNE.ev,
+  durum:'Elif okulda arkadaşıyla tartıştı, eve üzgün geldi. Babası oyunu durdurup yanına oturdu, olanları sonuna kadar dinledi ve "peki sen ne yapmak istersin?" diye sordu.',
+  soru:'Babası burada ne yaptı?',
+  secenekler:[
+   {label:'Dinledi ve Elif’in kendi çözümünü bulmasına yardım etti',correct:true},
+   {label:'Elif’in yerine sorunu çözdü',hint:'Baba çözümü söylemedi; Elif’e ne yapmak istediğini sordu.'},
+   {label:'Elif’i azarladı',hint:'Metinde azarlama yok; baba dinledi.'}],
+  ipucu:'Babanın ne yaptığına değil, nasıl yaptığına bak.',
+  result:'Aile, sorunu senin yerine çözmeden de destek olabilir.'},
+ {kind:'karar',prompt:'Destek yalnız para ve eşya değildir.',sahne:SAHNE.ev,
+  durum:'Bir ailede: anne her sabah kahvaltı hazırlıyor, abla ödevde takıldığında yardım ediyor, dede masal anlatıyor, baba maçta tribünden alkışlıyor.',
+  soru:'Bu ailede hangi destek türü var?',
+  secenekler:[
+   {label:'Hem günlük ihtiyaç hem duygusal destek',correct:true},
+   {label:'Yalnız günlük ihtiyaç desteği',hint:'Masal anlatmak ve alkışlamak ihtiyaç karşılamaz; iyi hissettirir.'},
+   {label:'Yalnız duygusal destek',hint:'Kahvaltı hazırlamak günlük bir ihtiyacı karşılar.'}],
+  araSoz:'Doğru. Peki hangisi olmasa da olur?',
+  neden:{soru:'Sence bir ailede bu desteklerden hangisi gereksizdir?',secenekler:[
+   {label:'Hiçbiri gereksiz değil, hepsi birlikte gerekir',correct:true},
+   {label:'Masal anlatmak gereksizdir',hint:'Duygusal destek de çocuğun gelişimi için gereklidir.'},
+   {label:'Alkışlamak gereksizdir',hint:'Desteklendiğini hissetmek çabayı sürdürmeyi sağlar.'}]},
+  result:'Ailenin desteği hem ihtiyaçları karşılamak hem de yanında olmaktır.'},
+ {kind:'konus',prompt:'Ailen sana nasıl destek oluyor?',sahne:SAHNE.ev,
+  gorev:'Ailenin sana destek olduğu bir örneği anlat ve bunun sana ne hissettirdiğini söyle.',
+  ornek:'Örnek: Şiir yarışmasına katılırken annem beni her akşam dinledi. Yalnız olmadığımı hissettim.',
+  olcutler:['Bir örnek anlattım.','Bana ne hissettirdiğini söyledim.','Anlaşılır konuştum.'],
+  result:'Ailenin desteğini kendi örneğinle anlattın.'}
+]};
+
+/* ---- h18 Görev Çetelesi (rakam sayacı yerine gerçek çetele, yorum adımı) ---- */
+GAMES.h18={title:'Görev Çetelesi',theme:'sinif',
+ finish:'Söyleneni doğru satıra çeteleyle işledin, çeteleyi sıklık tablosu gibi okudun ve sonucu yorumlayıp kendi görevini yazdın.',rounds:[
+ {kind:'cetele',prompt:'Arkadaşının söylediği görevi doğru satıra işle.',sahne:SAHNE.sinif,
+  soru:'Bu arkadaşın hangi görevi üstlenmiş?',
+  satirlar:['Tahta silme','Çiçek sulama','Kitaplık düzeni'],
+  ipucu:'Görev adı söylenmiyor; ne yaptığına bak. Beşinci çizgi dördünü keser.',
+  oylar:[
+   {t:'"Ders bitince yazıların hepsini temizliyorum."',dogru:0,neden:'Yazıları temizlemek tahta silmektir.'},
+   {t:'"Sabahları saksılara su veriyorum."',dogru:1,neden:'Saksıya su vermek çiçek sulamadır.'},
+   {t:'"Okunan kitapları raflara geri diziyorum."',dogru:2,neden:'Rafa dizmek kitaplık düzenidir.'},
+   {t:'"Kalan tebeşir izlerini siliyorum."',dogru:0,neden:'Tebeşir izi tahtada olur.'},
+   {t:'"Toprağı kuru olanlara su taşıyorum."',dogru:1,neden:'Toprağı sulamak çiçek işidir.'},
+   {t:'"Öğretmen yazacak diye yüzeyi hazırlıyorum."',dogru:0,neden:'Yazılacak yüzey tahtadır.'},
+   {t:'"Dağılan kitapları sırasına koyuyorum."',dogru:2,neden:'Kitapları sıraya koymak kitaplık işidir.'},
+   {t:'"Yaprakları tozlanınca siliyorum."',dogru:1,neden:'Yaprak bakımı çiçek görevidir.'},
+   {t:'"Dersten önce yüzeyi tamamen boş bırakıyorum."',dogru:0,neden:'Boş bırakılan yüzey tahtadır.'},
+   {t:'"Yeni gelen kitaplara yer açıyorum."',dogru:2,neden:'Rafta yer açmak kitaplık düzenidir.'}]},
+ {kind:'karar',prompt:'Çeteleyi tablo gibi oku.',sahne:SAHNE.sinif,
+  durum:'Sayım bitti — Tahta silme: 4 kişi, Çiçek sulama: 3 kişi, Kitaplık düzeni: 3 kişi.',
+  soru:'Bu tablodan hangisi çıkar?',
+  secenekler:[
+   {label:'En çok tahta silme seçilmiş, diğer ikisi eşit',correct:true},
+   {label:'Bütün görevler eşit seçilmiş',hint:'Tahta silme 4, diğerleri 3; eşit değil.'},
+   {label:'En az tahta silme seçilmiş',hint:'Tahta silme en yüksek sayıya sahip.'}],
+  araSoz:'Doğru. Peki fark ne kadar?',
+  neden:{soru:'En çok seçilen ile en az seçilen arasındaki fark kaç kişi?',secenekler:[
+   {label:'1 kişi',correct:true},
+   {label:'3 kişi',hint:'4 ile 3 arasındaki farka bak.'},
+   {label:'4 kişi',hint:'Fark, en büyük sayıdan en küçüğü çıkararak bulunur.'}]},
+  result:'Çetele bir sıklık tablosudur: en çok, en az ve aradaki fark okunabilir.'},
+ {kind:'yaz',prompt:'Kendi görevini ekle ve sonucu yorumla.',sahne:SAHNE.sinif,
+  gorev:'Sınıfta üstlendiğin ya da üstlenmek istediğin görevi yaz ve tabloya bakınca ne düşündüğünü "çünkü" ile açıkla.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Ben … görevini seçerim çünkü …',
+  ornekCevap:'Ben kitaplık düzeni görevini seçerim çünkü o satırda daha az arkadaşım var.',
+  result:'Kendi görevini ekledin ve tablodaki sonucu gerekçeyle yorumladın.'}
 ]};
 
 /* ===== açılış ===== */
