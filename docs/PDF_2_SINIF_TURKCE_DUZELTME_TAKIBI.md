@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 36/90 oyun uygulandı.**
+**Durum: 44/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -63,3 +63,11 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u34 | İklim Makinesi | okuma | Etiket köprüsü yerine neden-sonuç kabloları; 2. turda tek nedenin iki sonucu gösteriliyor. 3. turda çocuk kendi gözlemini neden-sonuç cümlesine çeviriyor. | Uygulamada |
 | u35 | Bukalemunun Şiiri | yazma | Benzeyen ve benzetilen metinde işaretleniyor; uygun/uygunsuz benzetme karşılaştırılıyor. 3. turda çocuk özgün benzetme dizesi yazıyor. | Uygulamada |
 | u36 | Kayıp İzci | yazma | Hareketli uzay hedefleri kaldırıldı; izci günlüğünde bağlam ipucu işaretleniyor. Aynı sözcük iki doğa cümlesinde inceleniyor; 3. turda tahmin-sözlük-yeni cümle döngüsü bağımsız tamamlanıyor. | Uygulamada |
+| u37 | Doğa Fotoğrafçısı | yazma | Cümleler balık değil fotoğraf alt yazısı kartı; olay/yer/ayrıntı ayrıştırılıyor. 3. turda başlık + bağlantılı iki cümle yazılıyor. | Uygulamada |
+| u38 | Bilmece Kutusu | okuma | Konu seçenekleri ancak iki görsel ipucu işaretlenince açılıyor; aynı başlığa uyan iki kapaktan güçlü olan kanıtla seçiliyor. 3. turda yeni başlık için tahmin cümlesi yazılıyor. | Uygulamada |
+| u39 | Fikir Terazisi | okuma | Katılıyorum/katılmıyorum kefeleri gerekçe taşıyor; güçlü ve zayıf gerekçe karşılaştırılıyor. 3. turda karar tam cümleyle gerekçelendiriliyor. | Uygulamada |
+| u40 | Hata Avcısı Papağan | konuşma | Dört okuyuş yalnız sesle ayırt ediliyor (yazılı etiket cevabı vermiyor); hız, ses ve anlaşılırlık ayrı ölçüt. 3. turda çocuk aynı cümleyi okuyup öz düzeltme yapıyor. | Uygulamada |
+| u41 | Sınıflandırma Fabrikası | okuma | Nesneler sabit karar noktalarında; metindeki nesne ile kutu rengi tutarlı. 2. turda malzeme yerine amaç ölçütü kullanılıyor. 3. turda üç yeni nesne gerekçesiyle yazılıyor. | Uygulamada |
+| u42 | Orman Postacısı | yazma | Kısa mesaj kim-nerede-ne yaptı kartlarıyla genişletiliyor; 3. turda üç cümlelik posta yazılıyor. | Uygulamada |
+| u43 | Dinleyici Karşısında | konuşma | Göz teması, ses, sıra ve beden dili ayrı ölçüt; hangi kuralın bozulduğu metinden bulunuyor. 3. turda 30 saniyelik konuşma yapılıp rubrikle değerlendiriliyor. | Uygulamada |
+| u44 | Sözlük Kâşifi | yazma | Roket motoru kaldırıldı, sözcük kartları sözlük sayfasına diziliyor. 2. turda ilk harf aynıyken ikinci harfe bakılıyor; 3. turda beş sözcük bağımsız sıralanıyor. | Uygulamada |

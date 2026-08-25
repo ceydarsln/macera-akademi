@@ -1473,6 +1473,202 @@ GAMES.u36={title:'Kayıp İzci',theme:'garden',finish:'Bağlamdan anlam çıkarm
   result:'Tahmin, sözlük ve kendi cümlen: döngüyü bağımsız tamamladın.'}
 ]};
 
+/* ---- Tema 4 · Okuma Serüvenimiz (u37–u44) ---- */
+const S4={
+ foto:'<div class="row"><span style="font-size:30px">📷</span><span style="font-size:26px">🏞️</span></div><div class="caption">Fotoğraf kadrajı</div>',
+ kutu:'<div class="row"><span style="font-size:30px">🎁</span><span style="font-size:26px">📕</span></div><div class="caption">Bilmece kutusu</div>',
+ terazi:'<div class="row"><span style="font-size:32px">⚖️</span></div><div class="caption">Fikir terazisi</div>',
+ papagan:'<div class="row"><span style="font-size:30px">🦜</span><span style="font-size:26px">🎧</span></div><div class="caption">Papağan stüdyosu</div>',
+ fabrika:'<div class="row"><span style="font-size:26px">♻️</span><span style="font-size:26px">🏭</span><span style="font-size:24px">🗑️</span></div><div class="caption">Geri dönüşüm fabrikası</div>',
+ postaci:'<div class="row"><span style="font-size:28px">🦉</span><span style="font-size:26px">✉️</span><span style="font-size:24px">📮</span></div><div class="caption">Orman postacısı</div>',
+ dinleyici:'<div class="row"><span style="font-size:28px">🐻</span><span style="font-size:24px">🎤</span><span style="font-size:26px">🐰</span><span style="font-size:26px">🦊</span></div><div class="caption">Konuşmacı ve dinleyiciler</div>',
+ sozluk:'<div class="row"><span style="font-size:30px">📔</span><span style="font-size:24px">🔖</span></div><div class="caption">Sözlük sayfası</div>'
+};
+
+GAMES.u37={title:'Doğa Fotoğrafçısı',theme:'garden',finish:'Fotoğrafı olay, yer ve ayrıntı olarak anlattın; sonra başlıklı iki cümlelik alt yazını yazdın.',rounds:[
+ {kind:'kanit',prompt:'Fotoğraftaki ayrıntıyı işaretle, sonra alt yazıyı seç.',sahne:S4.foto,
+  baslik:'Fotoğrafın anlatımı',
+  metin:[['Kadrajda ',{t:'bir sincap kozalağı kemiriyor',dogru:true},'; arkada ',{t:'çam ağaçları'},' var. ',{t:'Yerde kar izleri görünüyor'},'.']],
+  gerekKanit:1,soru:'Fotoğrafın alt yazısı hangisi olabilir?',
+  secenekler:[{label:'Sincap kış hazırlığı için kozalak kemiriyor.',correct:true},
+   {label:'Denizde balıklar yüzüyor.',hint:'İşaretlediğin ayrıntı fotoğrafta ne olduğunu söylüyor.'},
+   {label:'Çocuklar sınıfta ders çalışıyor.'}],
+  result:'Alt yazı, fotoğrafta gerçekten görüneni anlatır.'},
+ {kind:'esle',prompt:'Cümleleri olay, yer ve ayrıntıya ayır.',sahne:S4.foto,
+  gorev:'Üç cümle de fotoğrafı anlatıyor ama farklı şeyleri söylüyor.',
+  etiketler:[{t:'Sincap kozalak kemiriyor.'},{t:'Çam ormanının içinde.'},{t:'Kuyruğu kabarık ve kızıl.'}],
+  yuvalar:[{ad:'Olay (ne oluyor?)',dogru:0},{ad:'Yer (nerede?)',dogru:1},{ad:'Ayrıntı (nasıl?)',dogru:2}],
+  result:'İyi bir anlatımda olay, yer ve ayrıntı birlikte bulunur.'},
+ {kind:'yaz',prompt:'Fotoğrafa başlık ve iki cümle yaz.',sahne:S4.foto,
+  gorev:'İlk satıra kısa bir başlık yaz. Alt satırlara fotoğrafı anlatan, birbirine bağlı iki cümle yaz.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Kış Hazırlığı\nSincap çam ormanında bir kozalak buldu.\nKışın acıkmamak için onu ağaç kovuğuna saklayacak.',
+  ornekCevap:'Kış Hazırlığı\nSincap çam ormanında bir kozalak buldu.\nKışın acıkmamak için onu ağaç kovuğuna saklayacak.',
+  result:'Başlık ve birbirine bağlı iki cümleyle fotoğrafı anlattın.'}
+]};
+
+GAMES.u38={title:'Bilmece Kutusu',theme:'room',finish:'Başlık ile kapağı birlikte okudun ve tahminini kanıta dayandırdın.',rounds:[
+ {kind:'kanit',prompt:'İki görsel ipucunu işaretle, sonra konuyu seç.',sahne:S4.kutu,
+  baslik:'Kapak: “Gece Bekçisi”',
+  metin:[['Kapakta ',{t:'iri gözlü bir baykuş',dogru:true},' ve ',{t:'ay ışığında bir orman',dogru:true},' var. Sağ altta ',{t:'küçük bir yayınevi damgası'},' duruyor.']],
+  gerekKanit:2,soru:'Kitap ne anlatıyor olabilir?',
+  secenekler:[{label:'Geceleri uyanık olan orman hayvanları',correct:true},
+   {label:'Deniz altındaki balıklar',hint:'İşaretlediğin ipuçları ormanı ve geceyi gösteriyor.'},
+   {label:'Uzay yolculuğu'}],
+  result:'Baykuş ve ay ışığı birlikte gece ormanını gösteriyor; damga yalnızca bir ayrıntı.'},
+ {kind:'kanit',prompt:'Aynı başlığa iki kapak: hangisi daha güçlü?',sahne:S4.kutu,
+  baslik:'Başlık: “Küçük Kâşif”',
+  metin:[['Birinci kapakta ',{t:'sırt çantalı, haritalı bir çocuk',dogru:true},' var.'],
+   ['İkinci kapakta ',{t:'masada oturan bir çocuk'},' ve ',{t:'bir bardak süt'},' var.']],
+  gerekKanit:1,soru:'Başlığa hangi kapak daha güçlü uyuyor?',
+  secenekler:[{label:'Birinci kapak',correct:true},
+   {label:'İkinci kapak',hint:'Kâşif keşfe çıkar; harita ve sırt çantası bunu gösterir.'},
+   {label:'İkisi de aynı derecede'}],
+  result:'Harita ve sırt çantası keşfi doğrudan gösteriyor; masada süt içmek başlıkla bağ kurmuyor.'},
+ {kind:'yaz',prompt:'Yeni başlık için tahminini yaz.',sahne:S4.kutu,
+  gorev:'Başlık: “Kayıp Anahtar”. Kapağa ne çizerdin ve kitap ne anlatıyor olabilir? Tahminini bir cümleyle yaz, kanıtını söyle.',
+  enAzKelime:9,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Bence kitap … anlatıyor çünkü kapakta … olurdu.',
+  ornekCevap:'Bence kitap kaybolan bir anahtarı arayan çocukları anlatıyor çünkü kapakta eski bir kapı olurdu.',
+  bank:['Bence','çünkü','kapakta','anahtar','arıyor'],
+  result:'Tahminini kapağa çizeceğin kanıtla birlikte açıkladın.'}
+]};
+
+GAMES.u39={title:'Fikir Terazisi',theme:'class',finish:'Katılma kararını güçlü gerekçeyle desteklemeyi öğrendin ve kararını tam cümleyle yazdın.',rounds:[
+ {kind:'esle',prompt:'Gerekçeleri doğru kefeye koy.',sahne:S4.terazi,
+  gorev:'Görüş: “Her gün kitap okumak iyidir.”',
+  etiketler:[{t:'Yeni sözcükler öğreniriz.'},{t:'Bazen çok yorucu olabilir.'}],
+  yuvalar:[{ad:'Katılıyorum kefesi',dogru:0},{ad:'Katılmıyorum kefesi',dogru:1}],
+  result:'Aynı görüş için hem destekleyen hem karşı gerekçe bulunabilir.'},
+ {kind:'kanit',prompt:'Güçlü gerekçe hangisi?',sahne:S4.terazi,
+  baslik:'İki gerekçe',
+  metin:[['Birinci gerekçe: ',{t:'Kitap okuyunca kelime dağarcığımız genişler',dogru:true},'.'],
+   ['İkinci gerekçe: ',{t:'Kitapların kapağı renkli olur'},'.']],
+  gerekKanit:1,soru:'Hangisi görüşü daha güçlü destekler?',
+  secenekler:[{label:'Birinci gerekçe',correct:true},
+   {label:'İkinci gerekçe',hint:'Kapağın renkli olması okumanın yararıyla ilgili değil.'},
+   {label:'İkisi de aynı güçte'}],
+  result:'Güçlü gerekçe görüşün konusuyla doğrudan bağ kurar; kapak rengi konu dışıdır.'},
+ {kind:'yaz',prompt:'Kararını ve nedenini yaz.',sahne:S4.terazi,
+  gorev:'"Her gün kitap okumak iyidir." görüşüne katılıyor musun? Kararını ve nedenini tam bir cümleyle yaz.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Bu görüşe katılıyorum çünkü …',
+  ornekCevap:'Bu görüşe katılıyorum çünkü her gün okuyunca yeni sözcükler öğreniyorum.',
+  bank:['katılıyorum','katılmıyorum','çünkü','öğreniyorum'],
+  result:'Kararını nedeniyle birlikte söyledin: terazi gerekçeyle dengelenir.'}
+]};
+
+GAMES.u40={title:'Hata Avcısı Papağan',theme:'class',finish:'Hız, ses ve anlaşılırlığı ayrı ayrı değerlendirdin ve kendi okuyuşunu düzelttin.',rounds:[
+ {kind:'dinle',prompt:'Dört okuyuşu dinle, uygunu seç.',sahne:S4.papagan,
+  gorev:'Papağan aynı cümleyi dört kez okuyor. Metin ekranda yazılı değil.',
+  ses:'Birinci: çok yavaş… bu… ki tap… çok… gü zel. İkinci: çokhızlıbukitapçokgüzel. Üçüncü: bu kitap… ııı… çok… ııı güzel. Dördüncü: Bu kitap çok güzel.',
+  soru:'Hangi okuyuş uygundur?',
+  secenekler:[{label:'Dördüncü okuyuş',correct:true},
+   {label:'İkinci okuyuş',hint:'Bir kez daha dinle: sözcükler birbirine girmişti.'},
+   {label:'Üçüncü okuyuş'}],
+  result:'Uygun okuyuş ne çok yavaş, ne çok hızlı, ne de duraksamalıdır.'},
+ {kind:'esle',prompt:'Her kusuru doğru ölçütle eşle.',sahne:S4.papagan,
+  gorev:'Papağanın üç hatası vardı. Hangisi hangi ölçütle ilgili?',
+  etiketler:[{t:'Hız'},{t:'Ses yüksekliği'},{t:'Anlaşılırlık'}],
+  yuvalar:[{ad:'Sözcükleri birbirine yapıştırarak okudu',dogru:0},
+   {ad:'Arka sıradakiler duyamadı',dogru:1},
+   {ad:'Sözcükleri yutarak söyledi',dogru:2}],
+  result:'Hız, ses yüksekliği ve anlaşılırlık ayrı ölçütlerdir; biri düzelince diğeri kendiliğinden düzelmez.'},
+ {kind:'konus',prompt:'Aynı cümleyi sen oku ve kendini düzelt.',sahne:S4.papagan,
+  gorev:'"Bu kitap çok güzel, herkese öneririm." cümlesini papağandan daha iyi oku.',
+  ornek:'Örnek: Orta hızda, arka sıranın duyacağı sesle ve sözcükleri yutmadan.',
+  olcutler:['Papağandan daha uygun hızda okudum.','Arka sıranın duyacağı sesle okudum.','Sözcükleri yutmadan söyledim.','Cümlenin sonunda sesimi indirdim.'],
+  result:'Kendi okuyuşunu papağanınkiyle karşılaştırıp düzelttin.'}
+]};
+
+GAMES.u41={title:'Sınıflandırma Fabrikası',theme:'factory',finish:'Nesneleri malzemesine göre ayırdın, sonra amaca göre yeniden sınıfladın.',rounds:[
+ {kind:'esle',prompt:'Her nesneyi doğru kutuya gönder.',sahne:S4.fabrika,
+  gorev:'Metin: “Masada bir gazete, boş bir su şişesi ve kırık bir cam kavanoz vardı.”',
+  etiketler:[{t:'gazete'},{t:'su şişesi'},{t:'cam kavanoz'}],
+  yuvalar:[{ad:'Mavi kutu · kâğıt',dogru:0},{ad:'Sarı kutu · plastik',dogru:1},{ad:'Yeşil kutu · cam',dogru:2}],
+  result:'Geri dönüşümde nesneler yapıldıkları malzemeye göre ayrılır.'},
+ {kind:'esle',prompt:'Bu kez ölçüt değişti: amaç.',sahne:S4.fabrika,
+  gorev:'Aynı nesneler, farklı soru: bu nesne yeniden kullanılabilir mi, atık mı?',
+  etiketler:[{t:'temiz cam kavanoz'},{t:'kırık cam parçası'}],
+  yuvalar:[{ad:'Yeniden kullanılabilir',dogru:0,ipucu:'Hangisi yıkanıp yeniden kullanılabilir?'},
+   {ad:'Atık (geri dönüşüme gider)',dogru:1}],
+  result:'Aynı malzeme, duruma göre yeniden kullanılabilir ya da atık olabilir. Ölçüt değişince sınıf da değişir.'},
+ {kind:'yaz',prompt:'Üç yeni nesne ekle ve gerekçelendir.',sahne:S4.fabrika,
+  gorev:'Alt alta üç satır yaz. Her satırda bir nesne, kutusu ve nedeni olsun.',
+  enAzSatir:3,buyukHarf:true,gerekli:['çünkü'],
+  ipucuMetin:'Karton kutu mavi kutuya gider çünkü kâğıttan yapılmıştır.\nYoğurt kabı sarı kutuya gider çünkü plastiktir.\nReçel kavanozu yeşil kutuya gider çünkü camdır.',
+  ornekCevap:'Karton kutu mavi kutuya gider çünkü kâğıttan yapılmıştır.\nYoğurt kabı sarı kutuya gider çünkü plastiktir.\nReçel kavanozu yeşil kutuya gider çünkü camdır.',
+  result:'Üç nesneyi de malzemesine göre sınıflandırıp gerekçelendirdin.'}
+]};
+
+GAMES.u42={title:'Orman Postacısı',theme:'garden',finish:'Kısa mesajı kim-nerede-ne yaptı ayrıntılarıyla genişletip üç cümlelik posta yazdın.',rounds:[
+ {kind:'esle',prompt:'Mesajı genişleten ayrıntıyı bul.',sahne:S4.postaci,
+  gorev:'Kısa mesaj: “Geldim.” Hangi ayrıntı hangi soruyu yanıtlıyor?',
+  etiketler:[{t:'Ben, tilki Fındık'},{t:'kovuğun önüne'},{t:'bal kavanozunu bıraktım'}],
+  yuvalar:[{ad:'Kim?',dogru:0},{ad:'Nerede?',dogru:1},{ad:'Ne yaptı?',dogru:2}],
+  result:'"Geldim." tek başına yetmez; kim, nerede ve ne yaptığı eklenince mesaj anlaşılır olur.'},
+ {kind:'kanit',prompt:'Tek cümleyi iki bağlantılı cümleye çevir.',sahne:S4.postaci,
+  baslik:'Mesaj taslağı',
+  metin:[['Kısa hâli: ',{t:'Kapıya bıraktım'},'. Genişletilmiş hâli: ',{t:'Bal kavanozunu kovuğun önüne bıraktım',dogru:true},'; ',{t:'akşam olmadan alırsan bozulmaz'},'.']],
+  gerekKanit:1,soru:'Genişletilmiş mesaj neden daha iyi?',
+  secenekler:[{label:'Ne bırakıldığı ve nereye bırakıldığı açık',correct:true},
+   {label:'Daha uzun olduğu için',hint:'Uzunluk tek başına yetmez; bilgi eklenmiş olması gerekir.'},
+   {label:'Daha kibar olduğu için'}],
+  result:'İyi bir mesaj uzun değil, eksiksiz olandır: ne, nereye, ne zaman.'},
+ {kind:'yaz',prompt:'Kısa mesajı üç cümleye genişlet.',sahne:S4.postaci,
+  gorev:'"Yarın geliyorum." mesajını üç cümle olarak yaz: kim geliyor, nereye/ne zaman geliyor ve ne yapacak.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Ben tavşan Pamuk, yarın sabah size geliyorum.\nDere kenarındaki kovuğunuza uğrayacağım.\nBirlikte havuç toplayalım diye sepet getireceğim.',
+  ornekCevap:'Ben tavşan Pamuk, yarın sabah size geliyorum.\nDere kenarındaki kovuğunuza uğrayacağım.\nBirlikte havuç toplayalım diye sepet getireceğim.',
+  result:'Kısa mesajı kim-nerede-ne yaptı bilgileriyle üç cümleye genişlettin.'}
+]};
+
+GAMES.u43={title:'Dinleyici Karşısında',theme:'class',finish:'Konuşma kurallarını tek tek ayırdın ve kısa bir konuşma yapıp kendini değerlendirdin.',rounds:[
+ {kind:'esle',prompt:'Her davranışı doğru ölçütle eşle.',sahne:S4.dinleyici,
+  gorev:'Konuşmacı ayı sahnede; dinleyiciler tavşan ve tilki.',
+  etiketler:[{t:'Göz teması'},{t:'Ses yüksekliği'},{t:'Sıra'},{t:'Beden dili'}],
+  yuvalar:[{ad:'Dinleyicilere bakarak konuşmak',dogru:0},
+   {ad:'Arka sıranın duyacağı gibi konuşmak',dogru:1},
+   {ad:'Arkadaşının sözünü kesmemek',dogru:2},
+   {ad:'Ellerini cebinden çıkarıp dik durmak',dogru:3}],
+  result:'İyi bir konuşma göz teması, uygun ses, sıraya uyma ve beden dilinden oluşur.'},
+ {kind:'kanit',prompt:'Hangi davranış hangi kuralı bozuyor?',sahne:S4.dinleyici,
+  baslik:'Sınıfta konuşma',
+  metin:[['Ayı konuşurken ',{t:'sürekli tahtaya baktı',dogru:true},'. ',{t:'Sesi arka sıradan duyuluyordu'},' ve ',{t:'sırasını bekledi'},'.']],
+  gerekKanit:1,soru:'Ayı hangi kuralı yerine getirmedi?',
+  secenekler:[{label:'Göz teması kurmadı',correct:true},
+   {label:'Sesi çok kısıktı',hint:'Metin sesinin arka sıradan duyulduğunu söylüyor.'},
+   {label:'Sırasını beklemedi'}],
+  result:'Diğer ikisi tamamdı; eksik olan dinleyicilerle göz temasıydı.'},
+ {kind:'konus',prompt:'Kısa bir konuşma yap.',sahne:S4.dinleyici,
+  gorev:'En sevdiğin kitabı ya da oyunu sınıfa 30 saniye anlat. Dinleyicilere bakarak, duyulacak sesle konuş.',
+  ornek:'Örnek: “Merhaba arkadaşlar. Size en sevdiğim kitabı anlatmak istiyorum. Adı … ve konusu …”',
+  olcutler:['Dinleyicilere bakarak konuştum.','Arka sıranın duyacağı sesle konuştum.','Sözcükleri yutmadan, anlaşılır konuştum.','Konudan sapmadan anlattım.'],
+  result:'Göz teması, ses, anlaşılırlık ve konu bütünlüğü: dördünü birlikte uyguladın.'}
+]};
+
+GAMES.u44={title:'Sözlük Kâşifi',theme:'class',finish:'Sözcükleri alfabetik sıraya dizdin; ilk harf aynı olduğunda ikinci harfe baktın.',rounds:[
+ {kind:'sira',prompt:'Sözcükleri sözlük sırasına diz.',sahne:S4.sozluk,
+  gorev:'Alfabede önce gelen sözcük sözlükte de önce gelir.',
+  kartlar:[{t:'kalem'},{t:'armut'},{t:'zeytin'},{t:'defter'}],
+  dogru:[1,3,0,2],
+  ipucular:['Alfabede en önce gelen harf hangisi?','A’dan sonra hangisi geliyor?','D’den sonra hangisi?','En sona hangi harf kalır?'],
+  result:'armut, defter, kalem, zeytin: alfabetik sıra.'},
+ {kind:'sira',prompt:'İlk harfler aynı: ikinci harfe bak.',sahne:S4.sozluk,
+  gorev:'Dört sözcük de "k" ile başlıyor. Sıralamak için ikinci harfe bakmalısın.',
+  kartlar:[{t:'kuzu'},{t:'kalem'},{t:'kitap'},{t:'kedi'}],
+  dogru:[1,3,2,0],
+  ipucular:['ka-, ke-, ki-, ku-: ikinci harflerden hangisi alfabede önce?','a’dan sonra hangi ünlü geliyor?','e’den sonra hangisi?','En sona hangisi kalır?'],
+  result:'kalem, kedi, kitap, kuzu: ilk harf aynıysa ikinci harf sırayı belirler.'},
+ {kind:'yaz',prompt:'Beş sözcüğü sözlük sırasına yaz.',sahne:S4.sozluk,
+  gorev:'Şu sözcükleri alt alta sözlük sırasına yaz: masa, mavi, martı, mum, mektup.',
+  enAzSatir:5,buyukHarf:false,
+  ipucuMetin:'martı\nmasa\nmavi\nmektup\nmum',
+  ornekCevap:'martı\nmasa\nmavi\nmektup\nmum',
+  gerekli:['martı','masa','mavi','mektup','mum'],
+  result:'martı, masa, mavi, mektup, mum: hepsi "m" ile başlıyordu, sırayı ikinci ve üçüncü harfler belirledi.'}
+]};
+
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card">
  <div class="big">📖</div><h2>2. Sınıf Türkçe</h2>
