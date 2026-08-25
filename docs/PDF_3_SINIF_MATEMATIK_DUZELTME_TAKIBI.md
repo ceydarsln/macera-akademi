@@ -30,6 +30,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w14 | Kronometre Arenası | Süre tahmini | Hedef süre ve işaretli bölge kaldırıldı. Çocuk önce tahminini kaydediyor (hedef görünmüyor), sonra gerçek kronometreyle işi yapıp ölçüyor; tahmin / ölçüm / fark üçlü kartı sonda geliyor. Can eksilmiyor. Eylemler kişisel hıza bağlı 100 m koşu yerine ad yazma, 10 el çırpma, kısa cümle okuma. | Uygulamada |
 | w15 | Ölçüm İstasyonu | Uygun uzunluk ve kütle birimi | Beşli karışık satır ikiye ayrıldı: önce "uzunluk mu, kütle mi?", sonra o ailenin cm-m-km ya da g-kg-ton ölçeği. Eksik olan gram eklendi. Nesne kartı sabit ve tam görünür; yanlış ailede nicelik sorusuna geri dönülüyor. 3. turda aynı kalemin boyu ile kütlesi peş peşe soruluyor. | Uygulamada |
 | w16 | Banka Gişesi | Parada eşdeğerlik | Yasak çekmeceler kilitli ve nedeni yazılı; kilide basmak can götürmüyor. Paralar tepside gerçek yüzleriyle diziliyor, 100 kuruşluk gruplar çerçeveleniyor ve "1 TL" etiketi alıyor. Toplam çift gösterimle yazılıyor (250 kr = 2 TL 50 kr), fazla ödemede son para geri alınabiliyor. 3. tur aynı tutarı iki farklı bileşimle istiyor. | Uygulamada |
+| w17 | Zihin Arenası | Tahminî ve gerçek sonucu ilişkilendirme | Düşen sayı kapsülleri ve kalkan kaldırıldı; işlem panosu sabit. Tur yedi adım: iki sayıyı sayı doğrusunda yuvarla → parçalayarak (279 = 200 + 70 + 9) adım adım kesin sonucu bul → tahminle kesin sonucu aynı eksende işaretle → farkı bul → farkı yorumla. Başarı ancak yorum adımından sonra veriliyor. | Uygulamada |
+| w18 | Akıllı Asansör | Toplama ve çıkarmanın tersliği | Yatay tren/tünel/sürgü gitti; numaralı dikey kuyu var, kabin sürükleniyor. Çıkış mavi, dönüş kırmızı iz bırakıyor ve iki iz üst üste geliyor. İlerleme "görev" olarak yazıyor. Her turda ileri işlem ve tersi aynı başlangıç/varış üzerinde doğrulanıp iki eşitlik yan yana yazılıyor. | Uygulamada |
+| w19 | Uzay Kargo Bandı | 10 ve 100 ile çarpma-bölme | "Sağa sıfır ekle" kutuları kaldırıldı. Çocuk rakamları basamak tablosunda kaydırıyor; açıklama "basamak değeri 10 katına çıktı" diyor, boşalan basamakta 0'ın yer tutucu rolü gösteriliyor. Sağa kayamayan sayıda kart kaybolmuyor, nedeni yazılıyor. | Uygulamada |
+| w20 | Şeker Çiftliği | Çarpma ve bölmenin ilişkisi | Otomatik doldurma kaldırıldı: 32 şeker bantta duruyor, çocuk kutulara tek tek yerleştiriyor ve her kutudaki nesne ayrı ayrı sayılabiliyor. Kutu doldukça 4, 8, 12 … ritmik sayma şeridi oluşuyor. Fazla dokunulan kutu tek başına uyarılıyor, düzen bozulmuyor. Sonra aynı kutular üzerinde önce çarpma sonra bölme ifadesi seçiliyor. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -61,6 +65,16 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 - `renderPara` + `para`: kilitli/açık para çekmeceleri, tepside 100 kuruşluk
   gruplama, kuruş+TL çift gösterimi, son parayı geri alma ve "farklı bileşim"
   koşulu (w16).
+- `renderArena` + `arena`: yuvarlama → parçalayarak hesaplama → fark → yorum
+  adımlarını tek tur içinde zincirleyen adım listesi; `sayiDogrusu()` ortak
+  yardımcısı tahmin ile kesin sonucu aynı eksende işaretler (w17).
+- `renderTers` + `tersi`: numaralı dikey kuyu, sürüklenen kabin, çıkış/dönüş
+  izleri ve her adımda kurulan eşitlik satırı (w18).
+- `renderKargo` + `kargo`: beş sütunlu basamak tablosu, rakamları sola/sağa
+  kaydırma, değişen basamakların vurgulanması, sağa kayamama gerekçesi (w19).
+- `renderSeker` + `seker`: bant → kutulara tek tek yerleştirme (yalnız ilgili
+  kutu güncellenir), ritmik sayma şeridi, ardından çarpma ve bölme ifadesi
+  seçimi (w20).
 - `ertele(fn,ms)`: geciken geri çağrılar tur değiştiyse çalışmaz. `render`,
   `wrong`, `updateStage` ve `renderRound` artık oyun bittikten sonra çağrılırsa
   sessizce çıkar (koşumda seyrek görülen "round().prompt undefined" hatası).
