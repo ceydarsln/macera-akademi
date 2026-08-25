@@ -156,7 +156,9 @@ function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locke
  $('.sound').onclick=()=>{const r=round();if(r)speak(r.prompt,true)};
  /* rAF geri çağrısı bir sonraki karede çalışır; o ana kadar oyun bitmiş
     olabilir (gizli sekmede kuyrukta bekliyor). round() boşsa okuma. */
- renderRound();requestAnimationFrame(()=>{const r=round();if(r)speak(r.prompt)})}
+ renderRound();requestAnimationFrame(()=>{const t=roundIndex,r=round();
+  /* kare geri döndüğünde tur değişmiş olabilir: bayat yönergeyi okuma */
+  if(r&&roundIndex===t)speak(r.prompt)})}
 function feedback(msg,bad=false){const f=$('.feedback');if(!f)return;f.textContent=msg;f.className='feedback show'+(bad?' bad':'');setTimeout(()=>{if(f)f.className='feedback'},950)}
 /* Hızlı çift dokunuş tek hata için iki can götürmesin. */
 let sonCeza=0;
@@ -295,7 +297,11 @@ function kararCiz(r){
   (r.durum?`<div class="konus-balon">${esc(r.durum)}</div>`:'')+
   (r.cumle?`<div class="kart vurgu">${esc(r.cumle)}</div>`:'')+
   (r.sahneNot?`<div class="sahne-not">${esc(r.sahneNot)}</div>`:'')+
+  (r.kaynak?(state.kaynakAcik?`<div class="metin-kart"><div class="baslik">${esc(r.kaynak.baslik||'Kaynak')}</div>${esc(r.kaynak.metin)}</div>`
+    :`<button class="choice" id="kaynakGor">${esc(r.kaynak.dugme||'Kaynağı gör')}</button>`):'')+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ const kg=$('#kaynakGor');
+ if(kg)kg.onclick=()=>{state.kaynakAcik=true;kararCiz(r)};
  const soru=g?r.neden.soru:r.soru, sec=g?r.neden.secenekler:r.secenekler;
  $('#task').innerHTML=`<div class="caption soru">${esc(soru)}</div>`+
   `<div class="choices">${sec.map((c,i)=>`<button class="choice${c.label.length<16?' kisa':''}" data-${g?'neden':'sec'}="${i}">${esc(c.label)}</button>`).join('')}</div>`+
@@ -307,7 +313,7 @@ function kararCiz(r){
   if(!g&&r.neden){state.faz=1;state.not=r.araSoz||'Doğru. Peki neden?';feedback('Doğru');
    return gecisBasla(()=>kararCiz(r),FAST?30:600)}
   good()})}
-function renderKarar(r){state.faz=0;state.not='';kararCiz(r)}
+function renderKarar(r){state.faz=0;state.not='';state.kaynakAcik=false;kararCiz(r)}
 
 /* ===== SINIFLA: cümle kartı sabit ve TAM görünür; bant akışı yok.
    Kutu etiketleri kutu içinde kalır, simge ipucu vermez. ===== */
@@ -351,10 +357,14 @@ function siraCiz(r){
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  const d=state.dizi||[];
  if(!state.dizilim)state.dizilim=siraDizilim(r,siraTohum());
- $('#task').innerHTML=`<div class="dizi">${state.dizilim.map(i=>{
+ $('#task').innerHTML=(r.dinlet?`<button class="choice" id="dinleBtn">${state.dinleme?'Yeniden dinle':'Olayları dinle'}</button>`+
+   `<div class="hint">${state.dinleme?state.dinleme+' kez dinledin (tekrar dinlemek ceza değildir)':'Dinledikten sonra sırala.'}</div>`:'')+
+  `<div class="dizi">${state.dizilim.map(i=>{
    const k=r.kartlar[i],p=d.indexOf(i);
    return `<button class="sirakart ${p>=0?'secili':''}" data-kart="${i}"><span class="no">${p>=0?p+1:''}</span><span>${esc(k.t)}</span></button>`}).join('')}</div>`+
   `<div class="hint">${d.length}/${r.kartlar.length} adım dizildi. ${esc(r.ipucu||'')}</div>`;
+ const db=$('#dinleBtn');
+ if(db)db.onclick=()=>{if(locked)return;state.dinleme=(state.dinleme||0)+1;speak(r.dinlet,true);siraCiz(r)};
  $$('[data-kart]').forEach(b=>b.onclick=()=>{
   if(state.gecis||locked)return;
   const i=+b.dataset.kart;
@@ -963,6 +973,305 @@ GAMES.z08={title:'Hikâye Basamakları',theme:'doga',
   yasak:['Bence Poyraz yağmura yakalanacak çünkü metinde gökyüzü karanlıktı.'],
   ornekCevap:'Bence Poyraz bundan sonra annesini dinleyecek çünkü metinde utanıp önüne baktığı anlatılıyor.',
   result:'Tahminini metindeki kanıta dayandırdın: gerekçeli tahmin budur.'}
+]};
+
+/* ---- z09 Zaman Şeridi (roket kaldırıldı; ilk turda tarihler gizli) ---- */
+GAMES.z09={title:'Zaman Şeridi',theme:'muze',
+ finish:'Olayları tarihlere değil içeriklerine bakarak sıraladın, yalnız dinleyerek de sıraladın ve sırayı bağlaçlarla anlattın.',rounds:[
+ {kind:'sira',prompt:'Tarihler gizli: olayların kendisine bak.',sahne:SAHNE.masa,
+  gorev:'Zaman şeridine olayları en eskiden en yeniye diz. Kartlarda tarih yok.',
+  kartlar:[
+   {t:'Kâğıt icat edilir; bilgi taşa değil yaprağa yazılmaya başlar.'},
+   {t:'Matbaa kurulur; aynı kitaptan binlerce kopya basılabilir.'},
+   {t:'Telgraf çalışır; haber atlıdan hızlı gider.'},
+   {t:'İnternet yaygınlaşır; bilgi anında dünyanın öbür ucuna ulaşır.'}],
+  dogru:[0,1,2,3],
+  ipucular:['Bilgi önce neyin üstüne yazıldı?','Yazı vardı; çoğaltmak için ne gerekti?',
+   'Kitap çoğaldı; haberi hızlandıran ne oldu?','En sonda bilgi ne kadar hızlandı?'],
+  ipucu:'Her adım bir öncekini mümkün kılıyor.',
+  result:'Kâğıt, matbaa, telgraf ve internet: her buluş bir öncekinin üstüne kuruldu.'},
+ {kind:'sira',prompt:'Bu kez yalnız dinleyerek sırala.',sahne:SAHNE.masa,
+  gorev:'Olayları dinle, sonra en eskiden en yeniye diz. Tarih verilmiyor.',
+  dinlet:'Dinle. Önce köyde bir okul açıldı. Sonra okula elektrik geldi. Daha sonra okula bilgisayar sınıfı kuruldu. En sonunda köy okulu başka okullarla internetten görüşmeye başladı.',
+  kartlar:[
+   {t:'Köyde bir okul açıldı.'},
+   {t:'Okula elektrik geldi.'},
+   {t:'Okula bilgisayar sınıfı kuruldu.'},
+   {t:'Okul, başka okullarla internetten görüştü.'}],
+  dogru:[0,1,2,3],
+  ipucular:['Dinlediğinde ilk ne oldu?','Okul açıldı; sonra ne geldi?','Elektrik geldi; sonra ne kuruldu?','En sonunda ne oldu?'],
+  ipucu:'İstediğin kadar tekrar dinleyebilirsin.',
+  result:'Yalnız dinleyerek olay sırasını çıkardın.'},
+ {kind:'konus',prompt:'Sırayı bağlaçlarla anlat.',sahne:SAHNE.masa,
+  gorev:'Sıraladığın olayları "önce", "daha sonra" ve "en sonunda" sözcüklerini kullanarak üç cümlede anlat.',
+  ornek:'Örnek: Önce köyde okul açıldı. Daha sonra okula elektrik ve bilgisayar geldi. En sonunda okul internetten başka okullarla görüştü.',
+  olcutler:['Üç cümle kurdum.','"önce", "daha sonra" ve "en sonunda" sözcüklerini kullandım.','Olayları doğru sırayla anlattım.'],
+  result:'Zaman sırasını bağlaçlarla anlattın.'}
+]};
+
+/* ---- z10 Sözcük Tasnifi (bant kaldırıldı; çift örnek cümleyle sabit kartta) ---- */
+GAMES.z10={title:'Sözcük Tasnifi',theme:'kutuphane',
+ finish:'Eş anlamlı, zıt anlamlı ve sesteş çiftleri ayırdın, karışabilenleri ölçütle tartıştın ve sesteş bir çifti kendi cümlelerinde kullandın.',rounds:[
+ {kind:'sinifla',prompt:'Bu iki sözcüğün ilişkisi ne?',sahne:SAHNE.sozluk,
+  soru:'Bu çift hangi grubu oluşturur?',
+  kutular:['EŞ ANLAMLI','ZIT ANLAMLI','SESTEŞ'],
+  ipucu:'Yazılışları mı aynı, anlamları mı yakın, yoksa karşıt mı?',
+  kartlar:[
+   {t:'"ak" — "beyaz"\n(Ak saçlı dedem geldi. / Beyaz gömleğini giydi.)',dogru:0,
+    neden:'Farklı yazılış, aynı anlam: eş anlamlı.'},
+   {t:'"uzun" — "kısa"\n(Uzun bir yol yürüdük. / Kısa bir mola verdik.)',dogru:1,
+    neden:'Anlamları birbirinin karşıtı: zıt anlamlı.'},
+   {t:'"yaz" (mevsim) — "yaz" (yazmak)\n(Yaz tatili başladı. / Adını deftere yaz.)',dogru:2,
+    neden:'Aynı yazılış, tümüyle farklı anlam: sesteş.'},
+   {t:'"cevap" — "yanıt"\n(Sorunun cevabı buydu. / Öğretmen yanıtı okudu.)',dogru:0,
+    neden:'İkisi de aynı şeyi anlatıyor.'},
+   {t:'"aç" (tok değil) — "aç" (açmak)\n(Karnım çok aç. / Pencereyi aç.)',dogru:2,
+    neden:'Yazılış aynı, anlamlar bambaşka.'},
+   {t:'"ileri" — "geri"\n(Bir adım ileri git. / İki adım geri çekil.)',dogru:1,
+    neden:'Karşıt yönler: zıt anlamlı.'}]},
+ {kind:'sinifla',prompt:'Karışabilen çiftler geliyor.',sahne:SAHNE.sozluk,
+  soru:'Bu çift hangi grubu oluşturur?',
+  kutular:['EŞ ANLAMLI','SESTEŞ'],
+  ipucu:'Ölçüt: yazılış aynı mı, yoksa anlam mı aynı?',
+  kartlar:[
+   {t:'"yüz" (sayı) — "yüz" (surat)\n(Yüz lira verdi. / Yüzünü yıkadı.)',dogru:1,
+    neden:'Yazılış aynı, anlam farklı: sesteş.',hint:'Anlamları aynı mı? Hayır. Yazılışları aynı mı? Evet.'},
+   {t:'"okul" — "mektep"\n(Okula gittim. / Mektepte okudum.)',dogru:0,
+    neden:'Yazılışları farklı, anlamları aynı: eş anlamlı.'},
+   {t:'"gül" (çiçek) — "gül" (gülmek)\n(Bahçede gül açtı. / Şakama gül.)',dogru:1,
+    neden:'Aynı harfler, farklı anlamlar.'},
+   {t:'"kara" — "siyah"\n(Kara bulutlar geldi. / Siyah kalemi aldı.)',dogru:0,
+    neden:'İkisi de aynı rengi anlatıyor.'},
+   {t:'"dolu" (boş değil) — "dolu" (yağış)\n(Bardak dolu. / Dolu yağdı.)',dogru:1,
+    neden:'Yazılış aynı, anlamlar bambaşka.'},
+   {t:'"armağan" — "hediye"\n(Ona armağan aldım. / Hediyeyi açtı.)',dogru:0,
+    neden:'Farklı yazılış, aynı anlam.'}]},
+ {kind:'yaz',prompt:'Bir sesteş çifti iki cümlede kullan.',sahne:SAHNE.sozluk,
+  gorev:'Bir sesteş sözcük seç ("yüz", "gül", "dolu", "aç" gibi) ve onu iki ayrı cümlede farklı anlamlarda kullan.',
+  enAzKelime:10,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'…  …',
+  yasak:['Bahçede gül açtı. Şakama gül.'],
+  ornekCevap:'Bahçemizdeki gül bu sabah açtı. Kardeşim şakalarıma her seferinde gül diyor.',
+  result:'Aynı yazılışın iki farklı anlamını kendi cümlelerinde gösterdin.'}
+]};
+
+/* ---- z11 Sesteş Köprüsü (simge eşleşmesi kaldırıldı; karar bağlamdan) ---- */
+GAMES.z11={title:'Sesteş Köprüsü',theme:'doga',
+ finish:'Sesteş sözcüğün anlamını bağlamdan buldun, üç ayrı anlamı ayırdın ve kendi cümlelerinde kullandın.',rounds:[
+ {kind:'esle',prompt:'Her cümledeki "yüz" hangi anlamda?',sahne:SAHNE.basamak,
+  soru:'Önce alttan bir anlam seç, sonra ait olduğu cümleye dokun.',
+  ipucu:'Cümlenin geri kalanı hangi anlamı gerektiriyor?',
+  yuvalar:[
+   {hedef:'Havuzda yarım saat yüz, sonra çık.',dogru:0,neden:'Havuz ve süre, yüzme eylemini gösteriyor.',
+    hint:'Burada bir iş yapılması isteniyor.'},
+   {hedef:'Kumbarada yüz lira birikmiş.',dogru:1,neden:'"Lira" sözcüğü sayıyı gerektiriyor.',
+    hint:'Yanındaki sözcük para birimi.'},
+   {hedef:'Soğuktan yüzü kızarmıştı.',dogru:2,neden:'Kızarmak bedenle ilgili; burada surat anlatılıyor.',
+    hint:'Kızaran şey bir beden bölümü.'}],
+  etiketler:[{t:'yüzmek eylemi'},{t:'100 sayısı'},{t:'surat'}]},
+ {kind:'kanit',prompt:'Ayırt edici sözcüğü işaretle, sonra anlamı seç.',sahne:SAHNE.basamak,
+  baslik:'Üç cümlede "çay"',
+  metin:[['1) Kahvaltıda ',{t:'demli çay'},' içtik.'],
+   ['2) Köyün kenarındaki ',{t:'çayda balık tuttuk',dogru:true},'.'],
+   ['3) Bardaktaki ',{t:'çay soğumuş'},'.']],
+  gerekKanit:1,soru:'İkinci cümledeki "çay" ne anlama geliyor?',
+  secenekler:[
+   {label:'Küçük akarsu',correct:true},
+   {label:'İçecek',hint:'Balık tutulan yer bir içecek olamaz; işaretlediğin kanıta bak.'},
+   {label:'Bahçe',hint:'Metinde bahçeyle ilgili bir kanıt yok.'}],
+  araSoz:'Doğru. Peki hangi sözcük bunu belli etti?',
+  neden:{soru:'Anlamı hangi sözcük belli etti?',secenekler:[
+   {label:'"balık tuttuk"',correct:true},
+   {label:'"köyün"',hint:'Köy hem içeceğin hem akarsuyun bulunabileceği bir yer.'},
+   {label:'"kenarındaki"',hint:'Bu sözcük tek başına anlamı belirlemez.'}]},
+  result:'Sesteş sözcüğün anlamını, yanındaki bağlam sözcüğü belirler.'},
+ {kind:'yaz',prompt:'Bir sesteş sözcüğü iki anlamda yaz.',sahne:SAHNE.basamak,
+  gorev:'"Çay", "yüz" ya da "kaz" sözcüklerinden birini seç ve iki farklı anlamda iki cümle yaz.',
+  enAzKelime:10,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'…  …',
+  yasak:['Köyün kenarındaki çayda balık tuttuk.'],
+  ornekCevap:'Sabah bahçede küçük bir çukur kaz dedi babam. Gölette yüzen kaz sürüsünü uzun uzun izledik.',
+  result:'Aynı sözcüğü iki farklı anlamda kendi cümlelerinde kullandın.'}
+]};
+
+/* ---- z12 Kesme İşareti (kural kutusu ekranda; çeldiriciler kesme istemiyor) ---- */
+GAMES.z12={title:'Kesme İşareti',theme:'atolye',
+ finish:'Kesme işaretini özel adlara gelen eklerde kullandın, kesme istemeyen durumları ayırdın ve kendi cümlelerini yazdın.',rounds:[
+ {kind:'duzelt',prompt:'Özel adlara gelen ekleri doğru ayır.',sahne:SAHNE.matbaa,
+  gorev:'Tarih kitabının bu sayfasında özel adlara gelen ekler yanlış yazılmış. Düzelt.',
+  hatali:"Atatürk 1919da Samsuna çıktı ve Ankarada Meclisi açtı.",
+  sozcukKorunsun:false,
+  denetim:[
+   {ad:'Tarihe gelen eki kesmeyle ayır',desen:"1919'da"},
+   {ad:'Şehir adına gelen eki kesmeyle ayır (Samsun)',desen:"Samsun'a"},
+   {ad:'Şehir adına gelen eki kesmeyle ayır (Ankara)',desen:"Ankara'da"},
+   {ad:'Cümleyi noktayla bitir',desen:'\\.\\s*$'}],
+  ornekCevap:"Atatürk 1919'da Samsun'a çıktı ve Ankara'da Meclisi açtı.",
+  result:'Kesme işareti, özel ada gelen eki addan ayırır.'},
+ {kind:'sinifla',prompt:'Burada kesme işareti gerekir mi?',sahne:SAHNE.matbaa,
+  soru:'Altı çizili ek kesmeyle ayrılmalı mı?',
+  kutular:['KESME GEREKİR','KESME GEREKMEZ'],
+  ipucu:'Kesme, özel ada gelen çekim ekini ayırır; yapım eki ve cins adlar kesme almaz.',
+  kartlar:[
+   {t:'Ali___n kalemi masada kaldı. (Ali + in)',dogru:0,neden:'Kişi adı özel addır, çekim eki kesmeyle ayrılır.'},
+   {t:'Kitap___ı çantama koydum. (kitap + ı)',dogru:1,neden:'"Kitap" cins addır; kesme almaz.'},
+   {t:'Türkiye___nin başkenti Ankara. (Türkiye + nin)',dogru:0,neden:'Ülke adı özel addır.'},
+   {t:'Türk___çe dersini seviyorum. (Türk + çe)',dogru:1,neden:'"-çe" yapım ekidir; yapım ekleri kesmeyle ayrılmaz.'},
+   {t:'Ankara___lı arkadaşım geldi. (Ankara + lı)',dogru:1,neden:'"-lı" yapım ekidir; kesme almaz.'},
+   {t:'Ayşe___ye kitabı verdim. (Ayşe + ye)',dogru:0,neden:'Kişi adına gelen çekim eki kesmeyle ayrılır.'}]},
+ {kind:'yaz',prompt:'İki özel adla kendi cümlelerini yaz.',sahne:SAHNE.matbaa,
+  gorev:'Bir kişi adı ve bir şehir adı kullanarak iki cümle yaz. Adlara gelen ekleri kesme işaretiyle sen ayır.',
+  enAzKelime:10,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'En az iki yerde kesme işareti kullan',desen:"('[a-zçğıöşü]{1,4}[^']*){2}"}],
+  ipucuMetin:"… 'in … … 'da …",
+  yasak:["Atatürk 1919'da Samsun'a çıktı."],
+  ornekCevap:"Elif'in defteri çantada kaldı. Yaz tatilinde İzmir'e gideceğiz.",
+  result:'Özel adlara gelen ekleri kendi cümlelerinde kesmeyle ayırdın.'}
+]};
+
+/* ---- z13 Bilgi Denetimi (radar-kapsül kaldırıldı; kanıtla karar) ---- */
+GAMES.z13={title:'Bilgi Denetimi',theme:'lab',
+ finish:'Bilginin doğruluğunu kaynağa bakarak değerlendirdin, kısmen doğru olanı ayırdın ve doğrusunu kaynağıyla yazdın.',rounds:[
+ {kind:'karar',prompt:'Karardan önce kaynağa bak.',sahne:SAHNE.kalem,
+  durum:'Panoda şu bilgi asılı: "Dünyanın en uzun nehri Nil\'dir."',
+  kaynak:{dugme:'Kaynağı gör',baslik:'Kaynak',
+   metin:'Coğrafya Ansiklopedisi, 2021, Prof. Dr. A. Yılmaz: "Nil ile Amazon\'un uzunluğu tartışmalıdır; ölçüm yöntemine göre sonuç değişir."'},
+  soru:'Bu bilgi için ne söylersin?',
+  secenekler:[
+   {label:'Kesin değil, tartışmalı bir bilgi',correct:true},
+   {label:'Kesinlikle doğru',hint:'Kaynak "tartışmalıdır" diyor; kesinlik yok.'},
+   {label:'Kesinlikle yanlış',hint:'Kaynak yanlış demiyor, tartışmalı diyor.'}],
+  araSoz:'Doğru. Peki kaynağı ne güvenilir yapar?',
+  neden:{soru:'Bir kaynağı güvenilir yapan nedir?',secenekler:[
+   {label:'Yazarı, tarihi ve kurumu belli olması',correct:true},
+   {label:'İnternette çok paylaşılması',hint:'Çok paylaşılmak doğruluk kanıtı değildir.'},
+   {label:'Kısa ve anlaşılır olması',hint:'Anlaşılırlık güvenilirlik değildir.'}]},
+  result:'Bilgi, kaynağına bakılarak değerlendirilir.'},
+ {kind:'sinifla',prompt:'Bu bilgi ne kadar doğru?',sahne:SAHNE.kalem,
+  soru:'Bu ifade hangi gruba girer?',
+  kutular:['TAMAMEN DOĞRU','KISMEN DOĞRU','YANLIŞ'],
+  ipucu:'İfadenin her parçası doğru mu, bir kısmı mı?',
+  kartlar:[
+   {t:'"Su 100 derecede kaynar." (deniz seviyesinde)',dogru:0,
+    neden:'Deniz seviyesinde doğru bir bilgidir.'},
+   {t:'"Bütün kuşlar uçar."',dogru:2,
+    neden:'Penguen ve devekuşu uçmaz; "bütün" sözcüğü ifadeyi yanlış yapıyor.'},
+   {t:'"Ay, Dünya\'nın uydusudur."',dogru:0,
+    neden:'Doğrulanmış bir bilgidir.'},
+   {t:'"Sebze yemek sağlıklıdır, bu yüzden hasta olmazsın."',dogru:1,
+    neden:'İlk kısım doğru, ikinci kısım abartılı bir sonuç.'},
+   {t:'"Güneş Dünya\'nın çevresinde döner."',dogru:2,
+    neden:'Dünya Güneş\'in çevresinde döner.'},
+   {t:'"Kitap okumak kelime dağarcığını geliştirir, herkesi yazar yapar."',dogru:1,
+    neden:'İlk bölüm doğru; ikinci bölüm dayanaksız.'}]},
+ {kind:'yaz',prompt:'Yanlış bilgiyi kaynağıyla düzelt.',sahne:SAHNE.kalem,
+  gorev:'"Bütün kuşlar uçar" bilgisi yanlıştı. Doğrusunu kendi cümlenle yaz ve nereden öğrendiğini belirt.',
+  enAzKelime:12,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'Kaynağını belirt ("kaynak", "kitap", "ansiklopedi" gibi)',desen:'kaynak|kitap|ansiklopedi|ders|belgesel',bayrak:'i'}],
+  ipucuMetin:'Bütün kuşlar uçmaz; … Bu bilgiyi … öğrendim.',
+  yasak:['Bütün kuşlar uçar.'],
+  ornekCevap:'Bütün kuşlar uçmaz, penguen ve devekuşu uçamaz. Bu bilgiyi fen ders kitabımızdan öğrendim.',
+  result:'Yanlış bilgiyi düzelttin ve dayandığın kaynağı belirttin.'}
+]};
+
+/* ---- z14 Mektup Masası (bölümler kâğıttaki yerine oturuyor) ---- */
+GAMES.z14={title:'Mektup Masası',theme:'masa',
+ finish:'Mektubun bölümlerini kâğıttaki yerlerine yerleştirdin, uygun üslubu seçtin ve kendi mektubunu yazdın.',rounds:[
+ {kind:'esle',prompt:'Her cümleyi mektuptaki yerine koy.',sahne:SAHNE.masa,
+  soru:'Önce alttan bir cümle seç, sonra ait olduğu bölüme dokun.',
+  ipucu:'Mektup yukarıdan aşağıya: tarih, hitap, gövde, kapanış, imza.',
+  yuvalar:[
+   {hedef:'1. satır — TARİH',dogru:0,neden:'Mektup tarihle başlar; sağ üst köşeye yazılır.',hint:'Bu satır ne zaman yazıldığını gösterir.'},
+   {hedef:'2. satır — HİTAP',dogru:1,neden:'Hitap, mektubun kime yazıldığını gösterir.',hint:'Bu satır okuyana seslenir.'},
+   {hedef:'3. bölüm — GÖVDE',dogru:2,neden:'Gövdede asıl anlatılmak istenen yer alır.',hint:'Bu bölüm mektubun asıl konusudur.'},
+   {hedef:'Son satır — KAPANIŞ',dogru:3,neden:'Kapanış iyi dilekle biter.',hint:'Bu satır mektubu bitirir.'}],
+  etiketler:[
+   {t:'12 Mart 2026'},
+   {t:'Sevgili Dedem,'},
+   {t:'Okulumuzda kitap fuarı düzenlendi, sana anlatmak istedim.'},
+   {t:'Sağlıcakla kal, gözlerinden öperim.'}]},
+ {kind:'karar',prompt:'Hangi üslup bu mektuba uyar?',sahne:SAHNE.masa,
+  durum:'Okul müdürüne, kütüphaneye yeni kitap istemek için bir mektup yazıyorsun.',
+  soru:'Hangi hitap ve üslup uygun olur?',
+  secenekler:[
+   {label:'"Sayın Müdürüm, kütüphanemize yeni kitaplar kazandırmanızı rica ederiz."',correct:true},
+   {label:'"Naber müdürüm, bize kitap lazım."',hint:'Resmî bir yazışmada senli benli üslup kullanılmaz.'},
+   {label:'"Kitap almazsanız kütüphaneye gelmeyiz."',hint:'İstek tehditle değil, saygıyla iletilir.'}],
+  araSoz:'Doğru. Peki üslubu ne belirler?',
+  neden:{soru:'Mektubun üslubunu ne belirler?',secenekler:[
+   {label:'Kime yazıldığı ve amacı',correct:true},
+   {label:'Mektubun uzunluğu',hint:'Uzunluk üslubu belirlemez.'},
+   {label:'Yazanın yaşı',hint:'Çocuk da resmî mektup yazabilir; ölçüt muhatap ve amaçtır.'}]},
+  result:'Yazışmada üslubu, muhatap ve amaç belirler.'},
+ {kind:'yaz',prompt:'Kendi mektubunu yaz.',sahne:SAHNE.masa,
+  gorev:'Bir gaziye kısa bir mektup yaz. Hitapla başla, teşekkürünü anlat, kapanış ve imza ekle.',
+  enAzKelime:20,enAzCumle:3,buyukHarf:true,
+  denetim:[
+   {ad:'Hitapla başla (virgülle biten bir seslenme)',desen:'^[^\\n,]{3,40},'},
+   {ad:'"teşekkür" sözcüğünü kullan',desen:'teşekkür',bayrak:'i'},
+   {ad:'Sonunda imza olarak adını yaz',desen:'\\n\\s*[A-ZÇĞİÖŞÜ][a-zçğıöşü]+\\s*$|imza',bayrak:''}],
+  ipucuMetin:'Sayın gazimiz,\n…\n…\nAdın Soyadın',
+  ornekCevap:'Sayın gazimiz,\nBugün sınıfça sizin hikâyenizi dinledik ve bizim için neler yaptığınızı öğrendik. Bu güzel günleri size borçlu olduğumuzu biliyoruz ve size çok teşekkür ederiz.\nSağlıcakla kalın.\nElif',
+  result:'Mektubun bütün bölümlerini kendi cümlelerinle yazdın.'}
+]};
+
+/* ---- z15 Zıt Anlam Terazisi (kartlar küçük harfle; bağlama duyarlı çiftler) ---- */
+GAMES.z15={title:'Zıt Anlam Terazisi',theme:'atolye',
+ finish:'Zıt çiftleri eşledin, aynı sözcüğün bağlama göre farklı zıddı olduğunu gördün ve karşılaştırma cümleni yazdın.',rounds:[
+ {kind:'esle',prompt:'Her sözcüğü zıddıyla eşle.',sahne:SAHNE.matbaa,
+  soru:'Önce alttan bir sözcük seç, sonra zıddına dokun.',
+  ipucu:'Terazinin iki kefesi karşıt anlamları taşır.',
+  yuvalar:[
+   {hedef:'cesur',dogru:0,neden:'Cesaretin karşıtı korkaklıktır.',hint:'Bu sözcük korkuyla ilgili.'},
+   {hedef:'cömert',dogru:1,neden:'Cömertliğin karşıtı cimriliktir.',hint:'Bu sözcük vermemekle ilgili.'},
+   {hedef:'çalışkan',dogru:2,neden:'Çalışkanlığın karşıtı tembelliktir.',hint:'Bu sözcük çabayla ilgili.'},
+   {hedef:'alçakgönüllü',dogru:3,neden:'Alçakgönüllülüğün karşıtı kibirdir.',hint:'Bu sözcük büyüklenmeyle ilgili.'}],
+  etiketler:[{t:'korkak'},{t:'cimri'},{t:'tembel'},{t:'kibirli'}]},
+ {kind:'karar',prompt:'Aynı sözcük, bağlama göre başka zıt.',sahne:SAHNE.matbaa,
+  durum:'A) "Çantam çok ağır." \nB) "Bu soru çok ağır."',
+  soru:'B cümlesindeki "ağır" sözcüğünün zıddı hangisidir?',
+  secenekler:[
+   {label:'kolay',correct:true},
+   {label:'hafif',hint:'"Hafif", A cümlesindeki ağırlığın zıddı; B\'de zorluk anlatılıyor.'},
+   {label:'yavaş',hint:'Burada hız değil, zorluk anlatılıyor.'}],
+  araSoz:'Doğru. Peki bu ne gösteriyor?',
+  neden:{soru:'Bir sözcüğün zıddını ne belirler?',secenekler:[
+   {label:'Cümledeki anlamı',correct:true},
+   {label:'Sözcüğün uzunluğu',hint:'Uzunluk anlamla ilgili değildir.'},
+   {label:'Sözcüğün ilk harfi',hint:'Yazılış zıtlığı belirlemez.'}]},
+  result:'Zıt anlam sözcüğün kendisinde değil, cümledeki anlamındadır.'},
+ {kind:'yaz',prompt:'Bir zıt çifti aynı cümlede kullan.',sahne:SAHNE.matbaa,
+  gorev:'Bir zıt anlamlı çifti aynı cümlede kullanarak bir karşılaştırma cümlesi yaz.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',
+  bank:['ama','oysa','buna karşılık'],
+  ipucuMetin:'… ama …',
+  yasak:['Çantam ağır ama kalemim hafif.'],
+  ornekCevap:'Kardeşim sabahları çok hızlı hazırlanır ama akşamları oldukça yavaş davranır.',
+  result:'Zıt çifti aynı cümlede kullanarak karşılaştırma yaptın.'}
+]};
+
+/* ---- z16 Dikte (hedef sözcük hiçbir yerde yazılı DEĞİL) ---- */
+GAMES.z16={title:'Kahramanlık Diktesi',theme:'muze',
+ finish:'Sözcükleri yalnız dinleyerek doğru yazdın, yazımı zor sözcükleri kurdun ve yazdığın sözcüğü kendi cümlende kullandın.',rounds:[
+ {kind:'dikte',prompt:'Sözcüğü dinle ve harflerden kur.',  baglam:'Anıtta yazan sözcüğü dinle',
+  sozcukler:[
+   {t:'bayrak',celdirici:['t','n'],neden:'Doğru yazdın.'},
+   {t:'vatan',celdirici:['d'],neden:'Doğru yazdın.'},
+   {t:'özgürlük',celdirici:['u'],neden:'"ö" ve "ü" harflerini doğru seçtin.'}]},
+ {kind:'dikte',prompt:'Bu kez yazımı zor sözcükler.',
+  baglam:'Sözcüğü dinle; gerekirse tekrar dinle',
+  sozcukler:[
+   {t:'kâğıt',celdirici:['a','k'],neden:'Şapkalı "â" harfini doğru seçtin.'},
+   {t:'yağmur',celdirici:['g'],neden:'"ğ" ile "g" ayrımını doğru yaptın.'},
+   {t:'saygı',celdirici:['i','k'],neden:'"ı" ile "i" ayrımını doğru yaptın.'}]},
+ {kind:'yaz',prompt:'Yazdığın sözcüğü cümlede kullan.',
+  gorev:'Az önce yazdığın sözcüklerden birini ("bayrak", "vatan", "özgürlük", "kâğıt", "yağmur", "saygı") seç ve onu kendi cümlende kullan.',
+  enAzKelime:7,buyukHarf:true,bitis:'.',
+  /* Türkçede ünsüz yumuşar: bayrak -> bayrağı, kâğıt -> kâğıdı. Desen ikisini de kabul etmeli. */
+  denetim:[{ad:'Yazdığın sözcüklerden birini kullan',desen:'bayra[kğ]|vatan|özgürlü[kğ]|kâğı[td]|yağmur|saygı',bayrak:'i'}],
+  ipucuMetin:'…',
+  ornekCevap:'Törende bayrağı direğe çekerken hep birlikte İstiklal Marşı söyledik.',
+  result:'Doğru yazdığın sözcüğü kendi cümlende kullandın.'}
 ]};
 
 /* ===== açılış ===== */

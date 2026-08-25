@@ -198,7 +198,9 @@ function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locke
  $('.sound').onclick=()=>{const r=round();if(r)speak(r.prompt,true)};
  /* rAF geri çağrısı bir sonraki karede çalışır; o ana kadar oyun bitmiş
     olabilir (gizli sekmede kuyrukta bekliyor). round() boşsa okuma. */
- renderRound();requestAnimationFrame(()=>{const r=round();if(r)speak(r.prompt)})}
+ renderRound();requestAnimationFrame(()=>{const t=roundIndex,r=round();
+  /* kare geri döndüğünde tur değişmiş olabilir: bayat yönergeyi okuma */
+  if(r&&roundIndex===t)speak(r.prompt)})}
 function feedback(msg,bad=false){const f=$('.feedback');if(!f)return;f.textContent=msg;f.className='feedback show'+(bad?' bad':'');setTimeout(()=>{if(f)f.className='feedback'},950)}
 /* Hızlı çift dokunuş tek hata için iki can götürmesin. */
 let sonCeza=0;
