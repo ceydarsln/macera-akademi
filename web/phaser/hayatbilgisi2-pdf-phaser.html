@@ -191,14 +191,19 @@ function showOverlay(){document.getElementById('app').insertAdjacentHTML('before
 function round(){return game.rounds[roundIndex]}
 function hud(){return `<header class="hud"><div class="round">Tur ${roundIndex+1}/3</div><div class="prompt">${esc(round().prompt)}</div>`+
  `<div class="hud-right"><span class="lives">${'❤️'.repeat(lives)}${'🖤'.repeat(3-lives)}</span><button class="sound" aria-label="Yönergeyi tekrar dinle">🔊</button></div></header>`}
-function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;
+function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;sonCeza=0;
  document.getElementById('app').innerHTML=hud()+
   `<main class="scene" data-theme="${round().theme||game.theme||'sinif'}"><div class="feedback"></div>`+
   `<section class="stage" id="stage"></section><section class="task" id="task"></section></main>`;
- $('.sound').onclick=()=>speak(round().prompt,true);
- renderRound();requestAnimationFrame(()=>speak(round().prompt))}
+ $('.sound').onclick=()=>{const r=round();if(r)speak(r.prompt,true)};
+ /* rAF geri çağrısı bir sonraki karede çalışır; o ana kadar oyun bitmiş
+    olabilir (gizli sekmede kuyrukta bekliyor). round() boşsa okuma. */
+ renderRound();requestAnimationFrame(()=>{const r=round();if(r)speak(r.prompt)})}
 function feedback(msg,bad=false){const f=$('.feedback');if(!f)return;f.textContent=msg;f.className='feedback show'+(bad?' bad':'');setTimeout(()=>{if(f)f.className='feedback'},950)}
+/* Hızlı çift dokunuş tek hata için iki can götürmesin. */
+let sonCeza=0;
 function wrong(hint){if(locked||!round())return;
+ const simdi=Date.now();if(simdi-sonCeza<550)return;sonCeza=simdi;
  if(!round().cezasiz)lives=Math.max(0,lives-1);
  feedback('Bir daha düşün',true);speak(hint||'Bir daha düşün.');
  const sc=$('.stage');if(sc){sc.classList.remove('shake');void sc.offsetWidth;sc.classList.add('shake')}

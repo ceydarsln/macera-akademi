@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>4. Sınıf Türkçe — Gerçek Üretim Sahneleri</title>
+<link rel="icon" href="data:,">
+<style>
+:root{--ink:#1b2f45;--muted:#516d87;--panel:rgba(255,255,255,.95);--ok:#14855c;--bad:#cd463d;--gold:#dfa32a;--blue:#2c7cb6;--line:#b6cada}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:#dbecfa;touch-action:manipulation}
+button{font:inherit;color:inherit;cursor:pointer}
+.app{height:100%;display:grid;grid-template-rows:auto 1fr;isolation:isolate}
+.hud{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;padding:7px 9px;background:rgba(255,255,255,.97);box-shadow:0 3px 15px rgba(25,59,85,.16);z-index:30}
+.round{font-size:clamp(13px,3.2vw,17px);font-weight:950;white-space:nowrap}
+.prompt{font-size:clamp(11px,2.7vw,14px);line-height:1.18;font-weight:850;text-align:center;overflow-wrap:break-word}
+.hud-right{display:flex;align-items:center;gap:5px}
+.lives{font-size:15px;letter-spacing:-3px;white-space:nowrap}
+.sound{width:46px;height:44px;border:0;border-radius:13px;background:#e3f3ff;box-shadow:0 2px 0 #aacce2;font-size:20px}
+.scene{position:relative;min-height:0;overflow:auto;padding:9px 9px max(18px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:9px;background:linear-gradient(#d5eafd 0 58%,#a9c9e0 58%)}
+.scene[data-theme="kutuphane"]{background:linear-gradient(#fdf1da 0 68%,#b98358 68%)}
+.scene[data-theme="atolye"]{background:linear-gradient(#e7edf3 0 66%,#7b8ea1 66%)}
+.scene[data-theme="sahne"]{background:linear-gradient(#f3e6f5 0 64%,#8d6f9e 64%)}
+.scene[data-theme="meydan"]{background:linear-gradient(#d9ecfb 0 60%,#9aa6ae 60%)}
+.scene[data-theme="lab"]{background:linear-gradient(#e2f7f2 0 66%,#79b7a6 66%)}
+.scene[data-theme="muze"]{background:linear-gradient(#ece5f4 0 66%,#8d7fa6 66%)}
+.scene[data-theme="doga"]{background:linear-gradient(#d5eafd 0 52%,#8bbf6e 52%)}
+.scene[data-theme="masa"]{background:linear-gradient(#fdf3e2 0 70%,#c19a6b 70%)}
+.stage{position:relative;flex:1 1 auto;min-height:200px;border-radius:22px;padding:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,.86);border:2px solid rgba(255,255,255,.95);box-shadow:0 8px 24px rgba(20,56,82,.14)}
+.task{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:auto}
+.caption{width:100%;text-align:center;font-size:clamp(12px,3.1vw,15px);font-weight:850;line-height:1.28}
+.caption.soru{font-size:clamp(13px,3.5vw,17px);font-weight:950}
+.hint{width:100%;text-align:center;font-size:12px;font-weight:800;color:var(--muted);line-height:1.3}
+.row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px;width:100%}
+.choices{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:8px;width:100%}
+.choice{min-height:52px;flex:1 1 100%;max-width:340px;border:3px solid #fff;border-radius:16px;background:var(--panel);box-shadow:0 4px 0 rgba(35,77,108,.2);padding:9px 12px;font-weight:900;font-size:clamp(13px,3.4vw,16px);line-height:1.25;text-align:center;overflow-wrap:break-word}
+.choice.kisa{flex:1 1 44%;max-width:170px}
+.choice:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(35,77,108,.2)}
+/* karar verilecek cümle HER ZAMAN tam görünür (şartname ölçüt 5) */
+.kart{flex:0 0 auto;width:min(324px,95%);min-height:56px;background:#fff;border:3px solid var(--line);border-radius:16px;padding:10px 13px;font-weight:880;font-size:clamp(13px,3.5vw,16px);line-height:1.34;text-align:center;overflow-wrap:break-word;box-shadow:0 4px 0 rgba(35,77,108,.14)}
+.kart.vurgu{border-color:var(--gold);background:#fffaf0}
+.kutular{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;width:100%}
+.kutu{flex:1 1 45%;min-width:126px;max-width:200px;min-height:56px;border:3px solid #7fa3bd;border-radius:15px;background:#eef7fd;padding:8px 9px;font-weight:950;font-size:clamp(11px,3vw,14px);line-height:1.22;text-align:center;overflow-wrap:break-word}
+.kutu .sayac{display:block;font-size:11px;font-weight:800;color:var(--muted);margin-top:2px}
+.ilerleme{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.ilerleme i{width:11px;height:11px;border-radius:50%;background:#cfdde8;border:2px solid #a8bfd0}
+.ilerleme i.ok{background:var(--ok);border-color:#0b6a48}
+.ilerleme i.simdi{background:var(--gold);border-color:#a97c14}
+/* metin kartı — okuma ve düzeltme turlarında metin asla taşmaz */
+.metin-kart{flex:0 0 auto;width:min(330px,96%);overflow:visible;background:#fffdf6;border:3px solid #d8c9a4;border-radius:14px;padding:10px 12px;font-size:clamp(13px,3.4vw,15px);line-height:1.5;text-align:left;overflow-wrap:break-word}
+.metin-kart .baslik{font-weight:950;font-size:13px;color:#8a6a2c;margin-bottom:5px}
+.kanit{border-bottom:2px dotted #9db4c6;padding:1px 2px;border-radius:4px;cursor:pointer}
+.kanit.secili{background:#dff3e6;border-bottom-color:var(--ok)}
+.kanit.yanlis{background:#fde9e7;border-bottom-color:var(--bad)}
+.kanit-sayac{font-size:12px;font-weight:900;color:var(--muted)}
+.dizi{display:flex;flex-direction:column;gap:6px;width:100%;align-items:center}
+.sirakart{flex:0 0 auto;width:min(324px,95%);min-height:50px;border:3px solid var(--line);border-radius:14px;background:#fff;padding:8px 11px;font-weight:870;font-size:clamp(12px,3.3vw,15px);line-height:1.3;text-align:left;overflow-wrap:break-word;display:flex;align-items:center;gap:8px}
+.sirakart .no{flex:0 0 24px;height:24px;border-radius:50%;background:#e6eef5;color:var(--muted);font-size:12px;font-weight:950;display:flex;align-items:center;justify-content:center}
+.sirakart.secili{border-color:var(--ok);background:#e9f7f0}
+.sirakart.secili .no{background:var(--ok);color:#fff}
+.esle-alan{display:flex;flex-direction:column;gap:7px;width:100%;align-items:center}
+.yuva{flex:0 0 auto;width:min(330px,96%);min-height:58px;border:3px dashed #6f9cba;border-radius:15px;background:rgba(255,255,255,.72);padding:7px 9px;display:flex;align-items:center;gap:9px;text-align:left}
+.yuva.dolu{border-style:solid;border-color:var(--ok);background:#e9f7f0}
+.yuva .hedef{flex:1 1 auto;font-weight:880;font-size:clamp(12px,3.2vw,14px);line-height:1.3;overflow-wrap:break-word}
+.yuva .kondu{flex:0 0 auto;max-width:44%;font-weight:900;font-size:12px;color:#0b6a48;line-height:1.2;overflow-wrap:break-word}
+.etiketler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
+.etiket{min-height:46px;max-width:190px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word}
+.etiket.secili{border-color:var(--gold);background:#fff7e2}
+.etiket.bitti{visibility:hidden}
+.feedback{position:absolute;left:50%;top:46%;z-index:150;transform:translate(-50%,-50%) scale(.7);opacity:0;pointer-events:none;background:#fff;border:4px solid var(--ok);border-radius:22px;padding:14px 19px;min-width:200px;text-align:center;font-size:clamp(17px,4.6vw,25px);font-weight:1000;box-shadow:0 12px 38px rgba(0,0,0,.27)}
+.feedback.show{animation:pop .95s ease both}
+.feedback.bad{border-color:var(--bad)}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}18%,74%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}
+@keyframes shake{25%{transform:translateX(-7px)}50%{transform:translateX(7px)}75%{transform:translateX(-4px)}}
+@keyframes hop{50%{transform:translateY(-14px) scale(1.04)}}
+.shake{animation:shake .38s}.success-motion{animation:hop .7s ease}
+.overlay{position:absolute;inset:0;z-index:300;background:rgba(9,27,46,.88);display:flex;align-items:center;justify-content:center;padding:20px}
+.overlay-card{width:min(390px,94%);background:white;border-radius:26px;padding:22px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.overlay h2{margin:0 0 8px;font-size:27px}.overlay p{font-size:15px;font-weight:750;color:var(--muted);line-height:1.35}
+.big{font-size:clamp(38px,11vw,64px)}
+/* yazma — gerçek üretim; hazır kart dizmek başarı sayılmaz */
+.yazi-alan{flex:0 0 auto;width:min(330px,96%);min-height:96px;border:3px solid #8fb4cd;border-radius:15px;padding:9px 11px;font:inherit;font-size:15px;font-weight:800;line-height:1.4;resize:none;background:#fff}
+.olcut{width:min(330px,96%);display:flex;flex-direction:column;gap:3px}
+.olcut div{font-size:12px;font-weight:850;color:var(--muted);display:flex;gap:6px;align-items:flex-start;line-height:1.25}
+.olcut div.tam{color:#0b6a48}
+.trharf{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;width:min(330px,96%)}
+.trharf button{min-width:44px;min-height:44px;border:2px solid var(--line);border-radius:10px;background:#f4f9fd;font-size:17px;font-weight:950}
+.banka{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;width:min(330px,96%)}
+.banka button{min-height:38px;border:2px solid var(--line);border-radius:10px;background:#f2f7fb;padding:5px 9px;font-size:13px;font-weight:900}
+/* konuşma — gerçek ses üretimi */
+.rubrik{width:min(330px,96%);display:flex;flex-direction:column;gap:5px}
+.rubrik button{min-height:44px;border:3px solid var(--line);border-radius:13px;background:#fff;padding:6px 10px;font-weight:850;font-size:13px;text-align:left;line-height:1.25}
+.rubrik button.on{border-color:var(--ok);background:#e9f7f0}
+.tut{min-height:60px;min-width:190px;border:3px solid #fff;border-radius:18px;background:#2c7cb6;color:#fff;font-weight:950;font-size:17px;box-shadow:0 5px 0 #1b5a88;user-select:none;touch-action:none}
+.tut.basili{background:#1b5a88;transform:translateY(3px);box-shadow:0 2px 0 #134466}
+.sure-cubuk{width:min(300px,92%);height:12px;border-radius:7px;background:#dbe7ef;overflow:hidden}
+.sure-cubuk i{display:block;height:100%;width:var(--w,0%);background:var(--gold);transition:width .1s linear}
+/* dikte — hedef sözcük hiçbir yerde yazılı değil, harf havuzu karışık */
+.dikte-yuva{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;width:min(330px,96%);min-height:56px;padding:7px;border:3px dashed #9fb0c4;border-radius:13px;background:#fff}
+.dikte-yuva span{min-width:34px;min-height:42px;display:flex;align-items:center;justify-content:center;border-bottom:3px solid #9fb0c4;font-size:22px;font-weight:950}
+.harfler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
+.harf{min-width:48px;min-height:48px;border:3px solid #fff;border-radius:13px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);font-size:20px;font-weight:950}
+.harf.bitti{visibility:hidden}
+/* çetele — beşinci çizgi dördünü keser */
+.cetele-tablo{width:min(330px,96%);display:flex;flex-direction:column;gap:6px}
+.cetele-satir{display:flex;align-items:center;gap:8px;min-height:52px;border:3px solid var(--line);border-radius:13px;background:#fff;padding:6px 9px;text-align:left}
+.cetele-satir .ad{flex:0 0 100px;font-size:12px;font-weight:950;line-height:1.15;overflow-wrap:break-word}
+.cetele-satir .isaret{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:26px}
+.cetele-satir.vurgu{border-color:var(--ok);background:#e9f7f0}
+/* dinleme — metin görünmez, tekrar dinleme cezasız */
+.ses-kart{width:min(310px,94%);min-height:88px;border:3px solid var(--line);border-radius:16px;background:#eef6fc;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px}
+.ses-dalga{display:flex;gap:3px;align-items:flex-end;height:30px}
+.ses-dalga i{width:5px;border-radius:3px;background:var(--blue)}
+.sayim{font-size:12px;font-weight:900;color:var(--muted)}
+/* sahne çizimleri */
+svg.sahne{width:min(320px,94%);height:auto;max-height:170px;display:block}
+svg.mini{flex:0 0 74px;width:74px;height:auto;display:block}
+.sahne-not{font-size:12px;font-weight:850;color:var(--muted);text-align:center;line-height:1.25}
+.konus-balon{flex:0 0 auto;background:#fff;border:3px solid var(--line);border-radius:16px 16px 16px 4px;padding:8px 11px;font-weight:870;font-size:clamp(12px,3.2vw,15px);line-height:1.35;max-width:min(324px,95%);overflow-wrap:break-word;text-align:left}
+@media (max-height:640px){.stage{min-height:160px}.scene{gap:6px}.choice{min-height:48px}svg.sahne{max-height:130px}.metin-kart{max-height:170px}.yazi-alan{min-height:76px}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+/* Sınama modunda (?test=1) arka plan sekmesindeki setTimeout kısıntısını aş. */
+if(new URLSearchParams(location.search).has('test')){
+ const _st=window.setTimeout;
+ window.setTimeout=function(fn,ms){
+  if(!document.hidden||!(ms<2000))return _st(fn,ms);
+  const son=Date.now()+(ms||0),k=new MessageChannel();
+  k.port1.onmessage=()=>{Date.now()>=son?fn():k.port2.postMessage(0)};
+  k.port2.postMessage(0);return 0};
+}
+'use strict';
+const GAME_ID=new URLSearchParams(location.hash.slice(1)).get('oyun')||'z01';
+addEventListener('hashchange',()=>location.reload());
+const FAST=new URLSearchParams(location.search).has('test');
+const WAIT=FAST?25:820;
+let game,roundIndex=0,lives=3,score=0,state={},locked=false;
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* Seslendirme ateşle-unut: ilerleme hiçbir yerde ses olayına bağlı değil. */
+function speak(text,repeat=false){try{if(parent&&parent!==window&&typeof parent.oku==='function')return parent.oku(String(text||''),repeat)}catch(e){}
+ try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(text||''));u.lang='tr-TR';speechSynthesis.speak(u);return true}catch(e){return false}}
+function parentComplete(){try{if(parent&&parent!==window&&typeof parent.completeGame==='function'){parent.completeGame(game.finish,score);return}}catch(e){}showOverlay()}
+function showOverlay(){document.getElementById('app').insertAdjacentHTML('beforeend',
+ `<div class="overlay"><div class="overlay-card"><div class="big">🏅</div><h2>Harikasın!</h2><p>${esc(game.finish)}</p><button class="choice" onclick="location.reload()">Yeniden oyna</button></div></div>`)}
+function round(){return game.rounds[roundIndex]}
+function hud(){return `<header class="hud"><div class="round">Tur ${roundIndex+1}/3</div><div class="prompt">${esc(round().prompt)}</div>`+
+ `<div class="hud-right"><span class="lives">${'❤️'.repeat(lives)}${'🖤'.repeat(3-lives)}</span><button class="sound" aria-label="Yönergeyi tekrar dinle">🔊</button></div></header>`}
+function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;sonCeza=0;
+ document.getElementById('app').innerHTML=hud()+
+  `<main class="scene" data-theme="${round().theme||game.theme||'masa'}"><div class="feedback"></div>`+
+  `<section class="stage" id="stage"></section><section class="task" id="task"></section></main>`;
+ $('.sound').onclick=()=>{const r=round();if(r)speak(r.prompt,true)};
+ /* rAF geri çağrısı bir sonraki karede çalışır; o ana kadar oyun bitmiş
+    olabilir (gizli sekmede kuyrukta bekliyor). round() boşsa okuma. */
+ renderRound();requestAnimationFrame(()=>{const r=round();if(r)speak(r.prompt)})}
+function feedback(msg,bad=false){const f=$('.feedback');if(!f)return;f.textContent=msg;f.className='feedback show'+(bad?' bad':'');setTimeout(()=>{if(f)f.className='feedback'},950)}
+/* Hızlı çift dokunuş tek hata için iki can götürmesin. */
+let sonCeza=0;
+function wrong(hint){if(locked||!round())return;
+ const simdi=Date.now();if(simdi-sonCeza<550)return;sonCeza=simdi;
+ if(!round().cezasiz)lives=Math.max(0,lives-1);
+ feedback('Bir daha düşün',true);speak(hint||'Bir daha düşün.');
+ const sc=$('.stage');if(sc){sc.classList.remove('shake');void sc.offsetWidth;sc.classList.add('shake')}
+ const l=$('.lives');if(l)l.innerHTML='❤️'.repeat(lives)+'🖤'.repeat(3-lives);
+ if(lives===0){lives=3;setTimeout(render,700)}}
+function good(message){if(locked)return;locked=true;score+=10;const r=round();
+ feedback(message||'Doğru!');speak(r.result||message||'Doğru.');
+ const st=$('#stage');if(st)st.classList.add('success-motion');
+ setTimeout(()=>{roundIndex++;if(roundIndex>=3)parentComplete();else render()},WAIT)}
+function ertele(fn,ms){const t=roundIndex;setTimeout(()=>{if(roundIndex===t&&!locked)fn()},ms)}
+function gecisBasla(fn,ms){state.gecis=true;ertele(()=>{state.gecis=false;fn()},ms)}
+const TRUP=s=>String(s||'').toLocaleUpperCase('tr');
+function sadelestir(s){return String(s||'').toLocaleLowerCase('tr').replace(/[^\wçğıöşü\s]/g,' ').replace(/\s+/g,' ').trim()}
+function kelimeSay(s){const t=sadelestir(s);return t?t.split(' ').length:0}
+function ilerleme(n,i){return `<div class="ilerleme">${Array.from({length:n},(_,k)=>`<i class="${k<i?'ok':(k===i?'simdi':'')}"></i>`).join('')}</div>`}
+function sahneHtml(r){return typeof r.sahne==='function'?r.sahne(state):(r.sahne||'')}
+/* Cihaz klavyesinde Türkçe harf bulunmayabilir; ölçütler yazıma bakıyor.
+   İmleç konumuna harf ekleyen küçük bir şerit her yazma alanının altında durur. */
+const TRKUCUK=['ç','ğ','ı','i','ö','ş','ü'];
+const TRBUYUK=['Ç','Ğ','I','İ','Ö','Ş','Ü'];
+function trSerit(){const b=!!state.trBuyuk;
+ return `<div class="trharf">${(b?TRBUYUK:TRKUCUK).map(h=>`<button data-tr="${h}">${h}</button>`).join('')}`+
+  `<button data-trsw="1" title="büyük/küçük">${b?'küçük':'BÜYÜK'}</button></div>`}
+function trSeritBagla(sec,uygula){
+ const sw=$('[data-trsw]');
+ if(sw)sw.onclick=()=>{state.trBuyuk=!state.trBuyuk;
+  const ta=$(sec),k=ta?ta.selectionStart:null;
+  uygula(ta?ta.value:'', k==null?0:k)};
+ $$('[data-tr]').forEach(b=>b.onclick=()=>{
+  const ta=$(sec);if(!ta)return;
+  const a=ta.selectionStart??ta.value.length, z=ta.selectionEnd??a;
+  const yeni=ta.value.slice(0,a)+b.dataset.tr+ta.value.slice(z);
+  uygula(yeni, a+1)})}
+function karistir(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=(i*7+3)%(i+1);[b[i],b[j]]=[b[j],b[i]]}return b}
+
+/* Sahne çizimleri — başlıktaki mekân ölçülen becerinin gerçek parçası olsun
+   diye her tema kendi sahnesiyle geliyor; uzay/roket/bant zemini yok. */
+const SVG=(w,h,ic)=>`<svg class="sahne" viewBox="0 0 ${w} ${h}" role="img">${ic}</svg>`;
+const kisi=(x,y,r,govde,ten='#f0c9a4')=>
+ `<circle cx="${x}" cy="${y}" r="${r}" fill="${ten}" stroke="#c9915f" stroke-width="2"/>`+
+ `<path d="M${x-r*1.15} ${y+r*3.3} q0 -${r*2.5} ${r*1.15} -${r*2.5} q${r*1.15} 0 ${r*1.15} ${r*2.5} z" fill="${govde}"/>`+
+ `<circle cx="${x-r*.36}" cy="${y-r*.12}" r="2" fill="#3a2b22"/><circle cx="${x+r*.36}" cy="${y-r*.12}" r="2" fill="#3a2b22"/>`;
+const SAHNE={
+ cember:()=>SVG(320,140,
+  `<rect width="320" height="140" fill="#fdf1da"/><ellipse cx="160" cy="104" rx="132" ry="28" fill="#e2d3b6" stroke="#b99f74" stroke-width="3"/>`+
+  kisi(48,58,11,'#d9645a')+kisi(104,50,11,'#4e8fc4')+kisi(216,50,11,'#4fa08a')+kisi(272,58,11,'#d7a03c')+
+  `<rect x="126" y="14" width="68" height="42" rx="5" fill="#fff" stroke="#b99f74" stroke-width="3"/>`+
+  `<text x="160" y="40" font-size="11" font-weight="800" text-anchor="middle" fill="#8a6a2c">GÖRÜŞ PANOSU</text>`),
+ masa:()=>SVG(320,140,
+  `<rect width="320" height="140" fill="#fdf3e2"/><rect y="98" width="320" height="42" fill="#c19a6b"/>`+
+  `<rect x="22" y="26" width="104" height="72" rx="4" fill="#fff" stroke="#b99f74" stroke-width="3"/>`+
+  [0,1,2,3,4].map(i=>`<rect x="34" y="${38+i*11}" width="${80-i*7}" height="4" rx="2" fill="#d9cdb4"/>`).join('')+
+  `<rect x="150" y="44" width="66" height="46" rx="4" fill="#f6efdc" stroke="#b99f74" stroke-width="3"/>`+
+  `<rect x="228" y="44" width="66" height="46" rx="4" fill="#f6efdc" stroke="#b99f74" stroke-width="3"/>`+
+  kisi(262,20,10,'#4e8fc4')),
+ matbaa:()=>SVG(320,140,
+  `<rect width="320" height="140" fill="#e7edf3"/><rect y="104" width="320" height="36" fill="#7b8ea1"/>`+
+  `<rect x="58" y="26" width="150" height="66" rx="8" fill="#5b7185" stroke="#3f5566" stroke-width="4"/>`+
+  `<rect x="76" y="40" width="114" height="30" rx="3" fill="#cfdae3"/>`+
+  `<circle cx="222" cy="60" r="20" fill="#8fa3b5" stroke="#5b7185" stroke-width="4"/>`+
+  `<rect x="214" y="92" width="80" height="46" rx="3" fill="#fff" stroke="#b6cada" stroke-width="3"/>`),
+ sozluk:()=>SVG(320,140,
+  `<rect width="320" height="140" fill="#fdf1da"/>`+
+  `<path d="M22 22 h134 v100 h-134z" fill="#fffdf6" stroke="#b99f74" stroke-width="3"/>`+
+  `<path d="M164 22 h134 v100 h-134z" fill="#fffdf6" stroke="#b99f74" stroke-width="3"/>`+
+  `<rect x="156" y="18" width="8" height="108" rx="3" fill="#9c7a4c"/>`+
+  [0,1,2,3].map(i=>`<rect x="36" y="${40+i*18}" width="${104-i*12}" height="5" rx="2" fill="#ddd0b4"/>`).join('')+
+  [0,1,2,3].map(i=>`<rect x="178" y="${40+i*18}" width="${104-i*16}" height="5" rx="2" fill="#ddd0b4"/>`).join('')),
+ basamak:()=>SVG(320,140,
+  `<rect width="320" height="140" fill="#d5eafd"/><rect y="120" width="320" height="20" fill="#8bbf6e"/>`+
+  [0,1,2,3].map(i=>`<rect x="${28+i*66}" y="${112-i*24}" width="62" height="${12+i*24}" rx="3" fill="#e7d3ac" stroke="#b99f74" stroke-width="3"/>`).join('')+
+  kisi(46,96,10,'#d9645a')),
+ kalem:()=>SVG(320,140,
+  `<rect width="320" height="140" fill="#e7edf3"/><rect x="30" y="20" width="200" height="100" rx="6" fill="#fffdf6" stroke="#b6cada" stroke-width="3"/>`+
+  [0,1,2,3,4].map(i=>`<rect x="46" y="${36+i*17}" width="${168-(i%3)*30}" height="5" rx="2" fill="#dfe6ec"/>`).join('')+
+  `<path d="M246 106 l44 -70 l16 10 l-44 70 l-18 4z" fill="#f0c14b" stroke="#b98d16" stroke-width="3"/>`)
+};
+
+/* ===== KANIT (okuma kipi): cevaptan önce metindeki kanıt işaretlenir;
+   doğru seçenek ancak kanıtla tutarlıysa kabul edilir. ===== */
+function metinHtml(r){
+ return `<div class="metin-kart">${r.baslik?`<div class="baslik">${esc(r.baslik)}</div>`:''}`+
+  r.metin.map(par=>`<div>${par.map((p,si)=>{
+   if(typeof p==='string')return esc(p);
+   const ix=r.metin.indexOf(par)+'-'+si;
+   const se=(state.kanit||[]).indexOf(ix)>=0, ya=(state.yanlisKanit||[]).indexOf(ix)>=0;
+   return `<span class="kanit${se?' secili':''}${ya?' yanlis':''}" data-kanit="${ix}" data-dogru="${p.dogru?1:0}">${esc(p.t)}</span>`
+  }).join('')}</div>`).join('')+`</div>`}
+function kanitCiz(r){
+ const gerek=r.gerekKanit||1;
+ $('#stage').innerHTML=sahneHtml(r)+metinHtml(r)+
+  `<div class="kanit-sayac">İşaretlenen kanıt: ${(state.kanit||[]).length}/${gerek}</div>`+
+  `<div class="caption">${esc(state.not||'Cevaptan önce metinde kanıtı işaretle.')}</div>`;
+ $$('[data-kanit]').forEach(el=>el.onclick=()=>{
+  if(state.gecis||state.faz>0||locked)return;
+  const ix=el.dataset.kanit;
+  if((state.kanit||[]).indexOf(ix)>=0)return feedback('Bunu işaretledin');
+  if(el.dataset.dogru!=='1'){
+   state.yanlisKanit=(state.yanlisKanit||[]).concat(ix);
+   state.not='Bu bölüm soruyu yanıtlamıyor. Sorunun ne istediğini yeniden oku.';
+   kanitCiz(r);return wrong(state.not)}
+  state.kanit=(state.kanit||[]).concat(ix);state.not='Kanıt işaretlendi.';kanitCiz(r);
+  if(state.kanit.length>=gerek){state.faz=1;feedback('Kanıt tamam');gecisBasla(()=>kanitCiz(r),FAST?30:560)}});
+ if(state.faz===0){$('#task').innerHTML='<div class="caption">Metinde soruyu yanıtlayan bölüme dokun.</div>';return}
+ if(state.faz===2&&r.neden){
+  /* Kanıt turunda ikinci basamak: çıkarımın gerekçesi ayrıca sorulur. */
+  $('#task').innerHTML=`<div class="caption soru">${esc(r.neden.soru)}</div>`+
+   `<div class="choices">${r.neden.secenekler.map((c,i)=>`<button class="choice" data-neden="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+  $$('[data-neden]').forEach(b=>b.onclick=()=>{
+   if(locked||state.gecis)return;
+   const c=r.neden.secenekler[+b.dataset.neden];
+   if(!c.correct)return wrong(c.hint||'Metne dön: bunu hangi cümle gösteriyor?');
+   good()});
+  return}
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<div class="choices">${r.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`;
+ $$('[data-choice]').forEach(b=>b.onclick=()=>{
+  if(locked||state.gecis)return;
+  const c=r.secenekler[+b.dataset.choice];
+  if(!c.correct)return wrong(c.hint||'İşaretlediğin kanıta dön: o bölüm bu seçeneği destekliyor mu?');
+  if(r.neden){state.faz=2;state.not=r.araSoz||'Doğru. Peki bunu nereden anladın?';feedback('Doğru');
+   return gecisBasla(()=>kanitCiz(r),FAST?30:600)}
+  good()})}
+function renderKanit(r){state.kanit=[];state.yanlisKanit=[];state.faz=0;state.not='';kanitCiz(r)}
+
+/* ===== KARAR: sahneye bağlı seçim; seçenekler sabit, refleks yok.
+   İstenirse ikinci basamakta gerekçe sorulur. ===== */
+function kararCiz(r){
+ const g=state.faz===1&&r.neden;
+ $('#stage').innerHTML=sahneHtml(r)+
+  (r.durum?`<div class="konus-balon">${esc(r.durum)}</div>`:'')+
+  (r.cumle?`<div class="kart vurgu">${esc(r.cumle)}</div>`:'')+
+  (r.sahneNot?`<div class="sahne-not">${esc(r.sahneNot)}</div>`:'')+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ const soru=g?r.neden.soru:r.soru, sec=g?r.neden.secenekler:r.secenekler;
+ $('#task').innerHTML=`<div class="caption soru">${esc(soru)}</div>`+
+  `<div class="choices">${sec.map((c,i)=>`<button class="choice${c.label.length<16?' kisa':''}" data-${g?'neden':'sec'}="${i}">${esc(c.label)}</button>`).join('')}</div>`+
+  (r.ipucu&&!g?`<div class="hint">${esc(r.ipucu)}</div>`:'');
+ $$(`[data-${g?'neden':'sec'}]`).forEach(b=>b.onclick=()=>{
+  if(state.gecis||locked)return;
+  const c=sec[+(g?b.dataset.neden:b.dataset.sec)];
+  if(!c.correct)return wrong(c.hint||r.yanlisIpucu||'Cümleye yeniden bak.');
+  if(!g&&r.neden){state.faz=1;state.not=r.araSoz||'Doğru. Peki neden?';feedback('Doğru');
+   return gecisBasla(()=>kararCiz(r),FAST?30:600)}
+  good()})}
+function renderKarar(r){state.faz=0;state.not='';kararCiz(r)}
+
+/* ===== SINIFLA: cümle kartı sabit ve TAM görünür; bant akışı yok.
+   Kutu etiketleri kutu içinde kalır, simge ipucu vermez. ===== */
+function sinifCiz(r){
+ const i=state.ix||0,k=r.kartlar[i];
+ if(!k)return;
+ $('#stage').innerHTML=sahneHtml(r)+
+  ilerleme(r.kartlar.length,i)+
+  `<div class="kart vurgu">${esc(k.t)}</div>`+
+  (k.sahne?`<div class="sahne-not">${esc(k.sahne)}</div>`:'')+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<div class="kutular">${r.kutular.map((b,j)=>`<button class="kutu" data-kutu="${j}">${esc(b)}<span class="sayac">${(state.sayim||[])[j]||0}</span></button>`).join('')}</div>`+
+  (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
+ $$('[data-kutu]').forEach(b=>b.onclick=()=>{
+  if(state.gecis||locked)return;
+  const j=+b.dataset.kutu;
+  if(j!==k.dogru)return wrong(k.hint||'Cümleyi yeniden oku: hangi kutuya uyuyor?');
+  state.sayim=state.sayim||r.kutular.map(()=>0);state.sayim[j]++;
+  state.ix=i+1;state.not=k.neden||'';
+  if(state.ix>=r.kartlar.length)return good();
+  feedback('Doğru');gecisBasla(()=>sinifCiz(r),FAST?30:520)})}
+function renderSinif(r){state.ix=0;state.not='';state.sayim=r.kutular.map(()=>0);sinifCiz(r)}
+
+/* ===== SIRA: roket-yakıt sahnesi yok; yanlışta dizi silinmez. ===== */
+function siraCiz(r){
+ $('#stage').innerHTML=sahneHtml(r)+
+  (r.gorev?`<div class="konus-balon">${esc(r.gorev)}</div>`:'')+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ const d=state.dizi||[];
+ $('#task').innerHTML=`<div class="dizi">${r.kartlar.map((k,i)=>{
+   const p=d.indexOf(i);
+   return `<button class="sirakart ${p>=0?'secili':''}" data-kart="${i}"><span class="no">${p>=0?p+1:''}</span><span>${esc(k.t)}</span></button>`}).join('')}</div>`+
+  `<div class="hint">${d.length}/${r.kartlar.length} adım dizildi. ${esc(r.ipucu||'')}</div>`;
+ $$('[data-kart]').forEach(b=>b.onclick=()=>{
+  if(state.gecis||locked)return;
+  const i=+b.dataset.kart;
+  if(d.indexOf(i)>=0)return feedback('Bunu dizdin');
+  if(i!==r.dogru[d.length]){
+   state.not=(r.ipucular&&r.ipucular[d.length])||'Önce hangisi olmalı?';
+   siraCiz(r);return wrong(state.not)}
+  state.dizi=d.concat(i);state.not='';
+  if(state.dizi.length>=r.dogru.length){siraCiz(r);return good()}
+  siraCiz(r)})}
+function renderSira(r){state.dizi=[];state.not='';siraCiz(r)}
+
+/* ===== ESLE: parça ile hedef arasında simge/renk eşleşmesi YOK;
+   karar metnin anlamına dayanır. ===== */
+function esleCiz(r){
+ $('#stage').innerHTML=sahneHtml(r)+
+  `<div class="esle-alan">${r.yuvalar.map((y,i)=>{
+    const v=(state.yerlesen||[])[i];
+    return `<button class="yuva ${v!=null?'dolu':''}" data-yuva="${i}">`+
+     `<span class="hedef">${esc(y.hedef)}</span>`+
+     (v!=null?`<span class="kondu">${esc(r.etiketler[v].t)}</span>`:'')+`</button>`}).join('')}</div>`+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<div class="etiketler">${r.etiketler.map((e,j)=>{
+    const kondu=(state.yerlesen||[]).indexOf(j)>=0;
+    return `<button class="etiket ${kondu?'bitti':''} ${state.secEt===j?'secili':''}" data-et="${j}">${esc(e.t)}</button>`}).join('')}</div>`+
+  `<div class="hint">${esc(r.ipucu||'Önce alttan bir kart seç, sonra ait olduğu satıra dokun.')}</div>`;
+ $$('[data-et]').forEach(b=>b.onclick=()=>{if(locked)return;state.secEt=+b.dataset.et;esleCiz(r)});
+ $$('[data-yuva]').forEach(b=>b.onclick=()=>{
+  if(locked||state.secEt==null)return;
+  const i=+b.dataset.yuva;
+  if((state.yerlesen||[])[i]!=null)return feedback('Bu satır dolu');
+  if(state.secEt!==r.yuvalar[i].dogru){
+   state.not=r.yuvalar[i].hint||'Bu kart bu satıra ait değil; anlamını yeniden düşün.';
+   state.secEt=null;esleCiz(r);return wrong(state.not)}
+  state.yerlesen[i]=state.secEt;state.not=r.yuvalar[i].neden||'';
+  if(r.sesliSoyle)speak(r.etiketler[state.secEt].t);
+  state.secEt=null;esleCiz(r);
+  if(state.yerlesen.every(v=>v!=null))good()})}
+function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secEt=null;state.not='';esleCiz(r)}
+
+/* ===== YAZ: gerçek üretim. Ölçütler yazarken canlı işaretlenir; ekrandaki
+   örnek cümlenin kopyası reddedilir; kelime bankası yalnız erişim desteği. ===== */
+function olcutDurum(r,t){
+ const k=kelimeSay(t),ham=String(t||'').trim(),d=[];
+ if(r.enAzKelime)d.push({ad:`En az ${r.enAzKelime} sözcük yaz`,tam:k>=r.enAzKelime});
+ if(r.enAzCumle)d.push({ad:`En az ${r.enAzCumle} cümle yaz`,tam:(ham.match(/[.!?…]/g)||[]).length>=r.enAzCumle});
+ if(r.buyukHarf)d.push({ad:'Büyük harfle başla',tam:/^[A-ZÇĞİÖŞÜ]/.test(ham)});
+ if(r.bitis)d.push({ad:`Sonuna "${r.bitis}" koy`,tam:ham.endsWith(r.bitis)});
+ (r.gerekli||[]).forEach(g=>d.push({ad:`"${g}" sözcüğünü kullan`,tam:sadelestir(t).includes(sadelestir(g))}));
+ (r.denetim||[]).forEach(dn=>d.push({ad:dn.ad,tam:new RegExp(dn.desen,dn.bayrak||'').test(ham)}));
+ return d}
+function yazCiz(r){
+ const t=state.yazi||'',d=olcutDurum(r,t),tam=d.every(x=>x.tam);
+ $('#stage').innerHTML=sahneHtml(r)+
+  `<div class="konus-balon">${esc(r.gorev)}</div>`+
+  (r.kaynak?`<div class="metin-kart">${r.kaynakBaslik?`<div class="baslik">${esc(r.kaynakBaslik)}</div>`:''}${esc(r.kaynak)}</div>`:'')+
+  (r.ornek?`<div class="sahne-not">${esc(r.ornek)}</div>`:'')+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=
+  `<textarea class="yazi-alan" id="yaziAlan" placeholder="${esc(r.ipucuMetin||'Buraya kendi cümleni yaz.')}">${esc(t)}</textarea>`+
+  `<div class="olcut">${d.map(x=>`<div class="${x.tam?'tam':''}">${x.tam?'✓':'○'} ${esc(x.ad)}</div>`).join('')}</div>`+
+  trSerit()+
+  (r.bank?`<div class="banka">${r.bank.map(b=>`<button data-bank="${esc(b)}">${esc(b)}</button>`).join('')}</div>`:'')+
+  `<button class="choice" id="yazOk" ${tam?'':'disabled style="opacity:.5"'}>Yazdım, kontrol et</button>`;
+ const ta=$('#yaziAlan');
+ ta.oninput=()=>{const c=ta.selectionStart;state.yazi=ta.value;yazCiz(r);
+  const y=$('#yaziAlan');y.focus();try{y.setSelectionRange(c,c)}catch(e){}};
+ $$('[data-bank]').forEach(b=>b.onclick=()=>{
+  const v=b.dataset.bank;state.yazi=(state.yazi?state.yazi.replace(/\s*$/,' '):'')+v;yazCiz(r);
+  const y=$('#yaziAlan');if(y)y.focus()});
+ trSeritBagla('#yaziAlan',(yeni,imlec)=>{state.yazi=yeni;yazCiz(r);
+  const y=$('#yaziAlan');if(y){y.focus();try{y.setSelectionRange(imlec,imlec)}catch(e){}}});
+ $('#yazOk').onclick=()=>{
+  if(locked)return;
+  if((r.yasak||[]).some(y=>sadelestir(state.yazi)===sadelestir(y)||sadelestir(state.yazi).includes(sadelestir(y)))){
+   state.not='Bu, ekrandaki hazır cümlenin kopyası. Kendi sözcüklerinle yaz.';yazCiz(r);return wrong(state.not)}
+  const eksik=olcutDurum(r,state.yazi).find(x=>!x.tam);
+  if(eksik)return wrong('Eksik ölçüt: '+eksik.ad);
+  good()}}
+function renderYaz(r){state.yazi=r.baslangicMetni||'';state.not='';yazCiz(r)}
+
+/* ===== DUZELT: görev metni işaretin ADINI ve YERİNİ söylemez; öğrenci metni
+   kendisi düzenler, ölçütler desenle sınanır. Sayaç hamle sayısı vermez. ===== */
+function duzeltCiz(r){
+ const t=state.yazi!=null?state.yazi:r.hatali;
+ const d=(r.denetim||[]).map(x=>({ad:x.ad,tam:new RegExp(x.desen,x.bayrak||'').test(t)}));
+ const tam=d.every(x=>x.tam);
+ $('#stage').innerHTML=sahneHtml(r)+
+  `<div class="konus-balon">${esc(r.gorev)}</div>`+
+  `<div class="metin-kart"><div class="baslik">Gelen metin (düzeltilecek)</div>${esc(r.hatali)}</div>`+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=
+  `<textarea class="yazi-alan" id="duzeltAlan">${esc(t)}</textarea>`+
+  `<div class="olcut">${d.map(x=>`<div class="${x.tam?'tam':''}">${x.tam?'✓':'○'} ${esc(x.ad)}</div>`).join('')}</div>`+
+  trSerit()+
+  `<button class="choice" id="duzeltOk" ${tam?'':'disabled style="opacity:.5"'}>Düzelttim</button>`;
+ const ta=$('#duzeltAlan');
+ ta.oninput=()=>{const c=ta.selectionStart;state.yazi=ta.value;duzeltCiz(r);
+  const y=$('#duzeltAlan');y.focus();try{y.setSelectionRange(c,c)}catch(e){}};
+ trSeritBagla('#duzeltAlan',(yeni,imlec)=>{state.yazi=yeni;duzeltCiz(r);
+  const y=$('#duzeltAlan');if(y){y.focus();try{y.setSelectionRange(imlec,imlec)}catch(e){}}});
+ $('#duzeltOk').onclick=()=>{
+  if(locked)return;
+  if(sadelestir(state.yazi)!==sadelestir(r.hatali) && r.sozcukKorunsun!==false){
+   /* sözcükler korunmalı: yalnız yazım/noktalama değişebilir */
+   state.not='Sözcükleri değiştirme; yalnız yazım ve noktalamayı düzelt.';duzeltCiz(r);return wrong(state.not)}
+  const eksik=(r.denetim||[]).map(x=>({ad:x.ad,tam:new RegExp(x.desen,x.bayrak||'').test(state.yazi)})).find(x=>!x.tam);
+  if(eksik)return wrong('Eksik: '+eksik.ad);
+  good()}}
+function renderDuzelt(r){state.yazi=r.hatali;state.not='';duzeltCiz(r)}
+
+/* ===== DINLE: ilk turda metin ve cevap anahtarı görünmez; tekrar dinleme
+   sınırsız ve cezasız. Ses kapalıysa da metin açılmaz. ===== */
+function dinleCiz(r){
+ const n=state.dinleme||0;
+ $('#stage').innerHTML=sahneHtml(r)+
+  `<div class="ses-kart"><div class="ses-dalga">${[9,17,26,30,22,14,24,11].map(h=>`<i style="height:${h}px"></i>`).join('')}</div>`+
+   `<div class="sahne-not">${esc(r.kaynakAd||'Dinleme metni')}</div>`+
+   `<div class="sayim">${n?n+' kez dinledin (tekrar dinlemek ceza değildir)':'Henüz dinlemedin'}</div></div>`+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=`<button class="choice" id="dinleBtn">${n?'Yeniden dinle':'Dinle'}</button>`+
+  (n?`<div class="caption soru">${esc(r.soru)}</div>`+
+     `<div class="choices">${r.secenekler.map((c,i)=>`<button class="choice" data-choice="${i}">${esc(c.label)}</button>`).join('')}</div>`
+    :`<div class="hint">Seçenekler dinledikten sonra açılır.</div>`);
+ $('#dinleBtn').onclick=()=>{
+  if(locked)return;
+  state.dinleme=(state.dinleme||0)+1;speak(r.metin,true);
+  state.not='Dinledin. İstediğin kadar tekrar dinleyebilirsin.';dinleCiz(r)};
+ $$('[data-choice]').forEach(b=>b.onclick=()=>{
+  if(locked)return;
+  const c=r.secenekler[+b.dataset.choice];
+  if(!c.correct)return wrong(c.hint||'Yeniden dinle; aradığın bilgi metnin neresindeydi?');
+  good()})}
+function renderDinle(r){state.dinleme=0;state.not='';dinleCiz(r)}
+
+/* ===== KONUS: örnek dinletilir, öğrenci GERÇEKTEN ses üretir (süre ölçülür),
+   sonra gerekçe/anlaşılabilirlik ölçütlerini tek tek işaretler. ===== */
+function konusCiz(r){
+ const sure=state.sure||0;
+ $('#stage').innerHTML=sahneHtml(r)+
+  `<div class="konus-balon">${esc(r.gorev)}</div>`+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ if(state.faz===0){
+  $('#task').innerHTML=`<button class="choice" id="ornekDinle">Örneği dinle</button>`+
+   `<button class="choice" id="konusBasla" ${state.dinledi?'':'disabled style="opacity:.5"'}>Şimdi ben konuşacağım</button>`+
+   `<div class="hint">Önce örneği dinle, sonra kendi konuşmanı yap.</div>`;
+  $('#ornekDinle').onclick=()=>{state.dinledi=true;speak(r.ornek,true);state.not='Örneği dinledin. Şimdi sıra sende.';konusCiz(r)};
+  $('#konusBasla').onclick=()=>{if(!state.dinledi)return;state.faz=1;konusCiz(r)};
+  return}
+ if(state.faz===1){
+  const yeter=sure>=1200;
+  $('#task').innerHTML=`<button class="tut ${state.basili?'basili':''}" id="konusTut">Basılı tut ve konuş</button>`+
+   `<div class="sure-cubuk"><i style="--w:${Math.min(100,sure/2000*100)}%"></i></div>`+
+   `<div class="hint">${yeter?'Konuşman kaydedildi.':'En az 1,2 saniye konuş.'} (${(sure/1000).toFixed(1)} sn)</div>`+
+   (yeter?`<button class="choice" id="konusBitti">Konuştum</button>`:'');
+  const b=$('#konusTut');
+  const bas=()=>{state.basili=true;state.bas=Date.now();konusCiz(r);
+   state.sayac=setInterval(()=>{state.sure=Date.now()-state.bas;const c=$('.sure-cubuk i');
+    if(c)c.style.setProperty('--w',Math.min(100,state.sure/2000*100)+'%')},80)};
+  const birak=()=>{if(!state.basili)return;state.basili=false;clearInterval(state.sayac);
+   state.sure=Date.now()-state.bas;
+   state.not=state.sure>=1200?'Konuşmanı aldık.':'Çok kısa oldu; biraz daha uzun konuş.';konusCiz(r)};
+  b.onpointerdown=e=>{e.preventDefault();bas()};
+  b.onpointerup=birak;b.onpointerleave=birak;b.onpointercancel=birak;
+  const bt=$('#konusBitti');if(bt)bt.onclick=()=>{state.faz=2;state.not='';konusCiz(r)};
+  return}
+ const rub=state.rubrik||[];
+ $('#task').innerHTML=`<div class="caption soru">Kendi konuşmanı değerlendir:</div>`+
+  `<div class="rubrik">${r.olcutler.map((o,i)=>`<button class="${rub.indexOf(i)>=0?'on':''}" data-ol="${i}">${rub.indexOf(i)>=0?'✓':'○'} ${esc(o)}</button>`).join('')}</div>`+
+  `<button class="choice" id="konusOk" ${rub.length>=r.olcutler.length?'':'disabled style="opacity:.5"'}>Tamamla</button>`;
+ $$('[data-ol]').forEach(b=>b.onclick=()=>{const i=+b.dataset.ol;
+  state.rubrik=rub.indexOf(i)>=0?rub.filter(x=>x!==i):rub.concat(i);konusCiz(r)});
+ $('#konusOk').onclick=()=>{if((state.rubrik||[]).length>=r.olcutler.length)good()}}
+function renderKonus(r){state.faz=0;state.dinledi=false;state.sure=0;state.basili=false;state.rubrik=[];state.not='';konusCiz(r)}
+
+/* ===== DIKTE: hedef sözcük hiçbir yerde YAZILI DEĞİL; yalnız dinlenir ve
+   karışık harf havuzundan kurulur. Tekrar dinleme cezasız. ===== */
+function dikteCiz(r){
+ const i=state.ix||0,s=r.sozcukler[i];if(!s)return;
+ const kur=state.kurulan||[];
+ const havuz=state.havuz||[];
+ $('#stage').innerHTML=sahneHtml(r)+
+  ilerleme(r.sozcukler.length,i)+
+  `<div class="ses-kart"><div class="ses-dalga">${[12,22,30,18,26,14].map(h=>`<i style="height:${h}px"></i>`).join('')}</div>`+
+   `<div class="sahne-not">${esc(r.baglam||'Sözcüğü dinle')}</div>`+
+   `<div class="sayim">${state.dinleme?state.dinleme+' kez dinledin':'Henüz dinlemedin'}</div></div>`+
+  `<div class="dikte-yuva">${kur.length?kur.map(h=>`<span>${esc(h)}</span>`).join(''):'<span>&nbsp;</span>'}</div>`+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=`<button class="choice" id="dinleBtn">${state.dinleme?'Yeniden dinle':'Sözcüğü dinle'}</button>`+
+  (state.dinleme?`<div class="harfler">${havuz.map((h,j)=>`<button class="harf ${(state.kullanilan||[]).indexOf(j)>=0?'bitti':''}" data-harf="${j}">${esc(h)}</button>`).join('')}</div>`+
+    `<button class="choice" id="dikteGeri">Son harfi sil</button>`
+   :`<div class="hint">Harfler dinledikten sonra açılır.</div>`);
+ $('#dinleBtn').onclick=()=>{
+  if(locked)return;
+  state.dinleme=(state.dinleme||0)+1;speak(s.ses||s.t,true);
+  if(!state.havuz.length)state.havuz=karistir(s.t.split('').concat(s.celdirici||[]));
+  state.not='';dikteCiz(r)};
+ $$('[data-harf]').forEach(b=>b.onclick=()=>{
+  if(locked||state.gecis)return;
+  const j=+b.dataset.harf;
+  if((state.kullanilan||[]).indexOf(j)>=0)return;
+  const yeni=kur.concat(havuz[j]);
+  const dogruOnEk=s.t.slice(0,yeni.length);
+  if(yeni.join('')!==dogruOnEk){
+   state.not='Bu harf buraya gelmiyor. Sözcüğü yeniden dinle.';dikteCiz(r);return wrong(state.not)}
+  state.kurulan=yeni;state.kullanilan=(state.kullanilan||[]).concat(j);
+  if(yeni.join('')===s.t){
+   state.ix=i+1;state.kurulan=[];state.kullanilan=[];state.havuz=[];state.dinleme=0;state.not=s.neden||'';
+   if(state.ix>=r.sozcukler.length){dikteCiz(r);return good()}
+   feedback('Doğru yazdın');return gecisBasla(()=>dikteCiz(r),FAST?30:600)}
+  dikteCiz(r)});
+ const g=$('#dikteGeri');
+ if(g)g.onclick=()=>{if(locked||!kur.length)return;
+  state.kurulan=kur.slice(0,-1);state.kullanilan=(state.kullanilan||[]).slice(0,-1);dikteCiz(r)}}
+function renderDikte(r){state.ix=0;state.kurulan=[];state.kullanilan=[];state.havuz=[];state.dinleme=0;state.not='';dikteCiz(r)}
+
+/* ===== YONERGE: ok bloğu yerine YAZILI yönerge. Öğrenci yönergeyi yazar,
+   sahne yazılana göre hareket eder (şartname: "yönerge yazar" kazanımı). ===== */
+function yonergeCiz(r){
+ const i=state.ix||0,a=r.adimlar[i];if(!a)return;
+ const yazilan=state.yazilan||[];
+ $('#stage').innerHTML=sahneHtml(r)+
+  `<div class="konus-balon">${esc(r.gorev)}</div>`+
+  `<div class="metin-kart"><div class="baslik">Yazdığın yönerge</div>`+
+   (yazilan.length?yazilan.map((y,k)=>`<div>${k+1}. ${esc(y)}</div>`).join(''):'<div style="opacity:.55">Henüz adım yazmadın.</div>')+
+  `</div>`+
+  ilerleme(r.adimlar.length,i)+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ const t=state.taslak||'';
+ const uygun=new RegExp(a.desen,a.bayrak||'i').test(t.trim());
+ $('#task').innerHTML=`<div class="caption soru">${esc(a.soru)}</div>`+
+  `<textarea class="yazi-alan" id="yonergeAlan" placeholder="${esc(a.ipucuMetin||'Adımı bir cümleyle yaz.')}">${esc(t)}</textarea>`+
+  `<div class="olcut"><div class="${uygun?'tam':''}">${uygun?'✓':'○'} ${esc(a.olcut)}</div></div>`+
+  `<button class="choice" id="yonergeOk" ${uygun?'':'disabled style="opacity:.5"'}>Bu adımı ekle</button>`;
+ const ta=$('#yonergeAlan');
+ ta.oninput=()=>{const c=ta.selectionStart;state.taslak=ta.value;yonergeCiz(r);
+  const y=$('#yonergeAlan');y.focus();try{y.setSelectionRange(c,c)}catch(e){}};
+ $('#yonergeOk').onclick=()=>{
+  if(locked||state.gecis)return;
+  if(!new RegExp(a.desen,a.bayrak||'i').test((state.taslak||'').trim()))
+   return wrong(a.hint||'Bu adım aradığımızı anlatmıyor.');
+  state.yazilan=yazilan.concat(state.taslak.trim());state.taslak='';state.ix=i+1;state.not=a.neden||'';
+  if(state.ix>=r.adimlar.length){yonergeCiz(r);return good()}
+  feedback('Adım eklendi');gecisBasla(()=>yonergeCiz(r),FAST?30:560)}}
+function renderYonerge(r){state.ix=0;state.yazilan=[];state.taslak='';state.not='';yonergeCiz(r)}
+
+/* ===== CETELE: rakam sayacı yok; beşinci çizgi dördünü keser ve yanıt
+   cümlesi sütun adını birebir söylemez. ===== */
+function ceteleSvg(n){
+ const tam=Math.floor(n/5),kalan=n%5,g=[];
+ const grup=(k,cizik)=>`<svg width="${k*7+(cizik?10:0)}" height="24" viewBox="0 0 ${k*7+(cizik?10:0)} 24">`+
+  Array.from({length:k},(_,i)=>`<line x1="${3+i*7}" y1="3" x2="${3+i*7}" y2="21" stroke="#2c7cb6" stroke-width="3" stroke-linecap="round"/>`).join('')+
+  (cizik?`<line x1="0" y1="20" x2="${k*7+6}" y2="4" stroke="#cd463d" stroke-width="3" stroke-linecap="round"/>`:'')+`</svg>`;
+ for(let i=0;i<tam;i++)g.push(grup(4,true));
+ if(kalan)g.push(grup(kalan,false));
+ return g.join('')||'<span style="font-size:12px;color:#8aa0b2">—</span>'}
+function ceteleCiz(r){
+ const i=state.ix||0,o=r.oylar[i],say=state.say||r.satirlar.map(()=>0);
+ $('#stage').innerHTML=sahneHtml(r)+
+  (o?`<div class="konus-balon">${esc(o.t)}</div>`:'')+
+  ilerleme(r.oylar.length,i)+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<div class="cetele-tablo">${r.satirlar.map((sa,j)=>
+    `<button class="cetele-satir ${state.sonSatir===j?'vurgu':''}" data-satir="${j}">`+
+    `<span class="ad">${esc(sa)}</span><span class="isaret">${ceteleSvg(say[j])}</span></button>`).join('')}</div>`+
+  `<div class="hint">${esc(r.ipucu||'Beşinci çizgi dördünü keser.')}</div>`;
+ $$('[data-satir]').forEach(b=>b.onclick=()=>{
+  if(locked||state.gecis||!o)return;
+  const j=+b.dataset.satir;
+  if(j!==o.dogru){state.not=o.hint||'Söylenene yeniden bak.';ceteleCiz(r);return wrong(state.not)}
+  state.say=say.slice();state.say[j]++;state.sonSatir=j;state.ix=i+1;state.not=o.neden||'';
+  if(state.ix>=r.oylar.length){ceteleCiz(r);return good()}
+  feedback('İşlendi');gecisBasla(()=>ceteleCiz(r),FAST?30:460)})}
+function renderCetele(r){state.ix=0;state.say=r.satirlar.map(()=>0);state.not='';state.sonSatir=null;ceteleCiz(r)}
+
+function renderRound(){const r=round();if(!r)return;
+ const fn={kanit:renderKanit,karar:renderKarar,sinifla:renderSinif,sira:renderSira,esle:renderEsle,
+  yaz:renderYaz,duzelt:renderDuzelt,dinle:renderDinle,konus:renderKonus,dikte:renderDikte,
+  yonerge:renderYonerge,cetele:renderCetele}[r.kind];
+ (fn||renderKarar)(r)}
+
+const GAMES={};
+/* ===== 4. SINIF TÜRKÇE — z01–z64 =====
+   Kaynak şartname: output/pdf/4_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf
+   (yapılandırılmış hâli tmp/spec_z.json). Beş kabul ölçütü:
+   1) başlıktaki sahne ve karakter ölçülen becerinin gerçek parçası;
+   2) ekranda cevabı sızdıran hiçbir öge yok;
+   3) üç farklı tur, değişen içerik ve değişen doğru konumu;
+   4) yanlış cevap doğruyu söylemeden nedenini içerik üzerinde gösterir,
+      motor/refleks hatası can kaybettirmez;
+   5) 390x844'te karar verilecek cümle tam görünür, dokunma alanı >= 44 px.
+   Dört kip kuralı: okuma → önce kanıt; yazma → gerçek üretim; dinleme → metin
+   görünmez, tekrar cezasız; konuşma → örnek sonrası gerçek ses üretimi. */
+
+/* ---- z01 Tartışma Çemberi (bant kaldırıldı: görüş panoda sabit) ---- */
+GAMES.z01={title:'Tartışma Çemberi',theme:'kutuphane',
+ finish:'Görüşlere katılıp katılmadığını gerekçeyle ayırdın, kısmen katılmayı öğrendin ve kendi görüşünü öneriyle birlikte yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Panodaki görüşe katılıyor musun?',sahne:SAHNE.cember,
+  soru:'Bu görüşe katılıyor musun?',kutular:['KATILIYORUM','KATILMIYORUM'],
+  ipucu:'Görüş panoda duruyor, acele etme.',
+  kartlar:[
+   {t:'"Kitap okumak, bir filmi izlemekten daha çok hayal kurdurur."',dogru:0,
+    neden:'Okurken sahneleri kendin canlandırırsın; film hazır görüntü verir.'},
+   {t:'"Ödevini yapmayan arkadaşımın ödevini ona vermeliyim."',dogru:1,
+    neden:'Yardım etmek ödevi kopyalatmak değildir.'},
+   {t:'"Sınıf kurallarını hep birlikte belirlemeliyiz."',dogru:0,
+    neden:'Kurala uyulması, kuralın birlikte konmasıyla kolaylaşır.'},
+   {t:'"Kütüphanede yüksek sesle konuşmak serbest olmalı."',dogru:1,
+    neden:'Kütüphane okuyanların ortak alanıdır.'},
+   {t:'"Bir kitabı bitirmeden başka kitaba başlamamalıyım."',dogru:1,
+    neden:'Bu kesin bir kural değil; okur kendi düzenini kurabilir.',
+    hint:'Bu bir zorunluluk mu, yoksa kişisel bir tercih mi?'},
+   {t:'"Okuduğumu anlatmak, anlamamı güçlendirir."',dogru:0,
+    neden:'Anlatmak, anladığını yoklamanın en iyi yollarından biridir.'}]},
+ {kind:'sinifla',prompt:'Bu kez "kısmen" seçeneği de var.',sahne:SAHNE.cember,
+  soru:'Bu görüşe ne kadar katılıyorsun?',
+  kutular:['KATILIYORUM','KISMEN KATILIYORUM','KATILMIYORUM'],
+  ipucu:'Görüşün her yanı doğru mu, bir kısmı mı?',
+  kartlar:[
+   {t:'"Ekran her zaman zararlıdır."',dogru:1,
+    neden:'Ölçülü kullanım öğretici olabilir; "her zaman" sözü görüşü aşırı yapıyor.',
+    hint:'"Her zaman" sözcüğü görüşü ne kadar kesinleştiriyor?'},
+   {t:'"Herkes her gün en az bir sayfa okumalı."',dogru:1,
+    neden:'Okuma alışkanlığı iyidir ama "herkes, her gün" kesinliği tartışılır.'},
+   {t:'"Yalan söylemek arkadaşlığı zedeler."',dogru:0,
+    neden:'Güven zedelendiğinde arkadaşlık zarar görür.'},
+   {t:'"Kitap okumayan biri hiçbir şey öğrenemez."',dogru:2,
+    neden:'Öğrenmenin tek yolu kitap değildir; gözlem, dinleme ve deneyim de öğretir.'},
+   {t:'"Sınavdan düşük alan öğrenci tembeldir."',dogru:2,
+    neden:'Düşük not tek bir nedene bağlanamaz.'},
+   {t:'"Ödevler hafta sonu verilmemeli."',dogru:1,
+    neden:'Dinlenme hakkı var ama küçük bir tekrar da yararlı olabilir.'}]},
+ {kind:'yaz',prompt:'Kendi görüşünü gerekçe ve öneriyle yaz.',sahne:SAHNE.cember,
+  gorev:'Panodaki "Teneffüsler daha uzun olmalı" görüşü için kararını yaz: katılıp katılmadığını nedeniyle belirt ve bir öneri ekle.',
+  ornek:'Kalıp: "Katılıyorum çünkü … Önerim …" (ya da "Katılmıyorum çünkü …")',
+  enAzKelime:12,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"öneri" ya da "öneriyorum" sözcüğünü kullan',desen:'öner',bayrak:'i'}],
+  ipucuMetin:'Katılıyorum çünkü … Önerim …',
+  yasak:['Katılıyorum çünkü teneffüsler kısa. Önerim uzatılsın.'],
+  ornekCevap:'Katılıyorum çünkü on dakikada hem su içip hem oyun oynamaya vakit kalmıyor. Önerim teneffüslerin on beş dakika olması.',
+  result:'Kararını gerekçelendirdin ve somut bir öneri ekledin: tartışmaya katılmak budur.'}
+]};
+
+/* ---- z02 Yayınevi Masası (balon simge kopyası kaldırıldı; aday cümleler) ---- */
+GAMES.z02={title:'Yayınevi Masası',theme:'masa',
+ finish:'Konu, ana fikir ve yaşam bağlantısını aday cümlelerden ayırdın, ayrıntıyı eledin ve kendi ana fikrini yazdın.',rounds:[
+ {kind:'esle',prompt:'Her kartı ait olduğu satıra koy.',sahne:SAHNE.masa,
+  soru:'Önce alttan bir cümle seç, sonra ait olduğu satıra dokun.',
+  ipucu:'Metin yukarıda duruyor; kararını ona bakarak ver.',
+  yuvalar:[
+   {hedef:'KONU — metin neyden söz ediyor?',dogru:0,neden:'Konu, metnin neden söz ettiğidir; tek sözcük ya da kısa öbekle söylenir.',
+    hint:'Konu bir yargı değil, metnin ne hakkında olduğudur.'},
+   {hedef:'ANA FİKİR — yazar bize ne söylemek istiyor?',dogru:1,neden:'Ana fikir yazarın vermek istediği yargıdır.',
+    hint:'Ana fikir bir yargı cümlesidir, konu adı değildir.'},
+   {hedef:'YAŞAM BAĞLANTISI — bu bende neye karşılık geliyor?',dogru:2,neden:'Yaşam bağlantısı metni kendi deneyiminle buluşturur.',
+    hint:'Bu satır metnin dışına, senin hayatına bakar.'}],
+  etiketler:[
+   {t:'Ağaç dikmek'},
+   {t:'Bir fidan dikmek, geleceğe bırakılan en güzel armağandır.'},
+   {t:'Geçen yıl okul bahçemize diktiğimiz fidan bu yıl gölge yapmaya başladı.'}]},
+ {kind:'esle',prompt:'Bu kez aralarında bir de ayrıntı var.',sahne:SAHNE.masa,
+  soru:'Her cümleyi doğru satıra yerleştir; biri ayrıntı.',
+  ipucu:'Ayrıntı, metinde geçen ama ana düşünceyi taşımayan küçük bilgidir.',
+  yuvalar:[
+   {hedef:'KONU',dogru:0,neden:'Metnin neden söz ettiği.',hint:'Bu satıra yargı değil, konu adı gelir.'},
+   {hedef:'ANA FİKİR',dogru:1,neden:'Yazarın söylemek istediği yargı.',hint:'Bu satıra bir yargı cümlesi gelir.'},
+   {hedef:'YAŞAM BAĞLANTISI',dogru:2,neden:'Okurun kendi deneyimiyle kurduğu bağ.',hint:'Bu satır senin yaşamına bakar.'},
+   {hedef:'AYRINTI (ana düşünceyi taşımaz)',dogru:3,neden:'Doğru bir bilgi ama metnin ana düşüncesi değil.',hint:'Bu bilgi metinde geçiyor ama yazarın asıl derdi bu değil.'}],
+  etiketler:[
+   {t:'Kitap paylaşmak'},
+   {t:'Paylaşılan bir kitap, iki kişiye birden hayal kurdurur.'},
+   {t:'Sıra arkadaşımla kitaplarımızı değiştirdiğimizde iki kat kitap okumuş oluyoruz.'},
+   {t:'Kütüphanenin rafları ahşaptan yapılmıştı.'}]},
+ {kind:'yaz',prompt:'Yeni metnin ana fikrini ve yaşam bağlantısını yaz.',sahne:SAHNE.masa,
+  gorev:'Yandaki metni oku. Ana fikrini bir cümleyle, kendi yaşamınla bağlantısını bir cümleyle yaz. Hazır kart yok.',
+  kaynakBaslik:'Editöre gelen metin',
+  kaynak:'Ali her sabah kırık kanatlı serçeyi besledi. Kimse görmedi, kimse teşekkür etmedi. Serçe iyileşip uçtuğunda Ali, kimsenin bilmediği bu işi yapmaktan mutluydu.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'Ana fikir: … Benim yaşamımda: …',
+  yasak:['Ali her sabah kırık kanatlı serçeyi besledi.'],
+  ornekCevap:'İyilik, kimse görmese de yapılmaya değerdir. Ben de sokaktaki kediye her akşam su koyuyorum ve bunu kimseye söylemiyorum.',
+  result:'Ana fikri kendi cümlenle söyledin ve kendi yaşamınla bağladın.'}
+]};
+
+/* ---- z03 Noktalama Atölyesi (görev metni işaretin adını ve yerini söylemez) ---- */
+GAMES.z03={title:'Noktalama Atölyesi',theme:'atolye',
+ finish:'İşareti kuralın adını duymadan anlamdan buldun, işaretin anlamı değiştirdiğini gördün ve bozuk cümleleri kendin yazdın.',rounds:[
+ {kind:'duzelt',prompt:'Cümlelerin anlamına uygun işaretleri koy.',sahne:SAHNE.matbaa,
+  gorev:'Tezgâha gelen metinde işaretler eksik. Anlamına uygun olanları sen koy. Sözcükleri değiştirme.',
+  hatali:'ali sabah erken kalktı çantasını hazırladı ve okula gitti bugün hava ne kadar güzel',
+  denetim:[
+   {ad:'Cümleler büyük harfle başlasın',desen:'^[A-ZÇĞİÖŞÜ]'},
+   {ad:'Sıralanan işleri birbirinden ayır',desen:','},
+   {ad:'Bitmiş bir cümleyi noktayla kapat',desen:'\\.'},
+   {ad:'Şaşkınlık bildiren cümleyi uygun işaretle bitir',desen:'!\\s*$'}],
+  ornekCevap:'Ali sabah erken kalktı, çantasını hazırladı ve okula gitti. Bugün hava ne kadar güzel!',
+  result:'İşaretlerin adı söylenmeden, anlamdan yola çıkarak doğru kararı verdin.'},
+ {kind:'karar',prompt:'Aynı sözcükler, farklı işaret, farklı anlam.',sahne:SAHNE.matbaa,
+  durum:'Tezgâhta iki dizgi var:\nA) "Yemek yedin, mi?"\nB) "Yemek yedin mi?"\nBir de üçüncüsü var:\nC) "Yemek, yedin mi?"',
+  soru:'Hangisi doğru dizilmiş?',
+  secenekler:[
+   {label:'B',correct:true},
+   {label:'A',hint:'Soru sözcüğünden önce ayırma işareti konmaz.'},
+   {label:'C',hint:'Burada seslenme yok; sözcüğü cümleden ayırmak anlamı bozuyor.'}],
+  araSoz:'Doğru. Peki işaret anlamı nasıl değiştirir?',
+  neden:{soru:'"Dur, gitme!" ile "Dur gitme!" arasındaki fark nedir?',secenekler:[
+   {label:'Birincide iki ayrı buyruk var, ikincisinde tek bir istek',correct:true},
+   {label:'Hiçbir fark yok',hint:'Ayırma işareti iki buyruğu birbirinden ayırıyor; anlam değişiyor.'},
+   {label:'İkincisi yanlış yazılmıştır',hint:'İkisi de yazılabilir; anlamları farklıdır.'}]},
+  result:'Noktalama yalnız süs değil: cümlenin anlamını belirler.'},
+ {kind:'yaz',prompt:'Bozuk cümleleri baştan doğru yaz.',sahne:SAHNE.matbaa,
+  gorev:'Şu iki cümleyi baştan, doğru yazımla ve doğru işaretlerle yaz: "bugün pazartesi mi" ve "aman dikkat et"',
+  enAzCumle:2,buyukHarf:true,
+  denetim:[
+   {ad:'Soru cümlesini soru işaretiyle bitir',desen:'\\?'},
+   {ad:'Uyarı cümlesini ünlem işaretiyle bitir',desen:'!'},
+   {ad:'İki cümleyi de büyük harfle başlat',desen:'[.!?]\\s+[A-ZÇĞİÖŞÜ]'}],
+  ipucuMetin:'Bugün pazartesi mi? …',
+  ornekCevap:'Bugün pazartesi mi? Aman dikkat et!',
+  result:'İki cümleyi de baştan, kendi kararlarınla doğru yazdın.'}
+]};
+
+/* ---- z04 Kurallı Cümle Makinesi (kartlar küçük harfle; diziliş ele vermiyor) ---- */
+GAMES.z04={title:'Kurallı Cümle Makinesi',theme:'atolye',
+ finish:'Kurallı cümleyi ögelerin sırasıyla kurdun, devrik cümleyle farkını açıkladın ve kendi kurallı cümleni yazdın.',rounds:[
+ {kind:'sira',prompt:'Kartlara sırayla dokunarak kurallı cümleyi kur.',sahne:SAHNE.matbaa,
+  gorev:'Kartlar küçük harfle geliyor. Kurallı cümlede yüklem sonda olur.',
+  kartlar:[{t:'küçük kardeşim'},{t:'akşam yemeğinden sonra'},{t:'masayı'},{t:'topladı'}],
+  dogru:[0,1,2,3],
+  ipucular:['İşi kim yapıyor? Onunla başla.','Ne zaman olduğunu hangi kart söylüyor?','Neyi topladı?','Kurallı cümlede yüklem nerede olur?'],
+  ipucu:'Özne → zaman → nesne → yüklem.',
+  result:'"Küçük kardeşim akşam yemeğinden sonra masayı topladı." — yüklem sonda, yani cümle kurallı.'},
+ {kind:'karar',prompt:'Hangisi kurallı cümle?',sahne:SAHNE.matbaa,
+  durum:'A) "Topladı masayı küçük kardeşim."\nB) "Küçük kardeşim masayı topladı."',
+  soru:'Hangisi kurallı cümledir?',
+  secenekler:[
+   {label:'B',correct:true},
+   {label:'A',hint:'Bu cümlede yüklem başta; bu devrik cümledir.'}],
+  araSoz:'Doğru. Peki ölçüt ne?',
+  neden:{soru:'Bir cümlenin kurallı olduğunu nereden anlarsın?',secenekler:[
+   {label:'Yüklemin sonda olmasından',correct:true},
+   {label:'Cümlenin uzun olmasından',hint:'Uzunluk kurallılıkla ilgili değildir.'},
+   {label:'Öznenin başta olmasından',hint:'Özne başta olabilir ama ölçüt yüklemin yeridir.'}]},
+  result:'Kurallı cümlede yüklem sonda, devrik cümlede başka yerdedir.'},
+ {kind:'yaz',prompt:'Kendi kurallı cümleni yaz.',sahne:SAHNE.matbaa,
+  gorev:'"Sabah", "bahçede" ve "kuşlar" sözcüklerinden en az birini kullanarak kendi kurallı cümleni yaz. Yüklem sonda olsun.',
+  enAzKelime:5,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'Verilen sözcüklerden en az birini kullan',desen:'sabah|bahçe|kuş',bayrak:'i'}],
+  bank:['Sabah','bahçede','kuşlar'],
+  ipucuMetin:'Sabah bahçede kuşlar …',
+  yasak:['Sabah bahçede kuşlar öttü.'],
+  ornekCevap:'Sabah bahçede kuşlar neşeyle cıvıldadı.',
+  result:'Yüklemi sona koyarak kendi kurallı cümleni kurdun.'}
+]};
+
+/* ---- z05 Erdem Sözlüğü (hafıza kartı yerine gerçek sözlük sayfası) ---- */
+GAMES.z05={title:'Erdem Sözlüğü',theme:'kutuphane',
+ finish:'Erdemleri tanımlarıyla eşledin, yakın anlamlı erdemleri ayırt ettin ve kendi tanımını örnekle yazdın.',rounds:[
+ {kind:'esle',prompt:'Her madde başını tanımıyla eşle.',sahne:SAHNE.sozluk,
+  soru:'Önce alttan bir tanım seç, sonra ait olduğu madde başına dokun.',
+  ipucu:'Tanımdaki ayırt edici sözcüğe dikkat et.',
+  yuvalar:[
+   {hedef:'hoşgörü',dogru:0,neden:'Hoşgörü, katlanmak değil; farklılığı anlayışla karşılamaktır.',
+    hint:'Bu madde farklılıkla ilgilidir.'},
+   {hedef:'cömertlik',dogru:1,neden:'Cömertlik, kendine ait olanı karşılıksız paylaşmaktır.',
+    hint:'Bu madde vermekle ilgilidir.'},
+   {hedef:'sabır',dogru:2,neden:'Sabır, sonucu beklerken çabayı sürdürmektir.',
+    hint:'Bu madde beklemekle ilgilidir.'},
+   {hedef:'dürüstlük',dogru:3,neden:'Dürüstlük, zor olduğunda bile doğruyu söylemektir.',
+    hint:'Bu madde doğruyu söylemekle ilgilidir.'}],
+  etiketler:[
+   {t:'Kendinden farklı düşünen kişiyi anlayışla karşılama'},
+   {t:'Elindekini karşılık beklemeden paylaşma'},
+   {t:'Sonucu beklerken çabayı sürdürebilme'},
+   {t:'Zararına da olsa doğruyu söyleme'}]},
+ {kind:'karar',prompt:'Yakın iki erdem: hangisi?',sahne:SAHNE.sozluk,
+  durum:'Deniz, kendisine hiç arkadaşlık etmemiş bir sınıf arkadaşı unuttuğunda ona kendi kalemini verdi ve karşılığında hiçbir şey beklemedi.',
+  soru:'Deniz burada hangi erdemi gösterdi?',
+  secenekler:[
+   {label:'Cömertlik',correct:true},
+   {label:'Sabır',hint:'Burada bekleme ya da çabayı sürdürme yok; verme var.'},
+   {label:'Hoşgörü',hint:'Hoşgörü farklılığı karşılamaktır; burada paylaşma öne çıkıyor.'}],
+  araSoz:'Doğru. Peki ayırt edici sözcük hangisiydi?',
+  neden:{soru:'Cömertliği tanımlayan ayırt edici sözcük hangisi?',secenekler:[
+   {label:'"karşılık beklemeden"',correct:true},
+   {label:'"arkadaş"',hint:'Arkadaşlık bu erdemin tanımında geçmez.'},
+   {label:'"kalem"',hint:'Kalem yalnız örnekteki nesne; tanımın parçası değil.'}]},
+  result:'Yakın erdemleri, tanımlarındaki ayırt edici sözcük ayırır.'},
+ {kind:'yaz',prompt:'Bir erdemi kendi sözlerinle tanımla.',sahne:SAHNE.sozluk,
+  gorev:'Bir erdem seç. Sözlük maddesi gibi kendi tanımını yaz, sonra bir davranış örneği ekle.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'… : … Örnek: …',
+  yasak:['Kendinden farklı düşünen kişiyi anlayışla karşılama'],
+  ornekCevap:'Yardımseverlik: birinin zorlandığını görünce istemeden yardıma gitmektir. Örnek olarak arkadaşım çantasını taşıyamayınca birini ben taşıdım.',
+  result:'Bir erdemi kendi sözlerinle tanımlayıp örnekle destekledin.'}
+]};
+
+/* ---- z06 Bağlamdan Anlam (kapsül düşmesi kaldırıldı; önce kanıt) ---- */
+GAMES.z06={title:'Bağlamdan Anlam',theme:'doga',
+ finish:'Sözcüğün anlamını bağlamdaki kanıttan çıkardın, aynı sözcüğün başka cümlede değiştiğini gördün ve anlamı kendi cümlenle yazdın.',rounds:[
+ {kind:'kanit',prompt:'Önce bağlam ipucunu işaretle, sonra anlamı seç.',sahne:SAHNE.sozluk,
+  baslik:'Cümle',
+  metin:[['Dedem tarlaya inince ',{t:'toprağı avucuna aldı'},', ',{t:'kokladı',dogru:true},' ve ',{t:'"bu yıl bereketli olacak" dedi',dogru:true},'.']],
+  gerekKanit:2,soru:'Buradaki "bereketli" ne demektir?',
+  secenekler:[
+   {label:'Bol ürün veren',correct:true},
+   {label:'Çok yağmurlu',hint:'Yağmurdan söz edilmiyor; dede ürünü konuşuyor.'},
+   {label:'Çok pahalı',hint:'Fiyatla ilgili bir kanıt yok.'}],
+  result:'Toprağı koklayıp ürün için konuşması, "bereketli" sözcüğünü ürün bolluğuna bağlıyor.'},
+ {kind:'kanit',prompt:'Aynı sözcük, başka cümle, başka anlam.',sahne:SAHNE.sozluk,
+  baslik:'İki cümle',
+  metin:[['1) Kardeşim ',{t:'ateşi çıktı'},', ',{t:'bütün gün yatakta yattı',dogru:true},'.'],
+   ['2) Kamp yerinde ',{t:'ateşi yaktık',dogru:true},' ve ',{t:'çevresinde ısındık',dogru:true},'.']],
+  gerekKanit:2,soru:'İkinci cümledeki "ateş" ne anlama geliyor?',
+  secenekler:[
+   {label:'Yakılan alev',correct:true},
+   {label:'Vücut sıcaklığının yükselmesi',hint:'Bu birinci cümlenin anlamı; ikinci cümlede kamp ve ısınma var.'},
+   {label:'Öfke',hint:'Metinde öfkeye dair bir kanıt yok.'}],
+  result:'Aynı sözcük, bağlam değişince başka anlama gelir.'},
+ {kind:'yaz',prompt:'Tahminini sözlükle karşılaştır ve yaz.',sahne:SAHNE.sozluk,
+  gorev:'"Sırılsıklam" sözcüğünün anlamını kendi cümlenle yaz ve o sözcüğü kullandığın bir örnek cümle ekle.',
+  kaynakBaslik:'Sözlük',
+  kaynak:'sırılsıklam: her yanı ıslanmış, iyice ıslak.',
+  enAzKelime:12,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'"sırılsıklam" sözcüğünü kullan',desen:'sırılsıklam',bayrak:'i'}],
+  ipucuMetin:'Sırılsıklam … demektir. Örnek: …',
+  yasak:['sırılsıklam: her yanı ıslanmış, iyice ıslak.'],
+  ornekCevap:'Sırılsıklam, üstünün başının iyice ıslanması demektir. Örnek olarak yağmurda koştuğum için eve sırılsıklam geldim.',
+  result:'Tahminini sözlükle karşılaştırıp anlamı kendi cümlenle yazdın.'}
+]};
+
+/* ---- z07 Yazım Denetçisi (kalem otomatik düzeltmiyor; öğrenci yazıyor) ---- */
+GAMES.z07={title:'Yazım Denetçisi',theme:'atolye',
+ finish:'Yazım hatalarını kendin buldun ve düzelttin, farklı hata türlerini ayırdın ve bir paragrafı bağımsız denetledin.',rounds:[
+ {kind:'duzelt',prompt:'Metindeki yazım hatalarını düzelt.',sahne:SAHNE.kalem,
+  gorev:'Gelen yazıda yazım hataları var. Sözcükleri değiştirme, yalnız yanlış yazılanları düzelt.',
+  hatali:'yarın sabah okula giderken kitabımıda yanıma alıcam ve arkadaşıma vericem',
+  denetim:[
+   {ad:'Cümleyi büyük harfle başlat',desen:'^[A-ZÇĞİÖŞÜ]'},
+   {ad:'"da" ekini doğru yaz',desen:'kitabımı da',bayrak:'i'},
+   {ad:'Gelecek zamanı doğru yaz (alacağım)',desen:'alacağım',bayrak:'i'},
+   {ad:'Gelecek zamanı doğru yaz (vereceğim)',desen:'vereceğim',bayrak:'i'},
+   {ad:'Cümleyi noktayla bitir',desen:'\\.\\s*$'}],
+  /* Yazım düzeltmesi sözcüğün kendisini değiştirir; sözcük kilidi kapalı. */
+  sozcukKorunsun:false,
+  ornekCevap:'Yarın sabah okula giderken kitabımı da yanıma alacağım ve arkadaşıma vereceğim.',
+  result:'Konuşma dilindeki kısaltmaları yazı diline çevirdin.'},
+ {kind:'duzelt',prompt:'Bu kez hata türleri karışık.',sahne:SAHNE.kalem,
+  gorev:'Bu metinde büyük harf, ayrı-birleşik ve yazım hataları birlikte var. Hepsini düzelt.',
+  hatali:'benim adım elif ve ankarada oturuyorum herkez beni tanır',
+  denetim:[
+   {ad:'Cümleyi büyük harfle başlat',desen:'^[A-ZÇĞİÖŞÜ]'},
+   {ad:'Özel adı büyük harfle yaz',desen:'Elif'},
+   {ad:'Yer adını büyük harfle yaz ve ekini kesmeyle ayır',desen:"Ankara'da"},
+   {ad:'"herkes" sözcüğünü doğru yaz',desen:'herkes',bayrak:'i'},
+   {ad:'Cümleyi noktayla bitir',desen:'\\.\\s*$'}],
+  sozcukKorunsun:false,
+  ornekCevap:"Benim adım Elif ve Ankara'da oturuyorum. Herkes beni tanır.",
+  result:'Özel ad, kesme işareti ve yazım kurallarını birlikte uyguladın.'},
+ {kind:'duzelt',prompt:'Kısa paragrafı bağımsız denetle.',sahne:SAHNE.kalem,
+  gorev:'Bu paragrafta birden çok hata var. Hepsini bul ve düzelt.',
+  hatali:'dün akşam babamla birlikte kitapçıya gittik orda çok güzel bir kitap gördüm babam bana o kitabı aldı çok sevindim',
+  denetim:[
+   {ad:'İlk cümleyi büyük harfle başlat',desen:'^[A-ZÇĞİÖŞÜ]'},
+   {ad:'"orada" sözcüğünü doğru yaz',desen:'orada',bayrak:'i'},
+   {ad:'Cümleleri noktayla ayır (en az üç nokta)',desen:'(\\.[^.]*){3}'},
+   {ad:'Noktadan sonra büyük harfle devam et',desen:'\\.\\s+[A-ZÇĞİÖŞÜ]'}],
+  sozcukKorunsun:false,
+  ornekCevap:'Dün akşam babamla birlikte kitapçıya gittik. Orada çok güzel bir kitap gördüm. Babam bana o kitabı aldı. Çok sevindim.',
+  result:'Bir paragrafı baştan sona kendin denetledin ve düzelttin.'}
+]};
+
+/* ---- z08 Hikâye Basamakları (metin görünür; tahmin kanıta bağlı) ---- */
+GAMES.z08={title:'Hikâye Basamakları',theme:'doga',
+ finish:'Sonrasını metindeki kanıta dayanarak tahmin ettin, öncesini de çıkardın ve tahminini gerekçesiyle yazdın.',rounds:[
+ {kind:'kanit',prompt:'Kanıtı işaretle, sonra sonrasını tahmin et.',sahne:SAHNE.basamak,
+  baslik:'Hikâye · 1. bölüm',
+  metin:[['Poyraz sabah uyandığında ',{t:'gökyüzü kapkaranlıktı',dogru:true},'. Annesi ',{t:'"yağmurluğunu al" dedi',dogru:true},'. Poyraz ',{t:'acelesi olduğu için dinlemedi'},' ve ',{t:'koşarak çıktı'},'.']],
+  gerekKanit:2,soru:'Sonra ne olması en olasıdır?',
+  secenekler:[
+   {label:'Poyraz yolda yağmura yakalanır',correct:true},
+   {label:'Poyraz okulda ödül alır',hint:'Metinde ödülle ilgili hiçbir kanıt yok.'},
+   {label:'Hava açar ve güneş çıkar',hint:'İşaretlediğin kanıt kapkaranlık gökyüzünü gösteriyor.'}],
+  result:'Karanlık gökyüzü ve annenin uyarısı, yağmuru olası kılıyor: tahmin kanıta dayanıyor.'},
+ {kind:'kanit',prompt:'Bu kez öncesini çıkar.',sahne:SAHNE.basamak,
+  baslik:'Hikâye · 2. bölüm',
+  metin:[['Poyraz sınıfa girdiğinde ',{t:'saçlarından sular damlıyordu',dogru:true},'. ',{t:'Öğretmeni ona havlu uzattı',dogru:true},'. Poyraz ',{t:'önüne baktı'},' ve ',{t:'hiçbir şey söylemedi'},'.']],
+  gerekKanit:2,soru:'Bu bölümden ÖNCE ne olmuştur?',
+  secenekler:[
+   {label:'Poyraz yağmurda ıslanmıştır',correct:true},
+   {label:'Poyraz havuza girmiştir',hint:'Metinde havuzla ilgili bir kanıt yok; okula giderken olan bir şey aranıyor.'},
+   {label:'Poyraz kavga etmiştir',hint:'Islanmayı açıklayan bir kanıt bu değil.'}],
+  araSoz:'Doğru. Peki Poyraz neden hiçbir şey söylemedi?',
+  neden:{soru:'"Önüne baktı ve hiçbir şey söylemedi" ne gösteriyor?',secenekler:[
+   {label:'Annesini dinlemediği için utandığını',correct:true},
+   {label:'Öğretmenini duymadığını',hint:'Havluyu almış; duymamakla ilgili kanıt yok.'},
+   {label:'Derse geç kaldığını',hint:'Metinde geç kalmayla ilgili bir bilgi yok.'}]},
+  result:'Söylenmeyeni, söylenenlerin arasından çıkarmak da okumanın parçasıdır.'},
+ {kind:'yaz',prompt:'Tahminini gerekçesiyle yaz.',sahne:SAHNE.basamak,
+  gorev:'Hikâyenin devamında ne olacağını tahmin et. Tahminini metindeki bir kanıta dayandırarak yaz.',
+  enAzKelime:12,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"metinde" sözcüğüyle kanıtını göster',desen:'metin',bayrak:'i'}],
+  ipucuMetin:'Bence … olacak çünkü metinde …',
+  yasak:['Bence Poyraz yağmura yakalanacak çünkü metinde gökyüzü karanlıktı.'],
+  ornekCevap:'Bence Poyraz bundan sonra annesini dinleyecek çünkü metinde utanıp önüne baktığı anlatılıyor.',
+  result:'Tahminini metindeki kanıta dayandırdın: gerekçeli tahmin budur.'}
+]};
+
+/* ===== açılış ===== */
+game=GAMES[GAME_ID]||GAMES.z01;
+render();
+</script>
+</body>
+</html>

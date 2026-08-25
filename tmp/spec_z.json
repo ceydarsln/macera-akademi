@@ -1,0 +1,985 @@
+[
+ {
+  "id": "z01",
+  "group": "Tema 1 · Erdemler",
+  "title": "Katılıyorum Bandı",
+  "sub": "Görüşe katılıp katılmadığını seç",
+  "kaz": "T.D.4.2.h / ı — Dinlediklerine katılıp katılmadığını nedenleriyle ifade eder, öneride bulunur.",
+  "type": "beltSort",
+  "instruction": "Tartışma bandı çalışıyor! Gelen görüşe katılıyor musun, katılmıyor musun? Doğru kutuya dokun",
+  "n": {
+   "items": 8,
+   "bins": "KATILIYORUM / KATILMIYORUM"
+  },
+  "tur1": "Gerçek bir sınıf tartışma çemberi kur: görüş bir karakterin ağzından söylenip panoya asılsın, kart bantta akmasın ve hiçbir kenarda kırpılmasın.",
+  "tur2": "Kısmen katılınabilecek görüşler eklensin; öğrenci 'katılıyorum / kısmen / katılmıyorum' ayrımını yapsın.",
+  "tur3": "Öğrenci kararının nedenini 'Katılıyorum çünkü ...' kalıbıyla yazsın veya söylesin; bir de öneri eklesin."
+ },
+ {
+  "id": "z02",
+  "group": "Tema 1 · Erdemler",
+  "title": "Yayınevi Masası",
+  "sub": "Konu, ana fikir ve yaşam bağlantısı",
+  "kaz": "T.O.4.3.b / c · T.O.4.2.b — Metnin konusunu, ana fikrini bulur; günlük yaşamla bağlantısını kurar.",
+  "type": "serveOrder",
+  "instruction": "Editör masasındasın! Her metin için KONU, ANA FİKİR ve YAŞAM BAĞLANTISI kartlarını tepsiye koy",
+  "n": {
+   "customers": 3
+  },
+  "tur1": "Gerçek editör masası çiz: metin ayrı panelde okunur dursun; tepsi kartlarında etiket değil aday cümleler yazsın ve balondaki simge kopyası tamamen kaldırılsın.",
+  "tur2": "Konu, ana fikir, yaşam bağlantısı ve ayrıntı adayları yakın çeldiricilerle verilsin; öğrenci her kartın türünü kendisi belirlesin.",
+  "tur3": "Öğrenci yeni bir metnin ana fikrini ve kendi yaşamıyla bağlantısını hazır kart olmadan iki cümleyle yazsın."
+ },
+ {
+  "id": "z03",
+  "group": "Tema 1 · Erdemler",
+  "title": "Noktalama Atölyesi",
+  "sub": "Nokta, virgül, kesme ve ünlem",
+  "kaz": "T.Y.4.3.e / d — Noktalama işaretlerini ve yazım kurallarını kuralına uygun kullanır.",
+  "type": "punctFix",
+  "instruction": "Atölyeye bozuk cümleler geldi! Sözcüğe dokunup büyük harfle başlat, boşluğa noktalama koy",
+  "n": {
+   "rounds": 4,
+   "marks": ". , ? ! :"
+  },
+  "tur1": "Atölye tezgâhı gerçek matbaa görseliyle kurulsun; görev metni işaretin adını ve yerini söylemesin, yalnız 'cümlenin anlamına uygun işareti koy' desin.",
+  "tur2": "Aynı cümle farklı işaretlerle anlam değiştirsin; öğrenci tonlamalı seslendirmeden yararlanarak seçsin.",
+  "tur3": "Öğrenci iki bozuk cümleyi ekran klavyesiyle baştan doğru yazsın; büyük harf ve işaret kararları kayda geçsin."
+ },
+ {
+  "id": "z04",
+  "group": "Tema 1 · Erdemler",
+  "title": "Kurallı Cümle Makinesi",
+  "sub": "Anlamlı ve kurallı cümle kur",
+  "kaz": "T.K.4.3.ı / T.Y.4.2.j — Anlamlı ve kurallı cümleler kullanır; okuduklarını kendi ifadeleriyle yazar.",
+  "type": "sentenceBuild",
+  "instruction": "Baskı makinesi hazır! Kelime kartlarına sırayla dokunarak kurallı cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Baskı makinesi gerçekten çalışsın: kurulan cümle baskıdan çıkıp panoya asılsın. Kartlar küçük harfle gelsin; baş harf ve son işaret öğrencinin ayrı kararı olsun.",
+  "tur2": "Devrik ve kurallı cümle karşılaştırılsın; öğrenci hangisinin kurallı olduğunu ögelerin sırasıyla açıklasın.",
+  "tur3": "Öğrenci aynı sözcüklerden en az birini kullanarak kendi kurallı cümlesini ekran klavyesiyle yazsın."
+ },
+ {
+  "id": "z05",
+  "group": "Tema 1 · Erdemler",
+  "title": "Erdem Sözlüğü",
+  "sub": "Erdemi tanımıyla eşleştir",
+  "kaz": "T.O.4.3.a / T.Y.4.3.b — Metindeki bilgileri açıklar; sözcükleri anlamına uygun kullanır.",
+  "type": "memoryPairs",
+  "instruction": "Sözlük kartları kapalı! Kartları çevir ve her erdemi tanımıyla eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Gerçek bir sözlük sayfası açılsın: kart çevrilince madde başı, tanım ve örnek cümle birlikte görünsün; uzay zemini kaldırılsın.",
+  "tur2": "Yakın erdemler çeldirici olsun (hoşgörü/sabır, cömertlik/yardımseverlik); tanımdaki ayırt edici sözcük vurgulansın.",
+  "tur3": "Öğrenci seçtiği erdemi kendi tanımıyla yazsın ve bir davranış örneği eklesin."
+ },
+ {
+  "id": "z06",
+  "group": "Tema 1 · Erdemler",
+  "title": "Sözcük Anlamı Radarı",
+  "sub": "Bağlamdan anlamı tahmin et",
+  "kaz": "T.Y.4.2.ç — Bir sözcüğün anlamına ilişkin tahminlerini bağlamdan yararlanarak yazar.",
+  "type": "catchDrop",
+  "instruction": "Cümleyi oku, koyu sözcüğün anlamını toplayıcıyı sürükleyerek yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Cümle sabit panelde dursun; anlam seçenekleri düşmesin, sabit kartlarda olsun. Öğrenci karar öncesi cümledeki bağlam ipucunu işaretleyebilsin.",
+  "tur2": "Yakın iki anlamdan bağlama uygun olan seçilsin; aynı sözcük ikinci bir cümlede farklı anlamla gösterilsin.",
+  "tur3": "Tahmin-sözlük-yazma döngüsü tamamlansın: öğrenci tahminini sözlükle karşılaştırıp anlamı kendi cümlesiyle yazsın."
+ },
+ {
+  "id": "z07",
+  "group": "Tema 1 · Erdemler",
+  "title": "Yazım Hatası Avcısı",
+  "sub": "Hatalı sözcüğü bul ve düzelt",
+  "kaz": "T.Y.4.5.a / b · T.Y.4.3.d — Yazısındaki hataları bulur, düzeltir; yazım kurallarına uygun yazar.",
+  "type": "wordHighlight",
+  "instruction": "Düzeltme kalemi elinde! Metinde yanlış yazılmış sözcüğe dokun — kalem onu düzeltecek",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "Metin paneli taşmadan yerleşsin, büyüteç hedefi örtmesin; hatalı sözcüğe dokununca kalem otomatik düzeltmesin - öğrenci doğru yazımı seçsin veya klavyeyle yazsın.",
+  "tur2": "Farklı hata türleri karışsın: yazım, büyük harf, ayrı-birleşik; her düzeltmede kural kısa görünsün.",
+  "tur3": "Öğrenci kısa bir paragrafı bağımsız denetleyip bütün hataları düzeltsin; düzeltme sayısı ve türü kayda geçsin."
+ },
+ {
+  "id": "z08",
+  "group": "Tema 1 · Erdemler",
+  "title": "Hikâye Basamakları",
+  "sub": "Sonrasını tahmin ederek tırman",
+  "kaz": "T.D.4.2.ç / T.O.4.2.ç — Olayların öncesi ve sonrası hakkında tahminde bulunur.",
+  "type": "jumpPath",
+  "instruction": "Hikâye basamaklarında zıpla! Her adımda sırada ne olacağını tahmin et",
+  "n": {
+   "steps": 4
+  },
+  "tur1": "Hikâye metni ekranda görünür dursun; her basamakta 'sonra ne olur?' seçenekleri metindeki kanıta bağlansın ve basamak yazıları okunur kontrastta olsun.",
+  "tur2": "Doğrudan söylenmeyen, çıkarım gerektiren tahmin adımları eklensin; olayın öncesi de sorulsun.",
+  "tur3": "Öğrenci tahminini 'Bence ... olacak çünkü metinde ...' kalıbıyla gerekçelendirsin."
+ },
+ {
+  "id": "z09",
+  "group": "Tema 2 · Millî Mücadele ve Atatürk",
+  "title": "Zaman Şeridi",
+  "sub": "Olayları sırayla diz",
+  "kaz": "T.D.4.3.a — Dinlediği/izlediği metindeki olayları belirler.",
+  "type": "orderSequence",
+  "instruction": "Zaman şeridi karıştı! Olaylara en eskiden en yeniye doğru sırayla dokun",
+  "n": {
+   "items": 6
+  },
+  "tur1": "Roket ve YAKIT hunisi kaldırılsın; ekranda gerçek yatay zaman şeridi dursun. İlk turda kartlardaki tarihler gizlensin; sıralama olay metninden yapılsın, doğrulamada tarihler açılsın.",
+  "tur2": "Tarihi gizli yeni bir olay seti dinletilsin; öğrenci yalnız dinlediği bilgiyle sıralasın.",
+  "tur3": "Öğrenci sıraladığı olayları 'önce / daha sonra / en sonunda' bağlarıyla üç cümlede anlatsın."
+ },
+ {
+  "id": "z10",
+  "group": "Tema 2 · Millî Mücadele ve Atatürk",
+  "title": "Sözcük Tasnif Bandı",
+  "sub": "Eş, zıt ve sesteş sözcükler",
+  "kaz": "T.O.4.2.h — Eş anlamlı, zıt anlamlı ve sesteş sözcükleri tasnif eder.",
+  "type": "beltSort",
+  "instruction": "Tasnif bandı çalışıyor! Gelen sözcük çifti EŞ, ZIT mı yoksa SESTEŞ mi?",
+  "n": {
+   "items": 9,
+   "bins": "EŞ ANLAMLI / ZIT ANLAMLI / SESTEŞ"
+  },
+  "tur1": "Tasnif masası kurulsun: sözcük çifti sabit kartta, her iki sözcük de bir örnek cümleyle birlikte görünsün; bant akışı kaldırılsın.",
+  "tur2": "Sesteş ile eş anlamlı karışabilen çiftler eklensin (yüz/yüz, gül/gül); ölçüt yazılış-anlam ilişkisiyle tartışılsın.",
+  "tur3": "Öğrenci bir sesteş çifti iki ayrı cümlede kullanarak anlam farkını yazsın."
+ },
+ {
+  "id": "z11",
+  "group": "Tema 2 · Millî Mücadele ve Atatürk",
+  "title": "Sesteş Köprüsü",
+  "sub": "Sesteş sözcüğü anlamıyla birleştir",
+  "kaz": "T.Y.4.2.i — Yazılarında sesteş sözcükleri kullanır.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Cümledeki sesteş sözcüğü doğru anlamıyla birleştir",
+  "n": {
+   "sources": 6,
+   "targets": 6
+  },
+  "tur1": "Gerçek köprü sahnesi kurulsun ve parça-hedef simge eşleşmesi KALDIRILSIN; karar yalnız cümledeki bağlamdan çıkarılabilsin. Cümleler çipe sığacak boyutta yerleşsin.",
+  "tur2": "Aynı sesteş sözcüğün üç farklı anlamı karşılaştırılsın; ayırt edici bağlam sözcüğü işaretlensin.",
+  "tur3": "Öğrenci bir sesteş sözcüğü iki farklı anlamda kendi cümlelerinde kullanarak yazsın."
+ },
+ {
+  "id": "z12",
+  "group": "Tema 2 · Millî Mücadele ve Atatürk",
+  "title": "Kesme İşareti Tamirhanesi",
+  "sub": "Özel adlara gelen ekleri ayır",
+  "kaz": "T.Y.4.3.e / d — Kesme işaretini ve büyük harfleri kuralına uygun kullanır.",
+  "type": "punctFix",
+  "instruction": "Tarih kitabının dizgisi bozulmuş! Özel adlara dokunup büyük harfle başlat, gereken yere kesme işareti koy",
+  "n": {
+   "rounds": 4,
+   "marks": ". , ? ! ’"
+  },
+  "tur1": "Tarih kitabı sayfası gerçek dizgi görseliyle açılsın; kesme işaretinin ayırdığı ek renkli gösterilsin ve kural kutusu ekranda kalsın.",
+  "tur2": "Kesme istemeyen durumlar çeldirici olsun (Türkçe eki alan cins isim, kurum adına gelen çokluk eki).",
+  "tur3": "Öğrenci iki özel ada gelen eki ekran klavyesiyle kendisi yazsın; kesme işaretini kendisi koysun."
+ },
+ {
+  "id": "z13",
+  "group": "Tema 2 · Millî Mücadele ve Atatürk",
+  "title": "Doğru Bilgi Radarı",
+  "sub": "Bilgiyi doğruluk açısından karşılaştır",
+  "kaz": "T.D.4.2.f / g — İletileri ve metindeki bilgileri doğruluk, gerçeklik açısından karşılaştırır.",
+  "type": "catchDrop",
+  "instruction": "Radar tarıyor! Doğru bilgiyi taşıyan küreyi toplayıcıyı sürükleyerek yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Radar-kapsül düzeni kaldırılsın; bilgi kartları panoda sabit dursun, her kartın yanında 'kaynağı gör' düğmesi olsun ve doğruluk kararı kanıtla verilsin.",
+  "tur2": "Kısmen doğru ama eksik ifadeler eklensin; öğrenci 'tamamen doğru / kısmen doğru / yanlış' ayrımı yapsın.",
+  "tur3": "Öğrenci yanlış bilgiyi doğru biçimiyle kendi cümlesinde yazsın ve dayandığı kaynağı belirtsin."
+ },
+ {
+  "id": "z14",
+  "group": "Tema 2 · Millî Mücadele ve Atatürk",
+  "title": "Mektup Masası",
+  "sub": "Mektubun bölümlerini hazırla",
+  "kaz": "T.Y.4.1.f · T.Y.4.1.d — Yazışmalarını uygun ifadelerle sürdürür; imzasında adını soyadını kullanır.",
+  "type": "serveOrder",
+  "instruction": "Bir gaziye mektup yazıyoruz! Görevlinin istediği mektup bölümlerini tepsiye koy",
+  "n": {
+   "customers": 4
+  },
+  "tur1": "Gerçek mektup kâğıdı açılsın: tarih, hitap, gövde, kapanış ve imza alanları görünür olsun; bölümler tepsiye değil kâğıttaki yerlerine yerleşsin.",
+  "tur2": "Bölüm ile içerik eşleştirilsin: hangi cümle hitap, hangisi kapanış? Uygun olmayan üslup çeldirici olsun.",
+  "tur3": "Öğrenci gaziye kısa mektubu ekran klavyesiyle yazsın; imzasına ad ve soyadını kendisi eklesin."
+ },
+ {
+  "id": "z15",
+  "group": "Tema 2 · Millî Mücadele ve Atatürk",
+  "title": "Zıt Anlam Makinesi",
+  "sub": "Zıt anlamlı sözcükle cümle kur",
+  "kaz": "T.Y.4.2.h — Yazılarında zıt anlamlı sözcükleri kullanır.",
+  "type": "sentenceBuild",
+  "instruction": "Makine karşıtlık üretiyor! Kelime kartlarıyla zıt anlamlı sözcük içeren cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Makine karşıtlığı görselleştirsin: seçilen zıt çift iki kefeli sahnede karşı karşıya gelsin; kartlar küçük harfle gelsin.",
+  "tur2": "Bağlama duyarlı zıt çiftler eklensin (ağır-hafif / ağır-kolay); hangi cümlede hangisinin zıddı olduğu tartışılsın.",
+  "tur3": "Öğrenci bir zıt çifti aynı cümlede kullanarak karşılaştırma cümlesini kendisi yazsın."
+ },
+ {
+  "id": "z16",
+  "group": "Tema 2 · Millî Mücadele ve Atatürk",
+  "title": "Kahramanlık Diktesi",
+  "sub": "Duyduğun sözcüğü harflerle yaz",
+  "kaz": "T.Y.4.3.d / b — Yazım kurallarına uygun yazar; sözcükleri doğru kullanır.",
+  "type": "typeWord",
+  "instruction": "Dikte zamanı! Dinle düğmesine bas, duyduğun sözcüğü harflere dokunarak yaz",
+  "n": {
+   "rounds": 5
+  },
+  "tur1": "Hedef sözcük tilkinin balonunda YAZILMASIN; yalnız 'Dinle düğmesine bas' yönergesi görünsün. Harf havuzu karışık dizilsin ve sözcüğün harf sırasını ele vermesin.",
+  "tur2": "Yazımı zor sözcükler eklensin (â, ğ, kesme işaretli özel ad); sözcük iki kez dinletilip hece hece tekrar seçeneği sunulsun.",
+  "tur3": "Öğrenci yazdığı sözcüğü kısa bir cümle içinde kullansın; cümle diktesiyle tur tamamlansın."
+ },
+ {
+  "id": "z17",
+  "group": "Tema 3 · Doğa ve İnsan",
+  "title": "Kaynak Ayırma Bandı",
+  "sub": "Yenilenebilir mi, tükenir mi?",
+  "kaz": "T.O.4.2.ğ / T.K.4.2.e — Olay, durum, nesne ve kişileri özelliklerine göre sınıflandırır.",
+  "type": "beltSort",
+  "instruction": "Enerji istasyonunda bant çalışıyor! Gelen kaynak yenilenebilir mi, tükenebilir mi?",
+  "n": {
+   "items": 8,
+   "bins": "YENİLENEBİLİR / TÜKENEBİLİR"
+  },
+  "tur1": "Enerji istasyonu gerçek görsellerle kurulsun (güneş paneli, rüzgâr türbini, kömür ocağı); kaynak kartı sabit gelsin ve kenarda kırpılmasın.",
+  "tur2": "Tartışmalı örnekler eklensin (orman: yenilenebilir ama tükenebilir); öğrenci ölçütü seçip savunsun.",
+  "tur3": "Öğrenci bir kaynağı neden o kutuya koyduğunu bir cümleyle yazsın."
+ },
+ {
+  "id": "z18",
+  "group": "Tema 3 · Doğa ve İnsan",
+  "title": "Afet Robotu",
+  "sub": "Ayrıntılı yönerge yaz, robotu çalıştır",
+  "kaz": "T.Y.4.2.k — Ayrıntılı yönergeler yazar.",
+  "type": "codeGrid",
+  "instruction": "Deprem tatbikatı! Robota ayrıntılı yönerge yaz: yön bloklarını sıraya diz ve Çalıştır",
+  "n": {
+   "rounds": 2
+  },
+  "tur1": "Yön okları yazılı yönerge kartlarına dönüşsün ('iki adım ileri git', 'sağa dön'); dizilen program panelde numaralı cümleler hâlinde okunsun ve robot okurken uygulasın.",
+  "tur2": "Engeller değişsin ve daha uzun yönerge istensin; öğrenci hatalı bir programı okuyup hatayı bulsun.",
+  "tur3": "Öğrenci afet çantasına giden yönergeyi kelime kartları veya klavyeyle kendisi yazsın; robot yazılanı uygulasın."
+ },
+ {
+  "id": "z19",
+  "group": "Tema 3 · Doğa ve İnsan",
+  "title": "Eş Anlam Ormanı",
+  "sub": "Aynı anlamlı sözcükleri eşleştir",
+  "kaz": "T.Y.4.2.ı — Yazılarında eş anlamlı sözcükleri kullanır.",
+  "type": "memoryPairs",
+  "instruction": "Ormanda kartlar saklı! Kartları çevir ve her sözcüğü eş anlamlısıyla eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Orman sahnesi ağaç kovuklarıyla kurulsun; kartlar kovuklardan çıksın ve eşleşen eş anlamlı çift aynı cümle içinde iki kez okunarak doğrulansın.",
+  "tur2": "Her bağlamda birebir değiştirilemeyen eş anlamlılar karşılaştırılsın (kara-siyah her cümlede değişmez).",
+  "tur3": "Öğrenci bir eş anlamlı çiftin iki üyesiyle ayrı cümleler yazıp anlamın korunduğunu kontrol etsin."
+ },
+ {
+  "id": "z20",
+  "group": "Tema 3 · Doğa ve İnsan",
+  "title": "Üç Nokta ve Konuşma Çizgisi",
+  "sub": "Yeni noktalama işaretleri",
+  "kaz": "T.Y.4.3.e — Üç nokta, konuşma çizgisi ve tırnak işaretini kuralına uygun kullanır.",
+  "type": "punctFix",
+  "instruction": "Doğa güncesinde yeni işaretler var! Üç nokta (…), konuşma çizgisi (—) ve tırnak (\") koy",
+  "n": {
+   "rounds": 4,
+   "marks": ". , … — \" !"
+  },
+  "tur1": "Doğa güncesi gerçek defter sayfası olarak açılsın; görev metni hangi işaretin nereye geleceğini söylemesin ve başlık üst çubukta kırpılmasın.",
+  "tur2": "Konuşma çizgisi ile tırnak işaretinin farkı iki örnekle karşılaştırılsın: aktarılan söz ve yazılan söz.",
+  "tur3": "Öğrenci kendi doğa gözlemini bir konuşma cümlesiyle yazıp işaretlerini kendisi koysun."
+ },
+ {
+  "id": "z21",
+  "group": "Tema 3 · Doğa ve İnsan",
+  "title": "Su Döngüsü",
+  "sub": "Doğa olayının adımlarını sırala",
+  "kaz": "T.O.4.2.ç / T.D.4.3.a — Olayların öncesi ve sonrasını, sırasını belirler.",
+  "type": "orderSequence",
+  "instruction": "Su döngüsünün adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Roket kaldırılsın; gerçek su döngüsü şeması (deniz, buhar, bulut, yağmur, akarsu) ekranda dursun ve adım kartları şemanın üzerindeki yerlerine yerleşsin.",
+  "tur2": "Kar ve yer altı suyu varyantlarıyla yeni döngü sıralansın; ara adım çeldiricisi eklensin.",
+  "tur3": "Öğrenci döngüyü kendi cümleleriyle üç adımda yazsın veya anlatsın."
+ },
+ {
+  "id": "z22",
+  "group": "Tema 3 · Doğa ve İnsan",
+  "title": "Yarım Metin Atölyesi",
+  "sub": "Eksik bölümü tamamla",
+  "kaz": "T.Y.4.2.a — Yarım bırakılan bölümleri ön bilgilerinden yararlanarak devam ettirir.",
+  "type": "sentenceBuild",
+  "instruction": "Metin yarım kalmış! Kelime kartlarına sırayla dokunarak cümleyi tamamla",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Yarım metin ekranda görünür dursun: önceki bölüm panelde okunsun, tamamlama kartları metnin altında sabit olsun.",
+  "tur2": "İki makul tamamlamadan kişi, zaman ve konu tutarlılığına uyan seçilsin; öğrenci dayandığı ipucu cümlesini işaretlesin.",
+  "tur3": "Öğrenci metnin devamını hazır kart olmadan iki cümleyle kendisi yazsın."
+ },
+ {
+  "id": "z23",
+  "group": "Tema 3 · Doğa ve İnsan",
+  "title": "Tasarruf Ölçer",
+  "sub": "Su tüketimini tahmin et",
+  "kaz": "T.O.4.2.a / T.K.4.2.b — Metindeki bilgilerle ön bilgileri arasında bağlantı kurar, günlük yaşamla ilişkilendirir.",
+  "type": "dragSlider",
+  "instruction": "Su sayacını sürükleyerek günlük tüketimi tahmin et, sonra gerçek değeri gör",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "Tren-tünel sahnesi kaldırılsın; ekranda kısa bir bilgi metni (musluk dakikada kaç litre akıtır) ve gerçek su sayacı bulunsun. Tahmin bu metne dayansın.",
+  "tur2": "Tahmin, gerçek değer ve fark birlikte gösterilsin; iki farklı kullanım karşılaştırılsın (duş / küvet).",
+  "tur3": "Öğrenci tasarruf önerisini 'Metne göre ... yaparsak ... litre tasarruf ederiz' kalıbıyla yazsın."
+ },
+ {
+  "id": "z24",
+  "group": "Tema 3 · Doğa ve İnsan",
+  "title": "Doğa Dergisi Masası",
+  "sub": "Yazma planının bölümlerini hazırla",
+  "kaz": "T.Y.4.1.b / c / ç — Amacına ve ortamına uygun yazma stratejisi seçer, plana uygun yazar.",
+  "type": "serveOrder",
+  "instruction": "Doğa dergisi baskıya giriyor! Editörün istediği plan bölümlerini tepsiye koy",
+  "n": {
+   "customers": 3
+  },
+  "tur1": "Dergi masası gerçek sayfa taslağıyla kurulsun; plan bölümleri (başlık, giriş, gelişme, sonuç, görsel, kaynak) taslak sayfadaki yerlerine yerleşsin.",
+  "tur2": "Amaca göre farklı plan istensin: bilgilendirici yazı ile öykü planı karşılaştırılsın.",
+  "tur3": "Öğrenci verilen konu için kendi yazma planını dört maddeyle yazsın."
+ },
+ {
+  "id": "z25",
+  "group": "Tema 4 · Kütüphanemiz",
+  "title": "Kütüphane Görevlisi",
+  "sub": "Okurun aradığı kaynağı bul",
+  "kaz": "T.O.4.1.a / T.O.4.5.ç — Okuma amacına ve ilgi alanına göre metin seçer, tercihini belirtir.",
+  "type": "serveOrder",
+  "instruction": "Kütüphane görevlisisin! Okurun amacına uygun kaynağı tepsiye koy ve teslim et",
+  "n": {
+   "customers": 5
+  },
+  "tur1": "Gerçek kütüphane rafları ve kaynak kapakları çizilsin; okurun amacı açıklayıcı cümle olarak okunsun ve tür kapaktan çıkarımla bulunsun.",
+  "tur2": "Aynı konuda ansiklopedi, öykü ve dergi karşılaştırılsın; amaca en uygun olan gerekçeyle seçilsin.",
+  "tur3": "Öğrenci kendi okuma amacını ve seçtiği türü 'Bu kaynağı seçtim çünkü ...' cümlesiyle yazsın."
+ },
+ {
+  "id": "z26",
+  "group": "Tema 4 · Kütüphanemiz",
+  "title": "Anlam Tasnif Bandı",
+  "sub": "Gerçek, mecaz ve terim anlam",
+  "kaz": "T.O.4.3.d — Gerçek, mecaz ve terim anlamlı sözcükleri belirler.",
+  "type": "beltSort",
+  "instruction": "Anlam bandı çalışıyor! Cümledeki koyu sözcük GERÇEK, MECAZ mı yoksa TERİM anlamda mı?",
+  "n": {
+   "items": 9,
+   "bins": "GERÇEK ANLAM / MECAZ ANLAM / TERİM ANLAM"
+  },
+  "tur1": "Anlam laboratuvarı kurulsun: cümle sabit okunur kartta dursun, koyu sözcük vurgulu gösterilsin ve bant hızı kaldırılsın; üç kutu etiketi kutu içinde kalsın.",
+  "tur2": "Aynı sözcüğün üç anlamı yan yana karşılaştırılsın (yüzey: gerçek / mecaz / terim).",
+  "tur3": "Öğrenci bir sözcüğü terim anlamıyla kendi cümlesinde kullanıp gerçek anlamından farkını yazsın."
+ },
+ {
+  "id": "z27",
+  "group": "Tema 4 · Kütüphanemiz",
+  "title": "Atasözü Köprüsü",
+  "sub": "Atasözünü anlamıyla birleştir",
+  "kaz": "T.K.4.2.ö / T.K.4.3.g — Sık karşılaşılan atasözlerinin anlamlarını söyler, bağlama uygun kullanır.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her atasözünü doğru anlamıyla birleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Köprü kalasları atasözlerini taşısın; simge eşleşmesi kaldırılsın ve doğru eşleşmede atasözünün anlattığı durum kısa canlandırmayla gösterilsin.",
+  "tur2": "Yakın anlamlı atasözü çeldiricileri eklensin; anlam ile birebir sözcük benzerliği ayrılsın.",
+  "tur3": "Öğrenci bir atasözünü uygun bir yaşam durumuna bağlayarak cümle kursun ve sesli söylesin."
+ },
+ {
+  "id": "z28",
+  "group": "Tema 4 · Kütüphanemiz",
+  "title": "Yazışma Masası",
+  "sub": "E-posta ve mektup noktalaması",
+  "kaz": "T.Y.4.1.d / e · T.Y.4.3.e — Yazışmayı uygun ifadelerle başlatır, sürdürür, sonlandırır.",
+  "type": "punctFix",
+  "instruction": "Yazara e-posta yazıyoruz! Hitaptan sonra virgül, cümle sonlarına doğru işaret koy",
+  "n": {
+   "rounds": 4,
+   "marks": ". , : ? ! \""
+  },
+  "tur1": "Gerçek e-posta ekranı açılsın: alıcı, konu, hitap, gövde ve kapanış alanları görünür olsun; işaretler bu gerçek yapının üzerinde çalışılsın.",
+  "tur2": "Resmî ve samimi yazışmanın üslup ve noktalama farkı karşılaştırılsın.",
+  "tur3": "Öğrenci yazara iki cümlelik e-postayı klavyeyle yazsın; hitap ve kapanış kararları kayda geçsin."
+ },
+ {
+  "id": "z29",
+  "group": "Tema 4 · Kütüphanemiz",
+  "title": "Kaynak Denetim Radarı",
+  "sub": "Bilgi güvenilir mi?",
+  "kaz": "T.D.4.5.b / T.O.4.5.c — Verilen bilginin ve kaynağının doğruluğunu sorgular.",
+  "type": "catchDrop",
+  "instruction": "Radarı sürükleyerek en güvenilir kaynağı yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Radar kaldırılsın; kaynak kartları (ansiklopedi, kişisel blog, kurum sitesi, sosyal medya) sabit dursun ve her kartta yazar, tarih, kurum bilgisi görünsün.",
+  "tur2": "Aynı bilgiyi veren iki kaynaktan hangisinin daha güvenilir olduğu ölçütlerle karşılaştırılsın.",
+  "tur3": "Öğrenci seçtiği kaynağı 'Bu kaynak güvenilir çünkü ...' cümlesiyle gerekçelendirsin."
+ },
+ {
+  "id": "z30",
+  "group": "Tema 4 · Kütüphanemiz",
+  "title": "Okur Kimliği Anketi",
+  "sub": "Çetele çizerek veri topla",
+  "kaz": "T.O.4.5.ç — Okuma tercihlerini tür ve ilgi alanına göre belirtir.",
+  "type": "tallyChart",
+  "instruction": "Sınıf anketi! Gelen arkadaşının en sevdiği türü doğru satıra dokunarak çeteleye işle",
+  "n": {
+   "columns": 3,
+   "responses": 10
+  },
+  "tur1": "Cevap cümleleri sütun adını birebir söylemesin (çıkarım gereksin); işaretler rakam değil çetele çizgisiyle biriksin ve beşinci çizgi dördünü kessin.",
+  "tur2": "Çetele tamamlanınca sıklık tablosuna çevrilsin; 'en çok / en az / kaç fark' soruları sorulsun.",
+  "tur3": "Öğrenci kendi tercihini ekleyip sonucu 'Sınıfımızda en çok ... okunuyor, çünkü ...' cümlesiyle yorumlasın."
+ },
+ {
+  "id": "z31",
+  "group": "Tema 4 · Kütüphanemiz",
+  "title": "Dilek Kutusu",
+  "sub": "İstek, şikâyet ve öneri",
+  "kaz": "T.Y.4.2.o — İstek, şikâyet ve önerilerini uygun biçimlerle yazılı olarak ifade eder.",
+  "type": "sentenceBuild",
+  "instruction": "Kütüphane dilek kutusu için yazıyoruz! Kelime kartlarına sırayla dokunarak cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Gerçek dilek kutusu ve form sahnesi kurulsun; önce istek/şikâyet/öneri türü seçilsin, sonra türe uygun cümle kurulsun.",
+  "tur2": "Aynı konu üç türde ifade edilsin: isteğin, şikâyetin ve önerinin dil farkı karşılaştırılsın.",
+  "tur3": "Öğrenci kütüphane için kendi önerisini iki cümleyle klavyeden yazsın; nazik ifade rubriği uygulansın."
+ },
+ {
+  "id": "z32",
+  "group": "Tema 4 · Kütüphanemiz",
+  "title": "Araştırma Adımları",
+  "sub": "Kaynak göstermeye kadar sırala",
+  "kaz": "T.Y.4.2.p / T.Y.4.1.g — Yazma planı hazırlar, yararlandığı kaynakları yazar.",
+  "type": "orderSequence",
+  "instruction": "Araştırma adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Araştırma masası kurulsun: adımlar (soru belirleme, kaynak tarama, not alma, yazma, kaynak gösterme) panoda görselleşsin, roket kullanılmasın.",
+  "tur2": "Eksik veya yer değiştirmiş adım bulma görevi eklensin; kaynak göstermenin neden son adım olduğu tartışılsın.",
+  "tur3": "Öğrenci merak ettiği bir soru için araştırma planını yazsın ve kullandığı kaynağı kurala uygun belirtsin."
+ },
+ {
+  "id": "z33",
+  "group": "Tema 5 · Kendimizi Geliştiriyoruz",
+  "title": "Bağlaç Ayırma Bandı",
+  "sub": "Boşluğa hangi bağlaç gelir?",
+  "kaz": "T.K.4.3.i — Bağlaçları (ile, ve, veya, ya da, ama, çünkü, de, ki) kurallara uygun kullanır.",
+  "type": "beltSort",
+  "instruction": "Bağlaç bandı çalışıyor! Cümledeki boşluğa hangi bağlaç gelir? Doğru kutuya dokun",
+  "n": {
+   "items": 9,
+   "bins": "ve (ekleme) / ama (karşıtlık) / çünkü (neden)"
+  },
+  "tur1": "Bağlaç bandı durdurulsun; cümle sabit kartta ve boşluk vurgulu gösterilsin. Kutu etiketleri kutu içinde kalsın ve üç kutu 44 px'ten küçük olmasın.",
+  "tur2": "Aynı iki cümle farklı bağlaçlarla birleştirilip anlam farkı karşılaştırılsın (ve / ama / çünkü).",
+  "tur3": "Öğrenci üç bağlaçtan ikisiyle kendi cümlelerini yazsın."
+ },
+ {
+  "id": "z34",
+  "group": "Tema 5 · Kendimizi Geliştiriyoruz",
+  "title": "Bağlaç Makinesi",
+  "sub": "Bağlaçlı cümle kur",
+  "kaz": "T.K.4.3.i / T.Y.4.2.u — Bağlaçları doğru kullanır; neden-sonuç ilişkisini yazar.",
+  "type": "sentenceBuild",
+  "instruction": "Makine bağlaç üretiyor! Kelime kartlarına sırayla dokunarak bağlaçlı cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Makine bağlacın işlevini göstersin: seçilen bağlaç iki cümleyi görsel olarak birleştirsin (ekleme, karşıtlık, neden ayrı animasyonla).",
+  "tur2": "Yanlış bağlaç seçilince anlamın nasıl bozulduğu örnekle gösterilsin.",
+  "tur3": "Öğrenci neden-sonuç ilişkisini 'çünkü' ve 'bu yüzden' ile iki yönde kendisi yazsın."
+ },
+ {
+  "id": "z35",
+  "group": "Tema 5 · Kendimizi Geliştiriyoruz",
+  "title": "Arasöz Atölyesi",
+  "sub": "Virgül, üç nokta ve kısa çizgi",
+  "kaz": "T.Y.4.3.e — Virgül, üç nokta ve kısa çizgiyi kuralına uygun kullanır.",
+  "type": "punctFix",
+  "instruction": "Sahne programının noktalaması silinmiş! Arasözü virgülle ayır, yarım kalan sözü üç noktayla bitir",
+  "n": {
+   "rounds": 4,
+   "marks": ". , … ! ? -"
+  },
+  "tur1": "Sahne programı gerçek broşür olarak açılsın; arasözün ne olduğu bir örnekle sayfa kenarında dursun ve görev metni işaret adını söylemesin.",
+  "tur2": "Arasöz virgülü ile sıralama virgülü karşılaştırılsın; kısa çizginin farklı görevi ayrı örnekle verilsin.",
+  "tur3": "Öğrenci arasöz içeren bir cümleyi klavyeyle yazıp virgülleri kendisi koysun."
+ },
+ {
+  "id": "z36",
+  "group": "Tema 5 · Kendimizi Geliştiriyoruz",
+  "title": "Neden-Sonuç Köprüsü",
+  "sub": "Sebebi sonucuyla birleştir",
+  "kaz": "T.K.4.3.d / T.Y.4.2.u — Neden-sonuç ilişkilerini söyler ve yazar.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her nedeni doğru sonuçla birleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Gerçek köprü görseli kurulsun: sol kıyı neden, sağ kıyı sonuç; simge eşleşmesi kaldırılsın ve her doğru eşleşme köprüye kalas eklesin.",
+  "tur2": "Aynı nedenin birden çok sonucu olabildiği örnekler eklensin; zincirleme neden-sonuç kurulsun.",
+  "tur3": "Öğrenci kendi yaşamından bir neden-sonuç cümlesini 'çünkü' ve 'bu yüzden' ile yazsın."
+ },
+ {
+  "id": "z37",
+  "group": "Tema 5 · Kendimizi Geliştiriyoruz",
+  "title": "Eş Anlam Sahnesi",
+  "sub": "Aynı anlamlı sözcükleri eşleştir",
+  "kaz": "T.K.4.2.ğ — Konuşmalarında eş anlamlı sözcükleri kullanır.",
+  "type": "memoryPairs",
+  "instruction": "Sahne kartları kapalı! Kartları çevir ve her sözcüğü eş anlamlısıyla eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Tiyatro sahnesi gerçek görselle kurulsun; kart açılınca sözcük seslendirilsin ve eşleşen çift aynı replikte iki kez okunarak doğrulansın.",
+  "tur2": "Konuşma dilinde daha uygun düşen eş anlamlı seçilsin; üslup farkı karşılaştırılsın.",
+  "tur3": "Öğrenci eş anlamlı çiftle kısa bir replik söyleyip kaydetsin veya rubrikle değerlendirilsin."
+ },
+ {
+  "id": "z38",
+  "group": "Tema 5 · Kendimizi Geliştiriyoruz",
+  "title": "Sözcük Anlamı Radarı",
+  "sub": "Bağlamdan anlamı tahmin et",
+  "kaz": "T.Y.4.2.ç — Bir sözcüğün anlamına ilişkin tahminlerini bağlamdan yararlanarak yazar.",
+  "type": "catchDrop",
+  "instruction": "Cümleyi oku, koyu sözcüğün anlamını toplayıcıyı sürükleyerek yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Cümle sabit panelde dursun; anlam seçenekleri düşmesin. Öğrenci karar öncesi bağlam ipucunu işaretleyebilsin.",
+  "tur2": "Aynı sözcüğün mecaz ve gerçek anlamı iki cümlede karşılaştırılsın.",
+  "tur3": "Öğrenci tahminini sözlükle doğrulayıp anlamı kendi cümlesiyle yazsın."
+ },
+ {
+  "id": "z39",
+  "group": "Tema 5 · Kendimizi Geliştiriyoruz",
+  "title": "Sunum Masası",
+  "sub": "Sunum için gerekenleri hazırla",
+  "kaz": "T.K.4.1.d · T.K.4.3.ç — Konuşma planı hazırlar; beden dilini, ses tonunu ve dinleyiciyi dikkate alarak sunum yapar.",
+  "type": "serveOrder",
+  "instruction": "Yetenek sunumu hazırlıyoruz! Danışmanın istediği sunum ögelerini tepsiye koy",
+  "n": {
+   "customers": 4
+  },
+  "tur1": "Sunum sahnesi kurulsun: kürsü, dinleyiciler ve not kartları görünsün; danışmanın isteği sunum amacına göre okunsun, simge kopyası kaldırılsın.",
+  "tur2": "Aynı konu farklı dinleyiciler için planlansın (sınıf / veli); ses tonu ve beden dili ögeleri ayrı seçilsin.",
+  "tur3": "Öğrenci bir dakikalık sunumunu planına göre yapsın ve kaydetsin; beden dili-ses tonu rubriğiyle değerlendirilsin."
+ },
+ {
+  "id": "z40",
+  "group": "Tema 5 · Kendimizi Geliştiriyoruz",
+  "title": "Yazım Denetçisi",
+  "sub": "Ayrı-birleşik yazım hatalarını bul",
+  "kaz": "T.Y.4.5.a / b · T.Y.4.3.d — Yazısındaki hataları bulur ve düzeltir.",
+  "type": "wordHighlight",
+  "instruction": "Denetim kalemi elinde! Metinde yanlış yazılmış sözcüğe dokun — kalem onu düzeltecek",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "Metin taşmadan yerleşsin ve büyüteç hedefi örtmesin; hatalı sözcüğe dokununca doğru biçim otomatik gelmesin, öğrenci seçsin ya da yazsın.",
+  "tur2": "Ayrı-birleşik yazım kuralları karışık verilsin (de/da, ki, mi, pekiştirme); her düzeltmede kural kısa görünsün.",
+  "tur3": "Öğrenci kendi yazdığı kısa paragrafı denetleyip hatalarını bulsun ve düzeltsin."
+ },
+ {
+  "id": "z41",
+  "group": "Tema 6 · Bilim ve Teknoloji",
+  "title": "“de/da” Denetim Bandı",
+  "sub": "Ayrı mı, birleşik mi?",
+  "kaz": "T.O.4.2.l / T.Y.4.2.ü — “de” bağlacı ile “-de” ekinin etkisini fark eder, doğru yazar.",
+  "type": "beltSort",
+  "instruction": "Denetim bandı! Köşeli parantez içindeki [de] ayrı mı, birleşik mi yazılır? “dahi, bile” anlamı varsa ayrı; “içinde, üzerinde” anlamı varsa birleşik.",
+  "n": {
+   "items": 8,
+   "bins": "AYRI yazılır / BİRLEŞİK yazılır"
+  },
+  "tur1": "Bant durdurulsun ve cümle kartı ekranın tam ortasında, hiçbir kenarda kırpılmadan gösterilsin. [de] vurgulanıp cümle sesli okunsun; kural kutusu ekranda kalsın.",
+  "tur2": "'Dahi/bile' testi uygulatılsın: öğrenci sözcüğü cümleden çıkarıp anlamın bozulup bozulmadığını görsün.",
+  "tur3": "Öğrenci hem ayrı hem birleşik 'de' kullanarak iki cümleyi klavyeyle yazsın."
+ },
+ {
+  "id": "z42",
+  "group": "Tema 6 · Bilim ve Teknoloji",
+  "title": "“ki” Düzeltme Kalemi",
+  "sub": "Ayrı yazılması gerekeni bul",
+  "kaz": "T.Y.4.2.ü / T.Y.4.5.b — “ki” bağlacını doğru kullanır, hatalarını düzeltir.",
+  "type": "wordHighlight",
+  "instruction": "Düzeltme kalemi elinde! “ki” bağlacı ayrı yazılır — birleşik yazılmış sözcüğe dokun",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "Metin panelden taşmasın, soru başlığı tam görünsün ve büyüteç karar verilecek sözcüğü örtmesin; kural kutusu sayfada sabit kalsın.",
+  "tur2": "Bağlaç 'ki' ile ilgi eki '-ki/-kü' aynı metinde karşılaştırılsın; doğru yazılmış çeldiriciler bulunsun.",
+  "tur3": "Öğrenci 'ki' bağlacını ayrı yazarak kendi cümlesini yazsın."
+ },
+ {
+  "id": "z43",
+  "group": "Tema 6 · Bilim ve Teknoloji",
+  "title": "Kodlama Laboratuvarı",
+  "sub": "Robotu yönergeyle çalıştır",
+  "kaz": "T.Y.4.2.k — Ayrıntılı yönergeler yazar.",
+  "type": "codeGrid",
+  "instruction": "Kodlama laboratuvarında robot bekliyor! Yön bloklarını diz ve Çalıştır",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "Yön blokları yazılı yönerge kartlarına dönüşsün; dizilen program panelde numaralı cümleler hâlinde görünsün ve robot okurken adım adım uygulasın.",
+  "tur2": "Hatalı verilen bir programı okuyup hatayı bulma ve yalnız o adımı düzeltme görevi eklensin.",
+  "tur3": "Öğrenci robotu hedefe götüren yönergeyi kendisi yazsın; yazılan yönerge çalıştırılarak sınansın."
+ },
+ {
+  "id": "z44",
+  "group": "Tema 6 · Bilim ve Teknoloji",
+  "title": "Mucit Atölyesi",
+  "sub": "Deney için doğru araçları hazırla",
+  "kaz": "T.K.4.2.m / T.Y.4.2.b — Açıklamalarına örnekler ekler; ön bilgilerinden yararlanarak yazar.",
+  "type": "serveOrder",
+  "instruction": "Mucit atölyesine bilim insanları geldi! Her deney için gerekli araçları tepsiye koy",
+  "n": {
+   "customers": 5
+  },
+  "tur1": "Deney masası gerçek araç görselleriyle kurulsun; bilim insanının isteği amaç-araç-adım içeren kısa plan olarak okunsun ve simge kopyası kaldırılsın.",
+  "tur2": "Amaca uymayan çekici araç çeldirici olsun; öğrenci elemeyi gerekçelendirsin.",
+  "tur3": "Öğrenci basit bir deneyin adımlarını örnek ekleyerek kendi cümleleriyle yazsın."
+ },
+ {
+  "id": "z45",
+  "group": "Tema 6 · Bilim ve Teknoloji",
+  "title": "Deney Raporu Dizgisi",
+  "sub": "İki nokta, yay ayraç ve eğik çizgi",
+  "kaz": "T.Y.4.3.e — İki nokta, yay ayraç, kısa çizgi ve eğik çizgiyi kuralına uygun kullanır.",
+  "type": "punctFix",
+  "instruction": "Deney raporunun noktalaması silinmiş! İki nokta, yay ayraç ( ) ve eğik çizgi (/) koy",
+  "n": {
+   "rounds": 4,
+   "marks": ". , : ( ) - / !"
+  },
+  "tur1": "Deney raporu gerçek şablonla açılsın; görev metni hangi işaretin nereye geleceğini SÖYLEMESİN ve 'Kalan' sayacı ilk turdan sonra kapansın.",
+  "tur2": "Yay ayraç (açıklama), eğik çizgi (birim) ve kısa çizginin farklı görevleri ayrı örneklerle çalışılsın.",
+  "tur3": "Öğrenci kendi gözlem cümlesini iki nokta ve yay ayraç kullanarak klavyeyle yazsın."
+ },
+ {
+  "id": "z46",
+  "group": "Tema 6 · Bilim ve Teknoloji",
+  "title": "Terim Köprüsü",
+  "sub": "Bilim terimini tanımıyla birleştir",
+  "kaz": "T.O.4.3.d — Terim anlamlı sözcükleri belirler.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her bilim terimini doğru tanımıyla birleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Köprü kalasları bilim terimlerini taşısın; simge eşleşmesi kaldırılsın ve doğru eşleşmede terimin anlamı kısa görselle gösterilsin.",
+  "tur2": "Aynı sözcüğün günlük ve terim anlamı karşılaştırılsın (madde, kütle, çözelti).",
+  "tur3": "Öğrenci bir terimi tanımıyla birlikte kendi cümlesinde kullanarak yazsın."
+ },
+ {
+  "id": "z47",
+  "group": "Tema 6 · Bilim ve Teknoloji",
+  "title": "Yönerge Makinesi",
+  "sub": "Ayrıntılı yönerge cümlesi kur",
+  "kaz": "T.Y.4.2.k — Ayrıntılı yönergeler yazar.",
+  "type": "sentenceBuild",
+  "instruction": "Deney yönergesi yazıyoruz! Kelime kartlarına sırayla dokunarak adım cümlesini kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Yönerge makinesi adımı gerçekten uygulasın: kurulan cümle bir deney animasyonunu tetiklesin; kartlar küçük harfle gelsin.",
+  "tur2": "Eksik ve ayrıntılı yönerge karşılaştırılsın: 'suyu koy' ile 'bardağa yarıya kadar su koy' farkı gösterilsin.",
+  "tur3": "Öğrenci üç adımlı deney yönergesini ayrıntılarıyla kendisi yazsın."
+ },
+ {
+  "id": "z48",
+  "group": "Tema 6 · Bilim ve Teknoloji",
+  "title": "Araştırma Adımları",
+  "sub": "Bilimsel süreci sırala",
+  "kaz": "T.D.4.3.a / T.O.4.2.ç — Metindeki adımların ve olayların sırasını belirler.",
+  "type": "orderSequence",
+  "instruction": "Bilimsel araştırmanın adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 6
+  },
+  "tur1": "Bilim panosu kurulsun; adımlar soru-hipotez-deney-gözlem-sonuç akışıyla panoda görselleşsin, roket sahnesi kullanılmasın.",
+  "tur2": "Eksik adım bulma görevi eklensin: araştırmada hangi adım atlanmış?",
+  "tur3": "Öğrenci kendi araştırma sorusu için beş adımı sırayla yazsın."
+ },
+ {
+  "id": "z49",
+  "group": "Tema 7 · Geçmişten Geleceğe Mirasımız",
+  "title": "Müze Rehberi",
+  "sub": "Ziyaretçinin aradığı mirası bul",
+  "kaz": "T.O.4.3.a / T.K.4.2.b — Metindeki bilgileri açıklar, günlük yaşamla ilişkilendirir.",
+  "type": "serveOrder",
+  "instruction": "Müze rehberisin! Ziyaretçinin aradığı kültür mirasını tepsiye koy",
+  "n": {
+   "customers": 5
+  },
+  "tur1": "Müze salonu gerçek eser görselleriyle kurulsun; ziyaretçi isteği bilgi metninden çıkarım gerektirsin ve simge kopyası kaldırılsın.",
+  "tur2": "Somut ve somut olmayan miras ayrımı yapılsın (cami / âşıklık geleneği); ölçüt tartışılsın.",
+  "tur3": "Öğrenci bir mirası iki cümleyle tanıtsın ve günlük yaşamla bağını kursun."
+ },
+ {
+  "id": "z50",
+  "group": "Tema 7 · Geçmişten Geleceğe Mirasımız",
+  "title": "“ki” Denetim Bandı",
+  "sub": "Ayrı mı, birleşik mi?",
+  "kaz": "T.O.4.2.l / T.Y.4.2.ü — “ki” bağlacının etkisini fark eder ve doğru yazar.",
+  "type": "beltSort",
+  "instruction": "Denetim bandı! Köşeli parantez içindeki [ki] ayrı mı, birleşik mi yazılır? Bağlaç olan “ki” ayrı; ilgi eki olan “-ki/-kü” birleşik yazılır.",
+  "n": {
+   "items": 8,
+   "bins": "AYRI yazılır / BİRLEŞİK yazılır"
+  },
+  "tur1": "Bant durdurulsun ve cümle kartı tam görünsün; [ki] vurgulanıp cümle sesli okunsun. Kural kutusu ekranda kalsın.",
+  "tur2": "Bağlaç 'ki', ilgi eki '-ki' ve sıfat yapan '-ki' ayrı örneklerle karşılaştırılsın.",
+  "tur3": "Öğrenci hem ayrı hem birleşik 'ki' kullanarak iki cümleyi klavyeyle yazsın."
+ },
+ {
+  "id": "z51",
+  "group": "Tema 7 · Geçmişten Geleceğe Mirasımız",
+  "title": "Miras Panosu Dizgisi",
+  "sub": "Özel adları büyük harfle yaz",
+  "kaz": "T.Y.4.3.d / e — Yazım kurallarına uygun yazar; noktalama işaretlerini doğru kullanır.",
+  "type": "punctFix",
+  "instruction": "Müze panosunun dizgisi bozulmuş! Özel adlara dokunup büyük harfle başlat, noktalamayı tamamla",
+  "n": {
+   "rounds": 4,
+   "marks": ". , ? ! ’"
+  },
+  "tur1": "Müze panosu gerçek pano görseliyle kurulsun; özel ad türleri (yapı, kişi, dönem, kurum) karışık cümlelerde çalışılsın ve düzelen cümle panoya asılsın.",
+  "tur2": "Kesme işareti ve büyük harf birlikte istensin; cins isim çeldiricileri eklensin.",
+  "tur3": "Öğrenci pano için kendi tanıtım cümlesini klavyeyle yazsın; büyük harf ve kesme kararlarını bağımsız versin."
+ },
+ {
+  "id": "z52",
+  "group": "Tema 7 · Geçmişten Geleceğe Mirasımız",
+  "title": "Miras Haritası",
+  "sub": "Eseri şehriyle eşleştir",
+  "kaz": "T.O.4.3.a / T.O.4.2.ğ — Metindeki bilgileri açıklar, özelliklerine göre sınıflandırır.",
+  "type": "memoryPairs",
+  "instruction": "Harita kartları kapalı! Kartları çevir ve her mirası bulunduğu şehirle eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Türkiye haritası sahne olsun; eşleşen miras haritadaki şehrine yerleşsin ve kısa bilgi cümlesi okunarak eşleşme kanıtlansın.",
+  "tur2": "Aynı şehirden iki miras veya benzer mirasları olan iki şehir çeldirici olsun.",
+  "tur3": "Öğrenci bildiği bir mirası 'Bu miras ...dadır ve ...' cümlesiyle tanıtsın."
+ },
+ {
+  "id": "z53",
+  "group": "Tema 7 · Geçmişten Geleceğe Mirasımız",
+  "title": "Miras Zinciri",
+  "sub": "Kuşaklar arası aktarımı sırala",
+  "kaz": "T.D.4.3.a / T.O.4.2.ç — Olayların sırasını ve öncesi-sonrasını belirler.",
+  "type": "orderSequence",
+  "instruction": "Bir el sanatının kuşaklar arası yolculuğu karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Zincir gerçek atölye sahnesiyle kurulsun: usta, çırak ve ürün kuşak kuşak görünsün; roket kaldırılsın.",
+  "tur2": "Aktarımın kesintiye uğradığı ve yeniden canlandığı adımlar eklensin.",
+  "tur3": "Öğrenci bir el sanatının kuşaklar arası yolculuğunu üç cümleyle anlatsın veya yazsın."
+ },
+ {
+  "id": "z54",
+  "group": "Tema 7 · Geçmişten Geleceğe Mirasımız",
+  "title": "Eş Anlam Makinesi",
+  "sub": "Eş anlamlı sözcükle cümle kur",
+  "kaz": "T.Y.4.2.ı — Yazılarında eş anlamlı sözcükleri kullanır.",
+  "type": "sentenceBuild",
+  "instruction": "Makine eş anlam üretiyor! Kelime kartlarıyla eş anlamlı sözcük içeren cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Makine eş anlamı görselleştirsin: seçilen çift aynı cümlede yer değiştirerek anlamın korunduğunu göstersin; kartlar küçük harfle gelsin.",
+  "tur2": "Her bağlamda değiştirilemeyen eş anlamlılar çeldirici olsun.",
+  "tur3": "Öğrenci eş anlamlı sözcük içeren kendi cümlesini klavyeyle yazsın."
+ },
+ {
+  "id": "z55",
+  "group": "Tema 7 · Geçmişten Geleceğe Mirasımız",
+  "title": "Türkçe Koruma Kalemi",
+  "sub": "Yabancı sözcüğü Türkçesiyle değiştir",
+  "kaz": "T.Y.4.5.a / b · Dil sevgisi — Yazısındaki hataları belirler ve düzeltir.",
+  "type": "wordHighlight",
+  "instruction": "Türkçe koruma kalemi elinde! Metinde Türkçesi olan yabancı sözcüğe dokun — kalem onu değiştirecek",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "Metin taşmasın ve büyüteç örtmesin; yabancı sözcüğe dokununca kalem otomatik değiştirmesin - Türkçe karşılığı öğrenci seçsin ve değişen cümle yeniden okunsun.",
+  "tur2": "Birden çok Türkçe karşılıktan bağlama uygun olan seçilsin; karşılığı olmayan sözcükler çeldirici olsun.",
+  "tur3": "Öğrenci cümleyi Türkçe karşılıkla ekran klavyesinden yeniden yazsın."
+ },
+ {
+  "id": "z56",
+  "group": "Tema 7 · Geçmişten Geleceğe Mirasımız",
+  "title": "Miras Bekçisi Radarı",
+  "sub": "Mirası koruyan davranışı yakala",
+  "kaz": "T.D.4.2.h / T.K.4.2.i — Katılıp katılmadığını nedenleriyle ifade eder; davranışları değerlendirir.",
+  "type": "catchDrop",
+  "instruction": "Kalkanı sürükleyerek mirasımızı koruyan davranışı yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Kalkan-yakalama mekaniği kaldırılsın; davranış kartları sabit gelsin ve öğrenci 'koruyor / zarar veriyor' kararını gerekçe seçerek versin.",
+  "tur2": "Niyet ile etki ayrılsın: iyi niyetli ama zarar veren davranışlar eklensin.",
+  "tur3": "Öğrenci mirası koruyan bir davranış önerisini nedeniyle birlikte yazsın veya söylesin."
+ },
+ {
+  "id": "z57",
+  "group": "Tema 8 · Demokratik Yaşam",
+  "title": "Demokrasi Bandı",
+  "sub": "Hak, sorumluluk mu, özgürlük mü?",
+  "kaz": "T.D.4.2.ğ / T.Y.4.2.g — Durumları özelliklerine göre sınıflandırır.",
+  "type": "beltSort",
+  "instruction": "Adalet bandı çalışıyor! Gelen ifade bir HAK, bir SORUMLULUK mu yoksa bir ÖZGÜRLÜK mü?",
+  "n": {
+   "items": 9,
+   "bins": "HAK / SORUMLULUK / ÖZGÜRLÜK"
+  },
+  "tur1": "Adalet meydanı sahnesi kurulsun; ifade kartı sabit okunsun, karar sonrası kart doğru sütuna konsun ve üç kutu etiketi kutu içinde kalsın.",
+  "tur2": "Aynı konunun hak, sorumluluk ve özgürlük yönleri birlikte verilsin; hak ile özgürlük farkı tartışılsın.",
+  "tur3": "Öğrenci bir hakkını, ona bağlı sorumluluğunu ve bir özgürlüğünü kendi cümleleriyle yazsın."
+ },
+ {
+  "id": "z58",
+  "group": "Tema 8 · Demokratik Yaşam",
+  "title": "Dilekçe Masası",
+  "sub": "Dilekçenin bölümlerini hazırla",
+  "kaz": "T.Y.4.2.o / T.Y.4.3.a — İstek ve önerilerini uygun biçimde, plana uygun yazar.",
+  "type": "serveOrder",
+  "instruction": "Öğrenci meclisi dilekçe yazıyor! Görevlinin istediği bölümleri tepsiye koy",
+  "n": {
+   "customers": 4
+  },
+  "tur1": "Gerçek dilekçe şablonu açılsın: tarih, makam, istek metni, ad-soyad ve imza alanları görünür olsun; bölümler şablondaki yerlerine yerleşsin ve simge kopyası kaldırılsın.",
+  "tur2": "Uygun ve uygun olmayan üslupta istek cümleleri karşılaştırılsın.",
+  "tur3": "Öğrenci kurgusal bir istek için kısa dilekçeyi klavyeyle doldursun; kişisel veri istenmesin."
+ },
+ {
+  "id": "z59",
+  "group": "Tema 8 · Demokratik Yaşam",
+  "title": "Bildiri Dizgisi",
+  "sub": "İşaret anlamı nasıl değiştirir?",
+  "kaz": "T.O.4.1.c / T.Y.4.3.e — Noktalama işaretlerine dikkat ederek okur ve doğru kullanır.",
+  "type": "punctFix",
+  "instruction": "Çocuk hakları bildirisinin noktalaması silinmiş! Cümlenin anlamına uygun işareti koy",
+  "n": {
+   "rounds": 4,
+   "marks": ". , : ? ! \""
+  },
+  "tur1": "Bildiri panosu kurulsun; işaret seçimi cümlenin ANLAMINI nasıl değiştirdiği örnekleriyle gösterilsin ve seçilen işaretle cümle yeniden seslendirilsin.",
+  "tur2": "Aynı cümle farklı işaretlerle karşılaştırılsın; anlam farkı iki görselle gösterilsin.",
+  "tur3": "Öğrenci bir çocuk hakkını anlatan cümleyi uygun işaretle kendisi yazsın."
+ },
+ {
+  "id": "z60",
+  "group": "Tema 8 · Demokratik Yaşam",
+  "title": "Denge Köprüsü",
+  "sub": "Hakkı sorumluluğuyla birleştir",
+  "kaz": "T.K.4.3.d / T.O.4.3.a — Neden-sonuç ve ilişkileri belirler.",
+  "type": "dragMatch",
+  "instruction": "Her hakkın yanında bir sorumluluk vardır! Köprüyü kurarak eşleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Denge köprüsü gerçek görselle kurulsun: hak kalasları bir yandan, sorumluluk kalasları diğer yandan köprüyü dengede tutsun; simge eşleşmesi kaldırılsın ve yazılar sığsın.",
+  "tur2": "Bir hakka birden çok sorumluluğun bağlanabildiği örnekler eklensin.",
+  "tur3": "Öğrenci kendi yaşamından bir hak-sorumluluk çiftini cümleyle ifade etsin."
+ },
+ {
+  "id": "z61",
+  "group": "Tema 8 · Demokratik Yaşam",
+  "title": "Söz Hakkı Makinesi",
+  "sub": "Görüşünü nedeniyle ifade et",
+  "kaz": "T.Y.4.2.n / T.Y.4.2.m — Görüş ve düşüncelerini nedenleriyle açıklar, katılma kararını yazar.",
+  "type": "sentenceBuild",
+  "instruction": "Öğrenci meclisinde söz sırası sende! Kelime kartlarıyla görüşünü nedeniyle ifade et",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Meclis kürsüsü sahnesi kurulsun; kurulan cümle mikrofonda sesli okunsun ve panoya oylamaya asılsın. Kartlar küçük harfle gelsin.",
+  "tur2": "Gerekçeli ve gerekçesiz görüş karşılaştırılsın; ilgili-ilgisiz neden ayrımı yapılsın.",
+  "tur3": "Öğrenci görüşünü ve nedenini iki cümleyle yazsın, sonra kürsüde sesli sunsun."
+ },
+ {
+  "id": "z62",
+  "group": "Tema 8 · Demokratik Yaşam",
+  "title": "Gizlilik Kalkanı",
+  "sub": "Paylaşılabilir bilgiyi yakala",
+  "kaz": "T.Y.4.2.l · T.O.4.5.d — Dijital mahremiyete dikkat eder; çevrim içi ortamda olumlu davranış geliştirir.",
+  "type": "catchDrop",
+  "instruction": "Kalkanı sürükleyerek internette güvenle paylaşabileceğin bilgiyi yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Kalkan-yakalama mekaniği kaldırılsın; bilgi kartı sabit gelsin, öğrenci 'paylaşırım / paylaşmam' kararını gerekçe seçerek versin.",
+  "tur2": "Bağlama göre değişen örnekler eklensin: okul panosunda ad, internette adres; izin kavramı işlensin.",
+  "tur3": "Öğrenci dijital mahremiyet kuralını 'İnternette ... paylaşmam çünkü ...' kalıbıyla kendisi yazsın."
+ },
+ {
+  "id": "z63",
+  "group": "Tema 8 · Demokratik Yaşam",
+  "title": "Sınıf Seçimi",
+  "sub": "Oyları topla, sonucu yorumla",
+  "kaz": "T.D.4.2.d / T.O.4.3.a — Verileri ön bilgileriyle ilişkilendirir, sonucu açıklar.",
+  "type": "surveyChart",
+  "instruction": "Sınıf başkanı seçimi başlıyor! Sıradaki düğmesine basarak oyları topla, sonra sonucu yorumla",
+  "n": {
+   "responses": 10,
+   "options": 3
+  },
+  "tur1": "Sahne gerçek sınıf seçimi olsun: sandık, oy pusulası ve aday panosu görünsün. Oy ifadesi sütun adını birebir tekrar etmesin (aday özelliğinden çıkarım gereksin) ve sayım çetele çizgisiyle görünsün.",
+  "tur2": "Berabere biten ve tek oyla kazanılan senaryolar eklensin; çoğunluk kavramı somutlaştırılsın.",
+  "tur3": "Öğrenci sonucu 'Seçimi ... kazandı, ... oy aldı; ikinci ... oyla ...' biçiminde yorumlayıp azınlığın hakkını bir cümleyle belirtsin."
+ },
+ {
+  "id": "z64",
+  "group": "Tema 8 · Demokratik Yaşam",
+  "title": "Karar Basamakları",
+  "sub": "Demokratik karar adımlarını tırman",
+  "kaz": "T.D.4.3.a / T.K.4.2.i — Olayların sırasını belirler; görüşünü nedeniyle ifade eder.",
+  "type": "jumpPath",
+  "instruction": "Demokratik karar basamaklarında zıpla! Her adımda sıradaki doğru adımı seç",
+  "n": {
+   "steps": 4
+  },
+  "tur1": "Karar basamakları gerçek meclis sürecini göstersin (sorun, öneri, tartışma, oylama, uygulama); basamak yazıları okunur kontrastta olsun ve bağlam ekranda sürekli dursun.",
+  "tur2": "Atlanan adımın sonucu gösterilsin: tartışmasız oylama neden sorunlu?",
+  "tur3": "Öğrenci sınıfında çözülecek bir sorun için karar adımlarını sırayla yazsın ve görüşünü nedeniyle belirtsin."
+ }
+]

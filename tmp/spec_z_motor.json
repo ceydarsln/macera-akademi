@@ -1,0 +1,107 @@
+{
+ "TYPE_RISK": {
+  "beltSort": "Bant hızı okuma ve karar süresine karışıyor; kenarda kırpılan kart hiç okunamadan puan ve can etkiliyor. Yazım kuralı turlarında (de/da, ki) cümleyi görmeden karar vermek imkânsız olduğundan hata motor kaynaklı oluyor.",
+  "serveOrder": "Balondaki simge ile karttaki simge birebir eşleştiğinde öğrenci metni hiç okumadan simge kopyalayarak görevi bitirebilir; konu, ana fikir ve yaşam bağlantısı ayrımı hiç kurulmaz.",
+  "punctFix": "Görev metninin kuralı ve işaret yerini söylemesi, düşünmek yerine tarif edileni uygulamayı ödüllendirir; 'Kalan' sayacı kaç hamle kaldığını vererek eleme stratejisini kolaylaştırır.",
+  "sentenceBuild": "Büyük harfli kart ve nokta kartı dizilişi ele verir; ayrıca Türkçenin kurallı alternatif dizilişleri yanlış sayılırsa doğru dil sezgisi cezalandırılır.",
+  "catchDrop": "Doğru cevabı bilmek yetmiyor; düşen kapsüle yetişmek gerekiyor. Yanlış motor hareketi yanlış dil kararı gibi can kaybettiriyor.",
+  "orderSequence": "Kartlardaki tarih ve numara ipuçları, içerik bilgisi olmadan sayı sıralamayla çözümü verir; roket-yakıt sahnesi başlıkla çelişip kavramı bulanıklaştırır.",
+  "dragMatch": "Simge eşleşmesi cevabı doğrudan verdiği için sesteş, terim veya atasözü ayrımı hiç yapılmadan oyun bitirilebilir; taşan yazılar okunamadığından eşleştirme gerekçesiz kalır.",
+  "memoryPairs": "Eşleştirme, kavramı açıklamadan kart konumunu ezberleyerek de çözülür; görsel hafıza başarısı dil bilgisi başarısı gibi kayda geçer.",
+  "wordHighlight": "Kırpılan soru, taşan metin ve hedefi örten büyüteç cevabı rastlantıya bırakır; sözcüğü bulmak, yazım kuralını (de/da, ki, ayrı-birleşik) açıklama kanıtı üretmez.",
+  "jumpPath": "Bağlam cümlesi ekranda olmadığından seçim tahmine döner; düşük kontrastlı basamak yazıları okunamadan zıplanabilir.",
+  "codeGrid": "Kazanım 'ayrıntılı yönerge yazar' olduğu hâlde öğrenci hiçbir sözlü/yazılı yönerge üretmez; ok dizmek yön kavramını ölçer, yazmayı ölçmez.",
+  "typeWord": "Hedef sözcük ekranda yazılı olduğundan dikte, dinleme-yazma yerine bakarak kopyalamaya dönüşür; harf havuzu sırayı ele verir.",
+  "dragSlider": "Ölçülen şey Türkçe becerisi değil sayı tahmini; metin, ön bilgi ve günlük yaşam bağlantısı kurulmadığı için kazanım hiç yoklanmaz.",
+  "tallyChart": "Cümledeki sözcük sütun adıyla birebir aynı olduğundan görev sözcük kopyalamaya iner; rakam sayacı çetele kuralını (beşinci çizgi dördü keser) hiç göstermez.",
+  "surveyChart": "Oy ile sütun adı aynı olduğu için veri toplama mekanik tıklamaya iner; öğrenci sonucu yorumlamadan, çoğunluk ve azınlık ilişkisini kurmadan oyunu bitirebilir."
+ },
+ "TYPE_ACCEPT": {
+  "beltSort": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve dokunma alanı en az 44 px olacak.",
+  "serveOrder": "Kartlarda etiket/simge değil içerik yazacak; balondaki aday cümleler kart simgeleriyle eşleşerek cevabı vermeyecek ve her müşteri farklı içerik havuzu kullanacak.",
+  "punctFix": "Görev metni kuralı ve işaretin yerini söylemeyecek; 'Kalan' sayacı ilk turdan sonra kapanacak; başlık ve görev metni hiçbir çözünürlükte kırpılmayacak.",
+  "sentenceBuild": "Kartlar küçük harfle gelecek; baş harf ve son işaret öğrencinin ayrı kararı olacak. Kurallı alternatif dizilişler kabul edilecek ve son turda serbest yazı alanı bulunacak.",
+  "catchDrop": "İlk turda düşme kapalı, seçenekler sabit olacak; başarı doğru karar + kanıt ile ölçülecek, yakalama refleksi puana karışmayacak.",
+  "orderSequence": "Roket-yakıt sahnesi kaldırılacak; sırayı ele veren tarih/numara ilk turda gizlenecek ve kartlar 390x844 ekranda tam içeride kalacak.",
+  "dragMatch": "Parça ve hedefteki simgeler cevabı eşleştirmeyecek (ya kaldırılacak ya da ayırt edici olmayacak); yazılar çipe sığacak, hedef alanlar en az 44 px olacak ve her eşleşme bir gerekçe sorusuyla doğrulanacak.",
+  "memoryPairs": "Kart konumları ve içerik her açılışta karışacak; can sayısı genel standartla (3) eşitlenecek ve her eşleşme en az bir gerekçe adımıyla doğrulanacak.",
+  "wordHighlight": "Metin panelden taşmayacak, soru tam görünecek, büyüteç veya başka öge sözcüğü örtmeyecek; karar sonrası öğrenci kuralı seçerek veya yazarak gerekçelendirecek.",
+  "jumpPath": "Basamak yazıları zeminden ayrışan kontrastta olacak; karar bağlamı (cümle/hikâye) ekranda sürekli duracak; düşme animasyonu ceza üretmeyecek.",
+  "codeGrid": "Yön blokları yazılı yönerge kartlarına dönüşecek ve program cümle olarak okunacak; en az üç görev bulunacak; son görevde öğrenci yönergeyi kendisi yazacak.",
+  "typeWord": "Hedef sözcük ekranın hiçbir yerinde yazılı görünmeyecek; harf havuzu karışık dizilecek; tekrar dinleme cezasız olacak ve sayısı kaydedilecek.",
+  "dragSlider": "Tren-tünel sahnesi kaldırılacak; ekranda tahminin dayanacağı kısa bilgi metni bulunacak ve öğrenci tahminini metindeki veriye bağlayarak gerekçelendirecek.",
+  "tallyChart": "Cevap cümleleri tür adını birebir söylemeyecek; işaretler çetele çizgisiyle birikecek, beşinci çizgi dördünü kesecek ve bitişte tablo yorum sorusu sorulacak.",
+  "surveyChart": "Oy ifadeleri sütun adını birebir tekrar etmeyecek; sayım çetele çizgisiyle görünecek ve oyun ancak sonuç yorumu (çoğunluk, fark, azınlık hakkı) yapıldıktan sonra tamamlanacak."
+ },
+ "TYPE_FEEDBACK": {
+  "beltSort": "Yanlış kutuda bant dursun; kart sabitlenip yeniden okunsun ve ölçüt (neden bu kutu değil) doğru söylenmeden hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
+  "serveOrder": "Yanlış kartta tepsi kilitlenmesin; istek metni yeniden okunsun ve kartın neden uymadığı içerik üzerinden gösterilsin, simge üzerinden değil.",
+  "punctFix": "Yanlış işarette cümle uygun tonlamayla seslendirilsin ve işaretin görevi hatırlatılsın; doğru işaret adı ve yeri söylenmesin, 'Kalan' sayacı ipucu vermesin.",
+  "sentenceBuild": "Yanlışta bütün dizi bozulmasın; yalnız son kart geri alınsın. Kurallı alternatif diziliş kurulduysa doğru kabul edilsin ve fark açıklansın.",
+  "catchDrop": "Yanlış yakalamada düşme dursun; seçenek sabitlenip metin/ses kanıtıyla yeniden karar verilsin. Kaçan kapsül can yakmasın, yalnız yeniden denensin.",
+  "orderSequence": "Yanlış adımda dizi silinmesin; yalnız son seçim geri alınsın ve 'önce/sonra' ilişkisini düşündüren ipucu verilsin.",
+  "dragMatch": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı sözcük veya bağlam ipucu kısa bir soruyla vurgulansın.",
+  "memoryPairs": "Yanlış çiftte kartlar hemen kapanmasın; iki içerik yan yana sesli okunup farkı soran kısa bir ipucu verilsin. Can standardı diğer oyunlarla eşitlensin.",
+  "wordHighlight": "Yanlış sözcükte metin kaybolmasın; soru ile seçilen sözcük yan yana okunup kural karşılaştırılsın. Büyüteç hiçbir zaman hedefi örtmesin.",
+  "jumpPath": "Yanlış basamakta düşme animasyonu ceza üretmesin; bağlam cümlesi yeniden gösterilip iki seçenek yan yana karşılaştırılsın.",
+  "codeGrid": "Engele çarpınca robot dursun ve programdaki hatalı adım işaretlensin; tüm program silinmesin, yalnız hatalı adımdan itibaren düzeltilsin.",
+  "typeWord": "Yanlış harfte doğru harf gösterilmesin; sözcük yeniden dinletilsin ve gerekirse hece hece söylensin. Tekrar dinleme hiçbir turda ceza olmasın.",
+  "dragSlider": "Yanlış tahminde gerçek değer tek başına verilmesin; metindeki veya günlük yaşamdaki karşılaştırma ölçüsü (kaç bardak, kaç kova) gösterilerek tahmin yeniden yapılsın.",
+  "tallyChart": "Yanlış satırda cevap cümlesi yeniden dinletilsin; tür ile cümledeki ipucu arasındaki ilişki soruyla kurulsun, doğru satır parlatılmasın.",
+  "surveyChart": "Yanlış işaretlemede oy yeniden dinletilsin; sayım bitince sonuç doğrudan açıklanmasın, öğrenciye 'en çok/en az kim, kaç fark var?' soruları sorulsun."
+ },
+ "MODALITY_RISK": {
+  "writing": "Kazanım yazma/oluşturma istediği hâlde mevcut yapıda serbest sözcük, cümle veya metin üretme alanı yok; hazır kartı seçmek ya da dizmek gerçek yazma kanıtı değildir.",
+  "speaking": "Kazanım konuşma istediği hâlde öğrenci ses üretmiyor; yalnız seçenek işaretlendiği için vurgu, tonlama, beden dili ve uygun ifade gözlenemiyor.",
+  "listening": "Dinleme hedefinde yazılı yönerge ve seçenekler cevabı taşıyabiliyor; ses kapatıldığında da oyun çözülebiliyorsa ölçme geçerli değildir.",
+  "reading": "Okuma hedefi, metindeki kanıtı kullanmaktan çok görsel olarak en belirgin seçeneği bulmaya indirgenirse çıkarım ve anlama ölçülmez."
+ },
+ "MODALITY_NEW": {
+  "writing": "Son turda öğrenci gerçek bir sözcük, cümle, yönerge veya metin üretsin; kelime kartları yalnız erişim desteği olsun ve hazır kart dizmek tek başına başarı sayılmasın.",
+  "speaking": "Örnek dinletildikten sonra öğrenci kısa bir ses kaydı alsın veya yetişkin/öz değerlendirme rubriğiyle konuşsun; gerekçe, uygun ifade ve anlaşılabilirlik ayrı kaydedilsin.",
+  "listening": "İlk dinleme turunda hedef metin ve cevap anahtarı görünmesin; ses en az iki kez tekrar edilebilsin ve tekrar dinleme ceza oluşturmasın.",
+  "reading": "Öğrenci cevaptan önce metindeki görsel/sözel kanıtı işaretlesin; doğru seçenek ancak kanıtla tutarlı olduğunda kabul edilsin."
+ },
+ "GROUP_FOCUS": {
+  "Tema 1 · Erdemler": [
+   "Görüş bildirme ve ana fikir kazanımları gerekçe üretimine bağlanmalı; katılma kararı tek başına yeterli sayılmamalı.",
+   "Yayınevi, atölye ve baskı makinesi başlıkları gerçek sahne olarak görünmeli; servis tezgâhındaki simge kopyası kaldırılmalı.",
+   "Yazma kazanımlarında son turda serbest üretim zorunlu olmalı."
+  ],
+  "Tema 2 · Millî Mücadele ve Atatürk": [
+   "Tarihî içerik somut olmalı; kartlardaki tarihler ilk turda gizlenerek sıralama içerik bilgisine dayandırılmalı.",
+   "Sesteş, eş ve zıt anlam görevlerinde simge eşleşmesi cevabı vermemeli; karar bağlam cümlesinden çıkmalı.",
+   "Dikte oyununda hedef sözcük ekranda görünmemeli; mektup kazanımı gerçek yazı alanı içermeli."
+  ],
+  "Tema 3 · Doğa ve İnsan": [
+   "Doğa süreçleri gerçek şema ve görselle işlenmeli; adım kartları şemadaki yerine oturmalı.",
+   "Yönerge yazma kazanımı ok dizmekten çıkarılıp gerçek yazılı yönergeye bağlanmalı.",
+   "Tahmin görevleri metne dayanmalı; tren-tünel sahnesi ve sayı tahmini Türkçe kazanımının yerine geçmemeli."
+  ],
+  "Tema 4 · Kütüphanemiz": [
+   "Kütüphane, e-posta ve anket sahneleri gerçek nesnelerle kurulmalı; servis tezgâhı ve uzay şablonu kaldırılmalı.",
+   "Kaynak güvenilirliği ölçütlerle sorgulanmalı; yakalama refleksi karara karışmamalı.",
+   "Çetele kuralına uygun işleme ve tablo yorumu eklenmeli."
+  ],
+  "Tema 5 · Kendimizi Geliştiriyoruz": [
+   "Bağlaç, arasöz ve neden-sonuç görevleri anlam farkını gösteren karşılaştırmalarla çalışmalı.",
+   "Sunum kazanımı gerçek konuşma üretimi ve beden dili-ses tonu rubriği içermeli.",
+   "Düzeltme oyunlarında metin taşmamalı, büyüteç hedefi örtmemeli ve doğru biçim otomatik gelmemeli."
+  ],
+  "Tema 6 · Bilim ve Teknoloji": [
+   "de/da ve ki yazım kurallarında cümle tam görünmeli; kart kırpılması karar hatasına dönüşmemeli.",
+   "Terim anlamı ve deney raporu görevleri gerçek bilimsel bağlamla desteklenmeli.",
+   "Kodlama ve yönerge görevlerinde program yazılı yönerge cümlelerine dönüşmeli."
+  ],
+  "Tema 7 · Geçmişten Geleceğe Mirasımız": [
+   "Miras, şehir ve kuşak aktarımı harita ve gerçek görsel kanıtla sunulmalı.",
+   "Köprü oyunlarında simge eşleşmesi kaldırılmalı; karar bilgi ve bağlamdan çıkmalı.",
+   "Türkçe koruma ve pano görevleri gerçek yazı üretimiyle tamamlanmalı."
+  ],
+  "Tema 8 · Demokratik Yaşam": [
+   "Hak, sorumluluk ve özgürlük ayrımı üç kutulu bantta değil gerekçeli kararla kurulmalı.",
+   "Dilekçe, bildiri ve meclis görevleri gerçek şablon ve gerçek yazı/konuşma üretimiyle çalışmalı.",
+   "Seçim ve gizlilik görevleri hız oyunundan çıkarılıp veri yorumu ve gerekçe yapısına bağlanmalı."
+  ]
+ }
+}
