@@ -23,7 +23,7 @@
 const ENGINE1 = 'm01,m02,m03,m05,m09,m10,m11,m12,m14,m15,m17,m18,m20,m22,m23,m24,m25,m26,m28,m31,m32,m33,m34,m35,m36,m37,m38,m39,m41,m42,m43,m44,m45,m46,m47,m48,m49,m50,m51,m52,m53,m54,m55,m56,m57,m58,m59,m60,m61'.split(',');
 const ENGINE2 = 'v01,v02,v03,v04,v05,v06,v07,v08,v09,v10,v11,v12,v13,v14,v15,v16,v17,v18,v19,v20,v21,v22,v23,v24,v25,v26,v27,v28,v29,v30,v31,v32,v33,v34,v35,v36,v37,v38,v39,v40,v41,v42'.split(',');
 
-const ENGINE3 = 'w01,w02,w03,w04,w05,w06,w07,w08,w09,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w20'.split(',');   /* 3. sınıf: partiler hâlinde büyüyor */
+const ENGINE3 = 'w01,w02,w03,w04,w05,w06,w07,w08,w09,w10,w11,w12,w13,w14,w15,w16,w17,w18,w19,w20,w21,w22,w23,w24'.split(',');   /* 3. sınıf: partiler hâlinde büyüyor */
 
 const panel = document.getElementById('panel');
 const cerceve = document.getElementById('cerceve');
@@ -212,6 +212,35 @@ async function tur2(W){
       await tikla(W, '[data-choice="' + r.bolme.findIndex(c => c.correct) + '"]');
       break;
     }
+    case 'robot':
+      for (const id of r.program){
+        await tikla(W, '[data-kart="' + r.kartlar.findIndex(k => k.id === id) + '"]'); await bekle(60);
+      }
+      await tikla(W, '#calistir'); await bekle(200);
+      if (r.sonSoru) await tikla(W, '[data-choice="' + r.sonSoru.secenekler.findIndex(c => c.correct) + '"]');
+      break;
+    case 'problem': {
+      for (let i = 0; i < r.veriler.length; i++)
+        if (r.veriler[i].gerek){ await tikla(W, '[data-veri="' + i + '"]'); await bekle(40); }
+      await tikla(W, '#veriOk'); await bekle(200);
+      const sirali = r.kelimeler.map((k, i) => ({ k, i })).filter(x => x.k.sira != null).sort((a, b) => a.k.sira - b.k.sira);
+      for (const x of sirali){ await tikla(W, '[data-kelime="' + x.i + '"]'); await bekle(50); }
+      await bekle(280);
+      await tikla(W, '[data-choice="' + r.cozum.findIndex(c => c.correct) + '"]'); await bekle(220);
+      if (r.kontrol) await tikla(W, '[data-choice="' + r.kontrol.findIndex(c => c.correct) + '"]');
+      break;
+    }
+    case 'terazi':
+      for (const a of r.asamalar){
+        const dogrular = a.kartlar.map((k, i) => ({ k, i })).filter(x => (a.sabit || 0) + x.k.deger === a.solDeger);
+        for (const x of dogrular.slice(0, a.gerekli)){ await tikla(W, '[data-kart="' + x.i + '"]'); await bekle(90); }
+        await bekle(280);
+      }
+      break;
+    case 'firin':
+      for (let i = 0; i < r.enIyi.tepsi; i++){ await tikla(W, '[data-firin="tepsi"]'); await bekle(40); }
+      for (let i = 0; i < r.enIyi.tek; i++){ await tikla(W, '[data-firin="tek"]'); await bekle(25); }
+      break;
     case 'para':
       for (const h of r.hedefler){
         /* farklı bileşim istenen adımda küçükten büyüğe öde */

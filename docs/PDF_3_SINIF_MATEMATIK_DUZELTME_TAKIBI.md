@@ -34,6 +34,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w18 | Akıllı Asansör | Toplama ve çıkarmanın tersliği | Yatay tren/tünel/sürgü gitti; numaralı dikey kuyu var, kabin sürükleniyor. Çıkış mavi, dönüş kırmızı iz bırakıyor ve iki iz üst üste geliyor. İlerleme "görev" olarak yazıyor. Her turda ileri işlem ve tersi aynı başlangıç/varış üzerinde doğrulanıp iki eşitlik yan yana yazılıyor. | Uygulamada |
 | w19 | Uzay Kargo Bandı | 10 ve 100 ile çarpma-bölme | "Sağa sıfır ekle" kutuları kaldırıldı. Çocuk rakamları basamak tablosunda kaydırıyor; açıklama "basamak değeri 10 katına çıktı" diyor, boşalan basamakta 0'ın yer tutucu rolü gösteriliyor. Sağa kayamayan sayıda kart kaybolmuyor, nedeni yazılıyor. | Uygulamada |
 | w20 | Şeker Çiftliği | Çarpma ve bölmenin ilişkisi | Otomatik doldurma kaldırıldı: 32 şeker bantta duruyor, çocuk kutulara tek tek yerleştiriyor ve her kutudaki nesne ayrı ayrı sayılabiliyor. Kutu doldukça 4, 8, 12 … ritmik sayma şeridi oluşuyor. Fazla dokunulan kutu tek başına uyarılıyor, düzen bozulmuyor. Sonra aynı kutular üzerinde önce çarpma sonra bölme ifadesi seçiliyor. | Uygulamada |
+| w21 | Labirent Robotu | Yönergeyi işlem diline dönüştürme | Fasulye sırığı motoru kaldırıldı: duvarlı istasyonlardan oluşan robot laboratuvarı ve program şeridi var. Çocuk işlem kartlarını sırayla şeride diziyor, "Çalıştır" deyince robot istasyon istasyon ilerliyor ve her bloğun altında ara sonuç (12 → 36) kalıcı yazıyor. Hatalı blok kırmızıya dönüyor, robot kapıya taşınmıyor. 3. turda çocuk zinciri sözel cümleye çeviriyor. | Uygulamada |
+| w22 | Doğa Dedektifleri | Verilerden problem kurma | Roket-yakıt motoru gitti; 3 çadır ve her çadırda 4 çocuk gerçekten görünüyor. Hazır çözüm kartı başlangıçta yok: çocuk önce gerekli verileri seçiyor (gereksiz veri seçilirse neden gerekmediği tartışılıyor), sonra kelime kartlarıyla soru cümlesini kuruyor, çözüm ancak bundan sonra seçiliyor. 3. turda bölme sorusunun çarpma sağlaması da yapılıyor. | Uygulamada |
+| w23 | Kozmik Tahterevalli | Eşitliğin anlamı | Yönerge kaç doğru beklendiğini açıkça yazıyor ("3 tane var"). Karta dokununca değeri kefeye biniyor, kefe açısı farkla orantılı eğiliyor ve iki değer birden okunuyor. Yanlış kart eleniyor ama tur bitmiyor; bütün eşdeğer ifadeler bulunana kadar sürüyor. 3. turda 20 + ? = 35 eksik bloğu ekleniyor. | Uygulamada |
+| w24 | Fırıncının Tezgâhı | Kısa ve verimli işlem stratejisi | Sipariş metni artık "4 tepsi × 12" demiyor, yalnız toplam simiti söylüyor. 12'lik tepside 12 simit gerçekten görünüyor, tekler ayrı duruyor. Doğru ama uzun yol yanlış sayılmıyor: sipariş tamamlanınca "daha az işlemle olur mu?" seçeneği çıkıyor ve işlem sayısı tek tek koymakla karşılaştırılıyor. İpucu kademeli: önce büyük grup, sonra 12'nin katları. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -75,6 +79,16 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 - `renderSeker` + `seker`: bant → kutulara tek tek yerleştirme (yalnız ilgili
   kutu güncellenir), ritmik sayma şeridi, ardından çarpma ve bölme ifadesi
   seçimi (w20).
+- `renderRobot` + `robot`: istasyonlu labirent, silinebilir program şeridi,
+  her blokta ara sonuç, hatalı blokta kırmızı vurgu; isteğe bağlı sözel
+  okuma sorusu (w21).
+- `renderProblem` + `problem`: veri seçme → kelime kartlarıyla soru kurma →
+  çözüm (ve gerekirse sağlama) aşamaları; gereksiz veri gerekçesiyle
+  reddediliyor (w22).
+- `renderTerazi` + `terazi`: farkla orantılı eğilen kefe, çoklu doğru ve
+  eksik blok aşamaları, elenmiş kartların işaretlenmesi (w23).
+- `renderFirin` + `firin`: tepsi/tek paketleme, işlem sayacı, kademeli ipucu,
+  "doğru ama daha kısası var mı?" karşılaştırması (w24).
 - `ertele(fn,ms)`: geciken geri çağrılar tur değiştiyse çalışmaz. `render`,
   `wrong`, `updateStage` ve `renderRound` artık oyun bittikten sonra çağrılırsa
   sessizce çıkar (koşumda seyrek görülen "round().prompt undefined" hatası).
