@@ -26,6 +26,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w10 | Çikolata Fabrikası | Eş parçalar ve birim kesir | Yuvarlak disk ve "2'ye Böl" düğmeleri kaldırıldı; kare bölmeli gerçek tablet üzerinde kesme çizgisini çocuk kendi çekiyor, yanlış çizgiye dokununca kalkıyor. Parçalar ayrılıp seçildikten sonra 1/payda etiketi açılıyor. 3. turda hazır gelen eş olmayan kesim düzeltiliyor. | Uygulamada |
 | w11 | Kesir Asansörü | Pay ve payda ilişkisi | Yatay tren/tünel/ray tamamen kaldırıldı; 0 ile 1 bütün arasında on eş aralıklı dikey kuyu var, kabin parmakla sürüklenip katlara mıknatıslanıyor. Geçilen kat (pay) ve bütün kat (payda) ayrı renkte sayılıyor; ilerleme "görev" olarak yazıyor. | Uygulamada |
 | w12 | Zaman Kulesi | Analog ve dijital saat | Ok düğmeleri artık tek yol değil: ibreler uçlarından sürükleniyor, yönerge de bunu söylüyor. Zaman tek dakika sayacıyla tutulduğu için akrep dakikaya göre sürekli ilerliyor (14.45'te 2 ile 3 arasının dörtte üçünde). Dijital hedef ve günlük dil ayrı kartlarda. | Uygulamada |
+| w13 | Zaman Tüneli Bandı | Zaman birimi dönüşümleri | Yürüyen bant kaldırıldı: kart karar verilene kadar ortada duruyor, hiçbir kenarda kırpılmıyor. Kutular "7 gün", "12 ay", "24 saat", "60 dakika", "60 saniye" olarak sayı+birim taşıyor. Doğru eşlemeden sonra grup modeli (numaralı çipler / noktalar) açılıyor. 3. turda 365 gün = 52 tam hafta + 1 gün modeli gösteriliyor, artık yıl da anlatılıyor. | Uygulamada |
+| w14 | Kronometre Arenası | Süre tahmini | Hedef süre ve işaretli bölge kaldırıldı. Çocuk önce tahminini kaydediyor (hedef görünmüyor), sonra gerçek kronometreyle işi yapıp ölçüyor; tahmin / ölçüm / fark üçlü kartı sonda geliyor. Can eksilmiyor. Eylemler kişisel hıza bağlı 100 m koşu yerine ad yazma, 10 el çırpma, kısa cümle okuma. | Uygulamada |
+| w15 | Ölçüm İstasyonu | Uygun uzunluk ve kütle birimi | Beşli karışık satır ikiye ayrıldı: önce "uzunluk mu, kütle mi?", sonra o ailenin cm-m-km ya da g-kg-ton ölçeği. Eksik olan gram eklendi. Nesne kartı sabit ve tam görünür; yanlış ailede nicelik sorusuna geri dönülüyor. 3. turda aynı kalemin boyu ile kütlesi peş peşe soruluyor. | Uygulamada |
+| w16 | Banka Gişesi | Parada eşdeğerlik | Yasak çekmeceler kilitli ve nedeni yazılı; kilide basmak can götürmüyor. Paralar tepside gerçek yüzleriyle diziliyor, 100 kuruşluk gruplar çerçeveleniyor ve "1 TL" etiketi alıyor. Toplam çift gösterimle yazılıyor (250 kr = 2 TL 50 kr), fazla ödemede son para geri alınabiliyor. 3. tur aynı tutarı iki farklı bileşimle istiyor. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -49,3 +53,14 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
   gerçek daire alanı üzerinde dolar; taşmada tur yeniden kurulur (w09).
 - `turuTazele()`: hedefi aşan toplama kancalarında tur kilitlenmesin diye sahne
   yeniden kuruluyor (w01–w04'teki çıkmaz da bununla kapandı).
+- `renderTiming` + `timing`: tahmin aşaması (hedef gizli) → gerçek zamanlı
+  kronometre (`performance.now`) → tahmin/ölçüm/fark raporu; can eksiltmez (w14).
+- `renderStation` + `station`: iki adımlı karar — önce nicelik (uzunluk/kütle),
+  sonra o ailenin birimi; her nesne için ayrı kaydedilir, sonunda istasyon
+  raporu açılır (w15).
+- `renderPara` + `para`: kilitli/açık para çekmeceleri, tepside 100 kuruşluk
+  gruplama, kuruş+TL çift gösterimi, son parayı geri alma ve "farklı bileşim"
+  koşulu (w16).
+- `ertele(fn,ms)`: geciken geri çağrılar tur değiştiyse çalışmaz. `render`,
+  `wrong`, `updateStage` ve `renderRound` artık oyun bittikten sonra çağrılırsa
+  sessizce çıkar (koşumda seyrek görülen "round().prompt undefined" hatası).

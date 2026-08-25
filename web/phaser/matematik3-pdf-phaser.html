@@ -105,6 +105,42 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .lift-cabin{position:absolute;left:4px;right:4px;background:#f2b134;border:3px solid #b57d16;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:grab;touch-action:none}
 .lift-info{background:#fff;border:3px solid #cbd5e1;border-radius:11px;padding:5px 9px;text-align:center;font-size:21px;font-weight:900;color:#334155}
 .talk{background:#e8f4ff;border:3px solid #7fb6de;border-radius:11px;padding:5px 8px;font-size:13px;font-weight:800;color:#25506f;text-align:center}
+.time-card{background:#fff;border:4px solid #7fb6de;border-radius:16px;padding:11px 14px;max-width:290px;text-align:center;box-shadow:0 4px 0 rgba(35,77,108,.18)}
+.tc-main{font-size:clamp(19px,5.4vw,26px);font-weight:950;color:#1f3b52;line-height:1.2;white-space:normal;overflow-wrap:break-word}
+.tc-sub{font-size:12px;font-weight:800;color:#5b7185;margin-top:3px}
+.unit-strip{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:300px}
+.unit-chip{background:#fdf0d0;border:2px solid #d9b25e;border-radius:6px;padding:2px 5px;font-size:11px;font-weight:900;color:#7a5312}
+.unit-dot{width:9px;height:9px;border-radius:50%;background:#7fb6de;border:1px solid #4a7ea6}
+.week-wrap{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:310px}
+.week-chip{display:flex;gap:1px;padding:2px;background:#eaf2fb;border:1px solid #b7cfe4;border-radius:3px}
+.week-chip i{width:3px;height:8px;background:#4a7ea6;display:block}
+.day-extra{display:flex;gap:1px;padding:2px;background:#ffe2b8;border:2px solid #e08b2a;border-radius:3px}
+.day-extra i{width:5px;height:10px;background:#e08b2a;display:block}
+.task-card{background:#fff;border:4px solid #9ad0a8;border-radius:16px;padding:10px 14px;max-width:295px;text-align:center;font-weight:900;font-size:clamp(15px,4vw,19px);color:#1f4a2e}
+.report{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.report div{background:#fff;border:3px solid #cbd5e1;border-radius:12px;padding:5px 9px;text-align:center;min-width:78px}
+.report b{display:block;font-size:19px;color:#1f3b52}
+.report small{font-size:11px;font-weight:800;color:#64748b}
+.object-card{background:#fff;border:4px solid #cbd5e1;border-radius:18px;padding:9px 15px;text-align:center;min-width:170px}
+.object-card .obj-emoji{font-size:56px;line-height:1.1}
+.object-card .obj-name{font-weight:950;font-size:17px;color:#1f3b52}
+.choice.fam-len{background:#e3f1fb;border-color:#8fc0e2}
+.choice.fam-mass{background:#fdeee2;border-color:#e6b183}
+.choice.unit-len{background:#e3f1fb;border-color:#8fc0e2}
+.choice.unit-mass{background:#fdeee2;border-color:#e6b183}
+.tray{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:62px;width:min(320px,96%);padding:6px;background:#f6ece0;border:4px dashed #b9945c;border-radius:14px}
+.tray-group{display:flex;flex-wrap:wrap;gap:3px;align-items:center;padding:3px;border-radius:9px;border:2px dashed transparent}
+.tray-group.full{border-color:#2f9e5e;background:#e7f7ec}
+.tray-group small{font-size:10px;font-weight:900;color:#1f7a45}
+.coin{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;font-size:11px;font-weight:950;color:#4a3a12;border:3px solid #b58f2e;background:radial-gradient(circle at 34% 30%,#ffe9a8,#e0bb54)}
+.coin.c25{width:33px;height:33px;background:radial-gradient(circle at 34% 30%,#f2f4f6,#b9c3ca);border-color:#8d989f;color:#33404a}
+.coin.c50{width:37px;height:37px;background:radial-gradient(circle at 34% 30%,#f7e7bd,#cfa94e);border-color:#a8842a}
+.banknote{display:inline-flex;align-items:center;justify-content:center;width:64px;height:36px;border-radius:5px;font-size:13px;font-weight:950;border:3px solid #4f7f5b;background:linear-gradient(120deg,#d8ecd9,#a9d3b0);color:#1e4a2b}
+.banknote.n1000{border-color:#7a5aa8;background:linear-gradient(120deg,#e6dcf5,#bda6e0);color:#3b2760}
+.action.money{flex:0 0 auto;min-width:0;padding:6px 8px;position:relative}
+.action.money.kilitli{opacity:.45;filter:grayscale(.7)}
+.action.money .lock{position:absolute;right:2px;top:2px;font-size:13px;font-style:normal}
+.till{background:#152f3e;color:#ffe08a;border-radius:12px;padding:6px 11px;font-weight:900;font-size:13px;text-align:center;max-width:300px}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -129,17 +165,17 @@ function dotChart(cols,key=1){return `<div class="chart">${cols.map(c=>`<div cla
 function sceneHtml(r){return typeof r.scene==='function'?r.scene(state):r.scene||''}
 function hud(){return `<header class="hud"><div class="round">Tur ${roundIndex+1}/3</div><div class="prompt">${esc(round().prompt)}</div><div class="hud-right"><span class="lives">${'❤️'.repeat(lives)}${'🖤'.repeat(3-lives)}</span><button class="sound" aria-label="Yönergeyi dinle">🔊</button></div></header>`}
 function round(){return game.rounds[roundIndex]}
-function render(){state={};locked=false;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();requestAnimationFrame(()=>speak(round().prompt))}
-function updateStage(){const st=$('#stage');if(st)st.innerHTML=sceneHtml(round())}
+function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();requestAnimationFrame(()=>speak(round().prompt))}
+function updateStage(){if(!round())return;const st=$('#stage');if(st)st.innerHTML=sceneHtml(round())}
 function feedback(msg,bad=false){const f=$('.feedback');if(!f)return;f.textContent=msg;f.className='feedback show'+(bad?' bad':'');setTimeout(()=>{if(f)f.className='feedback'},950)}
-function wrong(hint){if(locked)return;if(!round().noPenalty)lives=Math.max(0,lives-1);feedback('Bir daha düşün',true);speak(hint||'Bir daha düşün. Nesneleri dikkatle incele.');const sc=$('.stage');sc?.classList.remove('shake');void sc?.offsetWidth;sc?.classList.add('shake');if(lives===0){lives=3;setTimeout(render,650)}else $('.lives').innerHTML='❤️'.repeat(lives)+'🖤'.repeat(3-lives)}
+function wrong(hint){if(locked||!round())return;if(!round().noPenalty)lives=Math.max(0,lives-1);feedback('Bir daha düşün',true);speak(hint||'Bir daha düşün. Nesneleri dikkatle incele.');const sc=$('.stage');sc?.classList.remove('shake');void sc?.offsetWidth;sc?.classList.add('shake');if(lives===0){lives=3;setTimeout(render,650)}else $('.lives').innerHTML='❤️'.repeat(lives)+'🖤'.repeat(3-lives)}
 function good(message){if(locked)return;locked=true;score+=10;const r=round();if(r.successScene){$('#stage').innerHTML=typeof r.successScene==='function'?r.successScene(state):r.successScene;$('#stage').classList.add('success-motion')}feedback(message||r.result||'Doğru!');speak(r.result||message||'Doğru.');setTimeout(()=>{roundIndex++;if(roundIndex>=3)parentComplete();else render()},WAIT)}
 function C(label,correct=false,value=null){return{label,correct,value}}
 function P(id,html,target){return{id,html,target}}
 function T(id,html,need=1){return{id,html,need}}
 function Q(prompt,scene,choices,result,hint,extra={}){return{kind:'choice',prompt,scene,choices,result,hint,...extra}}
 function D(prompt,scene,pieces,targets,result,hint,extra={}){return{kind:'drag',prompt,scene,pieces,targets,result,hint,...extra}}
-function renderRound(){const r=round();updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare,bar:renderBar,lift:renderLift}[r.kind];(fn||renderChoice)(r)}
+function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,route:renderRoute,clock:renderClock,cut:renderCut,fold:renderFold,memory:renderMemory,tally:renderTally,graph:renderGraph,research:renderResearch,slider:renderSlider,liquid:renderLiquid,rope:renderRope,connect:renderConnect,grid:renderGrid,scan:renderScan,timer:renderTimer,sequence:renderSequence,share:renderShare,bar:renderBar,lift:renderLift,timing:renderTiming,station:renderStation,para:renderPara}[r.kind];(fn||renderChoice)(r)}
 function renderChoice(r){$('#task').innerHTML=`<div class="choices">${r.choices.map((c,i)=>`<button class="choice" data-choice="${i}">${c.html||esc(c.label)}</button>`).join('')}</div>`;$$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.choices[+b.dataset.choice];if(c.correct)good(c.message);else wrong(c.hint||r.hint)})}
 /* Ritmik sayma: aynı seçenek listesinden sırayla doğru sayılar seçilir.
    Her doğru seçimde sahnedeki dal/adım büyür (state.step), böylece rota
@@ -327,7 +363,7 @@ function checkParts(r){const sc=r.selections[state.faz-1],adet=barParcalar().ade
  if(n!==sc.count)return wrong(`Şu an ${n} parça seçili. İstenen parça sayısını yeniden oku.`);
  state.etiket=sc.count+'/'+adet;
  if(state.faz>=r.selections.length){barCiz(r);good()}
- else{feedback('Seçtiğin kadarı '+state.etiket);speak(sc.count+' bölü '+adet);state.faz++;state.sec=[];state.etiket='';setTimeout(()=>barCiz(r),FAST?30:760)}}
+ else{feedback('Seçtiğin kadarı '+state.etiket);speak(sc.count+' bölü '+adet);state.faz++;state.sec=[];state.etiket='';ertele(()=>barCiz(r),FAST?30:760)}}
 
 /* ===== w11: kesir asansörü (pay / payda) =====
    Gerçek dikey kuyu, 0 ile 1 bütün arasında on eş aralık. Tren/tünel yok. */
@@ -368,6 +404,105 @@ function checkClock(r){const ts=r.targets||[r.target],t=ts[state.sub];
  if(state.tm===t.tm){state.sub++;if(state.sub>=ts.length)good();else{feedback('İlk saat doğru!');speak(t.speech);clockCiz(r)}}
  else wrong(r.hint||'Hangi ibre dakikayı, hangisi saati gösteriyor? İbreleri yeniden çevir.')}
 
+/* ===== w13: zaman birimi kartları ===== */
+function zamanKart(metin,alt){return `<div class="time-card"><div class="tc-main">${esc(metin)}</div>${alt?`<div class="tc-sub">${esc(alt)}</div>`:''}</div>`}
+function chipSerisi(n,etiket){return `<div class="unit-strip">${Array.from({length:n},(_,i)=>`<span class="unit-chip">${i+1}</span>`).join('')}</div><div class="caption">Say: ${n} ${esc(etiket)}</div>`}
+function noktaSerisi(n,etiket){return `<div class="unit-strip">${'<i class="unit-dot"></i>'.repeat(n)}</div><div class="caption">${n} ${esc(etiket)}</div>`}
+function haftaModeli(){return `<div class="week-wrap">${'<span class="week-chip"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>'.repeat(52)}<span class="day-extra"><i></i></span></div>
+ <div class="caption">52 tam hafta (her biri 7 gün) ve turuncu 1 artan gün</div>`}
+
+/* ===== w14: tahmin + gerçek kronometre ===== */
+function renderTiming(r){state.faz=0;state.tahmin=r.baslangic||5;state.olcum=null;timingCiz(r)}
+function setTahmin(n){state.tahmin=Math.max(1,Math.min(120,n));timingCiz(round())}
+function kronBas(){state.t0=performance.now();state.calisiyor=true;timingCiz(round());
+ state.saat=setInterval(()=>{const e=$('#kron');if(!e||!state.calisiyor){clearInterval(state.saat);return}
+  e.textContent=((performance.now()-state.t0)/1000).toFixed(1).replace('.',',')+' sn'},100)}
+function kronDur(){if(!state.calisiyor)return;state.calisiyor=false;clearInterval(state.saat);
+ state.olcum=(performance.now()-state.t0)/1000;
+ if(state.olcum<0.3){state.olcum=null;return wrong('Kronometre çok kısa çalıştı. Eylemi yapıp öyle durdur.')}
+ state.faz=2;timingCiz(round())}
+function timingCiz(r){
+ if(state.faz===0){
+  $('#stage').innerHTML=`<div class="stack"><div class="task-card">${esc(r.eylem)}</div><div class="caption">Kronometre henüz kapalı. Sence bu iş kaç saniye sürer?</div><div class="digital">${state.tahmin} sn</div></div>`;
+  $('#task').innerHTML='<div class="actions"><button class="action" data-adim="-1">− 1 sn</button><button class="action" data-adim="1">+ 1 sn</button><button class="action" id="tahminOk">Tahminimi Kaydet</button></div>';
+  $$('[data-adim]').forEach(b=>b.onclick=()=>setTahmin(state.tahmin+(+b.dataset.adim)));
+  $('#tahminOk').onclick=()=>{state.faz=1;timingCiz(r)};
+ }else if(state.faz===1){
+  $('#stage').innerHTML=`<div class="stack"><div class="task-card">${esc(r.eylem)}</div><div class="caption">Şimdi işi gerçekten yap: başlat, bitince durdur.</div><div class="digital" id="kron">0,0 sn</div><div class="caption">Tahminin kayıtlı; şu an görünmüyor.</div></div>`;
+  $('#task').innerHTML=state.calisiyor?'<button class="action" id="kronDur">Durdur</button>':'<button class="action" id="kronBasla">Başlat</button>';
+  const b1=$('#kronBasla'),b2=$('#kronDur');if(b1)b1.onclick=()=>kronBas();if(b2)b2.onclick=()=>kronDur();
+ }else{
+  const fark=Math.abs(state.olcum-state.tahmin);
+  $('#stage').innerHTML=`<div class="stack"><div class="report"><div><b>${state.tahmin}</b><small>tahminin</small></div><div><b>${state.olcum.toFixed(1).replace('.',',')}</b><small>ölçüm (sn)</small></div><div><b>${fark.toFixed(1).replace('.',',')}</b><small>fark</small></div></div><div class="caption">${esc(fark<=2?'Tahminin ölçüme çok yakın.':fark<=5?'Tahminin ölçüme yakın sayılır.':'Tahminle ölçüm arasında belirgin fark var; bu da bir bilgidir.')}</div><div class="caption">${esc(r.aciklama||'Süre kişiye ve koşula göre değişebilir.')}</div></div>`;
+  $('#task').innerHTML='<button class="action" id="timingOk">Devam</button>';
+  $('#timingOk').onclick=()=>good();
+ }}
+
+/* ===== w15: ölçüm istasyonu (önce nicelik, sonra birim) ===== */
+const AILE={uzunluk:['cm','m','km'],kutle:['g','kg','ton']};
+const AILE_AD={uzunluk:'uzunluk',kutle:'kütle'};
+function renderStation(r){state.i=0;state.faz=0;state.rapor=[];stationCiz(r)}
+function stationOzet(r){$('#stage').innerHTML=`<div class="stack"><div class="caption">İstasyon raporu</div>
+ ${r.items.map((it,i)=>`<div class="report"><div><b>${it.emoji}</b><small>${esc(it.ad)}</small></div><div><b>${esc(it.birim)}</b><small>${esc(AILE_AD[it.tur])}</small></div><div><b>${esc(it.yaklasik)}</b><small>yaklaşık</small></div></div>`).join('')}</div>`;
+ $('#task').innerHTML=''}
+function stationCiz(r){const it=r.items[state.i];
+ $('#stage').innerHTML=`<div class="stack"><div class="object-card"><div class="obj-emoji">${it.emoji}</div><div class="obj-name">${esc(it.ad)}</div></div>
+  <div class="task-card">${esc(it.soru)}</div>
+  ${state.rapor.length?`<div class="unit-strip">${state.rapor.map(x=>`<span class="unit-chip">${esc(x)}</span>`).join('')}</div>`:''}
+  <div class="caption">${state.faz===0?'Önce hangi niceliği ölçüyoruz?':'Şimdi bu büyüklüğe uyan birimi seç.'}</div></div>`;
+ if(state.faz===0){
+  $('#task').innerHTML='<div class="choices"><button class="choice fam-len" data-tur="uzunluk">📏 Uzunluk</button><button class="choice fam-mass" data-tur="kutle">⚖️ Kütle</button></div>';
+  $$('[data-tur]').forEach(b=>b.onclick=()=>{
+   if(b.dataset.tur!==it.tur)return wrong('Soruyu yeniden oku: bu soru neyin ölçüsünü istiyor, uzunluk mu kütle mi?');
+   state.faz=1;stationCiz(r)});
+ }else{
+  const sinif=it.tur==='uzunluk'?'unit-len':'unit-mass';
+  $('#task').innerHTML=`<div class="choices">${AILE[it.tur].map(u=>`<button class="choice ${sinif}" data-birim="${u}">${u}</button>`).join('')}</div>
+   <div class="actions"><button class="action" id="aileGeri">↩ Nicelik seçimine dön</button></div>`;
+  $('#aileGeri').onclick=()=>{state.faz=0;stationCiz(r)};
+  $$('[data-birim]').forEach(b=>b.onclick=()=>{
+   if(b.dataset.birim!==it.birim)return wrong(it.ipucu);
+   state.rapor.push(it.ad+' ≈ '+it.yaklasik);
+   state.i++;state.faz=0;
+   if(state.i>=r.items.length){stationOzet(r);good()}
+   else{feedback(it.ad+' ≈ '+it.yaklasik);speak(it.ad+' yaklaşık '+it.yaklasik);ertele(()=>stationCiz(r),FAST?30:820)}});
+ }}
+
+/* ===== w16: banka gişesi (para eşdeğerliği) ===== */
+const PARALAR=[25,50,100,500,1000];
+function paraGorsel(k){return k>=500
+ ? `<span class="banknote${k===1000?' n1000':''}">${k/100} TL</span>`
+ : `<span class="coin c${k}">${k===100?'1 TL':k+' kr'}</span>`}
+function kurusYaz(k){return `${k} kr = ${Math.floor(k/100)} TL ${k%100} kr`}
+function tepsiPara(list){const gruplar=[];let cur=[],s=0;
+ for(const k of list){cur.push(k);s+=k;if(s>=100){gruplar.push({p:cur,tam:s===100});cur=[];s=0}}
+ if(cur.length)gruplar.push({p:cur,tam:false});
+ return `<div class="tray">${gruplar.length?gruplar.map(g=>`<div class="tray-group${g.tam?' full':''}">${g.p.map(paraGorsel).join('')}${g.tam?'<small>1 TL</small>':''}</div>`).join(''):'<div class="caption">Tepsi boş</div>'}</div>`}
+function hedefSimdi(r){return r.hedefler[state.hedefIx]}
+function renderPara(r){state.tepsi=[];state.hedefIx=0;state.gecmis=[];paraCiz(r)}
+function paraCiz(r){const h=hedefSimdi(r),toplam=state.tepsi.reduce((a,b)=>a+b,0);
+ $('#stage').innerHTML=`<div class="stack"><div class="till">${esc(h.not)}</div>${tepsiPara(state.tepsi)}
+  <div class="lift-info">${kurusYaz(toplam)}</div>
+  <div class="caption">Hedef: ${kurusYaz(h.tutar)}${toplam>h.tutar?` · ${toplam-h.tutar} kr fazla`:toplam<h.tutar?` · ${h.tutar-toplam} kr kaldı`:''}</div></div>`;
+ $('#task').innerHTML=`<div class="actions">${PARALAR.map(k=>{const acik=h.izin.indexOf(k)>=0;
+   return `<button class="action money${acik?'':' kilitli'}" data-para="${k}">${paraGorsel(k)}${acik?'':'<i class="lock">🔒</i>'}</button>`}).join('')}</div>
+  <div class="actions"><button class="action" id="geriAl">↩ Son parayı geri al</button></div>`;
+ $$('[data-para]').forEach(b=>b.onclick=()=>paraKoy(r,+b.dataset.para));
+ $('#geriAl').onclick=()=>{if(state.tepsi.length){state.tepsi.pop();paraCiz(r)}}}
+function paraKoy(r,k){const h=hedefSimdi(r);
+ if(h.izin.indexOf(k)<0){feedback(h.kilit,true);speak(h.kilit);return}
+ state.tepsi.push(k);const t=state.tepsi.reduce((a,b)=>a+b,0);
+ if(t!==h.tutar)return paraCiz(r);
+ const imza=state.tepsi.slice().sort((a,b)=>a-b).join('-');
+ if(h.farkli&&state.gecmis.indexOf(imza)>=0){feedback('Bu bileşimi az önce kullandın; başka paralarla dene.',true);
+  speak('Aynı bileşimi kullandın. Farklı paralarla dene.');state.tepsi=[];return paraCiz(r)}
+ state.gecmis.push(imza);state.hedefIx++;
+ if(state.hedefIx>=r.hedefler.length){paraCiz2(r);good();return}
+ feedback('Doğru ödeme: '+kurusYaz(h.tutar));speak(h.onay||('Tam '+kurusYaz(h.tutar)));
+ state.tepsi=[];ertele(()=>paraCiz(r),FAST?30:900)}
+function paraCiz2(r){const h=r.hedefler[r.hedefler.length-1];
+ $('#stage').innerHTML=`<div class="stack">${tepsiPara(state.tepsi)}<div class="lift-info">${kurusYaz(h.tutar)}</div></div>`}
+
 const GAMES={};
 /* ===== 3. SINIF MATEMATİK — w01–w48 =====
    Kaynak şartname: output/pdf/3_sinif_matematik_oyunlari_detayli_duzeltmeler.pdf
@@ -383,8 +518,10 @@ function yuzlukModel(n){const y=Math.floor(n/100),o=Math.floor(n%100/10),b=n%10;
    NOT: motorun state.placed'i HEDEF başına sayaç tutar (parça kimliği
    değil), o yüzden değer toplamını burada ayrıca biriktiriyoruz. */
 function modulDegeri(id){return id.indexOf('y')===0?100:id.indexOf('o')===0?10:1}
+function ertele(fn,ms){/* Tur değiştiyse ya da tur bittiyse geciken geri çağrı çalışmasın. */
+ const t=roundIndex;setTimeout(()=>{if(roundIndex===t&&!locked)fn()},ms)}
 function turuTazele(){/* Hedef aşıldığında tur kilitlenmesin: can gitti, sahne yeniden kurulur. */
- const kalan=lives; if(kalan>0) setTimeout(()=>{if(!locked)renderRound()},760)}
+ if(lives>0) ertele(renderRound,760)}
 function toplamKanca(hedef){return(st,p)=>{
  const d=modulDegeri(p.id);
  st.toplam=(st.toplam||0)+d;
@@ -671,6 +808,87 @@ GAMES.w12={title:'Zaman Kulesi',theme:'city',finish:'Akrebi ve yelkovanı kendi 
   targets:[{tm:375,label:'06.15',speech:'Altıyı çeyrek geçe'},{tm:0,label:'12.00',speech:'Tam on iki'}],
   hint:'Çeyrek geçede yelkovan 3’tedir; tam saatte iki ibre de yukarıyı gösterir.',
   result:'Çeyrek geçede akrep 6’dan biraz ilerideydi; tam saatte ikisi de 12’de birleşti.'}
+]};
+
+/* ---- Tema 2: zaman, ölçü ve para (w13–w16) ---- */
+const ZAMAN_SEC=[{label:'7 gün',value:'7g'},{label:'12 ay',value:'12a'},{label:'24 saat',value:'24s'},{label:'60 dakika',value:'60d'},{label:'60 saniye',value:'60sn'}];
+GAMES.w13={title:'Zaman Tüneli Bandı',theme:'city',finish:'Zaman birimlerini gerçek gruplar üzerinde saydın; yılın yaklaşık 52 hafta olduğunu da gördün.',rounds:[
+ {kind:'sequence',prompt:'Karttaki eşitliği tamamlayan kutuya bas.',
+  scene:st=>{const k=st.step||0;const kartlar=['1 hafta = ?','1 yıl = ?'];
+   const model=k>=1?chipSerisi(7,'gün'):'';const model2=k>=2?chipSerisi(12,'ay'):'';
+   return `<div class="stack">${zamanKart(kartlar[Math.min(k,1)])}${model}${model2}</div>`},
+  options:ZAMAN_SEC,expected:['7g','12a'],
+  hint:'Kutulardaki sayıyı ve birimi birlikte oku: karttaki büyük birim kaç küçük birimden oluşuyor?',
+  result:'1 hafta 7 gün, 1 yıl 12 aydır.'},
+ {kind:'sequence',prompt:'Sırayla üç kartı da doğru kutuyla eşle.',
+  scene:st=>{const k=st.step||0;const kartlar=['1 gün = ?','1 saat = ?','1 dakika = ?'];
+   const modeller=[chipSerisi(24,'saat'),noktaSerisi(60,'dakika'),noktaSerisi(60,'saniye')];
+   return `<div class="stack">${zamanKart(kartlar[Math.min(k,2)])}${k>0?modeller[k-1]:''}</div>`},
+  options:ZAMAN_SEC,expected:['24s','60d','60sn'],
+  hint:'Gün saatlerden, saat dakikalardan, dakika saniyelerden oluşur.',
+  result:'1 gün 24 saat, 1 saat 60 dakika, 1 dakika 60 saniyedir.'},
+ {kind:'choice',prompt:'365 günü tam haftalara ayır: kaç hafta olur, kaç gün artar?',
+  scene:()=>`<div class="stack">${haftaModeli()}</div>`,
+  choices:[C('52 hafta + 1 gün',true),C('tam 52 hafta'),C('tam 53 hafta')],
+  hint:'52 haftanın kaç gün ettiğini hesapla: 52 × 7. Kalan gün var mı?',
+  result:'52 hafta 364 gün eder; 365. gün artar. Bu yüzden bir yıl yaklaşık 52 haftadır. Artık yılda 366 gün olur, 2 gün artar.'}
+]};
+
+GAMES.w14={title:'Kronometre Arenası',theme:'room',finish:'Önce tahmin edip sonra gerçekten ölçtün; tahminle ölçüm arasındaki farkı kendin gördün.',rounds:[
+ {kind:'timing',prompt:'Önce tahmin et, sonra gerçekten yap ve ölç.',noPenalty:true,baslangic:5,
+  eylem:'Adını bir kâğıda ya da havaya yaz.',
+  aciklama:'Aynı iş herkeste aynı sürmez; yazı büyüklüğü ve isim uzunluğu süreyi değiştirir.',
+  result:'Tahminini ölçümle karşılaştırdın. Fark ne kadar küçükse tahminin o kadar isabetli.'},
+ {kind:'timing',prompt:'Bu kez 10 kez el çırpma süresini tahmin et ve ölç.',noPenalty:true,baslangic:6,
+  eylem:'10 kez el çırp; saymayı unutma.',
+  aciklama:'Hızlı çırparsan süre kısalır; bu yüzden tek bir doğru süre yoktur.',
+  result:'On el çırpma çoğu kişide birkaç saniye sürer; senin ölçümün de bir veri.'},
+ {kind:'timing',prompt:'Son ölçüm: yönergeyi sesli okuma süresi.',noPenalty:true,baslangic:8,
+  eylem:'Şu cümleyi sesli oku: "Ölçmek, karşılaştırmak için sayı bulmaktır."',
+  aciklama:'Sınıfta herkesin sonucu farklı çıkar; süre kişiye ve koşula göre değişir.',
+  result:'Okuma süresi kişiden kişiye değişir. Ölçümleri karşılaştırmak için aynı cümleyi kullanmak gerekir.'}
+]};
+
+GAMES.w15={title:'Ölçüm İstasyonu',theme:'lab',finish:'Önce niceliği, sonra büyüklüğe uyan birimi seçtin; aynı nesnenin boyu ile kütlesini ayırabildin.',rounds:[
+ {kind:'station',prompt:'Her nesne için önce niceliği, sonra birimi seç.',
+  items:[
+   {emoji:'✏️',ad:'Kurşun kalem',soru:'Kalemin BOYU hangi birimle ölçülür?',tur:'uzunluk',birim:'cm',yaklasik:'18 cm',ipucu:'Kalem elinin içine sığar; metre bunun için çok büyük, kilometre çok daha büyük.'},
+   {emoji:'🪧',ad:'Sınıf tahtası',soru:'Tahtanın UZUNLUĞU hangi birimle ölçülür?',tur:'uzunluk',birim:'m',yaklasik:'3 m',ipucu:'Tahta senden uzun ama sokaktan kısa. Santimetreyle sayarsan yüzlerce çıkar.'},
+   {emoji:'🛣️',ad:'İki şehir arası yol',soru:'Yolun UZUNLUĞU hangi birimle ölçülür?',tur:'uzunluk',birim:'km',yaklasik:'250 km',ipucu:'Bu yolu metreyle sayarsan yüz binlerce metre olur; daha büyük bir birim gerekir.'}],
+  result:'Kalem santimetre, tahta metre, şehirler arası yol kilometre ile ölçülür.'},
+ {kind:'station',prompt:'Şimdi kütleler: önce nicelik, sonra birim.',
+  items:[
+   {emoji:'🧽',ad:'Silgi',soru:'Silginin KÜTLESİ hangi birimle ölçülür?',tur:'kutle',birim:'g',yaklasik:'15 g',ipucu:'Silgi çok hafif; kilogram için 1000 tane silgi gerekirdi.'},
+   {emoji:'🍉',ad:'Karpuz',soru:'Karpuzun KÜTLESİ hangi birimle ölçülür?',tur:'kutle',birim:'kg',yaklasik:'6 kg',ipucu:'Karpuzu iki elinle zor taşırsın; gram bunun için çok küçük bir birim.'},
+   {emoji:'🚛',ad:'Yüklü kamyon',soru:'Kamyonun KÜTLESİ hangi birimle ölçülür?',tur:'kutle',birim:'ton',yaklasik:'12 ton',ipucu:'Kamyon binlerce kilogram çeker; bu kadar büyük kütle için ayrı bir birim vardır.'}],
+  result:'Silgi gram, karpuz kilogram, kamyon ton ile ölçülür. 1 kg 1000 g, 1 ton 1000 kg eder.'},
+ {kind:'station',prompt:'Dikkat: aynı nesnenin farklı niceliği sorulabilir.',
+  items:[
+   {emoji:'✏️',ad:'Kurşun kalem',soru:'Kalemin BOYU hangi birimle ölçülür?',tur:'uzunluk',birim:'cm',yaklasik:'18 cm',ipucu:'Burada kalemin ne kadar uzun olduğu soruluyor, ne kadar ağır olduğu değil.'},
+   {emoji:'✏️',ad:'Kurşun kalem',soru:'Kalemin KÜTLESİ hangi birimle ölçülür?',tur:'kutle',birim:'g',yaklasik:'6 g',ipucu:'Bu kez kalemin ağırlığı soruluyor. Kalem bir bardak sudan bile hafiftir.'},
+   {emoji:'🚌',ad:'Okul otobüsü',soru:'Otobüsün UZUNLUĞU hangi birimle ölçülür?',tur:'uzunluk',birim:'m',yaklasik:'11 m',ipucu:'Otobüsün ne kadar uzun olduğu soruluyor. Santimetre için çok büyük, kilometre için çok küçük.'}],
+  result:'Aynı kalemin boyu santimetreyle, kütlesi gramla ölçülür. Önce sorunun hangi niceliği istediğine bakılır.'}
+]};
+
+GAMES.w16={title:'Banka Gişesi',theme:'city',finish:'Aynı tutarı farklı paralarla kurdun; kuruş toplamıyla TL gösterimini birbirine bağladın.',rounds:[
+ {kind:'para',prompt:'Müşterinin izin verdiği paralarla tam tutarı öde.',noPenalty:true,
+  hedefler:[{tutar:1000,izin:[500],not:'Müşteri: "Lütfen yalnız 5 TL banknotlarıyla ödeyin."',
+   kilit:'Bu çekmece kapalı: müşteri bu turda yalnız 5 TL kabul ediyor.',onay:'İki tane 5 TL, tam 10 TL eder.'}],
+  result:'İki tane 5 TL banknotu 10 TL eder: 1000 kuruş.'},
+ {kind:'para',prompt:'Aynı 1 TL’yi iki farklı parayla ayrı ayrı kur.',noPenalty:true,
+  hedefler:[
+   {tutar:100,izin:[50],not:'Önce: 1 TL’yi yalnız 50 kuruşluklarla kur.',
+    kilit:'Bu adımda yalnız 50 kuruş çekmecesi açık.',onay:'İki tane 50 kuruş, 1 TL eder.'},
+   {tutar:100,izin:[25],not:'Şimdi: aynı 1 TL’yi yalnız 25 kuruşluklarla kur.',
+    kilit:'Bu adımda yalnız 25 kuruş çekmecesi açık.',onay:'Dört tane 25 kuruş da 1 TL eder.'}],
+  result:'1 TL, iki 50 kuruşla da dört 25 kuruşla da kurulur: her ikisi de 100 kuruştur.'},
+ {kind:'para',prompt:'2 TL 50 kuruşu iki kez, her seferinde farklı paralarla öde.',noPenalty:true,
+  hedefler:[
+   {tutar:250,izin:[25,50,100],not:'2 TL 50 kuruşu bu üç parayla öde.',
+    kilit:'Bu turda yalnız 1 TL, 50 kr ve 25 kr çekmeceleri açık.',onay:'Tepside 250 kuruş var: 2 TL 50 kuruş.'},
+   {tutar:250,izin:[25,50,100],farkli:true,not:'Aynı tutarı bu kez FARKLI paralarla öde.',
+    kilit:'Bu turda yalnız 1 TL, 50 kr ve 25 kr çekmeceleri açık.',onay:'Farklı paralarla yine 250 kuruş.'}],
+  result:'2 TL 50 kuruş birden çok yolla ödenir: 1+1+0,50 da olur, on tane 25 kuruş da. İkisi de 250 kuruştur.'}
 ]};
 
 
