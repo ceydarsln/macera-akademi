@@ -323,6 +323,11 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .vagon-dizi{display:flex;flex-direction:column;gap:4px;align-items:center}
 .yuvakart{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#f6ede0;border:3px dashed #b9945c;border-radius:10px;padding:6px 9px;min-height:42px;width:min(316px,96%);font-size:13px;font-weight:800;color:#8a5725;text-align:left;line-height:1.25}
 .yuvakart.dolu{border-style:solid;border-color:#2f9e5e;background:#e7f7ec;color:#1f4a2e}
+/* Etiket seçilince hiçbir görsel iz kalmıyordu; çocuk neyi seçtiğini göremiyordu. */
+.choice.secili{background:#fff3d0;border-color:#f0a500;box-shadow:0 0 0 3px rgba(240,165,0,.45),0 5px 0 rgba(35,77,108,.22)}
+.choice.secili::after{content:'✓';margin-left:6px;color:#b06f00}
+.yuvakart.hedef{border-color:#f0a500;background:#fff8e8;animation:yuvaNabiz 1.1s ease-in-out infinite}
+@keyframes yuvaNabiz{0%,100%{box-shadow:0 0 0 0 rgba(240,165,0,.5)}50%{box-shadow:0 0 0 6px rgba(240,165,0,0)}}
 .duzelt-alan{width:min(316px,96%);min-height:56px;border:4px solid #e0a55a;border-radius:12px;padding:8px 10px;font:inherit;font-size:16px;font-weight:700;color:#1f3b52;background:#fffdf5}
 </style>
 </head>
@@ -360,10 +365,18 @@ function dotChart(cols,key=1){return `<div class="chart">${cols.map(c=>`<div cla
 function sceneHtml(r){return typeof r.scene==='function'?r.scene(state):r.scene||''}
 function hud(){return `<header class="hud"><div class="round">Tur ${roundIndex+1}/3</div><div class="prompt">${esc(round().prompt)}</div><div class="hud-right"><span class="lives">${'❤️'.repeat(lives)}${'🖤'.repeat(3-lives)}</span><button class="sound" aria-label="Yönergeyi dinle">🔊</button></div></header>`}
 function round(){return game.rounds[roundIndex]}
-function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();requestAnimationFrame(()=>speak(round().prompt))}
+function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;sonCeza=0;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();requestAnimationFrame(()=>speak(round().prompt))}
 function updateStage(){if(!round())return;const st=$('#stage');if(st)st.innerHTML=sceneHtml(round())}
+/* Yönlendirme uyarısı hata değildir: örneği dinlemek ya da ölçüt işaretlemek
+   bir ön koşuldur, can götürmemeli. */
+function uyar(msg){feedback(msg,true);speak(msg)}
 function feedback(msg,bad=false){const f=$('.feedback');if(!f)return;f.textContent=msg;f.className='feedback show'+(bad?' bad':'');setTimeout(()=>{if(f)f.className='feedback'},950)}
-function wrong(hint){if(locked||!round())return;if(!round().noPenalty)lives=Math.max(0,lives-1);feedback('Bir daha düşün',true);speak(hint||'Bir daha düşün. Nesneleri dikkatle incele.');const sc=$('.stage');sc?.classList.remove('shake');void sc?.offsetWidth;sc?.classList.add('shake');if(lives===0){lives=3;setTimeout(render,650)}else $('.lives').innerHTML='❤️'.repeat(lives)+'🖤'.repeat(3-lives)}
+/* Hızlı çift dokunuş tek hata için iki can götürüyordu; kısa bir ceza
+   soğuması hem çocuğun ikinci dokunuşunu hem de yinelenen olayları yutar. */
+let sonCeza=0;
+function wrong(hint){if(locked||!round())return;
+ const simdi=Date.now();if(simdi-sonCeza<550)return;sonCeza=simdi;
+ if(!round().noPenalty)lives=Math.max(0,lives-1);feedback('Bir daha düşün',true);speak(hint||'Bir daha düşün. Nesneleri dikkatle incele.');const sc=$('.stage');sc?.classList.remove('shake');void sc?.offsetWidth;sc?.classList.add('shake');if(lives===0){lives=3;setTimeout(render,650)}else $('.lives').innerHTML='❤️'.repeat(lives)+'🖤'.repeat(3-lives)}
 function good(message){if(locked)return;locked=true;score+=10;const r=round();if(r.successScene){$('#stage').innerHTML=typeof r.successScene==='function'?r.successScene(state):r.successScene;$('#stage').classList.add('success-motion')}feedback(message||r.result||'Doğru!');speak(r.result||message||'Doğru.');setTimeout(()=>{roundIndex++;if(roundIndex>=3)parentComplete();else render()},WAIT)}
 function C(label,correct=false,value=null){return{label,correct,value}}
 function P(id,html,target){return{id,html,target}}
@@ -402,7 +415,9 @@ function kanitCiz(r){const gerek=r.gerekKanit||1;
   $$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.secenekler[+b.dataset.choice];
    if(!c.correct)return wrong(c.hint||'İşaretlediğin kanıta geri dön: o cümle bu seçeneği destekliyor mu?');
    good()})}}
-function renderKanit(r){state.kanit=[];state.yanlisKanit=[];state.faz=0;state.not='';kanitCiz(r)}
+function renderKanit(r){state.kanit=[];state.yanlisKanit=[];state.not='';
+ /* gerekKanit 0 ise kanıt aşaması yoktur; doğrudan soruya geçilir. */
+ state.faz=(r.gerekKanit||0)>0?0:1;kanitCiz(r)}
 
 /* ===== YAZ: gerçek üretim (yazma kipi) ===== */
 function olcutDurum(r,t){const k=kelimeSay(t),ham=String(t||'').trim();
@@ -430,7 +445,9 @@ function yazCiz(r){const t=state.yazi||'',d=olcutDurum(r,t);
   ta.value=(ta.value?ta.value.replace(/\s*$/,' '):'')+v;state.yazi=ta.value;ta.focus();ta.oninput()});
  $('#yazOk').onclick=()=>{const dd=olcutDurum(r,state.yazi||'');
   const eksik=dd.find(x=>!x.tam);
-  if(eksik)return wrong('Eksik ölçüt: '+eksik.ad+'. Yazdığını gözden geçir.');
+  /* Ölçüt listesi ekranda canlı güncelleniyor; eksik ölçüt bir yanlış cevap
+     değil, tamamlanmamış bir iş. Boş gönderim can götürmemeli. */
+  if(eksik)return uyar('Eksik ölçüt: '+eksik.ad+'. Yazdığını gözden geçir.');
   if(r.yasak&&r.yasak.some(y=>sadeleştir(state.yazi).indexOf(sadeleştir(y))>=0))
    return wrong('Hazır cümleyi kopyalamak yerine kendi sözcüklerinle yaz.');
   good()}}
@@ -460,7 +477,7 @@ function konusCiz(r){const sure=state.sure||0;
  if(state.faz===0){
   $('#task').innerHTML=`<div class="actions"><button class="action" id="ornekDinle">🔊 Örneği dinle</button><button class="action" id="konusBasla">Hazırım</button></div>`;
   $('#ornekDinle').onclick=()=>{state.dinledi=true;speak(r.ornek,true)};
-  $('#konusBasla').onclick=()=>{if(!state.dinledi)return wrong('Önce örneği dinle.');
+  $('#konusBasla').onclick=()=>{if(!state.dinledi)return uyar('Önce örneği dinle.');
    state.faz=1;state.not='Düğmeyi basılı tut ve yüksek sesle söyle.';konusCiz(r)};
  }else if(state.faz===1){
   $('#task').innerHTML=`<button class="konus-btn" id="konusTut">🎤 Basılı tut ve konuş</button>
@@ -478,7 +495,7 @@ function konusCiz(r){const sure=state.sure||0;
   $$('[data-ol]').forEach(b=>b.onclick=()=>{const i=+b.dataset.ol,l=(state.rubrik||[]).slice();
    const k=l.indexOf(i);if(k>=0)l.splice(k,1);else l.push(i);state.rubrik=l;konusCiz(r)});
   $('#konusOk').onclick=()=>{if((state.rubrik||[]).length<r.olcutler.length)
-    return wrong('Bütün ölçütleri gözden geçir. Sağlamadığını düşündüğün varsa tekrar konuşabilirsin.');
+    return uyar('Bütün ölçütleri gözden geçir. Sağlamadığını düşündüğün varsa tekrar konuşabilirsin.');
    good()}}}
 function renderKonus(r){state.faz=0;state.dinledi=false;state.sure=0;state.rubrik=[];state.not='';konusCiz(r);
  requestAnimationFrame(()=>speak(r.gorev))}
@@ -507,13 +524,14 @@ function renderSira(r){state.dizi=[];state.faz=0;state.not='';siraCiz(r)}
 function esleCiz(r){
  $('#stage').innerHTML=`<div class="stack">${r.sahne||''}
   <div class="stack">${r.yuvalar.map((y,i)=>{const dolu=state.yerlesen&&state.yerlesen[i]!=null;
-   return `<div class="yuvakart${dolu?' dolu':''}" data-yuva="${i}"><span style="flex:1">${esc(y.ad)}</span>
+   const hedef=!dolu&&state.secEt!=null;
+   return `<div class="yuvakart${dolu?' dolu':hedef?' hedef':''}" data-yuva="${i}"><span style="flex:1">${esc(y.ad)}</span>
     <b style="min-width:64px;text-align:center;padding:2px 7px;border-radius:7px;background:${dolu?'#2f9e5e':'#e8dcc8'};color:${dolu?'#fff':'#8a5725'}">${dolu?esc(r.etiketler[state.yerlesen[i]].t):'…'}</b></div>`}).join('')}</div>
   <div class="caption">${esc(state.not||r.gorev)}</div></div>`;
- $('#task').innerHTML=`<div class="actions">${r.etiketler.map((e,i)=>`<button class="choice" data-et="${i}" ${(state.yerlesen||[]).indexOf(i)>=0?'style="opacity:.35"':''}>${esc(e.t)}</button>`).join('')}</div>`;
+ $('#task').innerHTML=`<div class="actions">${r.etiketler.map((e,i)=>`<button class="choice${state.secEt===i?' secili':''}" data-et="${i}" ${(state.yerlesen||[]).indexOf(i)>=0?'style="opacity:.35"':''}>${esc(e.t)}</button>`).join('')}</div>`;
  $$('[data-et]').forEach(b=>b.onclick=()=>{state.secEt=+b.dataset.et;state.not='Etiket seçildi: hangi yuvaya ait?';esleCiz(r)});
  $$('[data-yuva]').forEach(el=>el.onclick=()=>{const i=+el.dataset.yuva;
-  if(state.secEt==null)return feedback('Önce bir etiket seç',true);
+  if(state.secEt==null)return uyar('Önce bir etiket seç.');
   if(r.yuvalar[i].dogru!==state.secEt){state.not=r.yuvalar[i].ipucu||'Bu etiket buraya uymuyor; metindeki kanıta bak.';
    esleCiz(r);return wrong(state.not)}
   const y=(state.yerlesen||r.yuvalar.map(()=>null)).slice();y[i]=state.secEt;state.yerlesen=y;state.secEt=null;
@@ -536,10 +554,10 @@ function duzeltCiz(r){const t=state.yazi!=null?state.yazi:r.hatali;
   $$('.olcut div').forEach((el,i)=>{el.className=dd[i]?'tam':'';el.innerHTML=`<i>${dd[i]?'✓':'○'}</i>`+esc(r.denetim[i].ad)})};
  $('#duzeltOk').onclick=()=>{const v=state.yazi!=null?state.yazi:r.hatali;
   const eksik=r.denetim.find(d=>!new RegExp(d.desen,d.bayrak||'').test(v));
-  if(eksik)return wrong('Hâlâ düzeltilmemiş: '+eksik.ad);
+  if(eksik)return uyar('Hâlâ düzeltilmemiş: '+eksik.ad);
   /* Büyük harf oyununda tek değişiklik büyük harftir; sadeleştir() küçük
      harfe indirdiği için düzeltme 'değişiklik yok' sayılıyordu. */
-  if(String(v).trim()===String(r.hatali).trim())return wrong('Metinde hiçbir değişiklik yapmadın.');
+  if(String(v).trim()===String(r.hatali).trim())return uyar('Metinde hiçbir değişiklik yapmadın.');
   good()}}
 function renderDuzelt(r){state.yazi=r.hatali;state.not='';duzeltCiz(r)}
 
@@ -2443,6 +2461,348 @@ GAMES.u76={title:'Manyetik Zıtlık Deneyi',theme:'lab',finish:'Bağlama göre z
   ipucuMetin:'Taş ağır, tüy ise hafiftir.\nYağmurdan sonra yollar ıslak, çatı altı kuru kaldı.',
   ornekCevap:'Taş ağır, tüy ise hafiftir.\nYağmurdan sonra yollar ıslak, çatı altı kuru kaldı.',
   result:'İki zıt çiftle de karşılaştırma cümlesi kurdun.'}
+]};
+
+/* ---- Tema 6 devamı ve Tema 7 · Kültür Hazinemiz (u77–u83) ---- */
+const S9={
+ devre:'<div class="row"><span style="font-size:28px">🔌</span><span style="font-size:26px">💡</span></div><div class="caption">Devre tamirhanesi</div>',
+ kule:'<div class="row"><span style="font-size:28px">🔭</span><span style="font-size:26px">🪐</span></div><div class="caption">Gözlem kulesi</div>',
+ matris:'<div class="row"><span style="font-size:28px">🐦</span><span style="font-size:26px">✈️</span></div><div class="caption">Karşılaştırma şeması</div>',
+ bant:'<div class="row"><span style="font-size:26px">🏭</span><span style="font-size:24px">🔧</span><span style="font-size:24px">📦</span></div><div class="caption">Atölye bandı</div>',
+ kultur:'<div class="row"><span style="font-size:28px">📗</span><span style="font-size:26px">🫖</span></div><div class="caption">Kültür sözlüğü</div>',
+ mekan:'<div class="row"><span style="font-size:26px">🕌</span><span style="font-size:26px">🏛️</span><span style="font-size:24px">📖</span></div><div class="caption">Tarihî mekân rehberi</div>',
+ bayram:'<div class="row"><span style="font-size:26px">🌅</span><span style="font-size:26px">🍬</span><span style="font-size:26px">🧓</span></div><div class="caption">Bayram sabahı</div>'
+};
+
+GAMES.u77={title:'Devre Tamircisi',theme:'lab',finish:'Bağlaçların anlam ilişkisini kurduğunu gördün ve ikisiyle kendi cümlelerini yazdın.',rounds:[
+ {kind:'esle',prompt:'Her devreye uygun çipi tak.',sahne:S9.devre,
+  gorev:'İki cümle parçasını hangi bağlaç birleştirir?',
+  etiketler:[{t:'ve'},{t:'ama'},{t:'çünkü'}],
+  yuvalar:[{ad:'Kitabı aldım … defteri de aldım.',dogru:0},
+   {ad:'Kitabı aldım … okumaya vaktim olmadı.',dogru:1,ipucu:'İkinci parça birinciyle ters düşüyor.'},
+   {ad:'Kitabı aldım … konusu çok ilgimi çekti.',dogru:2,ipucu:'İkinci parça birincinin nedenini söylüyor.'}],
+  result:'"ve" ekler, "ama" karşıtlık kurar, "çünkü" neden bildirir.'},
+ {kind:'kanit',prompt:'Bağlaç değişince anlam da değişiyor.',sahne:S9.devre,
+  baslik:'Aynı iki cümle, iki bağlaç',
+  metin:[['Birinci: Dışarı çıktım ',{t:'ama'},' yağmur yağıyordu.'],
+   ['İkinci: Dışarı çıktım ',{t:'çünkü'},' hava açmıştı.']],
+  gerekKanit:0,soru:'İki cümle arasındaki fark nedir?',
+  secenekler:[{label:'Birinci cümlede beklenmedik bir durum, ikincide neden var',correct:true},
+   {label:'İkisi de aynı anlamda',hint:'"ama" beklenmedik durumu, "çünkü" nedeni gösterir.'},
+   {label:'Birinci cümlede neden var'}],
+  result:'Aynı iki parça, farklı bağlaçla farklı ilişki kurar.'},
+ {kind:'yaz',prompt:'İki bağlaçla kendi cümlelerini yaz.',sahne:S9.devre,
+  gorev:'Alt alta iki cümle yaz: birincide "ama", ikincide "çünkü" kullan.',
+  enAzSatir:2,buyukHarf:true,gerekli:['ama','çünkü'],
+  ipucuMetin:'Parka gitmek istedim ama hava soğuktu.\nEve erken döndüm çünkü ödevim vardı.',
+  ornekCevap:'Parka gitmek istedim ama hava soğuktu.\nEve erken döndüm çünkü ödevim vardı.',
+  result:'İki bağlacı da anlam ilişkisine uygun kullandın.'}
+]};
+
+GAMES.u78={title:'Gözlem Kulesi',theme:'space',finish:'Doğrudan veriyi çıkarımdan ayırdın ve iki veriye dayanan bir çıkarım yazdın.',rounds:[
+ {kind:'kanit',prompt:'Seyir defterindeki veriyi işaretle.',sahne:S9.kule,
+  baslik:'Seyir defteri',
+  metin:[['Gezegende ',{t:'sıcaklık eksi altmış derece',dogru:true},', ',{t:'yüzey buzla kaplı',dogru:true},' ve ',{t:'gökyüzü mor renkte'},'.']],
+  gerekKanit:2,soru:'Bu verilerden ne çıkarılabilir?',
+  secenekler:[{label:'Bu gezegende su donmuş hâlde bulunur',correct:true},
+   {label:'Bu gezegende sıcaklık eksi altmış derecedir',hint:'Bu doğrudan veri; çıkarım değil.'},
+   {label:'Bu gezegende yaz mevsimi vardır'}],
+  result:'Düşük sıcaklık ve buzlu yüzey birlikte suyun donmuş olduğu çıkarımını verir.'},
+ {kind:'esle',prompt:'Veri mi, çıkarım mı?',sahne:S9.kule,
+  gorev:'Defterdeki her ifadeyi doğru sütuna koy.',
+  etiketler:[{t:'Doğrudan veri'},{t:'Veriden yapılan çıkarım'}],
+  yuvalar:[{ad:'Yüzey buzla kaplı.',dogru:0},
+   {ad:'Burada canlı yaşaması zordur.',dogru:1,ipucu:'Bu bilgi defterde yazmıyor; verilerden anlaşılıyor.'}],
+  result:'Veri ölçülür ve yazılır; çıkarım verilerden düşünülerek elde edilir.'},
+ {kind:'yaz',prompt:'İki veriye dayanan çıkarım yaz.',sahne:S9.kule,
+  gorev:'Seyir defterindeki iki veriyi kullanarak bir çıkarım cümlesi yaz. Cümlende "çünkü" ile veriye dayan.',
+  enAzKelime:9,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Bu gezegende su donmuştur çünkü sıcaklık çok düşük ve yüzey buzla kaplı.',
+  ornekCevap:'Bu gezegende su donmuştur çünkü sıcaklık çok düşük ve yüzey buzla kaplıdır.',
+  bank:['çünkü','sıcaklık','buzla kaplı','donmuş'],
+  result:'Çıkarımını iki veriye dayandırdın.'}
+]};
+
+GAMES.u79={title:'Karşılaştırma Matrisi',theme:'class',finish:'Görünüş, hareket ve yapı ölçütlerini ayrı ayrı karşılaştırdın.',rounds:[
+ {kind:'esle',prompt:'Özellikleri doğru bölgeye koy.',sahne:S9.matris,
+  gorev:'Kuş ve uçak yan yana duruyor.',
+  etiketler:[{t:'Kanatları vardır'},{t:'Tüylerle kaplıdır'},{t:'Yakıtla çalışır'}],
+  yuvalar:[{ad:'İkisinde de var',dogru:0},{ad:'Yalnız kuşta',dogru:1},{ad:'Yalnız uçakta',dogru:2}],
+  result:'Kanat ortak; tüy yalnız kuşta, yakıt yalnız uçakta.'},
+ {kind:'esle',prompt:'Bu kez ölçütlere göre ayır.',sahne:S9.matris,
+  gorev:'Aynı karşılaştırmayı üç ayrı ölçütle yapıyoruz.',
+  etiketler:[{t:'Görünüş'},{t:'Hareket'},{t:'Yapı'}],
+  yuvalar:[{ad:'İkisinin de kanadı var',dogru:0},
+   {ad:'İkisi de havada ilerler',dogru:1},
+   {ad:'Biri canlı, biri metalden yapılmış',dogru:2}],
+  result:'Karşılaştırma ölçütü seçilince benzerlik ve farklar daha net görünür.'},
+ {kind:'yaz',prompt:'Bir ortak, iki farklı özellik yaz.',sahne:S9.matris,
+  gorev:'Alt alta üç cümle yaz: birinci cümlede ortak özelliği, sonraki ikisinde birer farkı tam cümleyle anlat.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Kuş da uçak da kanatları sayesinde havada uçar.\nKuşun bedeni tüylerle kaplıdır.\nUçak metalden yapılmıştır ve yakıtla çalışır.',
+  ornekCevap:'Kuş da uçak da kanatları sayesinde havada uçar.\nKuşun bedeni tüylerle kaplıdır.\nUçak metalden yapılmıştır ve yakıtla çalışır.',
+  result:'Ortak özelliği ve iki farkı tam cümlelerle yazdın.'}
+]};
+
+GAMES.u80={title:'Geri Dönüşüm Bandı',theme:'factory',finish:'Aynı nesneleri iki farklı ölçüte göre sınıflandırdın ve kendi ölçütünü yazdın.',rounds:[
+ {kind:'esle',prompt:'Nesneleri ölçüte göre ayır.',sahne:S9.bant,
+  gorev:'Ölçüt: elektrikli mi, elektriksiz mi?',
+  etiketler:[{t:'el feneri'},{t:'tahta kaşık'}],
+  yuvalar:[{ad:'Elektrikli',dogru:0},{ad:'Elektriksiz',dogru:1}],
+  result:'El feneri pille çalışır, tahta kaşık çalışmaz.'},
+ {kind:'esle',prompt:'Ölçüt değişti: malzeme.',sahne:S9.bant,
+  gorev:'Aynı nesneler, bu kez malzemeye göre.',
+  etiketler:[{t:'Metal ve plastik'},{t:'Ahşap'}],
+  yuvalar:[{ad:'el feneri',dogru:0},{ad:'tahta kaşık',dogru:1}],
+  result:'Aynı nesneler, ölçüt değişince farklı gruplara girebilir.'},
+ {kind:'yaz',prompt:'Kendi ölçütünü seç ve üç nesneyi sınıflandır.',sahne:S9.bant,
+  gorev:'İlk satıra seçtiğin ölçütü başlık olarak yaz. Sonraki üç satırda birer nesne ve hangi gruba girdiğini yaz.',
+  enAzSatir:4,buyukHarf:true,
+  ipucuMetin:'Ölçüt: Suda batar mı yüzer mi?\nTaş: batar\nTahta kaşık: yüzer\nPlastik kapak: yüzer',
+  ornekCevap:'Ölçüt: Suda batar mı yüzer mi?\nTaş: batar\nTahta kaşık: yüzer\nPlastik kapak: yüzer',
+  result:'Kendi ölçütünü belirleyip nesneleri ona göre sınıflandırdın.'}
+]};
+
+GAMES.u81={title:'Kültür Sözlüğü',theme:'market',finish:'Geleneksel bir sözcüğün anlamını önce tahmin ettin, sonra sözlükle karşılaştırdın.',rounds:[
+ {kind:'kanit',prompt:'Bağlam ipucunu işaretle, sonra tahmin et.',sahne:S9.kultur,
+  baslik:'Metin',
+  metin:[['Bayram sabahı büyükannem ',{t:'semaveri kömürle yaktı',dogru:true},' ve ',{t:'demli çay ikram etti'},'. ',{t:'Sofraya kurabiye koydu'},'.']],
+  gerekKanit:1,soru:'"Semaver" ne olabilir?',
+  secenekler:[{label:'Çay demlemeye yarayan kap',correct:true},
+   {label:'Kurabiye tepsisi',hint:'İşaretlediğin bölüm yakılan ve çayla ilgili bir şeyden söz ediyor.'},
+   {label:'Bayram kıyafeti'}],
+  result:'Kömürle yakılıp çay için kullanılan kap semaverdir.'},
+ {kind:'kanit',prompt:'Tahminini sözlük anlamıyla karşılaştır.',sahne:S9.kultur,
+  baslik:'Sözlük maddesi',
+  metin:[['semaver: ',{t:'içinde kömür yakılan bölmesi olan, su ısıtıp çay demlemeye yarayan metal kap',dogru:true},'. Örnek cümle: ',{t:'Semaver kaynayınca çayı demledik'},'.']],
+  gerekKanit:1,soru:'Tahminin sözlük anlamıyla uyuşuyor mu?',
+  secenekler:[{label:'Evet, ikisi de çay demlemeyi anlatıyor',correct:true},
+   {label:'Hayır, sözlük başka bir şey diyor',hint:'Sözlük maddesini yeniden oku: çay demlemeye yarayan kap.'},
+   {label:'Sözlükte bu sözcük yok'}],
+  result:'Bağlamdan yaptığın tahmin sözlük anlamıyla örtüştü.'},
+ {kind:'yaz',prompt:'Anlamı kendi sözünle yaz ve cümlede kullan.',sahne:S9.kultur,
+  gorev:'Alt alta iki satır yaz: birinci satırda semaverin anlamını kendi sözcüklerinle, ikinci satırda sözcüğü kullandığın kendi cümleni yaz.',
+  enAzSatir:2,buyukHarf:true,gerekli:['semaver'],
+  ipucuMetin:'Semaver, su ısıtıp çay demlemeye yarayan metal bir kaptır.\nBayramda büyükannem semaverde çay demledi.',
+  ornekCevap:'Semaver, su ısıtıp çay demlemeye yarayan metal bir kaptır.\nBayramda büyükannem semaverde çay demledi.',
+  result:'Anlamı kendi sözcüklerinle yazıp cümlede kullandın.'}
+]};
+
+GAMES.u82={title:'Tarihî Mekân Rehberi',theme:'city',finish:'Mimari ipuçlarından mekânı tanıdın ve kendi rehber cümleni yazdın.',rounds:[
+ {kind:'kanit',prompt:'Fotoğraftaki ipucunu işaretle, sonra rehber cümlesini seç.',sahne:S9.mekan,
+  baslik:'Fotoğraf açıklaması',
+  metin:[['Yapının ',{t:'geniş bir kubbesi',dogru:true},' ve ',{t:'iki minaresi',dogru:true},' var. Bahçesinde ',{t:'çınar ağaçları'},' bulunuyor.']],
+  gerekKanit:2,soru:'Bu yapı için hangi rehber cümlesi doğru?',
+  secenekler:[{label:'Bu yapı bir camidir; kubbesi ve minareleri vardır.',correct:true},
+   {label:'Bu yapı bir köprüdür.',hint:'İşaretlediğin ipuçları kubbe ve minare: bunlar köprüde bulunmaz.'},
+   {label:'Bu yapı bir kaledir.'}],
+  result:'Kubbe ve minare camiyi gösteren mimari ipuçlarıdır.'},
+ {kind:'kanit',prompt:'İki benzer mekân: ayırt edici ayrıntı hangisi?',sahne:S9.mekan,
+  baslik:'İki fotoğraf',
+  metin:[['Birinci yapının ',{t:'kalın taş duvarları ve burçları',dogru:true},' var.'],
+   ['İkinci yapının ',{t:'kemerli su yolu'},' biçiminde uzun sıra gözleri var.']],
+  gerekKanit:1,soru:'Birinci yapı hangisidir?',
+  secenekler:[{label:'Kale',correct:true},
+   {label:'Su kemeri',hint:'Kemerli sıra gözler ikinci yapıda; burçlar savunma yapısına aittir.'},
+   {label:'Kütüphane'}],
+  result:'Burç ve kalın duvar kaleyi, kemerli gözler su kemerini gösterir.'},
+ {kind:'yaz',prompt:'Seçtiğin mekân için rehber cümlesi yaz.',sahne:S9.mekan,
+  gorev:'Bir tarihî mekân seç ve onu tanıtan bir rehber cümlesi yaz. Cümlede yapının bir mimari özelliği geçsin.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',
+  ipucuMetin:'Bu yapı bir su kemeridir; taştan yapılmış kemerleriyle suyu şehre taşımıştır.',
+  ornekCevap:'Bu yapı bir su kemeridir; taştan yapılmış kemerleriyle suyu şehre taşımıştır.',
+  result:'Rehber cümleni mimari bir özelliğe dayandırdın.'}
+]};
+
+GAMES.u83={title:'Bayram Sabahı Yönergesi',theme:'room',finish:'Bayram sabahı adımlarını uygun sıraya dizdin ve kendi ailen için yönerge yazdın.',rounds:[
+ {kind:'sira',prompt:'Bayram sabahını sıraya diz.',sahne:S9.bayram,
+  gorev:'Adımlar sabit duruyor; hangisi önce gelir?',
+  kartlar:[{t:'Büyüklerin elini öpüp bayramını kutla.'},{t:'Erken kalkıp bayramlık kıyafetini giy.'},{t:'Komşulara bayram ziyaretine git.'}],
+  dogru:[1,0,2],
+  ipucular:['Güne nasıl başlanır?','Evden çıkmadan önce evdeki büyüklere ne yapılır?','En sonunda nereye gidilir?'],
+  result:'Önce hazırlık, sonra evdeki büyükler, en sonunda ziyaret.'},
+ {kind:'kanit',prompt:'İki sıralama var: hangisi uygun?',sahne:S9.bayram,
+  baslik:'İki sıra',
+  metin:[['A sırası: Kıyafetini giy → büyüklerin elini öp → komşuya git.'],
+   ['B sırası: Komşuya git → ',{t:'evdeki büyükleri atla',dogru:true},' → sonra dön.']],
+  gerekKanit:1,soru:'Hangi sıralama uygundur?',
+  secenekler:[{label:'A sırası',correct:true},
+   {label:'B sırası',hint:'İşaretlediğin adım evdeki büyükleri atlıyor; bu nazik değil.'},
+   {label:'İkisi de aynı'}],
+  result:'Bayramda önce evdeki büyüklerle bayramlaşılır, sonra ziyarete gidilir.'},
+ {kind:'yaz',prompt:'Kendi ailen için üç adımlı yönerge yaz.',sahne:S9.bayram,
+  gorev:'Bayram sabahı için üç adımlı bir yönerge yaz. Her adım alt satırda olsun ve bir adımda nazik bir söz kullan.',
+  enAzSatir:3,buyukHarf:true,
+  ipucuMetin:'Erken kalkıp hazırlan.\nAnneannenin elini öpüp “Bayramın kutlu olsun” de.\nBirlikte komşuya bayram ziyaretine git.',
+  ornekCevap:'Erken kalkıp hazırlan.\nAnneannenin elini öpüp “Bayramın kutlu olsun” de.\nBirlikte komşuya bayram ziyaretine git.',
+  result:'Üç adımlı, nazik bir bayram yönergesi yazdın.'}
+]};
+
+/* ---- Tema 7 · Kültür Hazinemiz (u84–u90) ---- */
+const SA={
+ form:'<div class="row"><span style="font-size:28px">📝</span><span style="font-size:26px">🪪</span></div><div class="caption">Kimlik formu ve bilgi kartı</div>',
+ neden:'<div class="row"><span style="font-size:28px">💬</span><span style="font-size:26px">🤔</span></div><div class="caption">Görüş ve neden</div>',
+ hali:'<div class="row"><span style="font-size:28px">🧶</span><span style="font-size:26px">🪡</span></div><div class="caption">Benzetme halısı</div>',
+ siir:'<div class="row"><span style="font-size:28px">📜</span><span style="font-size:26px">🎧</span></div><div class="caption">Bayram şiiri kaydı</div>',
+ sohbet:'<div class="row"><span style="font-size:26px">🧒</span><span style="font-size:24px">✋</span><span style="font-size:26px">👩‍🏫</span></div><div class="caption">Sınıf sohbeti</div>',
+ hazine:'<div class="row"><span style="font-size:28px">🧰</span><span style="font-size:26px">🔑</span></div><div class="caption">Hazine kutusu</div>',
+ muze:'<div class="row"><span style="font-size:26px">🏛️</span><span style="font-size:24px">🧑‍💼</span><span style="font-size:24px">🧓</span></div><div class="caption">Müze gezisi</div>'
+};
+
+GAMES.u84={title:'Kimlik Formu',theme:'class',finish:'Form alanlarını bilgi türüne göre doldurdun ve kurgusal bir karakterin formunu bağımsız tamamladın.',rounds:[
+ {kind:'esle',prompt:'Bilgi kartındaki bilgileri forma yerleştir.',sahne:SA.form,
+  gorev:'Bilgi kartı: “Ali Yılmaz, 8 yaşında, 2-B sınıfı, 14 Nisan 2025.”',
+  etiketler:[{t:'Ali Yılmaz'},{t:'8'},{t:'2-B'},{t:'14 Nisan 2025'}],
+  yuvalar:[{ad:'Ad ve soyad',dogru:0},{ad:'Yaş',dogru:1},{ad:'Sınıf',dogru:2},{ad:'Tarih',dogru:3}],
+  result:'Her alana yalnız o alana ait bilgi yazılır.'},
+ {kind:'esle',prompt:'Her alanın bilgi türü farklı.',sahne:SA.form,
+  gorev:'Alanlara hangi tür bilgi yazılır?',
+  etiketler:[{t:'harflerden oluşan ad'},{t:'sayı'},{t:'sınıf kodu (sayı ve harf)'},{t:'gün, ay ve yıl'}],
+  yuvalar:[{ad:'Ad ve soyad alanı',dogru:0},{ad:'Yaş alanı',dogru:1},
+   {ad:'Sınıf alanı',dogru:2},{ad:'Tarih alanı',dogru:3}],
+  result:'Yaş alanına harf, ad alanına sayı yazılmaz; her alanın kendi bilgi türü vardır.'},
+ {kind:'yaz',prompt:'Kurgusal karakterin formunu doldur.',sahne:SA.form,
+  gorev:'Hikâye kahramanı “Zeynep Kaya, 9 yaşında, 3-A sınıfı” için formu doldur. Alt alta dört satır yaz: ad soyad, yaş, sınıf, tarih. (Kendi bilgilerini yazma.)',
+  enAzSatir:4,buyukHarf:true,
+  ipucuMetin:'Ad Soyad: Zeynep Kaya\nYaş: 9\nSınıf: 3-A\nTarih: 20 Mayıs 2025',
+  ornekCevap:'Ad Soyad: Zeynep Kaya\nYaş: 9\nSınıf: 3-A\nTarih: 20 Mayıs 2025',
+  result:'Kurgusal karakterin formunu alan alan doldurdun.'}
+]};
+
+GAMES.u85={title:'Nedenini Söyle',theme:'class',finish:'Önce kararını verdin, sonra ilgili gerekçeyi seçtin ve kendi görüşünü nedeniyle yazdın.',rounds:[
+ {kind:'kanit',prompt:'Önce karar, sonra neden.',sahne:SA.neden,
+  baslik:'Görüş: “Sınıfça birlikte çalışmak öğrenmeyi kolaylaştırır.”',
+  metin:[['Geçen hafta grup çalışmasında ',{t:'birbirimize sorular sorduk',dogru:true},' ve ',{t:'anlamadığımız yerleri arkadaşımız anlattı',dogru:true},'. ',{t:'Masalar yuvarlaktı'},'.']],
+  gerekKanit:2,soru:'Bu görüşe katılıyor musun ve neden?',
+  secenekler:[{label:'Katılıyorum, çünkü birbirimize açıklama yapabiliyoruz',correct:true},
+   {label:'Katılıyorum, çünkü masalar yuvarlaktı',hint:'Masanın biçimi öğrenmeyi kolaylaştırmaz.'},
+   {label:'Katılmıyorum, çünkü kimse konuşmadı'}],
+  result:'Gerekçe görüşle doğrudan bağ kurmalı; masa biçimi ilgisiz bir ayrıntı.'},
+ {kind:'esle',prompt:'Gerekçeleri türüne ayır.',sahne:SA.neden,
+  gorev:'Görüş: “Her gün spor yapmak sağlıklıdır.”',
+  etiketler:[{t:'İlgili gerekçe'},{t:'İlgisiz gerekçe'},{t:'Çelişkili gerekçe'}],
+  yuvalar:[{ad:'Spor yapınca kaslarımız güçlenir.',dogru:0},
+   {ad:'Spor ayakkabıları renkli olur.',dogru:1},
+   {ad:'Spor yapmak insanı hasta eder.',dogru:2,ipucu:'Bu gerekçe görüşün tam tersini söylüyor.'}],
+  result:'İlgili gerekçe görüşü destekler, ilgisiz konuyla bağ kurmaz, çelişkili görüşe ters düşer.'},
+ {kind:'yaz',prompt:'Yeni görüşe katılımını nedeniyle yaz.',sahne:SA.neden,
+  gorev:'"Kitap okumak hayal gücünü geliştirir." görüşüne katılıyor musun? Kararını ve ilgili nedenini bir cümleyle yaz.',
+  enAzKelime:9,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Bu görüşe katılıyorum çünkü …',
+  ornekCevap:'Bu görüşe katılıyorum çünkü okurken olayları kafamda canlandırıyorum ve yeni dünyalar hayal ediyorum.',
+  bank:['katılıyorum','katılmıyorum','çünkü','hayal','canlandırıyorum'],
+  result:'Kararını konuyla doğrudan bağlı bir nedene dayandırdın.'}
+]};
+
+GAMES.u86={title:'Benzetme Halısı',theme:'market',finish:'Uygun benzetmeyi anlamsızdan ayırdın ve kültürel bir nesne için özgün benzetme kurdun.',rounds:[
+ {kind:'esle',prompt:'Her benzeyeni benzetilenine bağla.',sahne:SA.hali,
+  gorev:'Halı desenlerindeki çiftler.',
+  etiketler:[{t:'kırmızı gül gibi'},{t:'çağlayan gibi'},{t:'kar gibi'}],
+  yuvalar:[{ad:'Yanakları …',dogru:0},{ad:'Saçları omzundan … dökülüyordu',dogru:1},{ad:'Elleri … soğuktu',dogru:2}],
+  result:'Benzetme, iki şey arasındaki ortak özelliğe dayanır: renk, akış, soğukluk.'},
+ {kind:'esle',prompt:'Uygun mu, anlamsız mı?',sahne:SA.hali,
+  gorev:'"Gibi" ve "kadar" ile kurulan iki benzetme.',
+  etiketler:[{t:'Halı, çimen kadar yumuşaktı.'},{t:'Halı, taş kadar yumuşaktı.'}],
+  yuvalar:[{ad:'Uygun benzetme',dogru:0},
+   {ad:'Anlamsız benzetme',dogru:1,ipucu:'Taş yumuşak mıdır?'}],
+  result:'Benzetmede benzetilen, söylenen özelliği gerçekten taşımalıdır.'},
+ {kind:'konus',prompt:'Kültürel bir nesne için benzetme kur.',sahne:SA.hali,
+  gorev:'Bir halı, semaver ya da bakır tepsi seç ve onu bir şeye benzeten bir cümle söyle. "gibi" ya da "kadar" kullan.',
+  ornek:'Örnek: “Bakır tepsi, güneş gibi parlıyordu.”',
+  olcutler:['Bir kültürel nesne seçtim.','"gibi" ya da "kadar" kullandım.','Benzetmem gerçek bir ortak özelliğe dayanıyor.','Anlaşılır ve yeterli sesle söyledim.'],
+  result:'Ortak özelliğe dayanan özgün bir benzetme kurdun.'}
+]};
+
+GAMES.u87={title:'Okuma Hatası Dedektifi',theme:'class',finish:'Atlama, yanlış okuma, aşırı hız ve uygunsuz duraklamayı ayırdın ve kendi okuyuşunu düzelttin.',rounds:[
+ {kind:'dinle',prompt:'Kaydı dinle, hatayı bul.',sahne:SA.siir,
+  gorev:'Şiir dizesi: “Bayram sabahı sokaklar şenlendi.” Kayıtta bir hata var.',
+  ses:'Bayram sabahı sokaklar… şenlendi. Bayram sabahı şenlendi.',
+  soru:'İkinci okuyuşta ne oldu?',
+  secenekler:[{label:'Bir sözcük atlandı',correct:true},
+   {label:'Çok hızlı okundu',hint:'Bir kez daha dinle: ikinci okuyuşta hangi sözcük yok?'},
+   {label:'Yanlış sözcük okundu'}],
+  result:'İkinci okuyuşta "sokaklar" sözcüğü atlandı.'},
+ {kind:'esle',prompt:'Her hatayı türüne ayır.',sahne:SA.siir,
+  gorev:'Dört farklı okuma hatası var.',
+  etiketler:[{t:'Atlama'},{t:'Yanlış okuma'},{t:'Aşırı hız'},{t:'Uygunsuz duraklama'}],
+  yuvalar:[{ad:'“sokaklar” sözcüğünü hiç söylemedi',dogru:0},
+   {ad:'“şenlendi” yerine “şerbetlendi” dedi',dogru:1},
+   {ad:'Bütün dizeyi tek nefeste yapıştırarak okudu',dogru:2},
+   {ad:'“Bayram… sa… bahı” diye bölerek okudu',dogru:3}],
+  result:'Dört hata türü farklıdır; her biri ayrı bir düzeltme gerektirir.'},
+ {kind:'konus',prompt:'Dizeyi doğru oku.',sahne:SA.siir,
+  gorev:'"Bayram sabahı sokaklar şenlendi." dizesini hiçbir sözcüğü atlamadan, uygun hızda oku.',
+  ornek:'Örnek: Orta hızda, sözcükleri tam söyleyerek ve dize sonunda hafif durarak.',
+  olcutler:['Hiçbir sözcüğü atlamadım.','Sözcükleri doğru söyledim.','Uygun hızda okudum.','Dize sonunda uygun yerde durakladım.'],
+  result:'Dört ölçütü de gözeterek okudun ve kendi hatanı düzelttin.'}
+]};
+
+GAMES.u88={title:'Söz Alma Sırası',theme:'class',finish:'Uygun zamanda söz almayı, dinleme duruşunu ve söz kesmemeyi ayırdın.',rounds:[
+ {kind:'esle',prompt:'Her durumda doğru davranışı seç.',sahne:SA.sohbet,
+  gorev:'Sınıf sohbeti sürüyor.',
+  etiketler:[{t:'El kaldırıp sıranı bekle'},{t:'Konuşana dönüp bak'},{t:'Sözü bitene kadar bekle'}],
+  yuvalar:[{ad:'Bir şey söylemek istiyorsun',dogru:0},
+   {ad:'Arkadaşın konuşuyor, sen dinliyorsun',dogru:1},
+   {ad:'Aklına bir fikir geldi ama arkadaşın cümlesini bitirmedi',dogru:2}],
+  result:'Söz almak için el kaldırılır, dinlerken konuşana bakılır, söz kesilmez.'},
+ {kind:'kanit',prompt:'Bu sohbette hangi kural bozuldu?',sahne:SA.sohbet,
+  baslik:'Sohbet notu',
+  metin:[['Ela ',{t:'konuşana dönüp baktı'},', ',{t:'el kaldırdı'},' ama ',{t:'arkadaşı cümlesini bitirmeden konuşmaya başladı',dogru:true},'.']],
+  gerekKanit:1,soru:'Hangi kural bozuldu?',
+  secenekler:[{label:'Söz kesmeme',correct:true},
+   {label:'Dinleme duruşu',hint:'Metin, konuşana baktığını söylüyor.'},
+   {label:'El kaldırma'}],
+  result:'El kaldırmak yetmez; sıranın gelmesini de beklemek gerekir.'},
+ {kind:'konus',prompt:'Uygun zamanda söz al.',sahne:SA.sohbet,
+  gorev:'Bir arkadaşın en sevdiği oyunu anlatıyor. Sözü bittiğinde ona bir soru sor. Önce beklediğini, sonra sorunu sesli söyle.',
+  ornek:'Örnek: (Bekle…) “Ben de merak ettim: bu oyunu kaç kişi oynuyor?”',
+  olcutler:['Arkadaşımın sözünü kesmedim.','Sıramı bekledikten sonra konuştum.','Konuyla ilgili bir soru sordum.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Uygun zamanda, konuyla ilgili bir soruyla söz aldın.'}
+]};
+
+GAMES.u89={title:'Hazine Kutusu: Konu Bulma',theme:'pirate',finish:'Konu, ana fikir ve ayrıntıyı ayırdın; kutu ancak konu ile kanıt birlikte verilince açıldı.',rounds:[
+ {kind:'kanit',prompt:'Kanıtı işaretle, sonra konuyu seç.',sahne:SA.hazine,
+  baslik:'Metin',
+  metin:[['Dedem her bayram ',{t:'bakır tepsiye kurabiye dizerdi',dogru:true},'. ',{t:'Komşulara birlikte götürürdük',dogru:true},'. ',{t:'Sokakta kediler dolaşırdı'},'.']],
+  gerekKanit:2,soru:'Metnin konusu nedir?',
+  secenekler:[{label:'Bayram gelenekleri',correct:true},
+   {label:'Sokak kedileri',hint:'Kediler yalnız bir ayrıntı; metin bayram âdetlerinden söz ediyor.'},
+   {label:'Kurabiye tarifi'}],
+  result:'Kurabiye dizmek ve komşuya götürmek bayram geleneklerini gösteriyor.'},
+ {kind:'esle',prompt:'Konu, ana fikir ve ayrıntıyı ayır.',sahne:SA.hazine,
+  gorev:'Aynı metin için üç ifade.',
+  etiketler:[{t:'Bayram gelenekleri'},{t:'Bayramlar paylaşmayı öğretir'},{t:'Tepsi bakırdandı'}],
+  yuvalar:[{ad:'Konu',dogru:0},{ad:'Ana fikir',dogru:1},{ad:'Ayrıntı',dogru:2}],
+  result:'Konu neden söz edildiğidir, ana fikir verilen derstir, ayrıntı küçük bilgidir.'},
+ {kind:'yaz',prompt:'Konuyu kendi sözünle yaz, kanıt ekle.',sahne:SA.hazine,
+  gorev:'Alt alta iki satır yaz: birinci satırda metnin konusunu kendi cümlenle, ikinci satırda metinden bir kanıt yaz.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Konu: Bayramlarda yapılan geleneksel hazırlıklar.\nKanıt: Dedem bakır tepsiye kurabiye dizerdi.',
+  ornekCevap:'Konu: Bayramlarda yapılan geleneksel hazırlıklar.\nKanıt: Dedem bakır tepsiye kurabiye dizerdi.',
+  result:'Konuyu kendi cümlenle yazıp metinden kanıtla destekledin.'}
+]};
+
+GAMES.u90={title:'Üslup Seçici',theme:'city',finish:'Aynı isteği kişiye göre resmî, samimi ve saygılı üsluplarla kurdun.',rounds:[
+ {kind:'esle',prompt:'Her kişiye uygun cümleyi ver.',sahne:SA.muze,
+  gorev:'Müze gezisindesin; aynı şeyi üç kişiye soracaksın.',
+  etiketler:[{t:'Merhaba, tuvalet nerede acaba?'},{t:'Görevli bey, lütfen tuvaletin yerini söyler misiniz?'},{t:'Nineciğim, tuvaletin yerini biliyor musun?'}],
+  yuvalar:[{ad:'Arkadaşına',dogru:0},
+   {ad:'Müze görevlisine',dogru:1,ipucu:'Tanımadığın bir görevliye resmî ve rica eden bir dille sorulur.'},
+   {ad:'Ninene',dogru:2}],
+  result:'Aynı istek arkadaşa samimi, görevliye resmî, aile büyüğüne sevgi dolu bir üslupla söylenir.'},
+ {kind:'kanit',prompt:'Bu cümle hangi üslupta?',sahne:SA.muze,
+  baslik:'Bir cümle',
+  metin:[[{t:'“Sayın görevli, sergiyi fotoğraflamamız mümkün müdür?”',dogru:true},' cümlesinde ',{t:'“sayın”'},' ve ',{t:'“mümkün müdür”'},' ifadeleri var.']],
+  gerekKanit:1,soru:'Bu cümlenin üslubu nasıl?',
+  secenekler:[{label:'Resmî ve kibar',correct:true},
+   {label:'Samimi ve gündelik',hint:'"Sayın" ve "mümkün müdür" gündelik konuşmada pek kullanılmaz.'},
+   {label:'Kaba'}],
+  result:'"Sayın" hitabı ve "mümkün müdür" kalıbı resmî üslubun işaretleridir.'},
+ {kind:'konus',prompt:'Seçtiğin kişiye iki cümleyle konuş.',sahne:SA.muze,
+  gorev:'Müze görevlisinden serginin kaçta kapandığını öğrenmek istiyorsun. İki cümlelik uygun bir konuşma yap: önce hitap et ve sor, sonra teşekkür et.',
+  ornek:'Örnek: “Merhaba, görevli bey. Serginin kaçta kapandığını öğrenebilir miyim?” — “On yedide.” — “Teşekkür ederim, iyi çalışmalar.”',
+  olcutler:['Uygun bir hitapla başladım.','Kibar bir soru sordum.','Teşekkür ederek bitirdim.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Kişiye ve ortama uygun üslupla iki cümlelik konuşma yaptın.'}
 ]};
 
 game=GAMES[GAME_ID];

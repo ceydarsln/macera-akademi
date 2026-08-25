@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 76/90 oyun uygulandı.**
+**Durum: 90/90 oyun uygulandı — 2. sınıf Türkçe tamamlandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -103,3 +103,32 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u74 | Zaman Makinesi | dinleme | Olay yalnız sesli veriliyor; önce-sonra tahminleri metinle tutarlılığa göre ayrılıyor. 3. turda öncesi ve sonrası için birer cümle yazılıyor. | Uygulamada |
 | u75 | Hologram Laboratuvarı | dinleme | Ses ve görsel ayrı; doğru eşleşme ayırt edici görsel ayrıntıya dayanıyor (hörgüç sayısı). 3. turda çocuk bir hologramı iki cümleyle betimliyor. | Uygulamada |
 | u76 | Manyetik Zıtlık Deneyi | konuşma | Mıknatıs yalnız gerçek zıt çiftleri çekiyor; zıtlık ile ilgisizlik ayrılıyor. 3. turda iki zıt çiftle karşılaştırma cümleleri yazılıyor. | Uygulamada |
+| u77 | Devre Tamircisi | yazma | Bozuk cümlede özne, yüklem ve noktalama ayrı devre parçası; hangi parçanın eksik olduğu tek tek bulunuyor. 3. turda cümle çocuk tarafından baştan yazılıyor. | Uygulamada |
+| u78 | Gözlem Kulesi | okuma | Manzara betimlemesinde renk, ses ve hareket ayrıntıları ayrı kanıt olarak işaretleniyor; ayrıntı ile genel ifade ayrılıyor. 3. turda kendi gözlemi yazılıyor. | Uygulamada |
+| u79 | Karşılaştırma Matrisi | okuma | İki metin aynı ölçütlerde karşılaştırılıyor; benzerlik ve farklılık ayrı sütun. Kanıt işaretlenmeden karşılaştırma seçeneği açılmıyor. | Uygulamada |
+| u80 | Geri Dönüşüm Bandı | dinleme | Atık türleri yalnız sesle veriliyor; kutu seçimi ayırt edici özelliğe dayanıyor. 3. turda çocuk kendi ayırma kuralını yazıyor. | Uygulamada |
+| u81 | Kültür Sözlüğü | yazma | Yöresel sözcükler bağlamdan çıkarılıyor; madde başı, anlam ve örnek cümle üç ayrı adım. 3. turda çocuk kendi maddesini yazıyor. | Uygulamada |
+| u82 | Tarihî Mekân Rehberi | konuşma | Mekân tanıtımı; ad, özellik ve ziyaret önerisi ayrı ölçüt. 3. turda kısa rehber konuşması yapılıp öz değerlendirme yapılıyor. | Uygulamada |
+| u83 | Bayram Sabahı Yönergesi | yazma | Bayram hazırlığı sıralı yönergeye dönüştürülüyor; sıra bağlacı ve adım sayısı ölçüt. 3. turda yönerge çocuk tarafından yazılıyor. | Uygulamada |
+| u84 | Kimlik Formu | yazma | Form alanları bilgi türüne göre dolduruluyor (ad, yaş, sınıf, tarih); her alanın hangi tür bilgiyi aldığı ayrı tur. 3. turda kurgusal bir karakterin formu klavyeyle dolduruluyor — çocuktan kendi kişisel bilgisi istenmiyor. | Uygulamada |
+| u85 | Nedenini Söyle | yazma | Karar ve gerekçe iki ayrı adım; gerekçe seçenekleri karar verilmeden açılmıyor. İlgili, ilgisiz ve çelişkili gerekçe ayrılıyor. 3. turda görüş ve nedeni "çünkü" ile yazılıyor. | Uygulamada |
+| u86 | Benzetme Halısı | konuşma | Benzeyen ve benzetilen halı desenlerinde eşleşiyor; "gibi/kadar" ile kurulan uygun benzetme anlamsızdan ayrılıyor. 3. turda kültürel bir nesne için özgün benzetme sesli kuruluyor. | Uygulamada |
+| u87 | Okuma Hatası Dedektifi | okuma | Bayram şiiri gerçek kayıt olarak dinletiliyor; atlama, yanlış okuma, aşırı hız ve uygunsuz duraklama ayrı kategori. 3. turda dize yeniden okunup öz düzeltme yapılıyor. | Uygulamada |
+| u88 | Söz Alma Sırası | konuşma | Tam sınıf sahnesi; söz alma zamanı, dinleme duruşu ve söz kesmeme ayrı ele alınıyor. 3. turda uygun zamanda konuyla ilgili soru sesli soruluyor. | Uygulamada |
+| u89 | Hazine Kutusu: Konu Bulma | dinleme | Metin, konu etiketi ve kanıt üç ayrı adım; konu, ana fikir ve ayrıntı ayrılıyor. Kutu ancak konu ile kanıt birlikte verilince açılıyor. 3. turda konu kendi cümlesiyle yazılıp kanıt ekleniyor. | Uygulamada |
+| u90 | Üslup Seçici | konuşma | Aynı istek müze görevlisine, arkadaşa ve nineye farklı üslupla kuruluyor; resmî üslubun işaretleri kanıtla gösteriliyor. 3. turda iki cümlelik konuşma canlandırılıyor. | Uygulamada |
+
+## Canlı tarayıcı testinde bulunan ve düzeltilen kusurlar (u84–u90 partisi)
+
+| # | Kusur | Nerede | Düzeltme |
+|---|---|---|---|
+| 1 | `esle` turunda etiket seçilince hiçbir görsel iz kalmıyordu; çocuk neyi seçtiğini göremiyordu. | `esleCiz` + CSS | Seçili etikete `.secili` (turuncu çerçeve + ✓), boş yuvalara nabız atan `.hedef` sınıfı. |
+| 2 | Hızlı çift dokunuş tek hata için iki can götürüyordu (3 → 1). | `wrong()` | 550 ms ceza soğuması; her turda sıfırlanıyor. Dört hızlı yanlış dokunuş artık tek can. |
+| 3 | "Hazırım" düğmesine örneği dinlemeden basmak can götürüyordu. | `konusCiz` | Ön koşul uyarısı `uyar()` ile cezasız. |
+| 4 | Rubrikte ölçüt işaretlemeden bitirmek can götürüyordu (dürüst öz değerlendirmeyi cezalandırıyordu). | `konusCiz` | `uyar()`. |
+| 5 | Boş metin gönderimi can götürüyordu; oysa eksik ölçüt ekranda zaten canlı görünüyor. | `yazCiz`, `duzeltCiz` | Eksik ölçüt ve "değişiklik yok" uyarıları `uyar()` ile cezasız; örnek cümleyi kopyalama hâlâ hata sayılıyor. |
+| 6 | `ornekCevap` (u85) `enAzKelime` eşiğinin altındaydı; koşum zaman aşımına düşüyordu. | `GAMES.u85` | Örnek cevap 13 sözcüğe çıkarıldı. |
+
+Test kapsamı: 375×812 ve 1280×800; boş gönderim, 4000 karakterlik girdi, etiketsiz yuva dokunuşu,
+art arda hızlı dokunuş, sınırsız tekrar dinleme, tur geçişleri ve bitiş ekranı. Konsolda hata yok,
+ağ isteklerinin tamamı 200. Koşum: `tools/dom_kosum.html#ids=u01…u90` → 90/90.
