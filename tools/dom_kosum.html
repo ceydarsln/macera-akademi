@@ -1,0 +1,283 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>DOM motoru koşumu</title>
+<!--
+  matematik-pdf ve matematik2-pdf DOM motorlarındaki oyunları tarayıcı
+  içinde baştan sona oynar. Node/Playwright gerektirmez: pdf-math-smoke.js
+  ve pdf-math2-smoke.js içindeki çözücülerin tarayıcıya taşınmış hâlidir.
+
+  Kullanım:  dom_kosum.html#ids=v01,v02  (boş bırakılırsa iki motorun
+  tüm oyunları). Sonuçlar window.SONUC içinde ve ekranda birikir.
+-->
+<style>
+ body{margin:0;font:13px ui-monospace,monospace;background:#10141c;color:#cfe3d8;display:grid;grid-template-columns:420px 1fr;height:100vh}
+ #panel{padding:10px;overflow:auto;white-space:pre-wrap}
+ iframe{width:100%;height:100%;border:0;background:#fff}
+ .g{color:#7ce0a3}.b{color:#ff8a8a}
+</style>
+<div id="panel">hazırlanıyor…</div>
+<iframe id="cerceve"></iframe>
+<script>
+'use strict';
+
+const ENGINE1 = 'm01,m02,m03,m05,m09,m10,m11,m12,m14,m15,m17,m18,m20,m22,m23,m24,m25,m26,m28,m31,m32,m33,m34,m35,m36,m37,m38,m39,m41,m42,m43,m44,m45,m46,m47,m48,m49,m50,m51,m52,m53,m54,m55,m56,m57,m58,m59,m60,m61'.split(',');
+const ENGINE2 = 'v01,v02,v03,v04,v05,v06,v07,v08,v09,v10,v11,v12,v13,v14,v15,v16,v17,v18,v19,v20,v21,v22,v23,v24,v25,v26,v27,v28,v29,v30,v31,v32,v33,v34,v35,v36,v37,v38,v39,v40,v41,v42'.split(',');
+
+const ENGINE3 = 'w01,w02,w03,w04'.split(',');   /* 3. sınıf: partiler hâlinde büyüyor */
+
+const panel = document.getElementById('panel');
+const cerceve = document.getElementById('cerceve');
+const bekle = (ms) => new Promise(r => setTimeout(r, ms));
+const yaz = (m, sinif) => { panel.insertAdjacentHTML('beforeend', '<div class="' + (sinif||'') + '">' + m + '</div>'); panel.scrollTop = panel.scrollHeight; };
+
+function motorDosyasi(id){
+  if (id[0] === 'v') return '../app/src/main/assets/phaser/matematik2-pdf.html';
+  if (id[0] === 'w') return '../app/src/main/assets/phaser/matematik3-pdf.html';
+  return '../app/src/main/assets/phaser/matematik-pdf.html';
+}
+
+/* İframe penceresinden turun veri kopyasını al (işlevler atılır). */
+function turVerisi(W){
+  return JSON.parse(W.eval(
+    'JSON.stringify(round(), (k,v)=>typeof v==="function"?undefined:v)'
+  ));
+}
+const S  = (W, sec) => W.document.querySelector(sec);
+const SS = (W, sec) => Array.from(W.document.querySelectorAll(sec));
+
+/* Playwright locator'ları öğe görünene kadar bekler; motorlar sahneyi
+   animasyonla parça parça kurduğu için (ör. robot kutuları tek tek
+   yükler) aynı davranış burada da şart. */
+async function bekleyenSec(W, sec, sure){
+  const bas = Date.now();
+  while (Date.now() - bas < (sure || 8000)){
+    const el = S(W, sec);
+    if (el) return el;
+    await bekle(90);
+  }
+  throw new Error('bulunamadı: ' + sec);
+}
+async function tikla(W, sec){ (await bekleyenSec(W, sec)).click(); }
+
+/* Koşulu gerçek zamanda bekle */
+async function kosul(f, sure, ad){
+  const bas = Date.now();
+  while (Date.now() - bas < sure){ if (f()) return; await bekle(80); }
+  throw new Error('zaman aşımı: ' + ad);
+}
+
+/* ---------- motor 2 (v oyunları): dokun-seç / dokun-bırak yolu ---------- */
+async function surukle2(W, pid, tid){
+  const p = await bekleyenSec(W, '[data-piece="' + pid + '"]');
+  const t = await bekleyenSec(W, '[data-target="' + tid + '"]');
+  p.click(); t.click();
+  await bekle(45);
+}
+
+/* motor 2'nin rota bulucusu (BFS) — pdf-math2-smoke.js'ten */
+function rota(r){
+  const key = (x,y) => x + ',' + y;
+  const duvar = new Set((r.walls||[]).map(x => key(x[0],x[1])));
+  const q = [[r.start[0], r.start[1], []]];
+  const gezildi = new Set([key(r.start[0], r.start[1])]);
+  const yonler = [['U',0,-1],['D',0,1],['L',-1,0],['R',1,0]];
+  while (q.length){
+    const [x,y,p] = q.shift();
+    if (x === r.goal[0] && y === r.goal[1]) return p;
+    for (const [d,dx,dy] of yonler){
+      const nx = x+dx, ny = y+dy, k = key(nx,ny);
+      if (nx<0||nx>=r.cols||ny<0||ny>=r.rows||duvar.has(k)||gezildi.has(k)) continue;
+      gezildi.add(k); q.push([nx,ny,[...p,d]]);
+    }
+  }
+  throw new Error('rota bulunamadı');
+}
+
+async function tur2(W){
+  const r = turVerisi(W);
+  switch (r.kind){
+    case 'choice':   await tikla(W, '[data-choice="' + r.choices.findIndex(x=>x.correct) + '"]'); break;
+    case 'estimate': await tikla(W, '[data-est="'    + r.choices.findIndex(x=>x.correct) + '"]'); break;
+    case 'multi':
+      for (let i=0;i<r.items.length;i++) if (r.items[i].correct){ await tikla(W,'[data-item="'+i+'"]'); await bekle(40); }
+      break;
+    case 'order':
+      for (const id of r.order){ await tikla(W,'[data-order="'+r.items.findIndex(x=>x.id===id)+'"]'); await bekle(40); }
+      break;
+    case 'drag':
+      if (r.hedefToplam){
+        /* Fazlalıklı modül havuzu: hedefe ulaşacak kadarını seç
+           (büyükten küçüğe). Motor hedefe varınca turu bitirir. */
+        let kalan = r.hedefToplam;
+        const deger = (id) => id.includes('y') ? 100 : id.includes('o') ? 10 : 1;
+        for (const p of r.pieces.slice().sort((a,b)=>deger(b.id)-deger(a.id))){
+          const d = deger(p.id);
+          if (d > kalan) continue;
+          await surukle2(W, p.id, p.target);
+          kalan -= d;
+          if (kalan === 0) break;
+        }
+        if (kalan !== 0) throw new Error('hedef toplama ulaşılamadı, kalan ' + kalan);
+      } else {
+        for (const p of r.pieces) if (p.target) await surukle2(W, p.id, p.target);
+      }
+      break;
+    case 'process':
+      for (const id of r.sequence){ await tikla(W,'[data-action="'+r.actions.findIndex(x=>x.id===id)+'"]'); await bekle(60); }
+      break;
+    case 'route':
+      for (const d of rota(r)){ await tikla(W,'[data-dir="'+d+'"]'); await bekle(30); }
+      await tikla(W,'.run'); break;
+    case 'clock':
+      W.eval('(function(){const r=round();const t=(r.targets||[r.target])[state.sub];state.h=t.h;state.m=t.m;checkClock(r);' +
+             'if((r.targets||[]).length>1){const t2=r.targets[state.sub];state.h=t2.h;state.m=t2.m;checkClock(r);}})()');
+      break;
+    case 'cut':  W.eval('(function(){const r=round();state.lines=r.cuts;good();})()'); break;
+    case 'fold': W.eval('good()'); break;
+    case 'memory': {
+      const ciftler = JSON.parse(W.eval('JSON.stringify(state.cards.map(x=>x.pair))'));
+      for (const c of [...new Set(ciftler)]){
+        const ix = ciftler.map((p,i)=>p===c?i:-1).filter(i=>i>=0);
+        await tikla(W,'[data-card="'+ix[0]+'"]'); await bekle(60);
+        await tikla(W,'[data-card="'+ix[1]+'"]'); await bekle(120);
+      }
+      break;
+    }
+    case 'tally':
+      for (const y of r.responses){ await tikla(W,'[data-tally="'+y.id+'"]'); await bekle(40); }
+      break;
+    case 'graph':
+      for (const k of r.sources){ await tikla(W,'[data-graph="'+k.id+'"]'); await bekle(40); }
+      break;
+    case 'research':
+      await tikla(W,'[data-research="0"]'); await bekle(80);
+      for (const y of r.options[0].responses){ await tikla(W,'[data-rcol="'+y.id+'"]'); await bekle(40); }
+      break;
+    case 'sequence':
+      /* ritmik sayma: her adımda sıradaki doğru değere bas */
+      for (const beklenen of r.expected){
+        await tikla(W,'[data-choice="'+r.options.findIndex(o=>o.value===beklenen)+'"]');
+        await bekle(70);
+      }
+      break;
+    default: throw new Error('bilinmeyen mekanik (motor2): ' + r.kind);
+  }
+}
+
+/* ---------- motor 1 (m oyunları): bırakma doğrudan motor işleviyle ----------
+   İşaretçi taklidi bazı turlarda güvenilmez (m20'de takıldı); gerçek dokunma
+   yolunu Codex elle test etti. Regresyon için motorun kendi handleDrop
+   işlevini çağırıyoruz — mantık yolu (doğru/yanlış/sayaç) birebir aynı. */
+async function surukle1(W, pSec, tSec){
+  const p = await bekleyenSec(W, pSec);
+  const t = await bekleyenSec(W, tSec);
+  const pid = p.dataset.piece, tid = t.dataset.target;
+  W.__p = p; W.__t = t;
+  W.eval('handleDrop(' + JSON.stringify(pid) + ',' + JSON.stringify(tid) + ', window.__p, window.__t)');
+  await bekle(120);
+}
+async function dogruyaBas(W, secenekler, on){
+  const i = secenekler.findIndex(x=>x.correct);
+  if (i < 0) throw new Error('doğru seçenek tanımsız');
+  await tikla(W, (on||'') + '[data-choice="' + i + '"]');
+}
+
+async function tur1(W){
+  const r = turVerisi(W);
+  const tur = r.kind || 'choose';
+  switch (tur){
+    case 'choose': case 'pattern': case 'estimate':
+      await dogruyaBas(W, r.choices || []); break;
+    case 'stages':
+      for (const asama of r.stages){ await dogruyaBas(W, asama.choices); await bekle(760); }
+      break;
+    case 'drag':
+      for (const p of (r.pieces||[]).filter(x=>x.target))
+        await surukle1(W, '[data-piece="'+p.id+'"]', '[data-target="'+p.target+'"]');
+      break;
+    case 'grid': {
+      const hedef = Number(W.eval('(function(){const r=round();return r.start+r.dx+r.dy*5;})()'));
+      await tikla(W,'[data-cell="'+hedef+'"]'); break;
+    }
+    case 'sequence':
+      for (const beklenen of r.expected){
+        await tikla(W,'[data-choice="'+(r.options||[]).findIndex(x=>x.value===beklenen)+'"]');
+        await bekle(80);
+      }
+      break;
+    case 'count':
+      for (let i=0;i<Math.abs((r.target||0)-(r.start||0));i++){ await tikla(W,'[data-delta]'); await bekle(45); }
+      break;
+    case 'load':
+      for (let i=(r.start||0); i<r.targetCount; i++) await surukle1(W,'[data-piece="supply"]','[data-target="loadTarget"]');
+      break;
+    case 'remove':
+      for (let i=0;i<r.removeCount;i++) await surukle1(W,'[data-piece]','[data-target="returnCart"]');
+      await dogruyaBas(W, r.choices || []); break;
+    case 'memory':
+      W.eval('state.remaining=1');
+      await bekle(1250);
+      await dogruyaBas(W, r.choices || []); break;
+    case 'diff':
+      for (let i=0;i<(r.pairs||[]).length;i++)
+        if (r.pairs[i][2]){ await tikla(W,'[data-diff="'+i+'"]'); await bekle(45); }
+      break;
+    case 'multi':
+      for (const o of (r.items||[]).filter(x=>x.correct)){ await tikla(W,'[data-item="'+o.id+'"]'); await bekle(45); }
+      break;
+    case 'catch':
+      for (const renk of r.sequence) await surukle1(W,'[data-piece="hook"]','[data-target="'+renk+'"]');
+      break;
+    case 'survey':
+      for (const y of r.responses){ await tikla(W,'#ask'); await bekle(60); await tikla(W,'[data-col="'+y.id+'"]'); await bekle(60); }
+      await dogruyaBas(W, r.finalChoices || []); break;
+    default: throw new Error('bilinmeyen mekanik (motor1): ' + tur);
+  }
+}
+
+/* ---------- koşucu ---------- */
+window.SONUC = { bitti:false, gecti:[], kaldi:[], hatalar:[] };
+
+async function oyunuOyna(id){
+  const dosya = motorDosyasi(id);
+  /* src değişimi eski belgeyi hemen düşürmez: load olayını bekle,
+     yoksa önceki oyunun 'Tur 3/3' etiketi okunur (v02 hatası). */
+  await new Promise((coz) => {
+    cerceve.onload = () => coz();
+    cerceve.src = dosya + '?test=1&smoke=' + id + '#oyun=' + id;
+  });
+  await kosul(() => { try { return !!S(cerceve.contentWindow, '.hud .round'); } catch(e){ return false; } }, 9000, id+' açılış');
+  const W = cerceve.contentWindow;
+  const hatalar = [];
+  W.addEventListener('error', e => hatalar.push(String(e.message)));
+
+  for (let n=1; n<=3; n++){
+    const gorunen = S(W,'.hud .round').textContent.trim();
+    if (gorunen !== 'Tur ' + n + '/3') throw new Error('beklenen Tur '+n+'/3, görünen '+gorunen);
+    if (id[0]==='v' || id[0]==='w') await tur2(W); else await tur1(W);
+    if (n < 3) await kosul(() => S(W,'.hud .round') && S(W,'.hud .round').textContent.trim() === 'Tur '+(n+1)+'/3', 9000, id+' tur '+(n+1));
+    else       await kosul(() => !!S(W,'.overlay'), 9000, id+' bitiş');
+  }
+  if (hatalar.length) throw new Error('js hatası: ' + hatalar[0]);
+}
+
+(async () => {
+  const p = new URLSearchParams(location.hash.slice(1));
+  const ids = p.get('ids') ? p.get('ids').split(',') : [...ENGINE1, ...ENGINE2, ...ENGINE3];
+  panel.textContent = '';
+  yaz('koşum: ' + ids.length + ' oyun');
+  for (const id of ids){
+    try {
+      await oyunuOyna(id);
+      SONUC.gecti.push(id); yaz('✓ ' + id, 'g');
+    } catch (e){
+      SONUC.kaldi.push(id); SONUC.hatalar.push(id + ': ' + e.message);
+      yaz('✗ ' + id + ' — ' + e.message, 'b');
+    }
+    await bekle(60);
+  }
+  SONUC.bitti = true;
+  yaz('\nBİTTİ · geçti ' + SONUC.gecti.length + '/' + ids.length +
+      (SONUC.kaldi.length ? ' · kaldı: ' + SONUC.kaldi.join(',') : ''));
+})();
+</script>

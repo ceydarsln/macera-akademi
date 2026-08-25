@@ -20722,7 +20722,8 @@ function autoSpeak(game){
      Burada katalogdaki eski tek-tur metnini önce okumak iki sesin üst üste
      binmesine ve ilk turun yanlış anlatılmasına yol açıyordu. */
   else if (PHASER_OYUNLAR[game.id] === 'matematik-pdf' ||
-           PHASER_OYUNLAR[game.id] === 'matematik2-pdf') text = '';
+           PHASER_OYUNLAR[game.id] === 'matematik2-pdf' ||
+           PHASER_OYUNLAR[game.id] === 'matematik3-pdf') text = '';
   else if (phaserOyunuMu(game)) text = game.cfg.speak || game.cfg.instruction;
   else text = getCurrentPrompt(game);
   if(text && text !== gs.spokenKey){
@@ -21232,6 +21233,8 @@ const PHASER_OYUNLAR = {
   v34:'matematik2-pdf', v35:'matematik2-pdf', v36:'matematik2-pdf',
   v37:'matematik2-pdf', v38:'matematik2-pdf', v39:'matematik2-pdf',
   v40:'matematik2-pdf', v41:'matematik2-pdf', v42:'matematik2-pdf',
+  /* 3. sınıf matematik PDF motoru — w01–w48 partiler hâlinde ekleniyor */
+  w01:'matematik3-pdf', w02:'matematik3-pdf', w03:'matematik3-pdf', w04:'matematik3-pdf',
 
   /* İki kullanıcı PDF'inde ayrıntılandırılan 49 matematik oyunu.
      Her biri üç turlu, hikâyeye özel sahneye gider; genel uzay/kepçe
