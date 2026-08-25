@@ -20723,7 +20723,8 @@ function autoSpeak(game){
      binmesine ve ilk turun yanlış anlatılmasına yol açıyordu. */
   else if (PHASER_OYUNLAR[game.id] === 'matematik-pdf' ||
            PHASER_OYUNLAR[game.id] === 'matematik2-pdf' ||
-           PHASER_OYUNLAR[game.id] === 'matematik3-pdf') text = '';
+           PHASER_OYUNLAR[game.id] === 'matematik3-pdf' ||
+             PHASER_OYUNLAR[game.id] === 'sayma-pdf') text = '';
   else if (phaserOyunuMu(game)) text = game.cfg.speak || game.cfg.instruction;
   else text = getCurrentPrompt(game);
   if(text && text !== gs.spokenKey){
@@ -21246,6 +21247,10 @@ const PHASER_OYUNLAR = {
   w37:'matematik3-pdf', w38:'matematik3-pdf', w39:'matematik3-pdf', w40:'matematik3-pdf',
   w41:'matematik3-pdf', w42:'matematik3-pdf', w43:'matematik3-pdf', w44:'matematik3-pdf',
   w45:'matematik3-pdf', w46:'matematik3-pdf', w47:'matematik3-pdf', w48:'matematik3-pdf',
+  s0:'sayma-pdf', s1:'sayma-pdf', s2:'sayma-pdf', s3:'sayma-pdf', s4:'sayma-pdf', s5:'sayma-pdf',
+  s6:'sayma-pdf', s7:'sayma-pdf', s8:'sayma-pdf', s9:'sayma-pdf', s10:'sayma-pdf',
+  n1:'sayma-pdf', n2:'sayma-pdf', n3:'sayma-pdf', n4:'sayma-pdf', n5:'sayma-pdf',
+  n6:'sayma-pdf', n7:'sayma-pdf', n8:'sayma-pdf', n9:'sayma-pdf',
 
   /* İki kullanıcı PDF'inde ayrıntılandırılan 49 matematik oyunu.
      Her biri üç turlu, hikâyeye özel sahneye gider; genel uzay/kepçe
