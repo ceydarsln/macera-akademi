@@ -68,11 +68,16 @@ async function bekleyenSec(W, sec, sure){
 /* Motorlar aşama değiştirirken state.gecis=true yapıyor; o sırada gelen
    dokunuş yok sayılıyor. Tıklamadan önce geçişin bitmesini bekle. */
 async function gecisBekle(W){
-  await kosul(() => {
-    try { return W.eval('String(!(typeof state !== "undefined" && state && state.gecis) && ' +
-                        '!(typeof locked !== "undefined" && locked))') === 'true'; }
-    catch (e) { return true; }
-  }, 15000, 'aşama geçişi');
+  /* Bekleme sınırlı ve hata fırlatmıyor: oyun bittiğinde 'locked' kalıcı
+     olarak true kalıyor, o durumda dokunuş zaten yok sayılıyor. */
+  const bas = Date.now();
+  while (Date.now() - bas < 3000){
+    try {
+      if (W.eval('String(!(typeof state !== "undefined" && state && state.gecis) && ' +
+                 '!(typeof locked !== "undefined" && locked))') === 'true') return;
+    } catch (e) { return; }
+    await bekle(50);
+  }
 }
 async function tikla(W, sec){
   await gecisBekle(W);
@@ -524,8 +529,13 @@ async function tur2(W){
       const ciftler = JSON.parse(W.eval('JSON.stringify(state.cards.map(x=>x.pair))'));
       for (const c of [...new Set(ciftler)]){
         const ix = ciftler.map((p,i)=>p===c?i:-1).filter(i=>i>=0);
-        await tikla(W,'[data-card="'+ix[0]+'"]'); await bekle(60);
-        await tikla(W,'[data-card="'+ix[1]+'"]'); await bekle(120);
+        /* İki kart açıkken motor yeni dokunuşu yok sayıyor; kapanmayı bekle.
+           (Motorun 850 ms'lik zamanlayıcısı gizli sekmede kısılıyor.) */
+        await kosul(() => {
+          try { return Number(W.eval('String(state.open.length)')) === 0; } catch (e) { return false; }
+        }, 15000, 'kart kapanması');
+        await tikla(W,'[data-card="'+ix[0]+'"]'); await bekle(40);
+        await tikla(W,'[data-card="'+ix[1]+'"]'); await bekle(60);
       }
       break;
     }

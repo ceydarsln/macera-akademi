@@ -51,6 +51,18 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 </head>
 <body><div id="app" class="app"></div>
 <script>
+/* Sınama modunda (?test=1) tarayıcının arka plan sekme kısıntısını aş:
+   gizli sekmede setTimeout dakikada bire kadar iniyor ve oyunun kendi
+   geçişleri donuyordu. Yalnız kısa gecikmeler için, yalnız testte. */
+if(new URLSearchParams(location.search).has('test')){
+ const _st=window.setTimeout;
+ window.setTimeout=function(fn,ms){
+  if(!document.hidden||!(ms<2000))return _st(fn,ms);
+  const son=Date.now()+(ms||0),k=new MessageChannel();
+  k.port1.onmessage=()=>{Date.now()>=son?fn():k.port2.postMessage(0)};
+  k.port2.postMessage(0);return 0};
+}
+
 'use strict';
 const GAME_ID=new URLSearchParams(location.hash.slice(1)).get('oyun')||'v01';
 const FAST=new URLSearchParams(location.search).has('test');
