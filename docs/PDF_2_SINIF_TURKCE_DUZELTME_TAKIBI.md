@@ -4,7 +4,7 @@ Kaynak: `output/pdf/2_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (u01–u90,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_u.json` (katalog + `build_turkish2_detailed_corrections.py`).
 Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye özgü mekanikler).
 
-**Durum: 68/90 oyun uygulandı.**
+**Durum: 76/90 oyun uygulandı.**
 
 ## Şartnamenin dört kip kuralı ve motordaki karşılığı
 
@@ -95,3 +95,11 @@ Motor: `web/phaser/turkce2-pdf-phaser.html` (matematik3 çerçevesi + Türkçeye
 | u66 | Ses Dedektifi | dinleme | İki kayıt sırayla dinleniyor, seçenekler dinlemeden önce görünmüyor (tarayıcıda doğrulandı). Ortak konu ile ortak mesaj ayrılıyor; 3. turda ortak ileti sesli söyleniyor. | Uygulamada |
 | u67 | Yetenek Galerisi | okuma | Kapaklar etiketsiz; başlık ancak görsel kanıt işaretlenince seçiliyor. 2. turda güçlü/zayıf kanıt karşılaştırılıyor; 3. turda yeni başlığa kapak ve tanıtım yazılıyor. | Uygulamada |
 | u68 | Olay Baloncukları | dinleme | Hikâye yalnız sesli; yazılı metin ilk turda görünmüyor. Geçen olay, çıkarılabilen olay ve hiç geçmeyen olay ayrılıyor; 3. turda üç olay sırayla anlatılıyor. | Uygulamada |
+| u69 | Ön Bilgi Köprüsü | konuşma | Dinlenen bilgi ile öğrencinin ön bilgisi köprünün iki yanında; uyuşma ve çelişme ayrı ele alınıyor. 3. turda "Önceden… şimdi…" kalıbıyla sesli anlatım yapılıyor. | Uygulamada |
+| u70 | Dijital Sözlük Avı | yazma | Uzay meteoru kaldırıldı; arama, madde başı ve anlam seçimi adım adım uygulanıyor. Birden çok anlamdan bağlama uyanı seçiliyor; 3. turda anlam ve yeni cümle yazılıyor. | Uygulamada |
+| u71 | Notalı Noktalama | yazma | Piyano tuşları virgül, iki nokta ve tırnak; üçünün görevi ayrı örneklerle çalışılıyor. 3. turda eksik işaretler çocuk tarafından ekleniyor. | Uygulamada |
+| u72 | Sahne Kuralları | konuşma | Beden bütünlüğü görünüyor; göz teması, duruş, el hareketi ve sahne alanı ayrı ölçüt. 3. turda kısa sahne denemesi yapılıp öz değerlendirme yapılıyor. | Uygulamada |
+| u73 | Vurgu Avcısı | konuşma | Cümle sabit, büyüteç metni örtmüyor; vurgu yeri değişince anlamın değiştiği üç örnekle gösteriliyor. 3. turda istenen anlam sesle kuruluyor. | Uygulamada |
+| u74 | Zaman Makinesi | dinleme | Olay yalnız sesli veriliyor; önce-sonra tahminleri metinle tutarlılığa göre ayrılıyor. 3. turda öncesi ve sonrası için birer cümle yazılıyor. | Uygulamada |
+| u75 | Hologram Laboratuvarı | dinleme | Ses ve görsel ayrı; doğru eşleşme ayırt edici görsel ayrıntıya dayanıyor (hörgüç sayısı). 3. turda çocuk bir hologramı iki cümleyle betimliyor. | Uygulamada |
+| u76 | Manyetik Zıtlık Deneyi | konuşma | Mıknatıs yalnız gerçek zıt çiftleri çekiyor; zıtlık ile ilgisizlik ayrılıyor. 3. turda iki zıt çiftle karşılaştırma cümleleri yazılıyor. | Uygulamada |

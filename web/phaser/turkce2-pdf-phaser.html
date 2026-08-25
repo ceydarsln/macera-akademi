@@ -2250,6 +2250,201 @@ GAMES.u68={title:'Olay Baloncukları',theme:'class',finish:'Dinlediğin hikâyed
   result:'Dinlediğin hikâyeyi olay sırasıyla anlattın.'}
 ]};
 
+/* ---- Tema 6 · Mucit Çocuk (u69–u76) ---- */
+const S8={
+ onbilgi:'<div class="row"><span style="font-size:26px">🧠</span><span style="font-size:24px">🌉</span><span style="font-size:26px">🎧</span></div><div class="caption">Ön bilgi köprüsü</div>',
+ dsozluk:'<div class="row"><span style="font-size:28px">🔎</span><span style="font-size:26px">📱</span></div><div class="caption">Dijital sözlük</div>',
+ piyano:'<div class="row"><span style="font-size:30px">🎹</span><span style="font-size:24px">🎵</span></div><div class="caption">Notalı noktalama</div>',
+ sahne2:'<div class="row"><span style="font-size:28px">🎭</span><span style="font-size:26px">🧍</span></div><div class="caption">Tiyatro sahnesi</div>',
+ vurgu:'<div class="row"><span style="font-size:26px">🎚️</span><span style="font-size:26px">🗣️</span></div><div class="caption">Vurgu stüdyosu</div>',
+ zaman:'<div class="row"><span style="font-size:26px">⏮️</span><span style="font-size:28px">⏱️</span><span style="font-size:26px">⏭️</span></div><div class="caption">Zaman makinesi</div>',
+ hologram:'<div class="row"><span style="font-size:28px">🔷</span><span style="font-size:26px">🔊</span></div><div class="caption">Hologram laboratuvarı</div>',
+ miknatis:'<div class="row"><span style="font-size:28px">🧲</span><span style="font-size:26px">🧪</span></div><div class="caption">Manyetik zıtlık deneyi</div>'
+};
+
+GAMES.u69={title:'Ön Bilgi Köprüsü',theme:'lab',finish:'Dinlediğin yeni bilgiyi bildiklerinle birleştirdin ve "Önceden… şimdi…" kalıbıyla anlattın.',rounds:[
+ {kind:'dinle',prompt:'Yeni bilgiyi dinle, ön bilginle birleştir.',sahne:S8.onbilgi,
+  gorev:'Kayıt yalnız sesli; metin ekranda yazılı değil.',
+  ses:'Arılar çiçekten çiçeğe konarken çiçek tozu taşır ve bitkilerin çoğalmasına yardım eder.',
+  soru:'Bu bilgi, arılar hakkında bildiklerine ne ekliyor?',
+  secenekler:[{label:'Arılar yalnız bal yapmaz, bitkilerin çoğalmasına da yardım eder',correct:true},
+   {label:'Arılar bal yapar',hint:'Bunu zaten biliyordun; kayıt yeni bir bilgi ekledi.'},
+   {label:'Arılar çiçekleri yer'}],
+  result:'Ön bilgin "arılar bal yapar"dı; kayıt buna "çiçek tozu taşır" bilgisini ekledi.'},
+ {kind:'esle',prompt:'Yeni bilgi ön bilgiyle uyuşuyor mu, çelişiyor mu?',sahne:S8.onbilgi,
+  gorev:'İki yeni bilgi var.',
+  etiketler:[{t:'Ön bilgimle uyuşuyor'},{t:'Ön bilgimle çelişiyor'}],
+  yuvalar:[{ad:'“Arılar kovanda yaşar.” (Bunu biliyordum.)',dogru:0},
+   {ad:'“Arılar geceleri avlanan yırtıcılardır.” (Bildiğime ters.)',dogru:1,ipucu:'Bildiğin arı davranışıyla bu bilgi bağdaşıyor mu?'}],
+  result:'Yeni bilgi bazen bildiğimizi doğrular, bazen ona ters düşer; ters düşerse kaynağını sorgularız.'},
+ {kind:'konus',prompt:'"Önceden… şimdi…" diye anlat.',sahne:S8.onbilgi,
+  gorev:'Arılar hakkında önceden ne biliyordun, şimdi ne öğrendin? İki cümleyle sesli söyle.',
+  ornek:'Örnek: “Önceden arıların sadece bal yaptığını biliyordum. Şimdi çiçek tozu taşıyarak bitkilere yardım ettiklerini de öğrendim.”',
+  olcutler:['"Önceden" ile başlayan bir cümle kurdum.','"Şimdi" ile başlayan bir cümle kurdum.','Yeni öğrendiğim bilgiyi söyledim.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Ön bilginle yeni bilgiyi aynı anlatımda birleştirdin.'}
+]};
+
+GAMES.u70={title:'Dijital Sözlük Avı',theme:'room',finish:'Sözcüğü kaynaktan aradın, bağlama uyan anlamı seçtin ve yeni cümlede kullandın.',rounds:[
+ {kind:'esle',prompt:'Arama adımlarını sırayla eşle.',sahne:S8.dsozluk,
+  gorev:'Dijital sözlükte bir sözcüğü nasıl ararız?',
+  etiketler:[{t:'Sözcüğü arama kutusuna yaz'},{t:'Madde başını bul'},{t:'Cümleye uyan anlamı seç'}],
+  yuvalar:[{ad:'1. adım',dogru:0},{ad:'2. adım',dogru:1},{ad:'3. adım',dogru:2}],
+  result:'Ara, maddeyi bul, bağlama uyan anlamı seç.'},
+ {kind:'kanit',prompt:'Birden çok anlam var: cümleye uyanı seç.',sahne:S8.dsozluk,
+  baslik:'Cümle ve sözlük maddesi',
+  metin:[['Cümle: Mucit çocuk, ',{t:'devre kartını lehimledi',dogru:true},'.'],
+   ['Sözlük: "devre" 1) bir işin tamamlandığı süre 2) ',{t:'elektriğin dolaştığı yol'},' 3) dönem.']],
+  gerekKanit:1,soru:'Cümledeki "devre" hangi anlamda?',
+  secenekler:[{label:'Elektriğin dolaştığı yol',correct:true},
+   {label:'Bir işin tamamlandığı süre',hint:'İşaretlediğin bölüm lehimlemekten söz ediyor: bu elektrikle ilgili.'},
+   {label:'Dönem'}],
+  result:'Lehimlemek elektrikle ilgilidir; sözcüğün üç anlamından biri bağlama uydu.'},
+ {kind:'yaz',prompt:'Anlamı yaz, sonra kendi cümleni kur.',sahne:S8.dsozluk,
+  gorev:'Alt alta iki satır yaz: birinci satıra bulduğun anlamı, ikinci satıra sözcüğü kullandığın kendi cümleni yaz.',
+  enAzSatir:2,buyukHarf:true,gerekli:['devre'],
+  ipucuMetin:'Anlam: devre, elektriğin dolaştığı yol.\nCümlem: Lambayı yakmak için devreyi tamamladım.',
+  ornekCevap:'Anlam: devre, elektriğin dolaştığı yol.\nCümlem: Lambayı yakmak için devreyi tamamladım.',
+  result:'Anlamı kaydedip sözcüğü kendi cümlende kullandın.'}
+]};
+
+GAMES.u71={title:'Notalı Noktalama',theme:'class',finish:'Virgül, iki nokta ve tırnağın farklı görevlerini ayırdın ve eksik işaretleri kendin ekledin.',rounds:[
+ {kind:'esle',prompt:'Her cümleye uygun işareti bas.',sahne:S8.piyano,
+  gorev:'Üç tuş var: virgül, iki nokta ve tırnak.',
+  etiketler:[{t:','},{t:':'},{t:'“ ”'}],
+  yuvalar:[{ad:'Çantama kalem … defter ve silgi koydum.',dogru:0},
+   {ad:'Öğretmen şöyle dedi …',dogru:1,ipucu:'Bir açıklama ya da alıntı gelmeden önce hangi işaret kullanılır?'},
+   {ad:'Öğretmen … Sessiz olun … dedi.',dogru:2}],
+  result:'Virgül sıralar, iki nokta açıklama/alıntı getirir, tırnak söyleneni gösterir.'},
+ {kind:'kanit',prompt:'Hangi işaretin görevi ne?',sahne:S8.piyano,
+  baslik:'Üç görev',
+  metin:[['Birinci cümle: Elma, armut ve kiraz aldık. İkinci cümle: Annem dedi ki: ',{t:'“Yarın erken kalk.”',dogru:true},'']],
+  gerekKanit:1,soru:'İşaretlediğin bölümde tırnak ne yapıyor?',
+  secenekler:[{label:'Birinin söylediği sözü gösteriyor',correct:true},
+   {label:'Öğeleri sıralıyor',hint:'Sıralama işini virgül yapıyor, ilk cümlede.'},
+   {label:'Cümleyi bitiriyor'}],
+  result:'Tırnak, söylenen sözü olduğu gibi aktarır.'},
+ {kind:'duzelt',prompt:'Eksik işaretleri ekle.',sahne:S8.piyano,
+  gorev:'Cümlelere virgül, iki nokta ve tırnağı sen ekle.',
+  hatali:'Çantama kalem defter ve silgi koydum. Öğretmen şöyle dedi Sessiz olun.',
+  denetim:[{ad:'Sıralamada virgül var',desen:'kalem,'},
+   {ad:'Alıntıdan önce iki nokta var',desen:'dedi\\s*:'},
+   {ad:'Söylenen söz tırnak içinde',desen:'[“"][^”"]*Sessiz olun[^”"]*[”"]'}],
+  ornekCevap:'Çantama kalem, defter ve silgi koydum. Öğretmen şöyle dedi: “Sessiz olun.”',
+  result:'Virgül sıraladı, iki nokta alıntıyı getirdi, tırnak söyleneni gösterdi.'}
+]};
+
+GAMES.u72={title:'Sahne Kuralları',theme:'class',finish:'Göz teması, duruş, el hareketi ve sahne kullanımını ayrı ayrı değerlendirdin.',rounds:[
+ {kind:'esle',prompt:'Her davranışı ölçütüyle eşle.',sahne:S8.sahne2,
+  gorev:'Sahnede dört ayrı ölçüt var.',
+  etiketler:[{t:'Göz teması'},{t:'Duruş'},{t:'El hareketi'},{t:'Sahne alanını kullanma'}],
+  yuvalar:[{ad:'Seyirciye bakarak konuşmak',dogru:0},
+   {ad:'Dik durup öne eğilmemek',dogru:1},
+   {ad:'Ellerini söze uygun kullanmak',dogru:2},
+   {ad:'Sahnenin ortasında durmak, köşeye sinmemek',dogru:3}],
+  result:'İyi bir sahne performansı bu dört ölçütün birlikte sağlanmasıyla oluşur.'},
+ {kind:'kanit',prompt:'Bu denemede hangi ölçüt eksik?',sahne:S8.sahne2,
+  baslik:'Prova notu',
+  metin:[['Oyuncu ',{t:'seyirciye baktı'},', ',{t:'dik durdu'},' ama ',{t:'sahnenin en köşesinde kaldı',dogru:true},'.']],
+  gerekKanit:1,soru:'Hangi ölçüt sağlanmadı?',
+  secenekler:[{label:'Sahne alanını kullanma',correct:true},
+   {label:'Göz teması',hint:'Metin seyirciye baktığını söylüyor.'},
+   {label:'Duruş'}],
+  result:'Göz teması ve duruş tamamdı; eksik olan sahne alanını kullanmaktı.'},
+ {kind:'konus',prompt:'Kısa sahne denemesi yap.',sahne:S8.sahne2,
+  gorev:'"Merhaba arkadaşlar, bugün size bir buluşumu anlatacağım." cümlesini sahnedeymiş gibi söyle.',
+  ornek:'Örnek: Sahnenin ortasında, dik durarak, seyirciye bakıp elini hafifçe açarak.',
+  olcutler:['Seyirciye bakarak söyledim.','Dik durdum.','Elimi söze uygun kullandım.','Sesim arka sıradan duyulacak kadar güçlüydü.'],
+  result:'Dört ölçütü birlikte uyguladın.'}
+]};
+
+GAMES.u73={title:'Vurgu Avcısı',theme:'class',finish:'Vurgunun yeri değişince anlamın da değiştiğini gördün ve istenen anlamı sesinle kurdun.',rounds:[
+ {kind:'dinle',prompt:'Hangi sözcük vurgulandı?',sahne:S8.vurgu,
+  gorev:'Cümle: “Ödevimi ben yaptım.” Kayıtta bir sözcük vurgulanıyor.',
+  ses:'Ödevimi BEN yaptım.',
+  soru:'Vurgulanan sözcük hangisi?',
+  secenekler:[{label:'ben',correct:true},{label:'ödevimi',hint:'Bir kez daha dinle: hangi sözcükte ses yükseldi?'},{label:'yaptım'}],
+  result:'"Ben" vurgulandı: anlamı "başkası değil, ben yaptım" oldu.'},
+ {kind:'esle',prompt:'Vurgu yeri değişince anlam da değişir.',sahne:S8.vurgu,
+  gorev:'Aynı cümle, üç farklı vurgu.',
+  etiketler:[{t:'Ödevimi BEN yaptım.'},{t:'ÖDEVİMİ ben yaptım.'},{t:'Ödevimi ben YAPTIM.'}],
+  yuvalar:[{ad:'Başkası değil, ben',dogru:0},
+   {ad:'Başka bir şeyi değil, ödevimi',dogru:1},
+   {ad:'Yarım bırakmadım, tamamladım',dogru:2}],
+  result:'Sözcükler aynı; vurgunun yeri anlamı değiştiriyor.'},
+ {kind:'konus',prompt:'İstenen anlamı vurguyla kur.',sahne:S8.vurgu,
+  gorev:'"Ödevimi ben yaptım." cümlesini önce "başkası değil, ben" anlamıyla, sonra "yarım değil, tamamladım" anlamıyla söyle.',
+  ornek:'Örnek: Birincide "ben", ikincide "yaptım" sözcüğünü yükselterek.',
+  olcutler:['Cümleyi iki kez, farklı vurguyla söyledim.','Birinci okuyuşta "ben" sözcüğünü vurguladım.','İkinci okuyuşta "yaptım" sözcüğünü vurguladım.','Anlaşılır bir sesle söyledim.'],
+  result:'Aynı cümleyi iki farklı anlamda vurguladın.'}
+]};
+
+GAMES.u74={title:'Zaman Makinesi',theme:'space',finish:'Olayın öncesini ve sonrasını metne dayanarak tahmin ettin.',rounds:[
+ {kind:'dinle',prompt:'Ortadaki olayı dinle.',sahne:S8.zaman,
+  gorev:'Kayıt yalnız sesli; metin ekranda yazılı değil.',
+  ses:'Çocuk elindeki bardağı yere düşürdü ve bardak kırıldı.',
+  soru:'Bu olaydan ÖNCE ne olmuş olabilir?',
+  secenekler:[{label:'Çocuk bardağı eline almıştı',correct:true},
+   {label:'Çocuk bardağı süpürgeyle topladı',hint:'Bu olaydan sonra olacak bir şey.'},
+   {label:'Bardak dolaba kaldırıldı'}],
+  result:'Düşürmek için önce eline almış olması gerekir.'},
+ {kind:'kanit',prompt:'Birden çok tahmin var: metinle tutarlı olanı seç.',sahne:S8.zaman,
+  baslik:'Metin',
+  metin:[['Ali sabah ',{t:'şemsiyesini alıp çıktı',dogru:true},'. Akşam eve dönerken ',{t:'ayakkabıları ıslaktı'},'. ',{t:'Kapıyı annesi açtı'},'.']],
+  gerekKanit:1,soru:'Gün içinde ne olmuş olabilir?',
+  secenekler:[{label:'Yağmur yağmış olabilir',correct:true},
+   {label:'Kar yağmış olabilir',hint:'Islak ayakkabı yağmuru düşündürür; karda ayakkabı ıslanmadan önce kar birikirdi.'},
+   {label:'Hava çok sıcak olmuş olabilir'}],
+  result:'Şemsiye ve ıslak ayakkabı birlikte yağmuru gösteriyor.'},
+ {kind:'yaz',prompt:'Öncesi ve sonrası için birer cümle yaz.',sahne:S8.zaman,
+  gorev:'"Bardak yere düştü ve kırıldı." olayının öncesi ve sonrası için alt alta iki cümle yaz.',
+  enAzSatir:2,buyukHarf:true,
+  ipucuMetin:'Öncesinde çocuk bardağı masadan almıştı.\nSonrasında kırıkları dikkatlice süpürdüler.',
+  ornekCevap:'Öncesinde çocuk bardağı masadan almıştı.\nSonrasında kırıkları dikkatlice süpürdüler.',
+  result:'Olayın öncesini ve sonrasını mantıklı biçimde tahmin ettin.'}
+]};
+
+GAMES.u75={title:'Hologram Laboratuvarı',theme:'space',finish:'Sesle görsel arasındaki ayırt edici ayrıntıyı buldun ve bir hologramı sözlü betimledin.',rounds:[
+ {kind:'dinle',prompt:'Kaydı dinle, hangi hologram anlatılıyor?',sahne:S8.hologram,
+  gorev:'Kayıt yalnız sesli.',
+  ses:'Bu canlının uzun bir boynu, sarı benekli derisi vardır ve ağaçların yapraklarını yer.',
+  soru:'Hangi hologram anlatılıyor?',
+  secenekler:[{label:'Zürafa',correct:true},{label:'Fil',hint:'Bir kez daha dinle: uzun boyun ve benekli deri hangi hayvanda var?'},{label:'Zebra'}],
+  result:'Uzun boyun ve sarı benekli deri zürafayı gösteriyor.'},
+ {kind:'kanit',prompt:'İki görsel de uyuyor: ayırt edici ayrıntı hangisi?',sahne:S8.hologram,
+  baslik:'Kayıt metni ve iki hologram',
+  metin:[['Kayıtta ',{t:'“sırtında iki hörgücü var”',dogru:true},' deniyor. Birinci hologramda ',{t:'tek hörgüçlü deve'},', ikincisinde ',{t:'iki hörgüçlü deve'},' var.']],
+  gerekKanit:1,soru:'Hangi hologram doğru?',
+  secenekler:[{label:'İkinci hologram (iki hörgüçlü)',correct:true},
+   {label:'Birinci hologram',hint:'İşaretlediğin bölüm hörgüç sayısını söylüyor.'},
+   {label:'İkisi de olabilir'}],
+  result:'İkisi de deve ama ayırt edici ayrıntı hörgüç sayısıydı.'},
+ {kind:'konus',prompt:'Bir hologramı iki cümleyle betimle.',sahne:S8.hologram,
+  gorev:'Bir hayvan seç ve onu iki cümleyle betimle: birinci cümlede görünüşünü, ikinci cümlede ne yaptığını söyle.',
+  ornek:'Örnek: “Bu hayvanın uzun bir hortumu ve büyük kulakları var. Hortumuyla su alıp sırtına döküyor.”',
+  olcutler:['Görünüşünü anlatan bir cümle kurdum.','Ne yaptığını anlatan bir cümle kurdum.','Ayırt edici bir ayrıntı söyledim.','Anlaşılır ve yeterli sesle konuştum.'],
+  result:'Ayırt edici ayrıntı içeren iki cümlelik betimleme yaptın.'}
+]};
+
+GAMES.u76={title:'Manyetik Zıtlık Deneyi',theme:'lab',finish:'Bağlama göre zıtlık kuran sözcükleri ilgisizlerden ayırdın ve karşılaştırma cümleleri yazdın.',rounds:[
+ {kind:'esle',prompt:'Her sözcüğü zıddıyla eşle.',sahne:S8.miknatis,
+  gorev:'Mıknatıs yalnız gerçek zıt çiftleri çeker.',
+  etiketler:[{t:'ağır'},{t:'boş'},{t:'ıslak'}],
+  yuvalar:[{ad:'hafif',dogru:0},{ad:'dolu',dogru:1},{ad:'kuru',dogru:2}],
+  result:'Ağır-hafif, boş-dolu, ıslak-kuru: her biri gerçek bir zıt çift.'},
+ {kind:'esle',prompt:'Zıt mı, yalnızca ilgisiz mi?',sahne:S8.miknatis,
+  gorev:'Her sözcük çiftinin ilişkisini belirle.',
+  etiketler:[{t:'Zıt anlamlı'},{t:'İlgisiz (zıt değil)'}],
+  yuvalar:[{ad:'uzun – kısa',dogru:0},
+   {ad:'kalem – deniz',dogru:1,ipucu:'Zıtlık için aynı özelliğin iki ucu olmalı; bu ikisinin ortak özelliği yok.'}],
+  result:'Zıtlık aynı özelliğin iki ucudur; ilgisiz sözcükler birbirinin zıddı değildir.'},
+ {kind:'yaz',prompt:'İki zıt çiftle karşılaştırma cümlesi yaz.',sahne:S8.miknatis,
+  gorev:'Alt alta iki cümle yaz. Birincide "ağır-hafif", ikincide "ıslak-kuru" çiftini kullanarak karşılaştırma yap.',
+  enAzSatir:2,buyukHarf:true,gerekli:['ağır','hafif','ıslak','kuru'],
+  ipucuMetin:'Taş ağır, tüy ise hafiftir.\nYağmurdan sonra yollar ıslak, çatı altı kuru kaldı.',
+  ornekCevap:'Taş ağır, tüy ise hafiftir.\nYağmurdan sonra yollar ıslak, çatı altı kuru kaldı.',
+  result:'İki zıt çiftle de karşılaştırma cümlesi kurdun.'}
+]};
+
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card">
  <div class="big">📖</div><h2>2. Sınıf Türkçe</h2>
