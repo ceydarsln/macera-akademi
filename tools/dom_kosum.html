@@ -23,7 +23,7 @@
 const ENGINE1 = 'm01,m02,m03,m05,m09,m10,m11,m12,m14,m15,m17,m18,m20,m22,m23,m24,m25,m26,m28,m31,m32,m33,m34,m35,m36,m37,m38,m39,m41,m42,m43,m44,m45,m46,m47,m48,m49,m50,m51,m52,m53,m54,m55,m56,m57,m58,m59,m60,m61'.split(',');
 const ENGINE2 = 'v01,v02,v03,v04,v05,v06,v07,v08,v09,v10,v11,v12,v13,v14,v15,v16,v17,v18,v19,v20,v21,v22,v23,v24,v25,v26,v27,v28,v29,v30,v31,v32,v33,v34,v35,v36,v37,v38,v39,v40,v41,v42'.split(',');
 
-const ENGINE3 = 'w01,w02,w03,w04,w05,w06,w07,w08'.split(',');   /* 3. sınıf: partiler hâlinde büyüyor */
+const ENGINE3 = 'w01,w02,w03,w04,w05,w06,w07,w08,w09,w10,w11,w12'.split(',');   /* 3. sınıf: partiler hâlinde büyüyor */
 
 const panel = document.getElementById('panel');
 const cerceve = document.getElementById('cerceve');
@@ -57,7 +57,12 @@ async function bekleyenSec(W, sec, sure){
   }
   throw new Error('bulunamadı: ' + sec);
 }
-async function tikla(W, sec){ (await bekleyenSec(W, sec)).click(); }
+async function tikla(W, sec){
+  const el = await bekleyenSec(W, sec);
+  /* SVG öğelerinde .click() yok; gerçek dokunuşun ürettiği olayı gönder. */
+  if (typeof el.click === 'function') el.click();
+  else el.dispatchEvent(new W.MouseEvent('click', {bubbles:true, cancelable:true}));
+}
 
 /* Koşulu gerçek zamanda bekle */
 async function kosul(f, sure, ad){
@@ -109,9 +114,10 @@ async function tur2(W){
         /* Fazlalıklı modül havuzu: hedefe ulaşacak kadarını seç
            (büyükten küçüğe). Motor hedefe varınca turu bitirir. */
         let kalan = r.hedefToplam;
-        const deger = (id) => id.includes('y') ? 100 : id.includes('o') ? 10 : 1;
-        for (const p of r.pieces.slice().sort((a,b)=>deger(b.id)-deger(a.id))){
-          const d = deger(p.id);
+        const deger = (p) => p.deger != null ? p.deger
+                           : p.id.includes('y') ? 100 : p.id.includes('o') ? 10 : 1;
+        for (const p of r.pieces.slice().sort((a,b)=>deger(b)-deger(a))){
+          const d = deger(p);
           if (d > kalan) continue;
           await surukle2(W, p.id, p.target);
           kalan -= d;
@@ -128,9 +134,33 @@ async function tur2(W){
     case 'route':
       for (const d of rota(r)){ await tikla(W,'[data-dir="'+d+'"]'); await bekle(30); }
       await tikla(W,'.run'); break;
-    case 'clock':
-      W.eval('(function(){const r=round();const t=(r.targets||[r.target])[state.sub];state.h=t.h;state.m=t.m;checkClock(r);' +
-             'if((r.targets||[]).length>1){const t2=r.targets[state.sub];state.h=t2.h;state.m=t2.m;checkClock(r);}})()');
+    case 'clock': {
+      const hedefler = r.targets || [r.target];
+      for (let i = 0; i < hedefler.length; i++){
+        if (hedefler[i].tm != null) W.eval('setClock(' + hedefler[i].tm + ')');
+        else W.eval('(function(){const t=(round().targets||[round().target])[state.sub];state.h=t.h;state.m=t.m})()');
+        await tikla(W, '#clockOk'); await bekle(220);
+      }
+      break;
+    }
+    case 'bar': {
+      /* hatalı hazır çizgiyi kaldır, doğru çizgileri yerleştir, sonra parça seç */
+      W.eval('(function(){const sol=' + JSON.stringify(r.solution) + ';' +
+             'for(let i=(state.cuts||[]).length-1;i>=0;i--){const c=state.cuts[i];' +
+             'if(!sol.some(x=>x.axis===c.axis&&Math.abs(x.at-c.at)<1e-6))removeCut(i)}})()');
+      for (const c of r.solution)
+        W.eval('(function(){if(!(state.cuts||[]).some(x=>x.axis==="' + c.axis + '"&&Math.abs(x.at-' + c.at + ')<1e-6))' +
+               'addCut("' + c.axis + '",' + c.at + ')})()');
+      await tikla(W, '#barOk'); await bekle(200);
+      for (const sec of (r.selections || [])){
+        for (let k = 0; k < sec.count; k++){ await tikla(W, '[data-part="' + k + '"]'); await bekle(60); }
+        await tikla(W, '#partOk'); await bekle(320);
+      }
+      break;
+    }
+    case 'lift':
+      W.eval('setLift(' + r.target + ')');
+      await tikla(W, '#liftOk');
       break;
     case 'cut':  W.eval('(function(){const r=round();state.lines=r.cuts;good();})()'); break;
     case 'fold': W.eval('good()'); break;
