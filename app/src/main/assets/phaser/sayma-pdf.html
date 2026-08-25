@@ -356,7 +356,11 @@ function dotChart(cols,key=1){return `<div class="chart">${cols.map(c=>`<div cla
 function sceneHtml(r){return typeof r.scene==='function'?r.scene(state):r.scene||''}
 function hud(){return `<header class="hud"><div class="round">Tur ${roundIndex+1}/3</div><div class="prompt">${esc(round().prompt)}</div><div class="hud-right"><span class="lives">${'❤️'.repeat(lives)}${'🖤'.repeat(3-lives)}</span><button class="sound" aria-label="Yönergeyi dinle">🔊</button></div></header>`}
 function round(){return game.rounds[roundIndex]}
-function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();requestAnimationFrame(()=>speak(round().prompt))}
+function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();/* rAF geri çağrısı bir sonraki karede çalışıyor; gizli sekmede hiç
+   çalışmayıp sekme görünür olunca kuyruktan dönüyor. O ana kadar oyun
+   bitmişse round() undefined oluyordu. Tur numarası da doğrulanıyor ki
+   geciken kare bir önceki turun yönergesini okumasın. */
+requestAnimationFrame(()=>{const t=roundIndex,r=round();if(r&&roundIndex===t)speak(r.prompt)})}
 function updateStage(){if(!round())return;const st=$('#stage');if(st)st.innerHTML=sceneHtml(round())}
 function feedback(msg,bad=false){const f=$('.feedback');if(!f)return;f.textContent=msg;f.className='feedback show'+(bad?' bad':'');setTimeout(()=>{if(f)f.className='feedback'},950)}
 function wrong(hint){if(locked||!round())return;if(!round().noPenalty)lives=Math.max(0,lives-1);feedback('Bir daha düşün',true);speak(hint||'Bir daha düşün. Nesneleri dikkatle incele.');const sc=$('.stage');sc?.classList.remove('shake');void sc?.offsetWidth;sc?.classList.add('shake');if(lives===0){lives=3;setTimeout(render,650)}else $('.lives').innerHTML='❤️'.repeat(lives)+'🖤'.repeat(3-lives)}

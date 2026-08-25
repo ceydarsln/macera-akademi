@@ -149,6 +149,16 @@ metinde geçmesi tasarım gereğidir — çocuk zaten kanıtı işaretleyerek se
 
 Düzeltmelerden sonra: **270/270 tur temiz.**
 
+### Peer oturumunun (2. sınıf hayat bilgisi / 4. sınıf Türkçe) bildirdiği ve burada da doğrulanan kusur
+
+`render()` sonundaki `requestAnimationFrame(()=>speak(round().prompt))` geri çağrısı bir sonraki
+karede çalışıyor; gizli sekmede rAF hiç çalışmadığı için kuyrukta bekliyor ve sekme görünür
+olunca dönüyor. O ana kadar oyun bitmişse `round()` undefined olup TypeError fırlatıyordu.
+Yeniden üretildi (`render(); roundIndex=3;` ardından iki kare) ve üç motorda da düzeltildi
+(`turkce2-pdf`, `sayma-pdf`, `matematik3-pdf`): geri çağrı hem `round()` varlığını hem de tur
+numarasının değişmediğini doğruluyor — böylece geciken kare bir önceki turun yönergesini de okumuyor.
+
+
 Test kapsamı: 375×812 ve 1280×800; boş gönderim, 4000 karakterlik girdi, etiketsiz yuva dokunuşu,
 art arda hızlı dokunuş, sınırsız tekrar dinleme, tur geçişleri ve bitiş ekranı. Konsolda hata yok,
 ağ isteklerinin tamamı 200. Koşum: `tools/dom_kosum.html#ids=u01…u90` → 90/90.
