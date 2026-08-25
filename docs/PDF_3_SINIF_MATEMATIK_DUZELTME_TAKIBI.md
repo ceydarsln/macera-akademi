@@ -4,6 +4,8 @@ Kaynak: `output/pdf/3_sinif_matematik_oyunlari_detayli_duzeltmeler.pdf` (58 sayf
 Şartnamenin yapılandırılmış hâli: `tmp/spec3.json` (PDF üretici betiğinden çıkarıldı).
 Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sınıf yardımcıları).
 
+**Durum: 48/48 oyun uygulandı** (son güncelleme: 25 Ağustos 2026).
+
 "Uygulamada" işareti yalnız şu koşullar birlikte sağlanınca verilir:
 
 1. Üç tur farklı veriyle baştan sona oynanır (`tools/dom_kosum.html` ile doğrulanır).
@@ -58,6 +60,10 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
 | w42 | Sınıf Anketi | Çetele ile veri toplama | Harçlık konusu nötr sınıf verisiyle değiştirildi (okunan kitap, sevilen meyve, okula geliş). Anket öncesi soru + hedef grup + yöntem kartı gösteriliyor. Çeteleler standart beşli grup (4 dik + çapraz) çiziliyor, beşincide "beş" seslendiriliyor. Geri al düğmesi var, yanlış sütun can götürmüyor ve düzeltilebiliyor; toplam çetele sayısı katılımcı sayısıyla sürekli karşılaştırılıyor. | Uygulamada |
 | w43 | Sıklık Tablosu Fabrikası | Çeteleyi sıklığa dönüştürme | Düz çizgi dizileri kaldırıldı: bütün çeteleler standart beşli gruplama ile çiziliyor. Yanlış eşlemede kart kaybolmuyor, satırdaki beşli grup ve kalan çizgi sayısı söyleniyor. Kart sırası her açılışta karışıyor; bitişte toplam veri sayısı gösteriliyor. | Uygulamada |
 | w44 | Nokta Grafiği Laboratuvarı | Her nokta bir veriyi temsil eder | Hazır sayılar kaldırıldı: kaynak veri standart çetele olarak veriliyor ve sıklık oradan okunuyor. Bütün işaretler aynı boyda tek renk daire; "1 nokta = 1 kişi" anahtarı grafiğin üstünde sabit. Noktalar tabandan başlayıp boşluksuz diziliyor, fazla nokta kırmızı görünüyor ve sütun başına eksiltilebiliyor. Grafik bitince en çok/en az/toplam/fark soruları geliyor. | Uygulamada |
+| w45 | Grafik Terazisi | Grafikten fark ve toplam çıkarma | Değerler artık metinden değil, turun üstündeki gerçek nokta grafiğinden geliyor. Çocuk önce iki sütunu hizalayıp eşleşmeyen noktaları tek tek işaretliyor, sonra az kefeye o kadar birim ekliyor; fazla eklemede kefenin neden ağırlaştığı sayıyla gösteriliyor ve blok geri alınabiliyor. 3. turda terazi yerine "katılımcı sayısı paneli" var ve toplama stratejisi ayrıca adlandırılıyor. | Uygulamada |
+| w46 | Zaman ve Mekân Kapsülü | Verinin gruba göre değişebilirliği | İki dağılım aynı ölçekte yan yana duruyor: solda önceki sonuç, sağda canlı toplanan veri. Soru ve seçeneklerin sabit kaldığı kartta yazıyor. 1. tur grup değişimi, 2. tur zaman değişimi, 3. tur soru değişimi; sonuncusunda doğrudan karşılaştırmanın uygun olmadığı sonucuna varılıyor. Seçenekler "kesin değişir" değil "değişebilir" dilini kullanıyor. | Uygulamada |
+| w47 | Çoklu Nokta Şifresi | Ölçekli nokta grafiğini yorumlama | Soru metni artık "4 × 5 = ?" demiyor; anahtar ayrı köşede "● = 5 yıldız" olarak duruyor ve noktaları çocuk sayıyor. Ölçek turlar arasında 5 → 2 → 10 olarak değişiyor, son turda iki kategorinin farkı nokta farkı × ölçek ile kuruluyor. Tuş takımında silme var, yanlış giriş kalıcı ceza almıyor. | Uygulamada |
+| w48 | Veri Mimarı | Araştırma sürecini grafiğe dönüştürme | Süreç altı aşamaya bölündü ve üst şeritte gösteriliyor: soru seçimi → sanal sınıftan veri toplama → çetele → sıklık → grafik → iki yorum. 2. ve 3. turda soruyu çocuk seçiyor (hedef grubu ve değişkeni olmayan sorular reddediliyor). Her aşama bir öncekinin tutarlılığına bağlı; yanlışta hedef sayı söylenmiyor, ilgili satır vurgulanıyor. Yorumlarda "kesin" dili kullanan seçenekler yanlış sayılıyor. | Uygulamada |
 
 ## Motor tarafında eklenenler
 
@@ -153,6 +159,16 @@ Motor: `web/phaser/matematik3-pdf-phaser.html` (matematik2 çerçevesi + 3. sın
   sırası, kart kaybolmadan geri bildirim (w43).
 - `renderNokta` + `nokta`: çeteleden nokta grafiğine dönüşüm, birim anahtarı,
   fazla nokta uyarısı, sütun başına eksiltme ve yorum soruları (w44).
+- `grafRO(satir)`: salt-okunur nokta grafiği; w45 ve w46 aynı ölçekli
+  karşılaştırmaları bununla çiziyor.
+- `renderTeraziG` + `terazig`: eşleşmeyen noktaların işaretlenmesi, kefeye
+  birim ekleme, ayrı "toplam" paneli ve stratejinin adlandırılması (w45).
+- `renderKapsul` + `kapsul`: iki dağılımın aynı anda görünmesi, canlı veri
+  toplama ve grup/zaman/soru değişiminin ayrı turlarda ele alınması (w46).
+- `renderOlcek` + `olcek`: grafik anahtarı, sayı tuş takımı, turlar arası
+  değişen ölçek ve fark sorusu (w47).
+- `renderProje` + `proje`: altı aşamalı araştırma süreci, aşama şeridi ve
+  aşamalar arası tutarlılık kilidi (w48).
 - `gecisBasla(fn,ms)`: aşama ilerledikten sonra sahne henüz yenilenmemişken
   gelen dokunuşlar bir sonraki aşamanın verisine uygulanıyordu; geçiş boyunca
   girdi kilitleniyor. (Gizli sekmede tarayıcı oyunun zamanlayıcısını kıstığı
