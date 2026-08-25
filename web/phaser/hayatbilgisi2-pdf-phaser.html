@@ -57,6 +57,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .esle-alan{display:flex;flex-direction:column;gap:7px;width:100%;align-items:center}
 .yuva{width:min(330px,96%);min-height:60px;border:3px dashed #6f9cba;border-radius:15px;background:rgba(255,255,255,.7);padding:7px 9px;display:flex;align-items:center;gap:9px}
 .yuva.dolu{border-style:solid;border-color:var(--ok);background:#eaf8f1}
+svg.mini{flex:0 0 74px;width:74px;height:auto;display:block}
+.yuva svg.mini{flex:0 0 66px;width:66px}
 .yuva svg.sahne{width:64px;flex:0 0 64px;max-height:64px}
 .yuva .hedef{flex:1 1 auto;font-weight:900;font-size:clamp(12px,3.2vw,15px);line-height:1.25;overflow-wrap:break-word}
 .yuva .kondu{flex:1 1 auto;font-weight:850;font-size:12px;color:#0d6444;line-height:1.2}
@@ -254,6 +256,45 @@ const LEVHA={
  okulgecidi:`<svg class="sahne" style="max-height:96px" viewBox="0 0 90 90"><polygon points="45,6 84,80 6,80" fill="#f4e7c8" stroke="#c8342b" stroke-width="6" stroke-linejoin="round"/><g transform="translate(0,6)"><g fill="#2c2c2c">${yaya(36,58,1).replace(/#fff/g,'#2c2c2c')}${yaya(53,56,.82).replace(/#fff/g,'#2c2c2c')}</g></g></svg>`,
  bisiklet:`<svg class="sahne" style="max-height:96px" viewBox="0 0 90 90"><circle cx="45" cy="45" r="39" fill="#2f5fa8" stroke="#fff" stroke-width="5"/><g fill="none" stroke="#fff" stroke-width="4"><circle cx="29" cy="56" r="11"/><circle cx="61" cy="56" r="11"/><path d="M29 56 l12 -18 l20 18 M41 38 l14 0"/></g></svg>`,
  dikkat:`<svg class="sahne" style="max-height:96px" viewBox="0 0 90 90"><polygon points="45,6 84,80 6,80" fill="#f4e7c8" stroke="#c8342b" stroke-width="6" stroke-linejoin="round"/><rect x="41" y="32" width="8" height="26" rx="4" fill="#2c2c2c"/><circle cx="45" cy="68" r="5" fill="#2c2c2c"/></svg>`
+};
+
+/* Mekân, yönetim binası ve dönem çizimleri — tanıma gerektiren kazanımlarda
+   gerçek görsel kullanılır; parça ile hedef arasında renk/emoji eşleşmesi yok. */
+const MINI=(ic,h=74)=>`<svg class="mini" viewBox="0 0 96 ${h}" width="86">${ic}</svg>`;
+const MEKAN={
+ muze:MINI(`<rect x="6" y="60" width="84" height="8" fill="#b9a887"/><polygon points="48,8 92,30 4,30" fill="#d8cbb0" stroke="#9c8a68" stroke-width="2"/>`+
+  [10,26,42,58,74].map(x=>`<rect x="${x}" y="30" width="10" height="30" fill="#eee5d2" stroke="#b9a887" stroke-width="2"/>`).join('')),
+ kale:MINI(`<rect x="10" y="26" width="76" height="42" fill="#c6b394" stroke="#94805e" stroke-width="2"/>`+
+  [10,26,42,58,74].map(x=>`<rect x="${x}" y="16" width="12" height="12" fill="#c6b394" stroke="#94805e" stroke-width="2"/>`).join('')+
+  `<rect x="40" y="44" width="16" height="24" rx="8" fill="#6b5a44"/>`),
+ cami:MINI(`<rect x="18" y="40" width="60" height="28" fill="#e5dcc8" stroke="#a8977a" stroke-width="2"/>`+
+  `<path d="M18 40 a30 26 0 0 1 60 0z" fill="#9db9c9" stroke="#6d8a9c" stroke-width="2"/>`+
+  `<rect x="78" y="18" width="8" height="50" fill="#e5dcc8" stroke="#a8977a" stroke-width="2"/><polygon points="82,6 88,18 76,18" fill="#9db9c9"/>`),
+ selale:MINI(`<rect y="56" width="96" height="12" fill="#5fa9c4"/><path d="M28 10 h18 v46 h-18z" fill="#bfe6f5"/>`+
+  `<path d="M10 10 h20 v46 h-20z" fill="#8a9c7a"/><path d="M46 10 h40 v46 h-40z" fill="#8a9c7a"/>`+
+  `<path d="M30 12 q4 22 0 44 M40 12 q-4 22 0 44" stroke="#fff" stroke-width="3" fill="none"/>`),
+ park:MINI(`<rect y="56" width="96" height="12" fill="#8fc47a"/><circle cx="30" cy="34" r="18" fill="#79b862"/><rect x="27" y="44" width="7" height="14" fill="#8a5f38"/>`+
+  `<rect x="56" y="42" width="30" height="6" rx="3" fill="#a9764a"/><rect x="58" y="48" width="5" height="10" fill="#7b8ea1"/><rect x="79" y="48" width="5" height="10" fill="#7b8ea1"/>`),
+ belediye:MINI(`<rect x="12" y="26" width="72" height="42" fill="#dfe6ec" stroke="#9aa6b4" stroke-width="2"/>`+
+  `<rect x="42" y="6" width="14" height="22" fill="#dfe6ec" stroke="#9aa6b4" stroke-width="2"/><circle cx="49" cy="16" r="5" fill="#fff" stroke="#7b8ea1" stroke-width="2"/>`+
+  [18,34,50,66].map(x=>`<rect x="${x}" y="36" width="10" height="14" fill="#bcd9ee" stroke="#7fa3bd" stroke-width="1"/>`).join('')+
+  `<rect x="42" y="52" width="14" height="16" fill="#7b8ea1"/>`),
+ valilik:MINI(`<rect x="8" y="22" width="80" height="46" fill="#e8e2d4" stroke="#a89a7a" stroke-width="2"/>`+
+  `<polygon points="48,6 88,22 8,22" fill="#c7bda6" stroke="#a89a7a" stroke-width="2"/>`+
+  [14,30,46,62,74].map(x=>`<rect x="${x}" y="32" width="9" height="16" fill="#bcd9ee" stroke="#7fa3bd" stroke-width="1"/>`).join('')+
+  `<rect x="4" y="2" width="3" height="26" fill="#7b8ea1"/><path d="M7 4 h16 v9 h-16z" fill="#d94040"/>`+
+  `<rect x="89" y="2" width="3" height="26" fill="#7b8ea1"/><path d="M92 4 h-16 v9 h16z" fill="#d94040"/>`),
+ muhtarlik:MINI(`<rect x="24" y="38" width="52" height="30" fill="#efe6d2" stroke="#a89a7a" stroke-width="2"/>`+
+  `<polygon points="50,22 82,38 18,38" fill="#b8543f" stroke="#8a3c2c" stroke-width="2"/>`+
+  `<rect x="32" y="46" width="12" height="12" fill="#bcd9ee" stroke="#7fa3bd" stroke-width="1"/><rect x="56" y="46" width="12" height="22" fill="#8a5f38"/>`),
+ toren:MINI(`<rect y="58" width="96" height="10" fill="#c08a5c"/><rect x="34" y="40" width="28" height="18" fill="#e8e2d4" stroke="#a89a7a" stroke-width="2"/>`+
+  `<rect x="8" y="10" width="3" height="48" fill="#7b8ea1"/><path d="M11 12 h20 v11 h-20z" fill="#d94040"/>`+
+  `<rect x="85" y="10" width="3" height="48" fill="#7b8ea1"/><path d="M88 12 h-20 v11 h20z" fill="#d94040"/>`+
+  `<circle cx="48" cy="30" r="7" fill="#f0c9a4" stroke="#c9915f" stroke-width="2"/>`),
+ ziyaret:MINI(`<rect y="58" width="96" height="10" fill="#b98358"/><rect x="10" y="30" width="34" height="28" fill="#f0e2cc" stroke="#b39f7f" stroke-width="2"/>`+
+  `<polygon points="27,14 48,30 6,30" fill="#b8543f" stroke="#8a3c2c" stroke-width="2"/>`+
+  `<ellipse cx="70" cy="48" rx="20" ry="7" fill="#d9c49a" stroke="#96733f" stroke-width="2"/>`+
+  `<circle cx="62" cy="42" r="5" fill="#fff" stroke="#c9bfa4" stroke-width="2"/><circle cx="78" cy="42" r="5" fill="#fff" stroke="#c9bfa4" stroke-width="2"/>`)
 };
 
 /* ===== KARAR: sahneye bağlı seçim; seçenekler sabit durur, düşme/refleks yok.
@@ -1164,6 +1205,229 @@ GAMES.h18={title:'Görev Çetelesi',theme:'sinif',
   ipucuMetin:'Ben … görevini seçerim çünkü …',
   ornekCevap:'Ben kitaplık düzeni görevini seçerim çünkü o satırda daha az arkadaşım var.',
   result:'Kendi görevini ekledin ve tablodaki sonucu gerekçeyle yorumladın.'}
+]};
+
+/* ---- h19 Gezi Rehberi (etiket kopyası kaldırıldı: istek çıkarım gerektiriyor) ---- */
+GAMES.h19={title:'Gezi Rehberi',theme:'sehir',
+ finish:'Ziyaretçinin isteğinden hangi mekânı aradığını çıkardın, tarihî mekân ile doğal güzelliği ayırdın ve kendi çevrendeki bir yeri tanıttın.',rounds:[
+ {kind:'esle',prompt:'Ziyaretçi ne aradığını söylemiyor; sen çıkar.',
+  soru:'Önce alttan bir isteği seç, sonra uygun mekâna dokun.',
+  ipucu:'İstekte mekânın adı geçmiyor; ne yapmak istediğine bak.',
+  yuvalar:[
+   {gorsel:MEKAN.kale,hedef:'Kale',dogru:0,neden:'Surlar ve burçlar kalede bulunur.',hint:'Bu yapı savunma için yapılmıştır.'},
+   {gorsel:MEKAN.muze,hedef:'Müze',dogru:1,neden:'Eski eserler müzede sergilenir.',hint:'Burada eşyalar vitrinlerde korunur.'},
+   {gorsel:MEKAN.selale,hedef:'Şelale',dogru:2,neden:'Şelale bir doğal güzelliktir.',hint:'Bu yeri insan yapmadı.'},
+   {gorsel:MEKAN.park,hedef:'Şehir parkı',dogru:3,neden:'Park dinlenmek ve oynamak içindir.',hint:'Burada oturulur, oynanır.'}],
+  etiketler:[
+   {t:'Surlara çıkıp şehri yukarıdan görmek istiyorum.'},
+   {t:'Vitrindeki eski eşyaların hikâyesini öğrenmek isterim.'},
+   {t:'Suyun kayadan döküldüğü yeri görmek istiyorum.'},
+   {t:'Çocuklarımın koşup oynayabileceği bir yer arıyorum.'}]},
+ {kind:'karar',prompt:'Tarihî mekân mı, doğal güzellik mi?',
+  sahne:`<div class="row"><div class="stack">${MEKAN.kale}<div class="sahne-not">A · Kale</div></div>`+
+   `<div class="stack">${MEKAN.selale}<div class="sahne-not">B · Şelale</div></div></div>`,
+  durum:'İkisi de şehrin görülmeye değer yerleri. Ama biri insan eliyle yapıldı, biri kendiliğinden var.',
+  soru:'Hangisi tarihî mekândır?',
+  secenekler:[
+   {label:'A · Kale',correct:true},
+   {label:'B · Şelale',hint:'Şelaleyi insan yapmadı; o doğal bir güzelliktir.'}],
+  araSoz:'Doğru. Peki ayıran ölçüt ne?',
+  neden:{soru:'Bir yerin tarihî mekân olduğunu nereden anlarsın?',secenekler:[
+   {label:'Geçmişte insanlar tarafından yapılmışsa',correct:true},
+   {label:'Çok güzel görünüyorsa',hint:'Güzellik ölçüt değil; ikisi de güzel.'},
+   {label:'Şehrin dışındaysa',hint:'Yerin konumu tarihî olup olmadığını belirlemez.'}]},
+  result:'Tarihî mekânı insanlar geçmişte yapmıştır; doğal güzellik kendiliğinden vardır.'},
+ {kind:'yaz',prompt:'Kendi çevrenden bir yeri tanıt.',sahne:SAHNE.sokak,
+  gorev:'Yaşadığın yerde beğendiğin bir mekânı iki özelliğiyle tanıt.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',
+  ipucuMetin:'Bizim … var. Orası …',
+  ornekCevap:'Bizim mahallede eski bir taş köprü var. Orası çok eskiden yapılmış ve altından dere geçiyor.',
+  result:'Çevrendeki bir yeri özellikleriyle tanıttın.'}
+]};
+
+/* ---- h20 Mekân Özellikleri (genel radar yönergesi kaldırıldı) ---- */
+GAMES.h20={title:'Mekân Özellikleri',theme:'sehir',
+ finish:'Mekânların özelliklerini görselden okudun, aynı yerin farklı yönlerini incelediğin ve özelliği kendi sözlerinle ifade ettin.',rounds:[
+ {kind:'karar',prompt:'Bu yapının özelliğine bak.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.muze}<div class="sahne-not">Müze</div></div></div>`,
+  durum:'Bu yapının önünde kalın sütunlar var, içeride eşyalar cam vitrinlerde korunuyor ve her eşyanın yanında küçük bir kart duruyor.',
+  soru:'Bu mekân ne için kullanılır?',
+  secenekler:[
+   {label:'Geçmişten kalan eserleri korumak ve göstermek',correct:true},
+   {label:'İnsanların oturup dinlenmesi',hint:'Vitrin ve bilgi kartları dinlenme yeri için gerekmez.'},
+   {label:'Alışveriş yapılması',hint:'Vitrindeki eşyalar satılmıyor, korunuyor.'}],
+  ipucu:'Vitrin ve bilgi kartları neyi gösteriyor?',
+  result:'Müze, geçmişten kalan eserleri koruyup tanıtan yerdir.'},
+ {kind:'karar',prompt:'Aynı yapının başka bir özelliği.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.cami}<div class="sahne-not">Tarihî yapı</div></div></div>`,
+  durum:'Bu yapının kubbesi taştan, duvarları çok kalın. Üzerindeki yazıda dört yüz yıl önce yapıldığı belirtiliyor ve hâlâ kullanılıyor.',
+  soru:'Bu yapı için hangisi söylenebilir?',
+  secenekler:[
+   {label:'Hem tarihî hem bugün de kullanılan bir yapı',correct:true},
+   {label:'Yalnız geçmişte kullanılmış, bugün boş',hint:'Metinde "hâlâ kullanılıyor" diyor.'},
+   {label:'Yeni yapılmış bir yapı',hint:'Dört yüz yıl önce yapıldığı yazıyor.'}],
+  araSoz:'Doğru. Peki bu yapıyı ne korur?',
+  neden:{soru:'Böyle bir yapının ayakta kalması için ne gerekir?',secenekler:[
+   {label:'Bakımının yapılması ve zarar verilmemesi',correct:true},
+   {label:'Ziyarete kapatılması',hint:'Yapı hâlâ kullanılıyor; kapatmak korumanın tek yolu değil.'},
+   {label:'Yıkılıp yenisinin yapılması',hint:'Yıkmak tarihî yapıyı yok eder.'}]},
+  result:'Bir yapı hem tarihî olabilir hem bugün kullanılabilir; korunması bakımla olur.'},
+ {kind:'konus',prompt:'Bir mekânın özelliğini kendi sözlerinle anlat.',sahne:SAHNE.sokak,
+  gorev:'Gördüğün bir mekânı seç ve iki özelliğini kendi sözlerinle anlat.',
+  ornek:'Örnek: Şehir müzemiz taş bir binada. İçinde çok eski kap kacaklar var ve rehber onların hikâyesini anlatıyor.',
+  olcutler:['Bir mekân seçtim.','İki özelliğini söyledim.','Kendi sözlerimle anlattım.'],
+  result:'Bir mekânın özelliklerini kendi sözlerinle ifade ettin.'}
+]};
+
+/* ---- h21 Yönetim Birimleri (emoji eşleşmesi kaldırıldı: bina + işlev) ---- */
+GAMES.h21={title:'Yönetim Birimleri',theme:'sehir',
+ finish:'Yönetim birimlerini görevleriyle eşledin, hangi işin hangi birime gittiğini ayırdın ve bir sorunu doğru birime ilettin.',rounds:[
+ {kind:'esle',prompt:'Her yönetim birimini göreviyle eşle.',
+  soru:'Önce alttan bir görev seç, sonra ait olduğu birime dokun.',
+  ipucu:'Binanın büyüklüğüne değil, birimin işine bak.',
+  yuvalar:[
+   {gorsel:MEKAN.belediye,hedef:'Belediye',dogru:0,neden:'Çöp toplama, park ve yol işleri belediyenindir.',hint:'Bu birim şehrin günlük hizmetlerini yürütür.'},
+   {gorsel:MEKAN.muhtarlik,hedef:'Muhtarlık',dogru:1,neden:'Mahalleyle ilgili belgeler muhtarlıktan alınır.',hint:'Bu birim mahalle ölçeğinde çalışır.'},
+   {gorsel:MEKAN.valilik,hedef:'Valilik',dogru:2,neden:'Valilik ilin tamamını ilgilendiren kararları yürütür.',hint:'Bu birim bütün ilden sorumludur.'}],
+  etiketler:[
+   {t:'Mahallemizin parkındaki kırık salıncağın onarılması'},
+   {t:'Oturduğumuz yeri gösteren belgenin alınması'},
+   {t:'İl genelinde okulların kar tatili kararı'}]},
+ {kind:'karar',prompt:'Bu sorun hangi birime gider?',
+  sahne:`<div class="row"><div class="stack">${MEKAN.belediye}<div class="sahne-not">Belediye</div></div>`+
+   `<div class="stack">${MEKAN.muhtarlik}<div class="sahne-not">Muhtarlık</div></div></div>`,
+  durum:'Sokağınızdaki çöp konteyneri günlerdir boşaltılmıyor ve kötü koku yayılıyor.',
+  soru:'Bu sorun öncelikle hangi birime iletilir?',
+  secenekler:[
+   {label:'Belediye',correct:true},
+   {label:'Muhtarlık',hint:'Muhtarlık mahalle işlerinde yardımcı olur ama çöp toplama hizmetini belediye yürütür.'}],
+  araSoz:'Doğru. Peki nasıl karar verdin?',
+  neden:{soru:'Bir sorunu hangi birime ileteceğini ne belirler?',secenekler:[
+   {label:'O hizmeti hangi birimin yürüttüğü',correct:true},
+   {label:'Hangi bina daha yakınsa',hint:'Yakınlık değil, görev alanı belirler.'},
+   {label:'Hangi bina daha büyükse',hint:'Binanın büyüklüğü görevini göstermez.'}]},
+  result:'Sorun, o hizmeti yürüten birime iletilir.'},
+ {kind:'konus',prompt:'Bir sorunu gerekçesiyle ilet.',sahne:SAHNE.sokak,
+  gorev:'Çevrenden bir sorun seç, hangi birime ileteceğini söyle ve nedenini açıkla.',
+  ornek:'Örnek: Okulumuzun önündeki yaya geçidinin çizgileri silinmiş. Bunu belediyeye iletirim çünkü yol çizgileri belediyenin işidir.',
+  olcutler:['Bir sorun söyledim.','Hangi birime ileteceğimi söyledim.','Nedenini açıkladım.'],
+  result:'Sorunu doğru birime, gerekçesiyle ilettin.'}
+]};
+
+/* ---- h22 Atatürk'ün Okul Yılları (roket kaldırıldı; ilk turda tarih gizli) ---- */
+GAMES.h22={title:'Atatürk’ün Okul Yılları',theme:'muze',
+ finish:'Anıları olay içeriğinden sıraladın, Atatürk’ün öğrenciliğiyle kendi okul yaşamını karşılaştırdın ve en etkilendiğin anıyı anlattın.',rounds:[
+ {kind:'sira',prompt:'Tarihler gizli: olayların kendisinden sırala.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.muze}<div class="sahne-not">Dönem odası</div></div></div>`,
+  gorev:'Kartlarda tarih yok. Hangi olay önce olmalı? Okul basamaklarını düşün.',
+  kartlar:[
+   {t:'Mahalle mektebinde okumaya başlar.'},
+   {t:'Babasının isteğiyle Şemsi Efendi Okulu’na geçer.'},
+   {t:'Askerî Rüştiye sınavını kazanır ve üniformalı okula başlar.'},
+   {t:'Matematik öğretmeni ona "Kemal" adını verir.'},
+   {t:'Manastır Askerî İdadisi’ne gider.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['En küçük yaşta hangi okula gidilir?','Mektepten sonra hangi okula geçti?',
+   'Üniformalı askerî okula girmek için ne gerekir?','"Kemal" adını hangi okulda aldı?','Rüştiyeden sonra hangi okul gelir?'],
+  ipucu:'Küçükten büyüğe: mektep, okul, rüştiye, idadi.',
+  result:'Mektep, Şemsi Efendi Okulu, Askerî Rüştiye ve ardından Manastır İdadisi.'},
+ {kind:'karar',prompt:'Onun okul yaşamı ile seninki.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.muze}<div class="sahne-not">Dönem odası</div></div></div>`,
+  durum:'Atatürk okulda matematiği çok sevdi, öğretmeni onun bu ilgisini fark edip ona ad verdi. Kitaplara düşkündü ve okumayı hayatı boyunca sürdürdü.',
+  soru:'Bu anlatılandan öğrencilik için ne çıkarılır?',
+  secenekler:[
+   {label:'İlgi duyulan alanda çalışmak insanı ileri taşır',correct:true},
+   {label:'Yalnız matematik sevilirse başarılı olunur',hint:'Anlatılan, matematiğin kendisi değil, ilgi ve çalışma.'},
+   {label:'Öğretmenin verdiği ad başarıyı sağlar',hint:'Ad, ilgisinin fark edilmesinin sonucuydu; nedeni değil.'}],
+  araSoz:'Doğru. Peki sende karşılığı ne?',
+  neden:{soru:'Kendi okul yaşamında buna en çok ne benziyor?',secenekler:[
+   {label:'Sevdiğim derse daha çok zaman ayırıyorum',correct:true},
+   {label:'Ödevlerimi başkası yapıyor',hint:'Bu, çalışmanın karşılığı değildir.'},
+   {label:'Sevdiğim dersi de sevmediğim dersi de hiç çalışmıyorum',hint:'Anlatılan, çalışmayı sürdürmekti.'}]},
+  result:'İlgi duyduğun alanda çalışmayı sürdürmek, Atatürk’ün öğrenciliğinden bugüne kalan bir örnektir.'},
+ {kind:'konus',prompt:'En çok etkilendiğin anıyı anlat.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.muze}<div class="sahne-not">Dönem odası</div></div></div>`,
+  gorev:'Atatürk’ün öğrencilik yıllarından en çok etkilendiğin anıyı kendi cümlelerinle anlat ve neden etkilendiğini söyle.',
+  ornek:'Örnek: Öğretmeninin ona Kemal adını vermesi çok hoşuma gitti çünkü çabasının fark edildiğini gösteriyor.',
+  olcutler:['Bir anı anlattım.','Neden etkilendiğimi söyledim.','Kendi cümlelerimi kullandım.'],
+  result:'Etkilendiğin anıyı nedeniyle birlikte anlattın.'}
+]};
+
+/* ---- h23 Bayramlar (hafıza kartı yerine anlam eşlemesi, gerçek sahneler) ---- */
+GAMES.h23={title:'Bayramların Anlamı',theme:'sehir',
+ finish:'Bayramları anlamlarıyla eşledin, millî ve dinî bayramların farkını örneklerle gördün ve bir bayramın neden kutlandığını anlattın.',rounds:[
+ {kind:'esle',prompt:'Her bayramı anlamıyla eşle.',
+  soru:'Önce alttan bir anlam seç, sonra ait olduğu bayrama dokun.',
+  ipucu:'Bayramın adında değil, neyi andığında ipucu var.',
+  yuvalar:[
+   {gorsel:MEKAN.toren,hedef:'23 Nisan Ulusal Egemenlik ve Çocuk Bayramı',dogru:0,neden:'Bu tarihte Meclis ilk kez toplandı ve Atatürk bu günü çocuklara armağan etti.',hint:'Bu bayram bir meclisin açılışıyla ilgilidir.'},
+   {gorsel:MEKAN.toren,hedef:'29 Ekim Cumhuriyet Bayramı',dogru:1,neden:'Cumhuriyetin ilan edildiği gündür.',hint:'Bu bayram yönetim biçimimizle ilgilidir.'},
+   {gorsel:MEKAN.ziyaret,hedef:'Ramazan Bayramı',dogru:2,neden:'Bir ay süren orucun ardından kutlanır; ikram ve ziyaret öne çıkar.',hint:'Bu bayram bir ibadetin ardından gelir.'},
+   {gorsel:MEKAN.ziyaret,hedef:'Kurban Bayramı',dogru:3,neden:'Paylaşmanın öne çıktığı dinî bir bayramdır.',hint:'Bu bayramda paylaşmak ve dağıtmak önemlidir.'}],
+  etiketler:[
+   {t:'Milletin kendi kendini yönetmeye başladığı gün anılır ve çocuklara armağan edilmiştir.'},
+   {t:'Ülkemizin yönetim biçiminin ilan edildiği gün kutlanır.'},
+   {t:'Bir ay süren orucun ardından gelir; tatlı ikram edilir ve büyükler ziyaret edilir.'},
+   {t:'Etin komşu ve ihtiyaç sahipleriyle paylaşıldığı bayramdır.'}]},
+ {kind:'karar',prompt:'Millî mi, dinî mi? Ölçütü bul.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.toren}<div class="sahne-not">A</div></div>`+
+   `<div class="stack">${MEKAN.ziyaret}<div class="sahne-not">B</div></div></div>`,
+  durum:'A sahnesinde tören alanı, bayraklar ve kürsü var. B sahnesinde evde ikram sofrası ve ziyaret var.',
+  soru:'Millî bayram hangi sahnede kutlanıyor?',
+  secenekler:[
+   {label:'A · tören alanı',correct:true},
+   {label:'B · ev ziyareti',hint:'Ev ziyareti ve ikram dinî bayram kutlamasına daha yakındır.'}],
+  araSoz:'Doğru. Peki ayıran ölçüt ne?',
+  neden:{soru:'Bir bayramın millî olduğunu nereden anlarsın?',secenekler:[
+   {label:'Ülkenin tarihindeki bir olayı andığından',correct:true},
+   {label:'Tatil olduğundan',hint:'İki bayram türünde de tatil olur.'},
+   {label:'Ailece kutlandığından',hint:'İkisi de ailece kutlanabilir.'}]},
+  result:'Millî bayram ülkenin tarihindeki bir olayı anar; dinî bayram bir inanç geleneğinden gelir.'},
+ {kind:'konus',prompt:'Bir bayramın neden kutlandığını anlat.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.toren}<div class="sahne-not">Tören</div></div></div>`,
+  gorev:'Bir bayram seç ve neden kutlandığını kendi sözlerinle anlat.',
+  ornek:'Örnek: 29 Ekim’i kutluyoruz çünkü o gün cumhuriyet ilan edildi ve milletimiz kendi yönetimini seçti.',
+  olcutler:['Bir bayram seçtim.','Neden kutlandığını anlattım.','Kendi sözlerimi kullandım.'],
+  result:'Bir bayramın anlamını kendi sözlerinle anlattın.'}
+]};
+
+/* ---- h24 Bayram Ayırma (bant durduruldu; ayrım görsel kanıtla kuruluyor) ---- */
+GAMES.h24={title:'Millî mi, Dinî mi?',theme:'sehir',
+ finish:'Bayramları görsel kanıta bakarak ayırdın, aynı güne düşen kutlamaları ayırt ettin ve ölçütünü açıkladın.',rounds:[
+ {kind:'sinifla',prompt:'Bu kutlama millî mi, dinî mi?',
+  sahne:`<div class="row"><div class="stack">${MEKAN.toren}<div class="sahne-not">tören alanı</div></div>`+
+   `<div class="stack">${MEKAN.ziyaret}<div class="sahne-not">ev ziyareti</div></div></div>`,
+  soru:'Bu kutlama hangi gruba girer?',kutular:['MİLLÎ BAYRAM','DİNÎ BAYRAM'],
+  ipucu:'Kartın altında kutlamanın nasıl yapıldığı yazıyor.',
+  kartlar:[
+   {t:'Okullarda tören yapılır, öğrenciler şiir okur ve bayraklar asılır.',sahne:'23 Nisan',dogru:0,neden:'Tören ve şiir millî kutlamanın parçasıdır.'},
+   {t:'Sabah namazından sonra büyükler ziyaret edilir, çocuklara harçlık verilir.',sahne:'Ramazan Bayramı',dogru:1,neden:'Ziyaret ve ikram dinî bayram geleneğidir.'},
+   {t:'Cumhuriyetin ilanı meydanda kutlanır, fener alayı düzenlenir.',sahne:'29 Ekim',dogru:0,neden:'Ülkenin tarihindeki olay anılıyor.'},
+   {t:'Et komşularla ve ihtiyaç sahipleriyle paylaşılır.',sahne:'Kurban Bayramı',dogru:1,neden:'Paylaşma geleneği dinî bayrama aittir.'},
+   {t:'Zafer kazanılan gün için resmî geçit töreni yapılır.',sahne:'30 Ağustos',dogru:0,neden:'Zafer günü millî bir olaydır.'},
+   {t:'Bayram sabahı bayramlaşılır, tatlı ikram edilir.',sahne:'Ramazan Bayramı',dogru:1,neden:'Bayramlaşma ve tatlı ikramı dinî bayram geleneğidir.'}]},
+ {kind:'karar',prompt:'Aynı güne iki kutlama düşerse?',
+  sahne:`<div class="row"><div class="stack">${MEKAN.toren}<div class="sahne-not">meydan</div></div>`+
+   `<div class="stack">${MEKAN.ziyaret}<div class="sahne-not">ev</div></div></div>`,
+  durum:'Bir yıl, dinî bayramın ilk günü ile 19 Mayıs aynı güne denk geldi. Sabah stadyumda gençlik gösterisi yapıldı, öğleden sonra aileler birbirini ziyaret etti.',
+  soru:'O gün kaç bayram kutlandı?',
+  secenekler:[
+   {label:'İki ayrı bayram; biri millî, biri dinî',correct:true},
+   {label:'Tek bayram; ikisi birleşti',hint:'İki kutlamanın nedenleri farklı; aynı güne düşmeleri onları birleştirmez.'},
+   {label:'Hiçbiri sayılmaz',hint:'İki kutlama da yapıldı.'}],
+  araSoz:'Doğru. Peki ayrım neye göre?',
+  neden:{soru:'Ayrımı yaparken neye baktın?',secenekler:[
+   {label:'Kutlamanın nedenine',correct:true},
+   {label:'Kutlamanın tarihine',hint:'Tarih aynıydı; ayıran neden oldu.'},
+   {label:'Kutlamanın süresine',hint:'Süre ayrım ölçütü değildir.'}]},
+  result:'Bayramı ayıran şey tarihi değil, kutlanma nedenidir.'},
+ {kind:'yaz',prompt:'Ölçütünü yaz.',
+  sahne:`<div class="row"><div class="stack">${MEKAN.toren}<div class="sahne-not">tören</div></div></div>`,
+  gorev:'Bir bayram seç, hangi gruba koyduğunu yaz ve nedenini "çünkü" ile açıkla.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… bayramı … bayramıdır çünkü …',
+  ornekCevap:'Otuz Ağustos millî bayramdır çünkü ülkemizin tarihindeki bir zaferi anıyoruz.',
+  result:'Bayramı gruplandırdın ve ölçütünü yazdın.'}
 ]};
 
 /* ===== açılış ===== */
