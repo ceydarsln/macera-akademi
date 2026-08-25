@@ -1629,6 +1629,326 @@ GAMES.z24={title:'Doğa Dergisi Masası',theme:'masa',
   result:'Amacına uygun bir yazma planını dört bölümde kurdun.'}
 ]};
 
+/* ---- z25 Kütüphane Görevlisi (tür kapaktan çıkarımla; etiket kopyası yok) ---- */
+GAMES.z25={title:'Kütüphane Görevlisi',theme:'kutuphane',
+ finish:'Okurun amacına uygun kaynağı çıkarımla buldun, aynı konuda türleri karşılaştırdın ve kendi seçimini gerekçelendirdin.',rounds:[
+ {kind:'esle',prompt:'Okurun amacına uygun kaynağı ver.',sahne:SAHNE.sozluk,
+  soru:'Önce alttan bir kaynak seç, sonra ait olduğu okura dokun.',
+  ipucu:'Okur türün adını söylemiyor; ne yapmak istediğine bak.',
+  yuvalar:[
+   {hedef:'"Kelebeklerin kanat yapısını maddeler hâlinde öğrenmem gerek."',dogru:0,
+    neden:'Maddeler hâlinde bilgi ansiklopedide bulunur.',hint:'Bu okur bilgi arıyor, olay değil.'},
+   {hedef:'"Akşam yatmadan beni sürükleyecek bir olay okumak istiyorum."',dogru:1,
+    neden:'Sürükleyici olay öykü kitabında bulunur.',hint:'Bu okur bir olay peşinde.'},
+   {hedef:'"Bu ayki uzay haberlerini ve fotoğrafları görmek istiyorum."',dogru:2,
+    neden:'Güncel haber ve fotoğraf dergide olur.',hint:'Bu okur güncel bir şey arıyor.'},
+   {hedef:'"Bilmediğim bir sözcüğün anlamına hemen bakmam lazım."',dogru:3,
+    neden:'Sözcük anlamları sözlükte bulunur.',hint:'Bu okur tek bir sözcüğün peşinde.'}],
+  etiketler:[{t:'Ansiklopedi'},{t:'Öykü kitabı'},{t:'Aylık dergi'},{t:'Sözlük'}]},
+ {kind:'karar',prompt:'Aynı konu, üç farklı kaynak.',sahne:SAHNE.sozluk,
+  durum:'Ödevin: "Arıların kovan düzeni" konusunda üç maddelik bilgi vermek. Rafta üç kaynak var: bir ansiklopedi maddesi, arıları anlatan bir öykü, bir doğa dergisinin son sayısı.',
+  soru:'Amacına en uygun olan hangisi?',
+  secenekler:[
+   {label:'Ansiklopedi maddesi',correct:true},
+   {label:'Arıları anlatan öykü',hint:'Öykü olay anlatır; maddeler hâlinde bilgi vermez.'},
+   {label:'Doğa dergisinin son sayısı',hint:'Dergi güncel yazılar taşır; aradığın konu içinde olmayabilir.'}],
+  araSoz:'Doğru. Peki ölçütün neydi?',
+  neden:{soru:'Kaynağı seçerken neye baktın?',secenekler:[
+   {label:'Okuma amacıma',correct:true},
+   {label:'Kitabın kalınlığına',hint:'Kalınlık amaca uygunluğu göstermez.'},
+   {label:'Kapağın renginin güzelliğine',hint:'Kapak rengi içerikle ilgili değildir.'}]},
+  result:'Kaynak, okuma amacına göre seçilir.'},
+ {kind:'yaz',prompt:'Kendi seçimini gerekçelendir.',sahne:SAHNE.sozluk,
+  gorev:'Merak ettiğin bir konu seç. Hangi tür kaynağı seçeceğini ve nedenini yaz.',
+  enAzKelime:11,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… öğrenmek için … seçtim çünkü …',
+  yasak:['Bu kaynağı seçtim çünkü bilgi veriyor.'],
+  ornekCevap:'Yanardağların nasıl oluştuğunu öğrenmek için ansiklopediyi seçtim çünkü orada maddeler hâlinde bilgi var.',
+  result:'Okuma amacınla kaynak seçimini birbirine bağladın.'}
+]};
+
+/* ---- z26 Anlam Laboratuvarı (bant kaldırıldı; cümle sabit, sözcük vurgulu) ---- */
+GAMES.z26={title:'Anlam Laboratuvarı',theme:'lab',
+ finish:'Gerçek, mecaz ve terim anlamı ayırdın, aynı sözcüğün üç anlamını karşılaştırdın ve terim anlamını kendi cümlende kullandın.',rounds:[
+ {kind:'sinifla',prompt:'«» içindeki sözcük hangi anlamda?',sahne:SAHNE.kalem,
+  soru:'İşaretli sözcük hangi anlamda kullanılmış?',
+  kutular:['GERÇEK ANLAM','MECAZ ANLAM','TERİM ANLAM'],
+  ipucu:'Terim anlam bir bilim ya da sanat dalına aittir.',
+  kartlar:[
+   {t:'Çocuk «düştü» ve dizini yaraladı.',dogru:0,neden:'Sözcük tam karşılığıyla kullanılmış.'},
+   {t:'Sınavdan sonra morali «düştü».',dogru:1,neden:'Moral yere düşmez; sözcük başka anlama kaymış.'},
+   {t:'Üçgenin iç açıları «toplamı» 180 derecedir.',dogru:2,neden:'"Toplam" burada matematiğe ait bir terimdir.'},
+   {t:'Annem çorbaya biraz «tuz» attı.',dogru:0,neden:'Sözcük mutfaktaki gerçek karşılığıyla kullanılmış.'},
+   {t:'Onun sözleri yaralı yüreğime «tuz» oldu.',dogru:1,neden:'Söz gerçekten tuz olmaz; acıyı artırmak anlatılıyor.'},
+   {t:'Fen dersinde «çözelti» hazırladık.',dogru:2,neden:'"Çözelti" fen bilimlerine ait bir terimdir.'}]},
+ {kind:'esle',prompt:'Aynı sözcük, üç ayrı anlam.',sahne:SAHNE.kalem,
+  soru:'Önce alttan bir anlam türü seç, sonra ait olduğu cümleye dokun.',
+  ipucu:'Cümlenin konusu hangi alana ait?',
+  yuvalar:[
+   {hedef:'Masanın «yüzeyi» tozlanmış.',dogru:0,neden:'Masanın üst yüzü: gerçek anlam.',hint:'Burada elle dokunulan bir yer anlatılıyor.'},
+   {hedef:'Bu konunun yalnız «yüzeyine» dokunduk.',dogru:1,neden:'Konunun yüzeyi olmaz; derine inilmediği anlatılıyor.',hint:'Burada gerçek bir yüzey yok.'},
+   {hedef:'Kürenin «yüzey» alanını hesapladık.',dogru:2,neden:'Geometriye ait bir terim.',hint:'Bu cümle bir derse ait.'}],
+  etiketler:[{t:'gerçek anlam'},{t:'mecaz anlam'},{t:'terim anlam'}]},
+ {kind:'yaz',prompt:'Bir sözcüğü terim anlamıyla kullan.',sahne:SAHNE.kalem,
+  gorev:'Bir sözcüğü terim anlamıyla kendi cümlende kullan, sonra gerçek anlamından farkını bir cümleyle yaz.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,bitis:'.',
+  ipucuMetin:'…  Gerçek anlamda ise …',
+  yasak:['Kürenin yüzey alanını hesapladık.'],
+  ornekCevap:'Matematik dersinde dikdörtgenin çevresini santimetre cinsinden hesapladık. Gerçek anlamda çevre ise bizi kuşatan yakın alandır.',
+  result:'Terim anlamı ile gerçek anlamı kendi cümlelerinde ayırdın.'}
+]};
+
+/* ---- z27 Atasözü Köprüsü (simge eşleşmesi kaldırıldı) ---- */
+GAMES.z27={title:'Atasözü Köprüsü',theme:'kutuphane',
+ finish:'Atasözlerini anlattıkları durumla eşledin, yakın anlamlıları ayırdın ve bir atasözünü kendi yaşam durumuna bağladın.',rounds:[
+ {kind:'esle',prompt:'Her atasözünü anlattığı durumla eşle.',sahne:SAHNE.sozluk,
+  soru:'Önce alttan bir durum seç, sonra anlattığı atasözüne dokun.',
+  ipucu:'Sözcüklere değil, anlattığı duruma bak.',
+  yuvalar:[
+   {hedef:'Damlaya damlaya göl olur.',dogru:0,
+    neden:'Küçük birikimler zamanla büyür: kumbaraya her gün bir lira atan çocuk yıl sonunda bisiklet alır.',
+    hint:'Bu söz birikimle ilgili.'},
+   {hedef:'Sakla samanı, gelir zamanı.',dogru:1,
+    neden:'Şimdi işe yaramayan şey sonra gerekebilir: sakladığın kutu taşınırken çok işine yarar.',
+    hint:'Bu söz saklamakla ilgili.'},
+   {hedef:'Ayağını yorganına göre uzat.',dogru:2,
+    neden:'Elindekine göre harcamak: harçlığın kadar alışveriş yapmak.',
+    hint:'Bu söz ölçülü harcamayla ilgili.'},
+   {hedef:'Bir elin nesi var, iki elin sesi var.',dogru:3,
+    neden:'Birlikte çalışmak: sınıfça toplanınca pano bir saatte biter.',
+    hint:'Bu söz birlikte çalışmayla ilgili.'}],
+  etiketler:[
+   {t:'Küçük ama sürekli biriktirmek sonunda büyük sonuç verir.'},
+   {t:'Bugün gereksiz görünen şey ileride işe yarayabilir.'},
+   {t:'Harcamalarını elindekine göre ayarlamak gerekir.'},
+   {t:'Birlikte çalışmak tek başına çalışmaktan güçlüdür.'}]},
+ {kind:'karar',prompt:'Yakın anlamlı iki atasözü.',sahne:SAHNE.sozluk,
+  durum:'Eda, harçlığının tamamını ilk gün harcadı ve ayın geri kalanında hiç parası kalmadı.',
+  soru:'Bu duruma hangi atasözü uyar?',
+  secenekler:[
+   {label:'Ayağını yorganına göre uzat.',correct:true},
+   {label:'Damlaya damlaya göl olur.',hint:'Bu söz biriktirmeyi anlatır; Eda biriktirmedi, ölçüsüz harcadı.'},
+   {label:'Sakla samanı, gelir zamanı.',hint:'Bu söz saklamayı anlatır; buradaki sorun ölçüsüz harcama.'}],
+  araSoz:'Doğru. Peki nasıl ayırdın?',
+  neden:{soru:'Atasözünü seçerken neye baktın?',secenekler:[
+   {label:'Durumun anlattığı davranışa',correct:true},
+   {label:'Ortak sözcüklere',hint:'Sözcük benzerliği yanıltır; anlam önemlidir.'},
+   {label:'Atasözünün uzunluğuna',hint:'Uzunluk anlamla ilgili değildir.'}]},
+  result:'Atasözü, sözcük benzerliğine değil anlattığı duruma göre seçilir.'},
+ {kind:'konus',prompt:'Bir atasözünü kendi yaşamına bağla.',sahne:SAHNE.sozluk,
+  gorev:'Bir atasözü seç ve onu kendi yaşamından bir duruma bağlayarak sesli anlat.',
+  ornek:'Örnek: "Damlaya damlaya göl olur" atasözünü seviyorum. Her gün on sayfa okuyarak bir ayda koca bir kitabı bitirdim.',
+  olcutler:['Bir atasözü seçtim.','Kendi yaşamımdan bir durum anlattım.','İkisi arasındaki bağı açıkladım.'],
+  result:'Atasözünü kendi deneyiminle buluşturdun.'}
+]};
+
+/* ---- z28 Yazışma Masası (gerçek e-posta ekranı; üslup ve noktalama birlikte) ---- */
+GAMES.z28={title:'Yazışma Masası',theme:'masa',
+ finish:'E-postadaki işaretleri düzelttin, resmî ile samimi üslubu ayırdın ve kendi e-postanı yazdın.',rounds:[
+ {kind:'duzelt',prompt:'E-postadaki işaretleri düzelt.',sahne:SAHNE.masa,
+  gorev:'Gönderilmeye hazır e-postada işaretler eksik. Anlamına uygun olanları koy. Sözcükleri değiştirme.',
+  hatali:'sayın yazarımız kitabınızı sınıfça okuduk çok beğendik bize imzalı bir kitap gönderebilir misiniz saygılarımızla',
+  denetim:[
+   {ad:'Hitabı büyük harfle başlat',desen:'^[A-ZÇĞİÖŞÜ]'},
+   {ad:'Hitaptan sonra virgül koy',desen:'^[^,\\n]{5,40},'},
+   {ad:'Cümleleri noktayla ayır',desen:'(\\.[^.]*){2}'},
+   {ad:'Soru cümlesini soru işaretiyle bitir',desen:'\\?'}],
+  ornekCevap:'Sayın yazarımız, kitabınızı sınıfça okuduk. Çok beğendik. Bize imzalı bir kitap gönderebilir misiniz? Saygılarımızla.',
+  result:'Yazışmada hitap, cümle sınırları ve soru işareti birlikte çalışır.'},
+ {kind:'karar',prompt:'Resmî mi, samimi mi?',sahne:SAHNE.masa,
+  durum:'İki e-posta girişi:\nA) "Merhaba Deniz, nasılsın? Dün anlattığın kitabı çok merak ettim."\nB) "Sayın Yetkili, okulumuz kütüphanesi için bilgi almak istiyorum."',
+  soru:'Bu iki giriş için ne söylenir?',
+  secenekler:[
+   {label:'A samimi, B resmî üslupla yazılmış',correct:true},
+   {label:'İkisi de resmî',hint:'A\'da "nasılsın" gibi senli benli bir ifade var.'},
+   {label:'İkisi de samimi',hint:'B\'de "Sayın Yetkili" gibi resmî bir hitap var.'}],
+  araSoz:'Doğru. Peki noktalama farkı ne?',
+  neden:{soru:'Resmî yazışmada hangisine daha çok dikkat edilir?',secenekler:[
+   {label:'Hitabın ve kapanışın kurala uygun yazılmasına',correct:true},
+   {label:'Emoji kullanılmasına',hint:'Resmî yazışmada emoji kullanılmaz.'},
+   {label:'Cümlelerin kısa olmasına',hint:'Uzunluk resmîliği belirlemez.'}]},
+  result:'Üslup muhataba göre değişir; resmî yazışmada hitap ve kapanış kurala uyar.'},
+ {kind:'yaz',prompt:'Kendi e-postanı yaz.',sahne:SAHNE.masa,
+  gorev:'Sevdiğin bir yazara iki cümlelik bir e-posta yaz. Hitapla başla, kapanışla bitir.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,
+  denetim:[
+   {ad:'Hitapla başla ve virgül koy',desen:'^[^,\\n]{4,40},'},
+   {ad:'Kapanış ifadesi yaz (saygılarımla / sevgilerimle)',desen:'saygı|sevgi',bayrak:'i'}],
+  ipucuMetin:'Sayın …,\n…\nSaygılarımla',
+  yasak:['Sayın yazarımız, kitabınızı sınıfça okuduk.'],
+  ornekCevap:'Sayın yazarımız, kitabınızdaki küçük kahramanın cesaretini ve dostluğunu çok sevdim. Yeni kitabınızı sınıfça sabırsızlıkla bekliyoruz.\nSaygılarımla',
+  result:'Hitap, gövde ve kapanışıyla eksiksiz bir e-posta yazdın.'}
+]};
+
+/* ---- z29 Kaynak Denetimi (radar kaldırıldı; yazar, tarih, kurum görünüyor) ---- */
+GAMES.z29={title:'Kaynak Denetimi',theme:'lab',
+ finish:'Kaynakları yazar, tarih ve kurum bilgisine göre değerlendirdin, iki kaynağı karşılaştırdın ve seçimini gerekçelendirdin.',rounds:[
+ {kind:'sinifla',prompt:'Bu kaynak güvenilir mi?',sahne:SAHNE.kalem,
+  soru:'Bu kaynak hangi gruba girer?',
+  kutular:['GÜVENİLİR','GÜVENİLİR DEĞİL'],
+  ipucu:'Ölçüt: yazarı, tarihi ve kurumu belli mi?',
+  kartlar:[
+   {t:'Millî Eğitim Bakanlığı ders kitabı · 2024 · yazar kurulu belli',dogru:0,
+    neden:'Kurum, tarih ve yazar belli: denetlenmiş bir kaynak.'},
+   {t:'"gercekler_burada" adlı hesabın paylaşımı · tarih yok · yazar bilinmiyor',dogru:1,
+    neden:'Yazarı ve tarihi belli olmayan paylaşım doğrulanamaz.'},
+   {t:'Üniversite kütüphanesi dergisi · 2023 · Prof. Dr. imzalı',dogru:0,
+    neden:'Kurum ve uzman yazar belli.'},
+   {t:'Zincir mesaj: "Bunu 10 kişiye gönder, yoksa..."',dogru:1,
+    neden:'Zincir mesajlar kaynak göstermez ve korkutarak yayılır.'},
+   {t:'TÜBİTAK Bilim Çocuk dergisi · 2025 · editör kurulu belli',dogru:0,
+    neden:'Kurumu ve editör kurulu belli olan bir yayın.'},
+   {t:'Kişisel blog · "duydum ki" diye başlıyor · kaynak verilmemiş',dogru:1,
+    neden:'"Duydum ki" bir kanıt değildir; kaynak gösterilmemiş.'}]},
+ {kind:'karar',prompt:'Aynı bilgi, iki kaynak.',sahne:SAHNE.kalem,
+  durum:'"Dünyanın en derin gölü Baykal Gölü\'dür" bilgisi iki yerde geçiyor.',
+  kaynak:{dugme:'İki kaynağı da gör',baslik:'Kaynaklar',
+   metin:'A) Coğrafya Ansiklopedisi, 2022, Doç. Dr. M. Kaya, Üniversite Yayınları.\nB) Bir sosyal medya paylaşımı, tarih yok, yazar adı yok, kaynak belirtilmemiş.'},
+  soru:'Hangisine dayanmak daha doğru olur?',
+  secenekler:[
+   {label:'A · yazarı, tarihi ve yayınevi belli olan ansiklopedi',correct:true},
+   {label:'B · sosyal medya paylaşımı',hint:'Yazarı ve tarihi olmayan bir paylaşım doğrulanamaz.'}],
+  araSoz:'Doğru. Peki ikisi çelişseydi?',
+  neden:{soru:'İki kaynak çelişirse ne yaparsın?',secenekler:[
+   {label:'Üçüncü bir güvenilir kaynağa bakarım',correct:true},
+   {label:'Çok paylaşılanı seçerim',hint:'Paylaşım sayısı doğruluk göstergesi değildir.'},
+   {label:'Hoşuma gideni seçerim',hint:'Tercih, doğruluk ölçütü olamaz.'}]},
+  result:'Kaynak, yazarı-tarihi-kurumu belli olduğunda ve başka kaynakla doğrulandığında güvenilirdir.'},
+ {kind:'yaz',prompt:'Seçtiğin kaynağı gerekçelendir.',sahne:SAHNE.kalem,
+  gorev:'Bir ödev için seçeceğin kaynağı ve nedenini yaz.',
+  enAzKelime:11,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'Yazar, tarih ya da kurumdan en az birini söyle',desen:'yazar|tarih|kurum|yayın',bayrak:'i'}],
+  ipucuMetin:'Bu kaynak güvenilir çünkü …',
+  yasak:['Bu kaynak güvenilir çünkü doğru bilgi veriyor.'],
+  ornekCevap:'Okul kütüphanesindeki ansiklopediyi seçtim çünkü yazarı, yayınevi ve basım tarihi kapağında açıkça yazıyor.',
+  result:'Kaynak seçimini ölçütlerle gerekçelendirdin.'}
+]};
+
+/* ---- z30 Okur Kimliği Anketi (çetele çizgisi; cevap sütun adını söylemiyor) ---- */
+GAMES.z30={title:'Okur Kimliği Anketi',theme:'kutuphane',
+ finish:'Söylenenden türü çıkarıp çeteleye işledin, tabloyu yorumladın ve kendi tercihini gerekçesiyle yazdın.',rounds:[
+ {kind:'cetele',prompt:'Arkadaşının anlattığından türü çıkar.',sahne:SAHNE.sozluk,
+  soru:'Bu arkadaşın hangi türü seviyor?',
+  satirlar:['Macera','Bilim','Şiir'],
+  ipucu:'Tür adı söylenmiyor; ne okuduğuna bak. Beşinci çizgi dördünü keser.',
+  oylar:[
+   {t:'"Kahramanın tehlikeli yolculuğunu soluksuz okuyorum."',dogru:0,neden:'Tehlikeli yolculuk macera kitaplarında olur.'},
+   {t:'"Gezegenlerin nasıl oluştuğunu anlatan sayfaları seviyorum."',dogru:1,neden:'Gezegenler bilim konusudur.'},
+   {t:'"Kısa dizeleri ezberleyip sesli okumak hoşuma gidiyor."',dogru:2,neden:'Dize ve ezber şiire aittir.'},
+   {t:'"Define haritası ve gizli geçitler beni heyecanlandırıyor."',dogru:0,neden:'Define ve gizli geçit macera ögesidir.'},
+   {t:'"Deney düzeneklerinin anlatıldığı bölümleri okuyorum."',dogru:1,neden:'Deney bilim konusudur.'},
+   {t:'"Uyaklı satırlar kulağıma çok güzel geliyor."',dogru:2,neden:'Uyak şiirin ögesidir.'},
+   {t:'"Kaçış sahnelerinde kalbim hızlanıyor."',dogru:0,neden:'Kaçış sahnesi macera anlatısıdır.'},
+   {t:'"Canlıların sınıflandırılmasını okumayı seviyorum."',dogru:1,neden:'Sınıflandırma bilim konusudur.'},
+   {t:'"Her akşam bir dize ezberliyorum."',dogru:2,neden:'Dize şiire aittir.'},
+   {t:'"Ormanda kaybolan çocuğun izini sürüyorum."',dogru:0,neden:'İz sürmek macera anlatısıdır.'}]},
+ {kind:'karar',prompt:'Çeteleyi tablo gibi oku.',sahne:SAHNE.sozluk,
+  durum:'Sayım sonucu — Macera: 4 kişi, Bilim: 3 kişi, Şiir: 3 kişi.',
+  soru:'Bu tablodan hangisi çıkar?',
+  secenekler:[
+   {label:'En çok macera okunuyor; diğer ikisi eşit',correct:true},
+   {label:'Üç tür de eşit okunuyor',hint:'Macera 4, diğerleri 3.'},
+   {label:'En az macera okunuyor',hint:'Macera en yüksek sayıya sahip.'}],
+  araSoz:'Doğru. Peki fark kaç kişi?',
+  neden:{soru:'En çok ile en az arasındaki fark kaç kişi?',secenekler:[
+   {label:'1 kişi',correct:true},
+   {label:'4 kişi',hint:'Fark, en büyükten en küçüğü çıkararak bulunur.'},
+   {label:'3 kişi',hint:'4 ile 3 arasındaki farka bak.'}]},
+  result:'Çetele bir sıklık tablosudur: en çok, en az ve fark okunabilir.'},
+ {kind:'yaz',prompt:'Kendi tercihini ekle ve yorumla.',sahne:SAHNE.sozluk,
+  gorev:'Kendi okuma tercihini ekle ve tablodaki sonucu yorumla.',
+  enAzKelime:12,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Sınıfımızda en çok … okunuyor çünkü …',
+  yasak:['Sınıfımızda en çok macera okunuyor çünkü heyecanlı.'],
+  ornekCevap:'Sınıfımızda en çok macera okunuyor çünkü arkadaşlarım merak uyandıran olayları ve beklenmedik sonları seviyor.',
+  result:'Tabloyu yorumlayıp kendi tercihini gerekçesiyle ekledin.'}
+]};
+
+/* ---- z31 Dilek Kutusu (önce tür seçilir, sonra türe uygun cümle) ---- */
+GAMES.z31={title:'Dilek Kutusu',theme:'kutuphane',
+ finish:'İstek, şikâyet ve öneriyi ayırdın, aynı konuyu üç türde ifade ettin ve kendi önerini nazikçe yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu cümle hangi tür?',sahne:SAHNE.sozluk,
+  soru:'Dilek kutusuna atılan bu cümle hangi tür?',
+  kutular:['İSTEK','ŞİKÂYET','ÖNERİ'],
+  ipucu:'İstek bir şey ister, şikâyet bir sorunu bildirir, öneri bir çözüm sunar.',
+  kartlar:[
+   {t:'"Kütüphanemize daha çok bilim kitabı alınmasını istiyoruz."',dogru:0,
+    neden:'Bir şeyin yapılması isteniyor.'},
+   {t:'"Kütüphanedeki masalar çok gürültülü, ders çalışamıyoruz."',dogru:1,
+    neden:'Bir sorun bildiriliyor, çözüm sunulmuyor.'},
+   {t:'"Sessiz çalışma için pencere tarafına ayrı bir köşe yapılabilir."',dogru:2,
+    neden:'Bir çözüm yolu sunuluyor.'},
+   {t:'"Öğle arasında kütüphanenin açık kalmasını rica ediyoruz."',dogru:0,
+    neden:'Bir talep iletiliyor.'},
+   {t:'"Kitap rafları çok yüksek, üst raflara ulaşamıyoruz."',dogru:1,
+    neden:'Yaşanan bir zorluk bildiriliyor.'},
+   {t:'"Sık okunan kitaplar alt raflara yerleştirilebilir."',dogru:2,
+    neden:'Soruna bir çözüm öneriliyor.'}]},
+ {kind:'karar',prompt:'Aynı konu, üç ayrı dil.',sahne:SAHNE.sozluk,
+  durum:'Konu: teneffüste kütüphane çok kalabalık.\nA) "Kütüphane teneffüste çok kalabalık oluyor."\nB) "Kütüphanenin teneffüste daha sakin olmasını istiyoruz."\nC) "Teneffüste sınıflara sırayla giriş yapılabilir."',
+  soru:'Hangisi öneridir?',
+  secenekler:[
+   {label:'C',correct:true},
+   {label:'A',hint:'A bir sorunu bildiriyor; bu şikâyettir.'},
+   {label:'B',hint:'B bir talep iletiyor; bu istektir.'}],
+  araSoz:'Doğru. Peki öneriyi ayıran ne?',
+  neden:{soru:'Bir cümleyi öneri yapan nedir?',secenekler:[
+   {label:'Uygulanabilir bir çözüm sunması',correct:true},
+   {label:'Kibar yazılması',hint:'İstek de kibar olabilir; ayıran çözüm sunmasıdır.'},
+   {label:'Uzun olması',hint:'Uzunluk türü belirlemez.'}]},
+  result:'Şikâyet sorunu bildirir, istek talep eder, öneri çözüm sunar.'},
+ {kind:'yaz',prompt:'Kendi önerini nazikçe yaz.',sahne:SAHNE.sozluk,
+  gorev:'Okul kütüphanesi için bir öneri yaz. Önce sorunu, sonra çözümünü nazik bir dille belirt.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'Nazik bir ifade kullan (rica / olabilir / önerebilir)',desen:'rica|olabilir|öneri|sayg',bayrak:'i'},
+   {ad:'Suçlayıcı ifade kullanma',desen:'^(?!.*(berbat|rezalet|hiç kimse)).*$',bayrak:'is'}],
+  ipucuMetin:'Kütüphanemizde … Bu yüzden … olabilir.',
+  yasak:['Sık okunan kitaplar alt raflara yerleştirilebilir.'],
+  ornekCevap:'Kütüphanemizde sessiz çalışacak bir köşe bulunmuyor. Pencere tarafına küçük bir sessiz okuma alanı yapılmasını rica ediyoruz.',
+  result:'Sorunu bildirip nazik bir çözüm önerdin.'}
+]};
+
+/* ---- z32 Araştırma Adımları (roket kaldırıldı; kaynak gösterme son adım) ---- */
+GAMES.z32={title:'Araştırma Adımları',theme:'masa',
+ finish:'Araştırma adımlarını sıraladın, eksik adımı buldun ve kendi araştırma planını kaynağıyla yazdın.',rounds:[
+ {kind:'sira',prompt:'Araştırma hangi sırayla yapılır?',sahne:SAHNE.masa,
+  gorev:'Araştırma masasındaki adımları sırayla diz.',
+  kartlar:[
+   {t:'Neyi merak ettiğini bir soruya dönüştür.'},
+   {t:'Sorunu yanıtlayacak kaynakları tara.'},
+   {t:'Kaynaklardan işine yarayan bilgileri not al.'},
+   {t:'Notlarından yararlanarak yazını yaz.'},
+   {t:'Yararlandığın kaynakları yazının sonunda göster.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Araştırma neyle başlar?','Sorun belli; şimdi ne yaparsın?',
+   'Kaynakları buldun; bilgiyi nasıl saklarsın?','Notların hazır; sırada ne var?','Yazı bitti; son adım ne?'],
+  ipucu:'Kaynak göstermek yazının sonunda yapılır.',
+  result:'Soru, kaynak tarama, not alma, yazma ve kaynak gösterme.'},
+ {kind:'karar',prompt:'Bu planda ne eksik?',sahne:SAHNE.masa,
+  durum:'Bir öğrenci şöyle çalıştı: Soruyu belirledi, kaynakları taradı, notlarını aldı ve yazısını yazdı. Öğretmeni "yazın eksik" dedi.',
+  soru:'Ne eksik kaldı?',
+  secenekler:[
+   {label:'Yararlandığı kaynakları göstermedi',correct:true},
+   {label:'Not almadı',hint:'Notlarını aldığı yazıyor.'},
+   {label:'Soru belirlemedi',hint:'Soruyu belirlediği yazıyor.'}],
+  araSoz:'Doğru. Peki kaynak göstermek neden gerekli?',
+  neden:{soru:'Kaynak göstermek niçin gerekir?',secenekler:[
+   {label:'Bilginin nereden geldiği doğrulanabilsin diye',correct:true},
+   {label:'Yazı daha uzun görünsün diye',hint:'Amaç uzunluk değil, doğrulanabilirlik.'},
+   {label:'Öğretmen istediği için',hint:'Kural bir gerekçeye dayanır: doğrulanabilirlik.'}]},
+  result:'Kaynak göstermek, bilginin nereden geldiğini doğrulanabilir kılar.'},
+ {kind:'yaz',prompt:'Kendi araştırma planını yaz.',sahne:SAHNE.masa,
+  gorev:'Merak ettiğin bir soru yaz ve onu araştırmak için hangi kaynağı kullanacağını belirt.',
+  enAzKelime:13,enAzCumle:2,buyukHarf:true,
+  denetim:[
+   {ad:'Bir soru yaz (soru işareti kullan)',desen:'\\?'},
+   {ad:'Kullanacağın kaynağı belirt',desen:'kaynak|ansiklopedi|kitap|dergi|site',bayrak:'i'}],
+  ipucuMetin:'Sorum: …?\nKaynağım: …',
+  ornekCevap:'Deniz kaplumbağaları neden aynı kumsala geri döner? Bu soruyu araştırmak için okul kütüphanesindeki doğa ansiklopedisini kullanacağım.',
+  result:'Araştırma sorunu ve kaynağını birlikte planladın.'}
+]};
+
 /* ===== açılış ===== */
 game=GAMES[GAME_ID]||GAMES.z01;
 render();
