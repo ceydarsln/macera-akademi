@@ -111,8 +111,37 @@ async function turuCoz(W,adim){
 }
 
 window.SONUC={bitti:false,kusurlu:[],rapor:[]};
+/* Ön kontrol — koşum ve denetim motoru DOĞRUDAN açtığı için katalog
+   bağlantısındaki kopukluğu göremez: motor kusursuz çalışırken oyun
+   uygulamada hâlâ eski ortak motorla açılıyor olabilir. Bu yüzden önce
+   kataloğu yükleyip her id'nin gerçekten fen4-pdf'e bağlandığı sınanır. */
+async function katalogBagiOnKontrol(){
+  const kusur=[];
+  const cer=document.createElement('iframe');
+  cer.style.cssText='width:390px;height:600px;position:absolute;left:-9999px';
+  document.body.appendChild(cer);
+  await new Promise(coz=>{ cer.onload=()=>coz(); cer.src='../web/macera-akademi.html?kosum=1'; });
+  const W=cer.contentWindow;
+  for(let k=0;k<100 && !W.eval('typeof PHASER_OYUNLAR!=="undefined"');k++) await bekle(80);
+  try{
+    const harita=JSON.parse(W.eval('JSON.stringify(PHASER_OYUNLAR)'));
+    IDS.forEach(id=>{
+      if(harita[id]!=='fen4-pdf')
+        kusur.push(id+' katalogda fen4-pdf değil: '+(harita[id]||'(hiç bağlı değil)'));
+    });
+    if(W.eval('String(/fen4-pdf/.test(autoSpeak.toString()))')!=='true')
+      kusur.push("text='' koşulunda fen4-pdf dalı yok (yönerge iki kez okunur)");
+  }catch(e){ kusur.push('katalog okunamadı: '+e.message) }
+  cer.remove();
+  return kusur;
+}
+
 (async()=>{
   yaz('koşum: '+IDS.length+' oyun');
+  const bag=await katalogBagiOnKontrol();
+  if(bag.length){ yaz('✗ KATALOG BAĞLANTISI','b'); bag.forEach(b=>yaz('&nbsp;&nbsp;'+b,'n'));
+    window.SONUC.kusurlu.push('katalog'); window.SONUC.rapor.push({id:'katalog',bulgular:bag}); }
+  else yaz('✓ katalog bağlantısı: '+IDS.length+' oyun fen4-pdf motoruna bağlı','g');
   for(const id of IDS){
     const bulgular=[];
     let tamamlandi=null;
