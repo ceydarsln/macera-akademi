@@ -101,11 +101,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .veri-satir{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;font-weight:900;padding:2px 4px;border-bottom:1px dotted #ddd0b4}
 .veri-satir:last-child{border-bottom:0}
 .grafik{width:min(330px,96%);display:flex;gap:5px;align-items:stretch}
-.grafik .olcek-sutun{flex:0 0 22px;display:flex;flex-direction:column-reverse;justify-content:space-between;font-size:10px;font-weight:900;color:var(--muted);padding-bottom:24px}
+.grafik .olcek-sutun{flex:0 0 22px;display:flex;flex-direction:column-reverse;font-size:10px;font-weight:900;color:var(--muted);text-align:right;padding-bottom:32px}
+/* ölçek basamağı = blok yüksekliği (17px) + aralık (1px); kategori adı 24px,
+   sütun aralığı 3px ve çerçeve 2px alttan düşülür ki sayı bloğun tam yanına gelsin */
+.grafik .olcek-sutun span{flex:0 0 18px;height:18px;line-height:18px}
 .grafik .sutunlar{flex:1 1 auto;display:flex;gap:5px;align-items:flex-end}
 .gsutun{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:3px}
-.gsutun .bar{width:100%;min-height:120px;border:2px solid #a8bfd0;border-radius:6px 6px 0 0;background:repeating-linear-gradient(0deg,#eef4f9 0 19px,#e2ebf2 19px 20px);display:flex;flex-direction:column-reverse;gap:1px;padding:2px}
-.gsutun .bar i{display:block;height:17px;border-radius:3px;background:var(--blue)}
+.gsutun .bar{width:100%;border:2px solid #a8bfd0;border-radius:6px 6px 0 0;background:repeating-linear-gradient(0deg,#eef4f9 0 17px,#dfe9f1 17px 18px);display:flex;flex-direction:column-reverse;gap:1px;padding:0}
+.gsutun .bar i{display:block;flex:0 0 17px;height:17px;border-radius:3px;background:var(--blue)}
 .gsutun .ad{font-size:10.5px;font-weight:950;line-height:1.1;text-align:center;min-height:24px;overflow-wrap:break-word}
 /* OLCUM — dinamometre yayı ve yük ekranda; tren-tünel yok */
 .olcek{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:min(330px,96%);height:48px;min-height:48px;background:transparent;margin:0}
@@ -655,7 +658,7 @@ function grafikCiz(r){
   (r.veri?veriKutu(r.veri):'')+
   `<div class="grafik"><div class="olcek-sutun">${Array.from({length:enCok},(_,i)=>`<span>${i+1}</span>`).join('')}</div>`+
   `<div class="sutunlar">${r.gruplar.map((g,i)=>
-   `<button class="gsutun" data-sut="${i}"><span class="bar">${Array.from({length:kondu[i]},()=>'<i></i>').join('')}</span>`+
+   `<button class="gsutun" data-sut="${i}"><span class="bar" style="height:${enCok*18}px">${Array.from({length:kondu[i]},()=>'<i></i>').join('')}</span>`+
    `<span class="ad">${esc(g.ad)}</span></button>`).join('')}</div></div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
@@ -1805,6 +1808,402 @@ GAMES.g16={title:'Yer Bilimi Kartları',theme:'kazi',
   yasak:['Fosil demek fosil demektir. Örneğin fosil.'],
   ornekCevap:'Fosil demek çok eskiden yaşamış bir canlının taşa dönüşmüş kalıntısı demektir. Örneğin müzedeki dinozor kemiği bir fosildir.',
   result:'Bir kavramı tanımlayıp örneklendirdin.'}
+]};
+
+/* ---- g17 Fosil Masası (radar kaldırıldı: yönerge oyuna özel, kartlar sabit) ---- */
+GAMES.g17={title:'Fosil Masası',theme:'kazi',
+ finish:'Fosilin ne olduğunu açıkladın, bir fosilden nelerin çıkarılabileceğini ayırdın ve kendi çıkarımını gerekçelendirdin.',rounds:[
+ {kind:'karar',prompt:'Masadaki bu fosil ne anlatıyor?',sahne:SAHNE.kazi,
+  durum:'Kazı masasında sarmal biçimli, taşlaşmış bir deniz kabuğu duruyor. Bulunduğu yer bugün bir dağ yamacı.',
+  soru:'Bu fosil bize ne söyler?',
+  secenekler:[
+   {label:'Buranın çok eskiden deniz altında olduğunu',correct:true},
+   {label:'Buraya birinin kabuğu bıraktığını',hint:'Kabuk taşlaşmış; bu, kısa sürede olmaz.'},
+   {label:'Yarın havanın nasıl olacağını',hint:'Fosil geçmişten haber verir, gelecekten değil.'},
+   {label:'Dağın kaç metre yüksekte olduğunu',hint:'Yükseklik bugünün bilgisi; fosil geçmişi anlatır.'}],
+  neden:{soru:'Bu sonuca nasıl vardın?',
+   secenekler:[
+    {label:'Deniz canlısının kalıntısı ancak yaşadığı yerde gömülür',correct:true},
+    {label:'Bütün dağlar denizden yükselmiştir',hint:'Bu genel bir iddia; elimizdeki kanıt yalnız bu kabuk.'},
+    {label:'Kabuklar rüzgârla dağa taşınır',hint:'Rüzgâr taşlaşmış bir kabuğu katmanların içine gömemez.'}]},
+  araSoz:'Doğru. Peki bu sonuca nasıl vardın?',
+  ipucu:'Fosilin ne olduğuna değil, nerede bulunduğuna da bak.',
+  result:'Fosil, bulunduğu yerin geçmişteki ortamını anlatır.'},
+ {kind:'sinifla',prompt:'Bu sonuç bu fosilden çıkarılabilir mi?',sahne:SAHNE.kazi,
+  soru:'Elimizdeki tek kanıt taşlaşmış bir yaprak izi. Bu sonuca varabilir miyiz?',
+  kutular:[{ad:'ÇIKARILABİLİR',alt:'kanıt bunu destekliyor'},{ad:'ÇIKARILAMAZ',alt:'kanıt bunu söylemiyor'}],
+  ipucu:'Sor: bunu bu izden görebiliyor muyum, yoksa tahmin mi ediyorum?',
+  kartlar:[
+   {t:'Burada bir zamanlar bitkiler yetişiyordu',dogru:0,
+    neden:'Yaprak izi, bitkinin orada bulunduğunu gösterir.',
+    hint:'Yaprak izi bir bitkiden mi kaldı?'},
+   {t:'Bu yaprağın rengi yeşildi',dogru:1,
+    neden:'Renk taşa geçmez; iz yalnız biçimi korur.',hint:'Taşta bir renk görebiliyor musun?'},
+   {t:'Yaprağın kenarı dişli biçimdeydi',dogru:0,
+    neden:'İz, yaprağın biçimini olduğu gibi korur.',hint:'İzin kenarına bakabiliyor musun?'},
+   {t:'Bu bitki ilkbaharda çiçek açardı',dogru:1,
+    neden:'Tek bir yaprak izi mevsim davranışını göstermez.',
+    hint:'Elindeki izde çiçek var mı?'},
+   {t:'Yaprak, taşlaşmadan önce çamurla örtülmüştü',dogru:0,
+    neden:'İzin korunmuş olması örtülmüş olmasını gerektirir.',
+    hint:'Örtülmeseydi bu iz bugüne kalabilir miydi?'},
+   {t:'Bu bitkiyi bir hayvan yemişti',dogru:1,
+    neden:'İzde ısırık kanıtı yoksa bu söylenemez.',hint:'İzde bunu gösteren bir iz var mı?'}]},
+ {kind:'yaz',prompt:'Bir fosilden çıkardığın bilgiyi gerekçesiyle yaz.',sahne:SAHNE.kazi,
+  gorev:'Yukarıdaki fosillerden birini seç. Ondan hangi bilgiye ulaştığını ve bunu nereden çıkardığını yaz.',
+  ornek:'Kalıp: "Bu fosil … olduğunu gösteriyor çünkü …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Bu fosil … olduğunu gösteriyor çünkü …',
+  yasak:['Bu fosil eski olduğunu gösteriyor çünkü eskidir.'],
+  ornekCevap:'Dağda bulunan deniz kabuğu burasının eskiden su altında olduğunu gösteriyor çünkü deniz canlıları ancak suda yaşar.',
+  result:'Çıkarımını kanıta bağladın: bilimde sonuç böyle savunulur.'}
+]};
+
+/* ---- g18 Kazı Seti (tepsi kaldırıldı: set ekranda gerçekten kuruluyor) ---- */
+GAMES.g18={title:'Kazı Seti',theme:'kazi',
+ finish:'Kazı setini kurdun, kaba ve ince işin aletlerini ayırdın ve bir kazı planını adım adım yazdın.',rounds:[
+ {kind:'topla',prompt:'Kazı setine gereken aletleri topla.',sahne:SAHNE.kazi,
+  gorev:'Paleontolog: "Katmanın içindeki kemiği kırmadan çıkaracağız. Çıkarmak, incelemek ve kaydetmek için gerekenleri al."',
+  soru:'Bu alet kazıda işine yarar mı?',
+  cantaAd:'KAZI SETİ',bosMetin:'Set boş — kazıda ne gerekir?',
+  ipucu:'Üç iş var: çıkarmak, incelemek, kaydetmek.',
+  ogeler:[
+   {t:'Küçük çekiç',neden:'Sert katmanı dikkatlice kırmak için gerekir.'},
+   {t:'İnce fırça',neden:'Fosilin üstündeki tozu zarar vermeden temizler.'},
+   {t:'Büyüteç',neden:'Küçük ayrıntıları görmeyi sağlar.'},
+   {t:'Kayıt defteri',neden:'Fosilin hangi katmandan çıktığı yazılmalıdır.'},
+   {t:'Etiket ve saklama kutusu',neden:'Fosil taşınırken karışmasın diye etiketlenir.'},
+   {t:'Futbol topu',hint:'Bu, fosili çıkarmana ya da kaydetmene yarar mı?'},
+   {t:'Kulaklık',hint:'Bu alet kazının hangi işinde kullanılır?'},
+   {t:'Bahçe hortumu',hint:'Bunu kazıda kullansan taşlaşmış kalıntıya ne olur?'}],
+  gerekli:[0,1,2,3,4]},
+ {kind:'sinifla',prompt:'Bu alet kaba iş için mi, ince iş için mi?',sahne:SAHNE.kazi,
+  soru:'Bu alet kazının hangi aşamasında kullanılır?',
+  kutular:[{ad:'KABA İŞ',alt:'üstteki taşı ve toprağı almak'},{ad:'İNCE İŞ',alt:'fosile yaklaşınca'}],
+  ipucu:'Fosile yaklaştıkça alet küçülür ve dikkat artar.',
+  kartlar:[
+   {t:'Kürek — üstteki gevşek toprağı atmak',dogru:0,
+    neden:'Fosilden uzaktayken hızlı çalışılabilir.',hint:'Bu aletle bir kemiği temizleyebilir misin?'},
+   {t:'Diş fırçası inceliğinde fırça — kemiğin üstünü süpürmek',dogru:1,
+    neden:'Fosile değen alet yumuşak olmalıdır.',hint:'Bu alet ne kadar toprak kaldırır?'},
+   {t:'Kazma — katmanın sert üst kabuğunu kırmak',dogru:0,
+    neden:'Sert kabuk ancak ağır aletle açılır.',hint:'Bu alet fosile çarparsa ne olur?'},
+   {t:'İnce uçlu kazıyıcı — kemiğin kenarındaki toprağı sıyırmak',dogru:1,
+    neden:'Kemiğe yakın yerde milimetrelik çalışılır.',hint:'Bu aletle bir metrelik toprak atılabilir mi?'},
+   {t:'Elek — çıkan toprağı eleyip küçük parçaları bulmak',dogru:1,
+    neden:'Elekten geçen ufak parçalar da fosilin bir bölümü olabilir.',
+    hint:'Bu iş toprağı atmak mı, içindekini aramak mı?'},
+   {t:'El arabası — çıkan toprağı taşımak',dogru:0,
+    neden:'Taşıma işi fosile değmeden yapılır.',hint:'Bu araç fosile dokunuyor mu?'}]},
+ {kind:'yaz',prompt:'Kendi kazı planını adım adım yaz.',sahne:SAHNE.defter,
+  gorev:'Bir fosil kazısını nasıl yapacağını sırasıyla yaz: önce ne, sonra ne, en sonunda ne?',
+  ornek:'Kalıp: "Önce … Sonra … En sonunda …"',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,
+  denetim:[
+   {ad:'"önce" sözcüğünü kullan',desen:'önce',bayrak:'i'},
+   {ad:'"fırça", "kaydet" ya da "etiket" sözcüklerinden birini kullan',desen:'fırça|kayded|kaydet|etiket',bayrak:'i'}],
+  ipucuMetin:'Önce … Sonra … En sonunda …',
+  yasak:['Önce kazarım sonra çıkarırım en sonunda kaydederim.'],
+  ornekCevap:'Önce üstteki gevşek toprağı kürekle alırım. Sonra kemiğe yaklaşınca ince fırçayla tozu temizlerim. En sonunda hangi katmandan çıktığını deftere kaydederim.',
+  result:'Kazıyı bir plana bağladın: paleontologlar da böyle çalışır.'}
+]};
+
+/* ---- g19 Maddenin Hâlleri (KRİTİK: su kartı ile SIVI kutusu aynı simgeyi
+        taşıyordu; simgeler kaldırıldı, karar kabın biçimine bakarak veriliyor) ---- */
+GAMES.g19={title:'Maddenin Hâlleri',theme:'atolye',
+ finish:'Maddeleri hâllerine göre grupladın, sınıflaması zor olanları ölçütle ayırdın ve bir maddeyi gerekçesiyle sınıfladın.',rounds:[
+ {kind:'sinifla',prompt:'Bu madde hangi hâlde?',sahne:SAHNE.atolye,
+  soru:'Bu madde hangi gruba girer?',
+  kutular:[
+   {ad:'KATI',alt:'kendi biçimini korur'},
+   {ad:'SIVI',alt:'konduğu kabın biçimini alır'},
+   {ad:'GAZ',alt:'bulunduğu her yeri doldurur'}],
+  ipucu:'Kartı oku: madde kaba konunca ne oluyor?',
+  kartlar:[
+   {t:'Taş — hangi kaba konursa konsun biçimi değişmez',dogru:0,
+    neden:'Kendi biçimini koruyan maddeler bu gruptadır.',hint:'Kaba konunca biçimi değişiyor mu?'},
+   {t:'Su — bardağa dökülünce bardağın, tabağa dökülünce tabağın biçimini alır',dogru:1,
+    neden:'Kabın biçimini alan ama hacmi değişmeyen maddeler bu gruptadır.',
+    hint:'Kaptan kaba geçince biçimi ne oluyor?'},
+   {t:'Balonun içindeki hava — balon şiştikçe her yanını doldurur',dogru:2,
+    neden:'Bulunduğu kabı tümüyle dolduran maddeler bu gruptadır.',
+    hint:'Bu madde kabın yalnız altında mı duruyor, her yanında mı?'},
+   {t:'Buz küpü — tabağa koyduğunda köşeli biçimini sürdürür',dogru:0,
+    neden:'Donmuş su kendi biçimini korur.',hint:'Bu parça kabın biçimini alıyor mu?'},
+   {t:'Süt — şişeden bardağa aktarıldığında bardağın biçimini alır',dogru:1,
+    neden:'Akıcı olup kabın biçimini alan maddeler bu gruptadır.',
+    hint:'Aktarıldığında biçimi değişiyor mu?'},
+   {t:'Soluk verdiğimizde çıkan gaz — odaya yayılır, gözle görülmez',dogru:2,
+    neden:'Yayılıp her yeri dolduran maddeler bu gruptadır.',hint:'Bu madde bir yerde mi duruyor, yayılıyor mu?'},
+   {t:'Kurşun kalem — çantada da masada da aynı biçimde durur',dogru:0,
+    neden:'Biçimini koruyan maddeler bu gruptadır.',hint:'Çantaya girince biçimi değişiyor mu?'},
+   {t:'Zeytinyağı — şişeden tavaya döküldüğünde tavanın dibine yayılır',dogru:1,
+    neden:'Akan ve kabın biçimini alan maddeler bu gruptadır.',hint:'Bu madde akıyor mu?'},
+   {t:'Şişirilmiş topun içindekiler — topun her yanını eşit doldurur',dogru:2,
+    neden:'Kabı tümüyle dolduran maddeler bu gruptadır.',hint:'Top söndüğünde içindeki nereye gider?'}]},
+ {kind:'sinifla',prompt:'Bu maddeleri sınıflamak daha zor.',sahne:SAHNE.atolye,
+  soru:'Ölçüte bak: bu madde hangi gruba girer?',
+  kutular:[{ad:'KATI',alt:'taneleri kendi biçimini korur'},{ad:'SIVI',alt:'akar, kabın biçimini alır'},
+   {ad:'GAZ',alt:'yayılır, her yeri doldurur'}],
+  ipucu:'Akmak sıvı olmak demek değildir; tek tek tanelere bak.',
+  kartlar:[
+   {t:'Kum — kaba döküldüğünde yayılır ama her tanesi köşeli biçimini korur',dogru:0,
+    neden:'Tek tek taneleri biçimini koruyan maddeler katıdır.',
+    hint:'Bir kum tanesini büyüteçle görsen biçimi değişiyor mu?'},
+   {t:'Bal — çok yavaş da olsa akar ve kabın dibini kaplar',dogru:1,
+    neden:'Yavaş akmak da akmaktır.',hint:'Yeterince beklersen kabın biçimini alır mı?'},
+   {t:'Buhar — çaydanlıktan çıkıp mutfağın her yanına dağılır',dogru:2,
+    neden:'Dağılıp her yeri dolduran maddeler gazdır.',hint:'Bu madde bir yerde toplanıyor mu?'},
+   {t:'Un — elendiğinde akar gibi görünür ama her zerresi katıdır',dogru:0,
+    neden:'Toz hâlindeki maddeler de katıdır.',hint:'Bir un zerresi kabın biçimini alır mı?'},
+   {t:'Sıvı sabun — şişeden avuca döküldüğünde avucun biçimini alır',dogru:1,
+    neden:'Kabın biçimini alan akıcı maddeler sıvıdır.',hint:'Avucunda ne oluyor?'},
+   {t:'Şişme yatağın içindekiler — yatağın her köşesini doldurur',dogru:2,
+    neden:'Kabın tamamını dolduran maddeler gazdır.',hint:'Yatağın köşeleri de doluyor mu?'}]},
+ {kind:'yaz',prompt:'Bir maddeyi gerekçesiyle sınıfla.',sahne:SAHNE.ev,
+  gorev:'Çevrendeki bir maddeyi seç; katı, sıvı yoksa gaz mı olduğunu gerekçesiyle yaz.',
+  ornek:'Kalıp: "… bir … çünkü …" (biçimini koruyor mu, kabın biçimini mi alıyor?)',
+  enAzKelime:12,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… gördüm. Bu … hâldedir çünkü …',
+  yasak:['Su sıvıdır çünkü sıvıdır.'],
+  ornekCevap:'Buzdolabındaki meyve suyunu gördüm. Bu sıvı hâldedir çünkü sürahiden bardağa dökünce bardağın biçimini alıyor.',
+  result:'Sınıflamanı gözlenebilir bir ölçüte dayandırdın.'}
+]};
+
+/* ---- g20 Ayırma Yöntemi Köprüsü (karışım ile yöntem arasında simge kopyası yok) ---- */
+GAMES.g20={title:'Ayırma Yöntemi Köprüsü',theme:'atolye',
+ finish:'Karışımları uygun yöntemlerle eşledin, birden çok yöntemin işe yaradığı durumları tartıştın ve kendi yöntemini önerdin.',rounds:[
+ {kind:'esle',prompt:'Her karışımı uygun ayırma yöntemiyle eşle.',sahne:SAHNE.atolye,
+  soru:'Önce alttan bir karışım seç, sonra ona uyan yönteme dokun.',
+  ipucu:'Karışımın parçaları neyle ayrılır: tane boyu mu, ağırlık mı, mıknatıs mı?',
+  yuvalar:[
+   {hedef:'ELEME — iri taneleri ince tanelerden ayırır',dogru:0,
+    neden:'Tane boyu farklıysa elek işe yarar.',hint:'Bu yöntem hangi farktan yararlanır: boy mu, ağırlık mı?'},
+   {hedef:'SÜZME — sıvının içindeki katıyı tutar',dogru:1,
+    neden:'Sıvı geçer, katı süzgeçte kalır.',hint:'Bu yöntemde biri sıvı olmalı.'},
+   {hedef:'MIKNATISLA AYIRMA — yalnız mıknatısın çektiğini alır',dogru:2,
+    neden:'Demir mıknatısa yapışır, kum yapışmaz.',hint:'Bu yöntem hangi maddeyi çeker?'},
+   {hedef:'DİNLENDİRME — bekletince ağır olan dibe çöker',dogru:3,
+    neden:'Bekleyince asılı taneler dibe iner.',hint:'Bu yöntemde ne yapılır: karıştırılır mı, beklenir mi?'},
+   {hedef:'YÜZDÜRME — hafif olan suyun yüzüne çıkar',dogru:4,
+    neden:'Sudan hafif olan yüzer, ağır olan batar.',hint:'Bu yöntem hangi farktan yararlanır?'}],
+  etiketler:[
+   {t:'Un ile buğday tanesi'},
+   {t:'Demlikteki çay ile çay yaprağı'},
+   {t:'Kum ile demir tozu'},
+   {t:'Çamurlu su'},
+   {t:'Su içindeki kum ve talaş'}]},
+ {kind:'karar',prompt:'Bu karışım için birden çok yöntem var mı?',sahne:SAHNE.atolye,
+  durum:'Tezgâhta bir kapta su, kum ve talaş karışık duruyor. Talaş suyun yüzünde, kum dipte.',
+  soru:'Bu karışımı ayırmak için ne yapmalısın?',
+  secenekler:[
+   {label:'Önce yüzen talaşı toplayıp sonra kalanı süzmek',correct:true},
+   {label:'Yalnız mıknatıs tutmak',hint:'Mıknatıs kumu da talaşı da çekmez; ikisi de demir değil.'},
+   {label:'Yalnız elemek',hint:'Karışımın içinde su var; elek suyu tutmaz.'},
+   {label:'Karışımı iyice çalkalamak',hint:'Çalkalamak parçaları ayırmaz, daha da karıştırır.'}],
+  neden:{soru:'İki yöntem birden neden gerekti?',
+   secenekler:[
+    {label:'Karışımda üç madde var ve her biri farklı bir özellikle ayrılıyor',correct:true},
+    {label:'Tek yöntem her zaman yetersizdir',hint:'Kum ile demir tozu tek yöntemle ayrılabiliyordu.'},
+    {label:'Su her karışımda iki yöntem gerektirir',hint:'Çamurlu su tek başına dinlendirmeyle ayrılıyordu.'}]},
+  araSoz:'Doğru. Peki neden iki yöntem gerekti?',
+  ipucu:'Kapta kaç farklı madde var? Her biri hangi özelliğiyle ayrılır?',
+  result:'Karışımdaki madde sayısı arttıkça yöntem sayısı da artabilir.'},
+ {kind:'yaz',prompt:'Bir karışım için yöntem öner ve nedenini açıkla.',sahne:SAHNE.atolye,
+  gorev:'Evde karşılaşabileceğin bir karışım yaz ve onu nasıl ayıracağını nedeniyle belirt.',
+  ornek:'Kalıp: "… karışımını … ile ayırırım çünkü …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… karışımını … ile ayırırım çünkü …',
+  yasak:['Karışımı süzerek ayırırım çünkü süzülür.'],
+  ornekCevap:'Haşlanmış makarna ile kaynama suyunu mutfak süzgeciyle ayırırım çünkü delikler suyu geçirirken makarnayı üstte tutuyor.',
+  result:'Yöntemini maddelerin özelliğine dayandırdın.'}
+]};
+
+/* ---- g21 Süzme Deneyi (roket kaldırıldı: adımlar deney tezgâhında) ---- */
+GAMES.g21={title:'Süzme Deneyi',theme:'atolye',
+ finish:'Deney adımlarını sıraladın, tahmin tutmayınca ne yapılacağını öğrendin ve deneyi kendi sözcüklerinle anlattın.',rounds:[
+ {kind:'sira',prompt:'Deney adımlarını tezgâhta sırayla uygula.',sahne:SAHNE.atolye,
+  gorev:'Tezgâhta kum karışmış bir su var. Deneye hangi adımla başlarsın?',
+  ipucu:'Deney bir soruyla başlar, kayıtla biter.',
+  kartlar:[
+   {t:'"Kum ile suyu nasıl ayırırım?" diye sorarım',neden:'Deney bir soruya yanıt aramaktır.'},
+   {t:'"Süzgeçle ayrılır" tahminimi yazarım',neden:'Tahmin önceden yazılırsa sınanabilir.'},
+   {t:'Karışımı süzgeçten yavaşça dökerim',neden:'Bu, tahmini sınayan adımdır.'},
+   {t:'Süzgeçte kalanı ve geçen suyu incelerim',neden:'Gözlem, sonucu görmemizi sağlar.'},
+   {t:'Sonucu tahminimle karşılaştırıp deftere kaydederim',neden:'Karşılaştırma olmadan deney tamamlanmaz.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Deneye başlamadan önce ne belirlenmeli?',
+   'Sorun hazır; dökmeden önce ne yazarsın?',
+   'Tahminini sınamak için ne yaparsın?',
+   'Döktükten sonra neye bakarsın?',
+   'Gözlemini ne yaparsan deney tamamlanır?']},
+ {kind:'karar',prompt:'Tahmin tutmadı; şimdi ne yapmalı?',sahne:SAHNE.atolye,
+  durum:'Deneyi yaptın ama süzgeçten geçen su hâlâ bulanık. Tahminin "süzgeç kumu tutar, su berrak olur" idi.',
+  soru:'Bu durumda ne yapılır?',
+  secenekler:[
+   {label:'Deney yeniden kurulur; daha sık gözenekli bir süzgeç denenir',correct:true},
+   {label:'Sonuç tahmine uysun diye deftere "berrak" yazılır',
+    hint:'Ölçümü değiştirmek deneyi geçersiz kılar; bilim böyle yapmaz.'},
+   {label:'Deney bırakılır, konu kapatılır',hint:'Tutmayan tahmin bir başarısızlık değil, yeni bir bilgidir.'},
+   {label:'Tahmin hiç yazılmamış sayılır',hint:'Tahmin, sonucu karşılaştırdığın ölçüdür; silinmez.'}],
+  neden:{soru:'Tutmayan bir tahmin bize ne kazandırır?',
+   secenekler:[
+    {label:'Süzgecin gözeneklerinin kumdan büyük olduğunu öğretir',correct:true},
+    {label:'Hiçbir şey kazandırmaz',hint:'Beklenmedik sonuç, düzeneğin bir yanını açığa çıkarır.'},
+    {label:'Deneyin yanlış konuda olduğunu gösterir',hint:'Konu doğruydu; sorun düzenekte.'}]},
+  araSoz:'Doğru. Peki bu sonuç bize ne öğretti?',
+  ipucu:'Bilim insanı tutmayan tahminde deneyi tekrar eder.',
+  result:'Sonuç tahmine uymazsa deney tekrarlanır; sonuç değiştirilmez.'},
+ {kind:'yaz',prompt:'Süzme deneyini kendi sözcüklerinle anlat.',sahne:SAHNE.defter,
+  gorev:'Süzme deneyini baştan sona kendi cümlelerinle yaz: neyi ayırdın, nasıl ayırdın, ne gözledin?',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,
+  denetim:[
+   {ad:'"süz" sözcüğünü kullan',desen:'süz',bayrak:'i'},
+   {ad:'"gözlem" ya da "gördüm" sözcüğünü kullan',desen:'gözlem|gördüm',bayrak:'i'}],
+  ipucuMetin:'Karışımı … Sonra … Gözlemim …',
+  yasak:['Karışımı süzdüm. Sonra baktım. Gözlemim iyiydi.'],
+  ornekCevap:'Kum karışmış suyu süzgeçten yavaşça geçirdim. Sonra süzgeçte kalanla geçen suyu ayrı ayrı inceledim. Gözlemim kumun süzgeçte kaldığı ve suyun kaba aktığıdır.',
+  result:'Deneyi adım adım anlattın: bilimsel rapor böyle yazılır.'}
+]};
+
+/* ---- g22 Ayırma Atölyesi (tepsi kaldırıldı: düzenek tezgâhta kuruluyor) ---- */
+GAMES.g22={title:'Ayırma Atölyesi',theme:'atolye',
+ finish:'Ayırma düzeneğini kurdun, yanlış alet seçiminin sonucunu gördün ve bir ayırma işi için gerekenleri kendin sıraladın.',rounds:[
+ {kind:'topla',prompt:'Süzme düzeneğini tezgâhta kur.',sahne:SAHNE.atolye,
+  gorev:'Usta: "Çamurlu suyu berraklaştıracağız. Süzme düzeneğini kurmak için gerekenleri tezgâha diz."',
+  soru:'Bu alet düzeneğin bir parçası mı?',
+  cantaAd:'TEZGÂH',bosMetin:'Tezgâh boş — düzeneği kurmaya başla.',
+  ipucu:'Düzenek: süzeceğin şey, süzen şey ve altta toplayan şey.',
+  ogeler:[
+   {t:'Huni',neden:'Süzgeç kâğıdını tutan ve suyu yönlendiren parçadır.'},
+   {t:'Süzgeç kâğıdı',neden:'Katıyı tutan asıl parçadır.'},
+   {t:'Altta duran boş kap',neden:'Süzülen suyun toplandığı yerdir.'},
+   {t:'Destek ayağı',neden:'Huniyi kabın üstünde sabit tutar.'},
+   {t:'Mıknatıs',hint:'Bu alet neyi çeker? Çamurda demir var mı?'},
+   {t:'Tartı',hint:'Bu alet ağırlık ölçer; ayırma işini yapıyor mu?'},
+   {t:'Çekiç',hint:'Bu aleti düzeneğe koyarsan ne işe yarar?'}],
+  gerekli:[0,1,2,3]},
+ {kind:'karar',prompt:'Yanlış alet seçilirse ne olur?',sahne:SAHNE.atolye,
+  durum:'Bir öğrenci çamurlu suyu ayırmak için süzgeç kâğıdı yerine iri delikli bir elek kullandı.',
+  soru:'Sonuç ne olur?',
+  secenekler:[
+   {label:'Çamur taneleri deliklerden geçer, su bulanık kalır',correct:true},
+   {label:'Su berraklaşır, çamur elekte kalır',hint:'Eleğin delikleri çamur tanesinden büyük; ne olur?'},
+   {label:'Su hiç geçmez, elekte birikir',hint:'İri delikli elek suyu rahatça geçirir.'},
+   {label:'Çamur suyun üstünde toplanır',hint:'Bu, yüzdürme yönteminin sonucudur; burada elek kullanıldı.'}],
+  neden:{soru:'Doğru aleti belirleyen şey nedir?',
+   secenekler:[
+    {label:'Deliklerin, ayrılacak tanelerden küçük olması',correct:true},
+    {label:'Aletin büyük olması',hint:'Boyut değil, gözenek büyüklüğü belirleyici.'},
+    {label:'Aletin metal olması',hint:'Malzeme değil, gözenek belirleyici.'}]},
+  araSoz:'Doğru. Peki aleti ne belirliyor?',
+  ipucu:'Eleğin deliğiyle çamur tanesinin boyunu karşılaştır.',
+  result:'Ayırma aleti, ayrılacak tanenin boyuna göre seçilir.'},
+ {kind:'yaz',prompt:'Bir ayırma işi için gerekenleri sırala.',sahne:SAHNE.defter,
+  gorev:'Ayırmak istediğin bir karışım seç ve bunun için gereken aletleri kullanım sırasıyla yaz.',
+  ornek:'Kalıp: "… ayırmak için önce … sonra … kullanırım."',
+  enAzKelime:14,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'"önce" sözcüğünü kullan',desen:'önce',bayrak:'i'},
+   {ad:'"sonra" sözcüğünü kullan',desen:'sonra',bayrak:'i'}],
+  ipucuMetin:'… ayırmak için önce … sonra … kullanırım.',
+  yasak:['Ayırmak için önce alet sonra alet kullanırım.'],
+  ornekCevap:'Çayı yaprağından ayırmak için önce demliği bir süre dinlendiririm sonra süzgeçli bardağa yavaşça dökerim.',
+  result:'Aletleri işe ve sıraya göre seçtin.'}
+]};
+
+/* ---- g23 Geri Dönüşüm Kutuları (radar kaldırıldı: kutular ekranda) ---- */
+GAMES.g23={title:'Geri Dönüşüm Kutuları',theme:'park',
+ finish:'Atıkları doğru kutulara ayırdın, karıştırılan atıkları çözdün ve evindeki bir atığı hangi kutuya atacağını yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu atık hangi kutuya gider?',sahne:SAHNE.geri,
+  soru:'Elindeki atık hangi kutuya atılır?',
+  kutular:[{ad:'KÂĞIT'},{ad:'PLASTİK'},{ad:'CAM'},{ad:'ORGANİK',alt:'yiyecek artığı'}],
+  ipucu:'Atığın yapıldığı maddeye bak.',
+  kartlar:[
+   {t:'Boşalmış reçel kavanozu',dogru:2,neden:'Kavanoz eritilerek yeniden şişe olur.',
+    hint:'Bu kap hangi maddeden yapılmış: saydam ve sert olan hangisi?'},
+   {t:'Muz kabuğu',dogru:3,neden:'Yiyecek artıkları çürüyerek gübreye dönüşür.',
+    hint:'Bu atık toprakta çürüyebilir mi?'},
+   {t:'Okuduğun gazete',dogru:0,neden:'Gazete yeniden kâğıt hamuru olur.',
+    hint:'Bu atık hangi maddeden yapılmış?'},
+   {t:'Boş su şişesi',dogru:1,neden:'Şişeler eritilip yeniden şişe ya da elyaf olur.',
+    hint:'Bu şişe hafif ve esnek mi, ağır ve kırılgan mı?'},
+   {t:'Yumurta kabuğu',dogru:3,neden:'Kabuk toprakta çözünür.',hint:'Bu atık mutfaktan mı çıktı, kırtasiyeden mi?'},
+   {t:'Karton yumurta viyolü',dogru:0,neden:'Viyol preslenmiş kâğıttan yapılır.',
+    hint:'Bu kap neye benziyor: kartona mı, cama mı?'},
+   {t:'Kırık bardak',dogru:2,neden:'Kırık cam da eritilerek geri kazanılır.',
+    hint:'Bu parça saydam ve keskin mi?'},
+   {t:'Yoğurt kabı',dogru:1,neden:'Yoğurt kapları geri dönüştürülebilir plastiktir.',
+    hint:'Bu kap elde ezilebiliyor mu?'}]},
+ {kind:'karar',prompt:'Bu atıklar kolay karıştırılıyor.',sahne:SAHNE.geri,
+  durum:'Kantinden çıkan üç atık: içi yağ olmuş pizza kutusu, hem karton hem alüminyum kaplı meyve suyu kutusu, bir de kâğıt peçete.',
+  soru:'Yağlı pizza kutusu kâğıt kutusuna atılır mı?',
+  secenekler:[
+   {label:'Atılmaz; yağlı kısım kâğıt hamurunu bozar, organik atığa gider',correct:true},
+   {label:'Atılır; kartondan yapılmış her şey kâğıt kutusuna gider',
+    hint:'Kâğıdın yeniden hamur olabilmesi için temiz olması gerekir.'},
+   {label:'Atılır; yağ geri dönüşümde yanar',hint:'Yağ, hamurun içinde leke bırakır ve kâğıdı kullanılmaz kılar.'},
+   {label:'Hiçbir kutuya atılamaz, yakılır',hint:'Yağlı kâğıt çürüyebilir; bir kutusu var.'}],
+  neden:{soru:'Peki bu kuraldan hangi genel sonuç çıkar?',
+   secenekler:[
+    {label:'Geri dönüşüm için atık temiz ve tek maddeden olmalıdır',correct:true},
+    {label:'Kartonlar hiçbir zaman geri dönüştürülemez',hint:'Temiz karton sorunsuz dönüştürülür.'},
+    {label:'Bütün atıklar organik kutuya atılabilir',hint:'Cam ve plastik toprakta çürümez.'}]},
+  araSoz:'Doğru. Peki bundan hangi kural çıkar?',
+  ipucu:'Geri dönüşümde atığın maddesi kadar temizliği de önemli.',
+  result:'Kirlenmiş ya da iki maddeden yapılmış atıklar ayrı değerlendirilir.'},
+ {kind:'yaz',prompt:'Evindeki bir atığı hangi kutuya atacağını yaz.',sahne:SAHNE.ev,
+  gorev:'Bugün evinde çıkan bir atığı yaz, hangi kutuya atacağını söyle ve nedenini belirt.',
+  ornek:'Kalıp: "… atığını … kutusuna atarım çünkü …"',
+  enAzKelime:12,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… atığını … kutusuna atarım çünkü …',
+  yasak:['Atığı kutuya atarım çünkü oraya atılır.'],
+  ornekCevap:'Boşalan süt kutusunu kâğıt kutusuna atarım çünkü dışı kartondan yapılmış ve içini yıkayıp kuruttum.',
+  result:'Ayrıştırma kararını atığın maddesine dayandırdın.'}
+]};
+
+/* ---- g24 Okul Atık Grafiği (grup sayıları artık ekranda; ölçek eklendi) ---- */
+GAMES.g24={title:'Okul Atık Grafiği',theme:'bahce',
+ finish:'Sayım verilerini grafiğe döktün, grafiği okuyup farkları buldun ve okulun için bir azaltma önerisi yazdın.',rounds:[
+ {kind:'grafik',prompt:'Sayım verilerini grafiğe dök.',sahne:SAHNE.bahce,
+  soru:'Her atık türü için sütununa o kadar blok koy.',
+  ipucu:'Veri satırını oku, sonra o sütuna dokun.',
+  veri:{bas:'Okulda bir haftada toplanan atık (kutu sayısı)',
+   satirlar:[{ad:'Kâğıt',deger:6},{ad:'Plastik',deger:4},{ad:'Organik',deger:5},{ad:'Cam',deger:2}]},
+  gruplar:[
+   {ad:'Kâğıt',sayi:6,hint:'Kâğıt satırında kaç kutu yazıyor?'},
+   {ad:'Plastik',sayi:4,hint:'Plastik satırını yeniden oku.'},
+   {ad:'Organik',sayi:5,hint:'Organik satırında kaç kutu var?'},
+   {ad:'Cam',sayi:2,hint:'Cam satırını yeniden oku.'}],
+  enCok:7,
+  result:'Sayıları grafiğe döktün; artık karşılaştırma yapabilirsin.'},
+ {kind:'karar',prompt:'Kurduğun grafiği oku.',sahne:SAHNE.bahce,
+  durum:'Bir kutu 5 kilogram geliyor. Grafikteki sütunlar bir haftalık toplamı gösteriyor.',
+  veri:{bas:'Okulda bir haftada toplanan atık (kutu sayısı)',
+   satirlar:[{ad:'Kâğıt',deger:6},{ad:'Plastik',deger:4},{ad:'Organik',deger:5},{ad:'Cam',deger:2}]},
+  soru:'Kâğıt ile cam arasında kaç kilogram fark var?',
+  secenekler:[
+   {label:'20 kilogram',correct:true},
+   {label:'4 kilogram',hint:'Bulduğun fark kutu sayısı; her kutu 5 kilogram.'},
+   {label:'8 kilogram',hint:'Önce kutu farkını bul, sonra 5 ile çarp.'},
+   {label:'40 kilogram',hint:'İki sütunun toplamını değil, farkını al.'}],
+  neden:{soru:'Okulda en çok hangi atık toplanıyor?',
+   secenekler:[
+    {label:'Kâğıt',correct:true},
+    {label:'Organik',hint:'Organik sütunu kâğıttan bir kutu kısa.'},
+    {label:'Cam',hint:'Cam en kısa sütun.'}]},
+  araSoz:'Doğru. Peki en çok hangi atık toplanıyor?',
+  ipucu:'Önce kutu farkını bul, sonra kilograma çevir.',
+  result:'Grafiği okuyup sayısal bir karşılaştırma yaptın.'},
+ {kind:'yaz',prompt:'Okulun için bir azaltma önerisi yaz.',sahne:SAHNE.bahce,
+  gorev:'Grafiğe göre en çok toplanan atığı azaltmak için okuluna somut bir öneri yaz ve nedenini belirt.',
+  ornek:'Kalıp: "En çok … toplanıyor. Önerim … çünkü …"',
+  veri:{bas:'Okulda bir haftada toplanan atık (kutu sayısı)',
+   satirlar:[{ad:'Kâğıt',deger:6},{ad:'Plastik',deger:4},{ad:'Organik',deger:5},{ad:'Cam',deger:2}]},
+  enAzKelime:16,enAzCumle:2,buyukHarf:true,gerekli:['çünkü'],
+  ipucuMetin:'En çok … toplanıyor. Önerim … çünkü …',
+  yasak:['En çok kâğıt toplanıyor. Önerim azaltmak çünkü çok.'],
+  ornekCevap:'Okulumuzda en çok kâğıt toplanıyor. Önerim kâğıtların iki yüzünü de kullanmamız çünkü böylece aynı işi yarı kâğıtla bitiririz.',
+  result:'Veriden yola çıkıp somut bir öneri geliştirdin.'}
 ]};
 
 /* ===== OYUN VERİSİ BURADA BİTER (yeni parti bu satırın üstüne eklenir) ===== */
