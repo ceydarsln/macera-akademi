@@ -131,10 +131,45 @@ function sizintiDenetle(W,r){
   return kusur;
 }
 
+
+/* Ön kontrol — koşum ve denetim motoru DOĞRUDAN açtığı için katalog
+   bağlantısındaki kopukluğu göremez: motor kusursuz çalışırken oyun
+   uygulamada hâlâ eski ortak motorla açılıyor olabilir ve iki araç da
+   "temiz" der. Bugün bu yüzden iki ders sessizce kopuk kaldı. Motor adı
+   MOTOR_AD sabitinden geliyor; araç kopyalanınca elle düzeltmek gerekmiyor. */
+const MOTOR_AD = MOTOR.replace(/^.*\//,'').replace(/(-phaser)?\.html$/,'');
+async function katalogBagiOnKontrol(){
+  const kusur=[];
+  const cer=document.createElement('iframe');
+  cer.style.cssText='width:390px;height:600px;position:absolute;left:-9999px';
+  document.body.appendChild(cer);
+  await new Promise(coz=>{ cer.onload=()=>coz(); cer.src='../web/macera-akademi.html?kosum=1'; });
+  const W=cer.contentWindow;
+  for(let k=0;k<100 && !W.eval('typeof PHASER_OYUNLAR!=="undefined"'); k++) await bekle(80);
+  try{
+    const harita=JSON.parse(W.eval('JSON.stringify(PHASER_OYUNLAR)'));
+    IDS.forEach(id=>{
+      if(harita[id]!==MOTOR_AD)
+        kusur.push(id+' katalogda '+MOTOR_AD+' değil: '+(harita[id]||'(hiç bağlı değil)'));
+    });
+    /* Aynı metni okutan motorlarda eksik dal zararsız (gs.spokenKey ikinciyi
+       yutuyor); bu yüzden bu bir uyarı, kusur değil. */
+    if(W.eval('String(/'+MOTOR_AD+'/.test(autoSpeak.toString()))')!=='true')
+      yaz("uyarı: text='' koşulunda "+MOTOR_AD+" dalı yok",'n');
+  }catch(e){ kusur.push('katalog okunamadı: '+e.message) }
+  cer.remove();
+  return kusur;
+}
+
 window.SONUC={bitti:false,kusurlu:[],rapor:[],toplamTur:0};
 
 (async()=>{
   yaz('denetim: '+IDS.length+' oyun × 3 tur');
+  const bag=await katalogBagiOnKontrol();
+  if(bag.length){ yaz('✗ KATALOG BAĞLANTISI','b'); bag.forEach(b=>yaz('&nbsp;&nbsp;'+b,'n'));
+    window.SONUC.kusurlu.push('katalog'); window.SONUC.rapor.push({id:'katalog',bulgular:bag}); }
+  else yaz('✓ katalog bağlantısı: '+IDS.length+' oyun '+MOTOR_AD+' motoruna bağlı','g');
+
   for(const id of IDS){
     const bulgular=[];
     for(let t=0;t<3;t++){
