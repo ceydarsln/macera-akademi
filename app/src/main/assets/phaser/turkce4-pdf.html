@@ -31,6 +31,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .caption{width:100%;text-align:center;font-size:clamp(12px,3.1vw,15px);font-weight:850;line-height:1.28}
 .caption.soru{font-size:clamp(13px,3.5vw,17px);font-weight:950}
 .hint{width:100%;text-align:center;font-size:12px;font-weight:800;color:var(--muted);line-height:1.3}
+.stack{display:flex;flex-direction:column;align-items:center;gap:4px}
 .row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px;width:100%}
 .choices{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:center;gap:8px;width:100%}
 .choice{min-height:52px;flex:1 1 100%;max-width:340px;border:3px solid #fff;border-radius:16px;background:var(--panel);box-shadow:0 4px 0 rgba(35,77,108,.2);padding:9px 12px;font-weight:900;font-size:clamp(13px,3.4vw,16px);line-height:1.25;text-align:center;overflow-wrap:anywhere}
@@ -2859,6 +2860,315 @@ GAMES.z56={title:'Miras Bekçisi',theme:'muze',
   yasak:['Müzede eserlere dokunmamalıyız çünkü zarar verir.'],
   ornekCevap:'Antik kentlerden taş parçası almamalıyız çünkü her alınan parça o kentten bir daha geri gelmez.',
   result:'Koruma önerini gerekçesiyle birlikte yazdın.'}
+]};
+
+/* ---- z57 Demokrasi Panosu (bant durduruldu; hak-sorumluluk-özgürlük) ---- */
+GAMES.z57={title:'Demokrasi Panosu',theme:'meydan',
+ finish:'Hak, sorumluluk ve özgürlüğü ayırdın, aralarındaki bağı gördün ve kendi örneklerini yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu ifade hangi kavramı anlatıyor?',sahne:SAHNE.cember,
+  soru:'Bu cümle hangi kavramı anlatıyor?',
+  kutular:['HAK','SORUMLULUK','ÖZGÜRLÜK'],
+  ipucu:'Hak sana verilendir, sorumluluk senden beklenendir, özgürlük seçebilmendir.',
+  kartlar:[
+   {t:'Her çocuğun okula gitme ve öğrenme imkânı vardır.',dogru:0,
+    neden:'Bu, çocuğa tanınan bir haktır.'},
+   {t:'Sınıf kitaplığından aldığım kitabı zamanında geri vermeliyim.',dogru:1,
+    neden:'Bu, benden beklenen bir davranıştır.'},
+   {t:'Hangi kitabı okuyacağıma kendim karar verebilirim.',dogru:2,
+    neden:'Bu, bir seçme özgürlüğüdür.'},
+   {t:'Herkesin sağlıklı bir çevrede yaşama imkânı vardır.',dogru:0,
+    neden:'Bu bir haktır.'},
+   {t:'Çöpümü yere değil kutuya atmalıyım.',dogru:1,
+    neden:'Bu, hakkın karşılığı olan sorumluluktur.'},
+   {t:'Düşüncemi kimseyi incitmeden söyleyebilirim.',dogru:2,
+    neden:'Bu bir ifade özgürlüğüdür.'}]},
+ {kind:'karar',prompt:'Hak ile özgürlük aynı şey mi?',sahne:SAHNE.cember,
+  durum:'"Her çocuğun oyun oynama hakkı vardır."\n"Hangi oyunu oynayacağıma kendim karar veririm."',
+  soru:'Bu iki cümle arasındaki fark nedir?',
+  secenekler:[
+   {label:'Birincisi tanınan bir imkân, ikincisi seçme serbestliği',correct:true},
+   {label:'İkisi de aynı şeyi söylüyor',hint:'Biri imkânın varlığını, diğeri seçim yapabilmeyi anlatıyor.'},
+   {label:'İkisi de sorumluluk anlatıyor',hint:'Sorumluluk, senden beklenen davranıştır.'}],
+  araSoz:'Doğru. Peki hakkın karşılığı ne?',
+  neden:{soru:'Oyun oynama hakkının karşılığındaki sorumluluk hangisi olabilir?',secenekler:[
+   {label:'Oyun alanını temiz bırakmak ve sıraya uymak',correct:true},
+   {label:'İstediğim kadar oynamak',hint:'Bu bir istek; sorumluluk değil.'},
+   {label:'Başkalarını oyuna almamak',hint:'Bu, başkasının hakkını engeller.'}]},
+  result:'Her hakkın yanında onu sürdüren bir sorumluluk vardır.'},
+ {kind:'yaz',prompt:'Kendi örneklerini yaz.',sahne:SAHNE.cember,
+  gorev:'Bir hakkını, ona bağlı bir sorumluluğunu ve bir özgürlüğünü kendi cümlelerinle yaz.',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'"hak" ya da "hakkım" sözcüğünü kullan',desen:'hak',bayrak:'i'},
+   {ad:'"sorumlu" sözcüğünü kullan',desen:'sorumlu',bayrak:'i'},
+   {ad:'"özgür" sözcüğünü kullan',desen:'özgür',bayrak:'i'}],
+  ipucuMetin:'Hakkım: … Sorumluluğum: … Özgürlüğüm: …',
+  ornekCevap:'Okula gidip eğitim almak benim en temel hakkım. Derse zamanında gelmek ve ödevimi yapmak ise benim sorumluluğum. Hangi kulübe yazılacağıma kendim karar vermekte özgürüm.',
+  result:'Üç kavramı kendi yaşamından örneklerle ayırdın.'}
+]};
+
+/* ---- z58 Dilekçe Masası (gerçek şablon; kişisel veri istenmiyor) ---- */
+GAMES.z58={title:'Dilekçe Masası',theme:'masa',
+ finish:'Dilekçenin bölümlerini yerlerine yerleştirdin, uygun üslubu seçtin ve kendi dilekçeni yazdın.',rounds:[
+ {kind:'esle',prompt:'Her bölümü şablondaki yerine koy.',sahne:SAHNE.masa,
+  soru:'Önce alttan bir içerik seç, sonra ait olduğu bölüme dokun.',
+  ipucu:'Dilekçe yukarıdan aşağıya: makam, istek, tarih, ad-soyad.',
+  yuvalar:[
+   {hedef:'1. satır — MAKAM (kime yazılıyor)',dogru:0,neden:'Dilekçe hangi makama yazıldığıyla başlar.',hint:'Bu satır muhatabı gösterir.'},
+   {hedef:'2. bölüm — İSTEK METNİ',dogru:1,neden:'İstek açık ve kısa yazılır.',hint:'Bu bölüm ne istendiğini anlatır.'},
+   {hedef:'3. satır — TARİH',dogru:2,neden:'Dilekçenin ne zaman verildiğini gösterir.',hint:'Bu satır zamanı gösterir.'},
+   {hedef:'Son satır — AD ve SOYAD',dogru:3,neden:'Dilekçeyi kimin verdiği belli olmalıdır.',hint:'Bu satır dilekçeyi vereni gösterir.'}],
+  etiketler:[
+   {t:'Okul Müdürlüğüne'},
+   {t:'Sınıf kitaplığımıza yeni öykü kitapları alınmasını rica ederiz.'},
+   {t:'12 Mart 2026'},
+   {t:'4-B sınıfı öğrencileri adına sınıf başkanı'}]},
+ {kind:'karar',prompt:'Hangi üslup dilekçeye uyar?',sahne:SAHNE.masa,
+  durum:'Sınıfça kütüphaneye yeni kitap istiyorsunuz.',
+  soru:'Dilekçede hangi ifade uygun olur?',
+  secenekler:[
+   {label:'"Sınıf kitaplığımıza yeni öykü kitapları alınmasını rica ederiz."',correct:true},
+   {label:'"Bize hemen kitap alın, yoksa kütüphaneye gelmeyiz."',hint:'İstek tehditle iletilmez.'},
+   {label:'"Kitap falan lazım işte, bakarsınız artık."',hint:'Resmî bir yazıda bu üslup kullanılmaz.'}],
+  araSoz:'Doğru. Peki dilekçede ne yazılmaz?',
+  neden:{soru:'Bir dilekçeye aşağıdakilerden hangisi yazılmaz?',secenekler:[
+   {label:'Ev adresi ve telefon gibi gereksiz kişisel bilgiler',correct:true},
+   {label:'İstek metni',hint:'İstek metni dilekçenin asıl bölümüdür.'},
+   {label:'Tarih',hint:'Tarih dilekçenin gerekli bir parçasıdır.'}]},
+  result:'Dilekçe açık, saygılı ve gereksiz kişisel bilgi içermeden yazılır.'},
+ {kind:'yaz',prompt:'Kendi dilekçeni yaz.',sahne:SAHNE.masa,
+  gorev:'Okul kütüphanesi için kısa bir dilekçe yaz: makamla başla, isteğini saygılı bir dille belirt. Adres ya da telefon yazma.',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,
+  denetim:[
+   {ad:'Bir makama seslen ("Müdürlüğüne" gibi)',desen:'müdürlüğüne|müdürlüğü|öğretmenliğine',bayrak:'i'},
+   {ad:'Saygılı bir istek ifadesi kullan',desen:'rica|arz|saygı',bayrak:'i'},
+   {ad:'Kişisel iletişim bilgisi yazma',desen:'^(?!.*(telefon|adres|\\d{7,})).*$',bayrak:'is'}],
+  ipucuMetin:'… Müdürlüğüne\n… rica ederiz.',
+  yasak:['Sınıf kitaplığımıza yeni öykü kitapları alınmasını rica ederiz.'],
+  ornekCevap:'Okul Müdürlüğüne\nSınıfımızın kitaplığındaki kitaplar öğrencilerin tamamı tarafından okunmuştur. Kitaplığımıza yeni bilim ve öykü kitapları kazandırılmasını saygıyla rica ederiz.',
+  result:'Dilekçeyi kurallara ve saygılı üsluba uygun yazdın.'}
+]};
+
+/* ---- z59 Bildiri Dizgisi (işaret anlamı nasıl değiştiriyor) ---- */
+GAMES.z59={title:'Bildiri Dizgisi',theme:'meydan',
+ finish:'İşaretin anlamı değiştirdiğini gördün, aynı cümleyi iki anlamda okudun ve bir hakkı doğru işaretle yazdın.',rounds:[
+ {kind:'duzelt',prompt:'Bildiriyi anlamına uygun işaretlerle yaz.',sahne:SAHNE.masa,
+  gorev:'Pano bildirisinde işaretler eksik. Anlamına uygun olanları koy. Sözcükleri değiştirme.',
+  hatali:'çocuklar oynamak dinlenmek ve öğrenmek ister bu haklarına saygı gösterelim',
+  denetim:[
+   {ad:'Cümleyi büyük harfle başlat',desen:'^[A-ZÇĞİÖŞÜ]'},
+   {ad:'Sıralanan eylemleri virgülle ayır',desen:','},
+   {ad:'İki ayrı cümleyi noktayla ayır',desen:'(\\.[^.]*){2}'},
+   {ad:'Noktadan sonra büyük harfle devam et',desen:'\\.\\s+[A-ZÇĞİÖŞÜ]'}],
+  ornekCevap:'Çocuklar oynamak, dinlenmek ve öğrenmek ister. Bu haklarına saygı gösterelim.',
+  result:'Virgül sıralar, nokta cümleyi kapatır: ikisi de anlamı belirler.'},
+ {kind:'karar',prompt:'Aynı sözcükler, farklı işaret, farklı anlam.',sahne:SAHNE.masa,
+  durum:'A) "Dinleyin, çocuklar konuşuyor."\nB) "Dinleyin çocuklar, konuşuyor."',
+  soru:'Bu iki cümle aynı şeyi mi söylüyor?',
+  secenekler:[
+   {label:'Hayır: A\'da çocuklar konuşuyor, B\'de çocuklara sesleniliyor',correct:true},
+   {label:'Evet, ikisi de aynı',hint:'Virgülün yeri kimin konuştuğunu değiştiriyor.'},
+   {label:'B yanlış yazılmış',hint:'İkisi de doğru yazılabilir; anlamları farklı.'}],
+  araSoz:'Doğru. Peki bu ne gösteriyor?',
+  neden:{soru:'Virgülün yeri neyi değiştirdi?',secenekler:[
+   {label:'Cümlede kime seslenildiğini',correct:true},
+   {label:'Cümlenin uzunluğunu',hint:'Uzunluk aynı.'},
+   {label:'Sözcüklerin yazımını',hint:'Sözcükler aynı yazıldı.'}]},
+  result:'Virgülün yeri değişince cümlenin anlamı da değişir.'},
+ {kind:'yaz',prompt:'Bir çocuk hakkını yaz.',sahne:SAHNE.masa,
+  gorev:'Bir çocuk hakkını anlatan bir cümle yaz; içinde en az iki şey sırala ve işaretlerini sen koy.',
+  enAzKelime:10,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'Sıralama için virgül kullan',desen:','}],
+  ipucuMetin:'Her çocuk … , … ve … hakkına sahiptir.',
+  yasak:['Çocuklar oynamak, dinlenmek ve öğrenmek ister.'],
+  ornekCevap:'Her çocuk beslenme, barınma ve eğitim hakkına eşit biçimde sahiptir.',
+  result:'Sıralamayı virgülle göstererek bir hakkı yazdın.'}
+]};
+
+/* ---- z60 Denge Köprüsü (simge eşleşmesi kaldırıldı; hak-sorumluluk dengesi) ---- */
+GAMES.z60={title:'Denge Köprüsü',theme:'meydan',
+ finish:'Hakları sorumluluklarıyla dengeledin, bir hakka birden çok sorumluluk bağlanabildiğini gördün ve kendi çiftini yazdın.',rounds:[
+ {kind:'esle',prompt:'Her hakkı onu sürdüren sorumlulukla eşle.',sahne:SAHNE.cember,
+  soru:'Önce alttan bir sorumluluk seç, sonra ait olduğu hakka dokun.',
+  ipucu:'Bu hakkın sürmesi için ne yapılmalı?',
+  yuvalar:[
+   {hedef:'HAK: Temiz bir sınıfta ders görmek',dogru:0,neden:'Temizlik ancak herkes çöpünü toplarsa sürer.',hint:'Bu hak temizlikle ilgili.'},
+   {hedef:'HAK: Sınıf kitaplığından kitap almak',dogru:1,neden:'Kitaplığın sürmesi kitapların geri gelmesine bağlı.',hint:'Bu hak ödünç almayla ilgili.'},
+   {hedef:'HAK: Derste görüşünü söylemek',dogru:2,neden:'Herkesin konuşabilmesi için sıraya uyulmalı.',hint:'Bu hak konuşmayla ilgili.'},
+   {hedef:'HAK: Oyun alanını kullanmak',dogru:3,neden:'Alanın herkese yetmesi için paylaşmak gerekir.',hint:'Bu hak oyun alanıyla ilgili.'}],
+  etiketler:[
+   {t:'SORUMLULUK: Çöpümü kutuya atmak'},
+   {t:'SORUMLULUK: Aldığım kitabı zamanında geri vermek'},
+   {t:'SORUMLULUK: Söz sırası beklemek'},
+   {t:'SORUMLULUK: Alanı arkadaşlarımla paylaşmak'}]},
+ {kind:'karar',prompt:'Bir hakka birden çok sorumluluk.',sahne:SAHNE.cember,
+  durum:'Hak: "Kütüphaneyi kullanmak."\nOlası sorumluluklar: sessiz olmak · kitapları yerine koymak · zamanında iade etmek.',
+  soru:'Bu üç sorumluluk için ne söylenir?',
+  secenekler:[
+   {label:'Üçü de aynı hakkın sürmesi için gerekir',correct:true},
+   {label:'Yalnız biri gereklidir',hint:'Üçü de kütüphanenin herkes için kullanılabilir kalmasını sağlar.'},
+   {label:'Hiçbiri o hakla ilgili değil',hint:'Üçü de kütüphane kullanımıyla ilgili.'}],
+  araSoz:'Doğru. Peki sorumluluk yerine getirilmezse?',
+  neden:{soru:'Sorumluluklar yerine getirilmezse ne olur?',secenekler:[
+   {label:'Hak herkes için kullanılamaz hâle gelir',correct:true},
+   {label:'Hak yine aynı kalır',hint:'Kitaplar geri gelmezse kütüphane boşalır.'},
+   {label:'Yalnız o kişi zarar görür',hint:'Ortak alanda herkes etkilenir.'}]},
+  result:'Haklar, sorumluluklar yerine getirildiği sürece herkes için sürer.'},
+ {kind:'yaz',prompt:'Kendi hak-sorumluluk çiftini yaz.',sahne:SAHNE.cember,
+  gorev:'Kendi yaşamından bir hak ve ona bağlı bir sorumluluk yaz.',
+  enAzKelime:12,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[
+   {ad:'"hak" sözcüğünü kullan',desen:'hak',bayrak:'i'},
+   {ad:'"sorumlu" sözcüğünü kullan',desen:'sorumlu',bayrak:'i'}],
+  ipucuMetin:'… hakkım var. Bu yüzden … sorumluluğum var.',
+  yasak:['Temiz bir sınıfta ders görmek hakkım.'],
+  ornekCevap:'Parkta oyun oynama hakkım var. Bu yüzden salıncağı sıradaki arkadaşıma bırakmak sorumluluğum.',
+  result:'Bir hakkı, onu sürdüren sorumlulukla birlikte yazdın.'}
+]};
+
+/* ---- z61 Söz Hakkı (kartlar küçük harfle; gerekçeli görüş) ---- */
+GAMES.z61={title:'Söz Hakkı Kürsüsü',theme:'meydan',
+ finish:'Görüş cümleni kurdun, gerekçeli görüşü gerekçesizden ayırdın ve kendi görüşünü nedeniyle sundun.',rounds:[
+ {kind:'sira',prompt:'Kürsüde söyleyeceğin cümleyi kur.',sahne:SAHNE.cember,
+  gorev:'Kartlar küçük harfle geliyor. Gerekçeli bir görüş cümlesi kur.',
+  kartlar:[{t:'bence'},{t:'sınıf kitaplığı'},{t:'zenginleşmeli'},{t:'çünkü aynı kitapları okuduk'}],
+  dogru:[0,1,2,3],
+  ipucular:['Görüş hangi sözcükle başlar?','Görüş neyle ilgili?','Ne olmasını istiyorsun?','Nedenini hangi kart veriyor?'],
+  ipucu:'Görüş + gerekçe.',
+  result:'"Bence sınıf kitaplığı zenginleşmeli çünkü aynı kitapları okuduk." — görüş nedeniyle güçlenir.'},
+ {kind:'karar',prompt:'Gerekçeli mi, gerekçesiz mi?',sahne:SAHNE.cember,
+  durum:'Üç öğrenci kürsüye çıktı:\nA) "Bence gezi müzeye olmalı."\nB) "Bence gezi müzeye olmalı çünkü tarih konusunu yeni işledik."\nC) "Bence gezi müzeye olmalı çünkü ben müzeyi seviyorum."',
+  soru:'Hangisi sınıfı ilgilendiren bir gerekçe sunuyor?',
+  secenekler:[
+   {label:'B',correct:true},
+   {label:'A',hint:'A hiç gerekçe sunmuyor.'},
+   {label:'C',hint:'C kişisel bir tercih; sınıfın ortak kararı için yeterli bir neden değil.'}],
+  araSoz:'Doğru. Peki C neden zayıf?',
+  neden:{soru:'C\'nin gerekçesi niçin zayıf?',secenekler:[
+   {label:'Yalnız kendi isteğini anlatıyor, ortak yarara dayanmıyor',correct:true},
+   {label:'Çok kısa',hint:'Uzunluk değil, dayandığı neden önemli.'},
+   {label:'"çünkü" kullanmamış',hint:'C\'de de "çünkü" var.'}]},
+  result:'Görüş, ortak yarara dayanan bir nedenle güçlenir.'},
+ {kind:'konus',prompt:'Görüşünü kürsüde sun.',sahne:SAHNE.cember,
+  gorev:'Sınıfınla ilgili bir konuda görüşünü ve nedenini kürsüde sesli söyle.',
+  ornek:'Örnek: Bence sınıf panosu her ay yenilenmeli çünkü aynı yazıları okuyunca kimse panoya bakmıyor.',
+  olcutler:['Görüşümü açıkça söyledim.','Nedenini belirttim.','Anlaşılır ve yüksek sesle konuştum.'],
+  result:'Görüşünü gerekçesiyle birlikte sundun.'}
+]};
+
+/* ---- z62 Gizlilik (yakalama kaldırıldı; izin kavramı) ---- */
+GAMES.z62={title:'Gizlilik Kalkanı',theme:'lab',
+ finish:'Paylaşılabilir bilgiyle paylaşılmaması gerekeni ayırdın, bağlamın önemini gördün ve kendi kuralını yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu bilgiyi internette paylaşır mısın?',sahne:SAHNE.kalem,
+  soru:'Bu bilgi internette paylaşılmalı mı?',
+  kutular:['PAYLAŞIRIM','PAYLAŞMAM'],
+  ipucu:'Bu bilgi seni bulmaya ya da taklit etmeye yarar mı?',
+  kartlar:[
+   {t:'Ev adresim ve kapı numaram',dogru:1,neden:'Adres, seni bulunabilir kılar.'},
+   {t:'En sevdiğim kitabın adı',dogru:0,neden:'Bu bilgi kimseye zarar vermez.'},
+   {t:'Okulumun adı ve çıkış saatim',dogru:1,neden:'İkisi birlikte nerede olacağını gösterir.'},
+   {t:'Bugün çizdiğim bir resim',dogru:0,neden:'Kendi ürettiğin bir çalışmayı paylaşabilirsin.'},
+   {t:'Anne veya babamın telefon numarası',dogru:1,neden:'Başkasının bilgisini izinsiz paylaşamazsın.'},
+   {t:'Sevdiğim bir şarkının adı',dogru:0,neden:'Zararsız bir tercih bilgisidir.'}]},
+ {kind:'karar',prompt:'Bağlam değişince karar değişir.',sahne:SAHNE.kalem,
+  durum:'Adın ve soyadın iki yerde isteniyor:\nA) Sınıf panosuna asılacak "haftanın okuru" listesi.\nB) Tanımadığın birinin internetten gönderdiği "ödül formu".',
+  soru:'Hangisinde adını yazmak uygun olur?',
+  secenekler:[
+   {label:'Yalnız A',correct:true},
+   {label:'İkisinde de',hint:'Tanımadığın birine bilgi vermek güvenli değildir.'},
+   {label:'Hiçbirinde',hint:'Sınıf panosu okulunun bildiği güvenli bir ortamdır.'}],
+  araSoz:'Doğru. Peki başkasının bilgisi?',
+  neden:{soru:'Arkadaşının fotoğrafını paylaşmadan önce ne yaparsın?',secenekler:[
+   {label:'Ondan izin isterim',correct:true},
+   {label:'Hemen paylaşırım, nasılsa arkadaşım',hint:'Arkadaşlık, izin almadan paylaşma hakkı vermez.'},
+   {label:'Yüzünü kapatıp paylaşırım',hint:'Yine de izin almak gerekir.'}]},
+  result:'Ne paylaşacağını bağlam ve izin birlikte belirler.'},
+ {kind:'yaz',prompt:'Kendi gizlilik kuralını yaz.',sahne:SAHNE.kalem,
+  gorev:'İnternette paylaşmayacağın bir bilgiyi ve nedenini yaz.',
+  enAzKelime:11,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"paylaşmam" ya da "paylaşmayacağım" yaz',desen:'paylaşma',bayrak:'i'}],
+  ipucuMetin:'İnternette … paylaşmam çünkü …',
+  yasak:['İnternette adresimi paylaşmam çünkü tehlikeli.'],
+  ornekCevap:'İnternette okulumun adını ve çıkış saatimi paylaşmam çünkü bunlar nerede olduğumu gösterir.',
+  result:'Dijital mahremiyet kuralını kendi cümlenle ve nedeniyle yazdın.'}
+]};
+
+/* ---- z63 Sınıf Seçimi (oy sütun adını tekrarlamıyor; çetele görünüyor) ---- */
+GAMES.z63={title:'Sınıf Seçimi',theme:'meydan',
+ finish:'Oyları ifadelerinden çıkardın, çeteleyle saydın, sonucu yorumladın ve azınlığın hakkını belirttin.',rounds:[
+ {kind:'cetele',prompt:'Söylenenden hangi adaya oy verildiğini çıkar.',sahne:SAHNE.cember,
+  soru:'Bu oy hangi adaya gidiyor?',
+  satirlar:['Deniz','Eda','Mert'],
+  ipucu:'Aday adı söylenmiyor; vaadine bak. Beşinci çizgi dördünü keser.',
+  oylar:[
+   {t:'"Kitaplığı zenginleştireceğini söyleyene veriyorum."',dogru:0,neden:'Deniz kitaplık sözü vermişti.'},
+   {t:'"Sınıf panosunu her ay yenileyecek olana."',dogru:1,neden:'Eda pano sözü vermişti.'},
+   {t:'"Teneffüs oyunlarını sıraya bağlayacak olana."',dogru:2,neden:'Mert oyun sırası sözü vermişti.'},
+   {t:'"Yeni öykü kitapları getireceğini söyleyene."',dogru:0,neden:'Kitap vaadi Deniz\'e ait.'},
+   {t:'"Panoya herkesin resmini asacak olana."',dogru:1,neden:'Pano vaadi Eda\'ya ait.'},
+   {t:'"Kütüphane köşesi kuracağını söyleyene."',dogru:0,neden:'Kitaplıkla ilgili vaat Deniz\'in.'},
+   {t:'"Oyun sırasını çizelgeye bağlayacak olana."',dogru:2,neden:'Oyun sırası vaadi Mert\'in.'},
+   {t:'"Ayın panosunu öğrencilerin seçmesini sağlayacak olana."',dogru:1,neden:'Pano vaadi Eda\'ya ait.'},
+   {t:'"Sınıfa okuma saati koyacağını söyleyene."',dogru:0,neden:'Okuma vaadi Deniz\'in.'},
+   {t:'"Bahçede takım kurmayı düzenleyecek olana."',dogru:2,neden:'Oyun düzeni vaadi Mert\'in.'}]},
+ {kind:'karar',prompt:'Sonucu yorumla.',sahne:SAHNE.cember,
+  durum:'Sayım sonucu — Deniz: 4 oy, Eda: 3 oy, Mert: 3 oy.',
+  soru:'Seçim sonucu için hangisi doğru?',
+  secenekler:[
+   {label:'Deniz kazandı; fark yalnız bir oy',correct:true},
+   {label:'Üç aday eşit oy aldı',hint:'Deniz 4, diğerleri 3 oy aldı.'},
+   {label:'Seçim geçersiz',hint:'Bir aday diğerlerinden fazla oy aldı.'}],
+  araSoz:'Doğru. Peki azınlıkta kalanlar?',
+  neden:{soru:'Oyu az çıkan adaylara oy verenler için ne yapılmalı?',secenekler:[
+   {label:'Görüşleri dinlenmeli ve önerileri değerlendirilmeli',correct:true},
+   {label:'Kararı kabul edip susmalılar',hint:'Çoğunluk kararı uygulanır ama azınlığın görüşü de dinlenir.'},
+   {label:'Yeniden seçim yapılmalı',hint:'Sonuç belli; yeniden seçim gerekmiyor.'}]},
+  result:'Çoğunluk kararı belirler; azınlığın görüşü yok sayılmaz.'},
+ {kind:'yaz',prompt:'Sonucu yorumla ve azınlığın hakkını belirt.',sahne:SAHNE.cember,
+  gorev:'Seçim sonucunu yorumla: kimin kazandığını, kaç oy aldığını yaz ve azınlıkta kalanlar için bir cümle ekle.',
+  enAzKelime:16,enAzCumle:2,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'Bir sayı yaz (kaç oy)',desen:'\\d|dört|üç|iki|bir',bayrak:'i'}],
+  ipucuMetin:'Seçimi … kazandı, … oy aldı. Azınlıkta kalanların …',
+  ornekCevap:'Seçimi Deniz kazandı ve toplam 4 oy aldı. Azınlıkta kalan arkadaşlarımızın önerileri de sınıf panosunda değerlendirilmeli.',
+  result:'Sonucu sayılarla yorumladın ve azınlığın hakkını belirttin.'}
+]};
+
+/* ---- z64 Karar Basamakları (bağlam ekranda sürekli duruyor) ---- */
+GAMES.z64={title:'Karar Basamakları',theme:'meydan',
+ finish:'Karar sürecinin adımlarını sıraladın, atlanan adımın sonucunu gördün ve kendi sorunun için adımları yazdın.',rounds:[
+ {kind:'sira',prompt:'Sınıf kararı hangi sırayla alınır?',sahne:SAHNE.cember,
+  gorev:'Sorun: "Teneffüste sınıf çok gürültülü oluyor." Karar adımlarını sırayla diz.',
+  kartlar:[
+   {t:'Sorun sınıfa açıkça söylenir.'},
+   {t:'Herkes çözüm önerisini sunar.'},
+   {t:'Öneriler tek tek tartışılır, artısı eksisi konuşulur.'},
+   {t:'Oylama yapılır ve karar belirlenir.'},
+   {t:'Karar uygulanır ve sonucu bir hafta izlenir.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Karar vermeden önce ne bilinmeli?','Sorun söylendi; ne toplanır?',
+   'Öneriler geldi; oylamadan önce ne yapılır?','Tartışma bitti; karar nasıl verilir?','Karar çıktı; iş burada biter mi?'],
+  ipucu:'Bağlam ekranda duruyor; her adımı ona göre düşün.',
+  result:'Sorun söylenir, öneriler alınır, tartışılır, oylanır ve karar izlenir.'},
+ {kind:'karar',prompt:'Adım atlanınca ne olur?',sahne:SAHNE.cember,
+  durum:'Sınıf, önerileri hiç tartışmadan doğrudan oyladı. "Teneffüste hiç konuşulmasın" kararı çıktı. Ertesi gün kimse uygulayamadı ve karar kendiliğinden düştü.',
+  soru:'Karar neden uygulanamadı?',
+  secenekler:[
+   {label:'Önerinin uygulanabilir olup olmadığı tartışılmadı',correct:true},
+   {label:'Oylama yapılmadı',hint:'Oylama yapıldı; karar oyla çıktı.'},
+   {label:'Sorun söylenmedi',hint:'Sorun söylendiği için oylamaya geçildi.'}],
+  araSoz:'Doğru. Peki tartışma ne sağlar?',
+  neden:{soru:'Oylamadan önce tartışmak ne sağlar?',secenekler:[
+   {label:'Önerinin gerçekten uygulanabilir olup olmadığı anlaşılır',correct:true},
+   {label:'Karar daha hızlı çıkar',hint:'Tartışmak zaman kazandırmaz, kararı sağlamlaştırır.'},
+   {label:'Herkes aynı fikirde olur',hint:'Tartışma aynılaştırmaz; seçenekleri açar.'}]},
+  result:'Tartışılmadan alınan karar uygulanamayabilir.'},
+ {kind:'yaz',prompt:'Kendi sorunun için adımları yaz.',sahne:SAHNE.cember,
+  gorev:'Sınıfında çözülmesini istediğin bir sorun yaz, karar adımlarını sırala ve kendi görüşünü nedeniyle belirt.',
+  enAzKelime:20,enAzCumle:3,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"oylama" ya da "oylar" sözcüğünü kullan',desen:'oyla',bayrak:'i'}],
+  ipucuMetin:'Sorun: … Adımlar: … Bence … çünkü …',
+  ornekCevap:'Sınıfımızın dolabı çok dağınık. Önce sorunu söyler, sonra önerileri toplayıp tartışır ve oylama yaparız. Bence her hafta bir sıra görevli olmalı çünkü tek kişi bu işi sürdüremez.',
+  result:'Karar sürecini kendi sorununa uyguladın ve görüşünü gerekçelendirdin.'}
 ]};
 
 /* ===== ÖZ DENETİM =====
