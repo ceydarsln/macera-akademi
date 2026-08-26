@@ -63,7 +63,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .yuva .hedef{flex:1 1 auto;font-weight:880;font-size:clamp(12px,3.2vw,14px);line-height:1.3;overflow-wrap:break-word}
 .yuva .kondu{flex:0 0 auto;max-width:46%;font-weight:900;font-size:12px;color:#0a6349;line-height:1.22;overflow-wrap:break-word}
 .etiketler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.etiket{min-height:46px;max-width:100%;flex:0 1 auto;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(30,72,104,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;white-space:normal;text-align:center}
+.etiket{min-height:46px;min-width:48px;max-width:100%;flex:0 1 auto;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(30,72,104,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;white-space:normal;text-align:center}
 .etiket.secili{border-color:var(--gold);background:#fff7e4}
 .etiket.bitti{visibility:hidden}
 .etiket.yok{display:none}
@@ -116,6 +116,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .hkart.yanlis{background:#fdeceb;color:#8d2f28;border-color:var(--bad)}
 /* gözlem — ölçülen olgu ekranda gerçekten canlanır, sayaç onunla birlikte ilerler */
 .gozlem-sar{width:min(330px,96%);display:flex;flex-direction:column;align-items:center;gap:7px}
+/* ısıtma — kronometre yok; ocak, kap, madde ve termometre var.
+   Sıcaklık-zaman çizgisi hâl değişimi boyunca DÜZ gider: kavramın kendisi. */
+.isit-dugme{min-height:64px;min-width:200px;border:3px solid #fff;border-radius:18px;background:#d2603f;color:#fff;
+ font-weight:950;font-size:17px;box-shadow:0 5px 0 #9c4229;user-select:none;touch-action:none}
+.isit-dugme.basili{background:#9c4229;transform:translateY(3px);box-shadow:0 2px 0 #7a3320}
+.isit-dugme.kapali{background:#8fa3b3;box-shadow:0 5px 0 #6b7d8b}
+.gozlem-satir{width:min(330px,96%);border:3px solid var(--line);border-radius:13px;background:#fff;
+ padding:7px 10px;font-size:13px;font-weight:900;line-height:1.3;text-align:center}
 .olcek{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:min(330px,96%);height:48px;min-height:48px;background:transparent;margin:0}
 .olcek::-webkit-slider-runnable-track{height:14px;border-radius:8px;background:#dae7ef;border:2px solid #a6bece}
 .olcek::-moz-range-track{height:14px;border-radius:8px;background:#dae7ef;border:2px solid #a6bece}
@@ -378,6 +386,83 @@ const SAHNE={
   [3,2,1,0].map(i=>n>i?`<circle cx="106" cy="75" r="${26+i*16}" fill="${renk[i]}" stroke="#0d1c3a" stroke-width="2"/>`:'').join('')+
   `<circle cx="106" cy="75" r="74" fill="none" stroke="#7f93a8" stroke-width="2" stroke-dasharray="5 5"/>`+
   ad.map((a,i)=>`<text x="196" y="${34+i*26}" font-size="11" font-weight="900" fill="${n>i?renk[i]:'#4a5a70'}">${n>i?(i+1)+'. '+a:'—'}</text>`).join(''))},
+
+ /* ocak + kap + madde + termometre; sağda sıcaklık-zaman çizgisi birikir */
+ ocak:(d)=>{const {T,Tmin,Tmax,oran,faz,madde,kayit,yaniyor}=d;
+  const y=v=>112-((v-Tmin)/(Tmax-Tmin))*92;
+  const civaY=Math.max(20,Math.min(112,y(T)));
+  const alev=faz==='kapali'?0:1;
+  return SVG(320,150,
+  `<rect width="320" height="150" fill="#eef4f7"/>`+
+  `<rect x="0" y="128" width="320" height="22" fill="#8fa3b3"/>`+
+  /* ocak */
+  `<rect x="24" y="112" width="96" height="16" rx="4" fill="#5d6f7d"/>`+
+  `<rect x="40" y="104" width="64" height="10" rx="3" fill="#40505c"/>`+
+  (alev?`<path d="M56 104 q4 -12 8 -6 q3 -9 8 2 q4 -8 8 4 q1 6 -6 8 z" fill="#f0932b" opacity=".95"/>`+
+        `<path d="M64 104 q3 -8 6 -4 q2 -6 5 2 q1 4 -4 6 z" fill="#ffd166"/>`:'')+
+  /* kap ve madde */
+  `<path d="M36 74 h72 v30 h-72 z" fill="none" stroke="#7a8c99" stroke-width="3"/>`+
+  `<rect x="38" y="${104-24*Math.max(.35,oran*.9+.35)}" width="68" height="${24*Math.max(.35,oran*.9+.35)}" `+
+   `fill="${madde.sivi}" opacity=".9"/>`+
+  (madde.katiCiz&&oran<1?Array.from({length:3},(_,i)=>
+    `<rect x="${46+i*20}" y="86" width="${Math.max(3,14*(1-oran))}" height="${Math.max(3,12*(1-oran))}" rx="2" fill="${madde.kati}" stroke="#8fb8cc" stroke-width="1.5"/>`).join(''):'')+
+  (madde.kaynar&&oran>0&&oran<1?Array.from({length:4},(_,i)=>
+    `<circle cx="${48+i*16}" cy="${88-((i*7+Math.round(oran*30))%16)}" r="${2.5+i%2}" fill="#fff" opacity=".85"/>`).join(''):'')+
+  (yaniyor?`<path d="M60 72 q4 -10 8 -4 q3 -7 7 3" fill="none" stroke="#5b4636" stroke-width="3" opacity=".7"/>`:'')+
+  /* termometre */
+  `<rect x="130" y="16" width="16" height="100" rx="8" fill="#fff" stroke="#7a8c99" stroke-width="2.5"/>`+
+  `<circle cx="138" cy="120" r="10" fill="#d2603f" stroke="#7a8c99" stroke-width="2.5"/>`+
+  `<rect x="134" y="${civaY.toFixed(1)}" width="8" height="${(118-civaY).toFixed(1)}" rx="4" fill="#d2603f"/>`+
+  `<text x="138" y="12" font-size="10" font-weight="900" text-anchor="middle" fill="#4d6a80">°C</text>`+
+  `<text x="160" y="${Math.max(24,civaY+4).toFixed(1)}" font-size="13" font-weight="950" fill="#1a2d3d">${Math.round(T)}°</text>`+
+  /* sıcaklık-zaman çizgisi */
+  `<rect x="196" y="16" width="112" height="100" rx="6" fill="#fff" stroke="#a9bcc9" stroke-width="2"/>`+
+  `<text x="252" y="28" font-size="9" font-weight="900" text-anchor="middle" fill="#4d6a80">sıcaklık — zaman</text>`+
+  (kayit.length>1?`<polyline fill="none" stroke="#2a75ad" stroke-width="2.5" points="${
+    kayit.map((k,i)=>`${(200+ (i/(kayit.length-1||1))*104).toFixed(1)},${
+      (112-((k-Tmin)/(Tmax-Tmin))*86).toFixed(1)}`).join(' ')}"/>`:'')+
+  `<text x="252" y="126" font-size="9" font-weight="800" text-anchor="middle" fill="#7a8c99">zaman →</text>`)},
+ /* su döngüsü şeması — damla şemanın üzerinde ilerler */
+ dongu:(st)=>{const n=((st&&st.dizi)||[]).length;
+  const vur=i=>n>i?'#d99b20':'#9fb6c9';
+  return SVG(320,150,
+  `<rect width="320" height="150" fill="#d8ecfb"/>`+
+  `<rect x="0" y="112" width="320" height="38" fill="#2f6f9e"/>`+
+  `<path d="M0 112 q60 -22 120 -4 q60 18 120 -8 q40 -16 80 -2 v14 h-320 z" fill="#3c8ec4"/>`+
+  `<circle cx="46" cy="30" r="16" fill="#f6c944"/>`+
+  Array.from({length:6},(_,i)=>`<line x1="46" y1="30" x2="${46+24*Math.cos(i*Math.PI/3)}" y2="${30+24*Math.sin(i*Math.PI/3)}" stroke="#f6c944" stroke-width="2.5"/>`).join('')+
+  `<path d="M96 96 v-30" stroke="${vur(1)}" stroke-width="3" stroke-dasharray="5 4"/><path d="M96 62 l-5 9 h10 z" fill="${vur(1)}"/>`+
+  `<ellipse cx="168" cy="46" rx="40" ry="16" fill="${n>2?'#e8eef4':'#c6d6e2'}" stroke="${vur(2)}" stroke-width="2.5"/>`+
+  `<ellipse cx="196" cy="38" rx="26" ry="13" fill="${n>2?'#e8eef4':'#c6d6e2'}"/>`+
+  (n>3?Array.from({length:5},(_,i)=>`<line x1="${146+i*14}" y1="62" x2="${142+i*14}" y2="82" stroke="#4a9fd0" stroke-width="3" stroke-linecap="round"/>`).join(''):'')+
+  (n>4?`<path d="M244 88 q18 12 40 18" fill="none" stroke="#4a9fd0" stroke-width="3.5" stroke-dasharray="6 4"/>`:'')+
+  `<text x="160" y="140" font-size="10.5" font-weight="900" text-anchor="middle" fill="#e8f1f8">${n}/5 adım — damlanın yolculuğu</text>`)},
+ /* ısı akışı — ok maddeye girer ya da maddeden çıkar */
+ isi:(st)=>{const v=(st&&st.vurgu)||'';
+  return SVG(320,132,
+  `<rect width="320" height="132" fill="#e6f4f2"/><rect x="0" y="100" width="320" height="32" fill="#6fa89a"/>`+
+  `<rect x="118" y="46" width="84" height="54" rx="6" fill="#dff0f7" stroke="#7a8c99" stroke-width="3"/>`+
+  `<text x="160" y="78" font-size="12" font-weight="900" text-anchor="middle" fill="#4d6a80">MADDE</text>`+
+  (v==='alir'?`<path d="M40 73 h60" stroke="#d2603f" stroke-width="5"/><path d="M116 73 l-18 -9 v18 z" fill="#d2603f"/>`+
+   `<text x="70" y="60" font-size="11" font-weight="900" text-anchor="middle" fill="#d2603f">ısı girer</text>`:'')+
+  (v==='verir'?`<path d="M204 73 h60" stroke="#2a75ad" stroke-width="5"/><path d="M280 73 l-18 -9 v18 z" fill="#2a75ad"/>`+
+   `<text x="240" y="60" font-size="11" font-weight="900" text-anchor="middle" fill="#2a75ad">ısı çıkar</text>`:'')+
+  (v?'':`<text x="160" y="118" font-size="10.5" font-weight="800" text-anchor="middle" fill="#eaf6f2">ısı nereye gidiyor?</text>`))},
+ /* deney düzeneği — seçilen malzeme tezgâha yerleşir */
+ duzenek:(malzemeler)=>{const var_=a=>malzemeler.some(m=>m.id===a);
+  return SVG(320,140,
+  `<rect width="320" height="140" fill="#e9eef3"/><rect x="0" y="106" width="320" height="34" fill="#78899b"/>`+
+  `<rect x="0" y="102" width="320" height="6" fill="#5a6b7d"/>`+
+  (var_('bardak')?`<path d="M36 62 h44 v42 h-44 z" fill="#dff0f7" stroke="#7a8c99" stroke-width="3"/>`:
+    `<rect x="36" y="62" width="44" height="42" fill="none" stroke="#b8c6d2" stroke-width="2" stroke-dasharray="5 4"/>`)+
+  (var_('su')&&var_('bardak')?`<rect x="38" y="80" width="40" height="23" fill="#4a9fd0" opacity=".8"/>`:'')+
+  (var_('termometre')?`<rect x="96" y="44" width="10" height="60" rx="5" fill="#fff" stroke="#7a8c99" stroke-width="2.5"/><circle cx="101" cy="106" r="7" fill="#d2603f"/>`:
+    `<rect x="96" y="44" width="10" height="60" rx="5" fill="none" stroke="#b8c6d2" stroke-width="2" stroke-dasharray="4 4"/>`)+
+  (var_('kronometre')?`<circle cx="140" cy="82" r="14" fill="#fff" stroke="#7a8c99" stroke-width="2.5"/><path d="M140 82 v-8" stroke="#1a2d3d" stroke-width="2"/>`:'')+
+  (var_('defter')?`<rect x="168" y="66" width="52" height="38" rx="3" fill="#fffdf3" stroke="#c9b48b" stroke-width="2.5"/><line x1="176" y1="80" x2="212" y2="80" stroke="#c3d3de" stroke-width="2"/><line x1="176" y1="90" x2="212" y2="90" stroke="#c3d3de" stroke-width="2"/>`:'')+
+  (var_('gozluk')?`<path d="M244 74 h14 M234 74 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 M258 74 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0" fill="none" stroke="#2a75ad" stroke-width="3"/>`:'')+
+  (var_('eldiven')?`<path d="M280 92 q0 -16 8 -16 q3 -10 6 0 q3 -9 6 0 q7 0 7 16 z" fill="#8fbf6a" stroke="#4f7f3a" stroke-width="2"/>`:'')+
+  `<text x="160" y="128" font-size="10.5" font-weight="900" text-anchor="middle" fill="#eef4f7">düzenek: ${malzemeler.length} parça yerleşti</text>`)},
  /* Dünya-Güneş — dönme ve dolanma gerçekten canlanır, saat onunla ilerler.
     Sahne kuzey kutbunun ÜSTÜNDEN bakış: aydınlık yarım küre her zaman
     Güneş'e döner, karanlık yarım küre ondan kaçar. Kırmızı nokta bir şehir;
@@ -467,10 +552,12 @@ function siniflaCiz(r){
   const j=+b.dataset.kutu;
   if(j!==k.dogru)return wrong(k.hint||'Kartı yeniden oku: elinde kanıt var mı?');
   state.sayim=state.sayim||r.kutular.map(()=>0);state.sayim[j]++;
+  /* vurgu ancak karar verildikten SONRA çizilir: önce çizilse cevabı söylerdi */
+  state.vurgu=k.vurgu||'';
   state.ix=i+1;state.not=k.neden||'';
   if(state.ix>=r.kartlar.length)return good();
   feedback('Doğru');gecisBasla(()=>siniflaCiz(r),FAST?30:520)})}
-function renderSinifla(r){state.ix=0;state.not='';state.sayim=r.kutular.map(()=>0);siniflaCiz(r)}
+function renderSinifla(r){state.ix=0;state.not='';state.vurgu='';state.sayim=r.kutular.map(()=>0);siniflaCiz(r)}
 
 /* ===== KARAR: seçenekler sabit durur, düşmez. Her kartın künyesi (yazar,
    tarih, kurum) ekranda okunur; karardan sonra gerekçe sorulur. ===== */
@@ -793,9 +880,64 @@ function gozlemOynat(r){
  kareIste(adim)}
 function renderGozlem(r){state.ix=0;state.t=0;state.izleme=0;state.oynuyor=false;state.not='';gozlemCiz(r)}
 
+/* ===== ISIT: kronometre kaldırıldı. Ekranda gerçek ocak, kap, madde ve
+   termometre var. Hedef sıcaklık HİÇBİR yerde yazılı değil — ne görevde,
+   ne "Hedef" satırında, ne ölçek işaretinde. Öğrenci maddede gördüğü
+   değişime bakarak ocağı kapatıyor.
+   Şartnamenin çekirdek kavramı: hâl değişimi SÜRERKEN sıcaklık SABİT kalır.
+   Sağdaki sıcaklık-zaman çizgisi bu düzlüğü gözle görünür kılıyor. ===== */
+function isitDurum(r){
+ const m=r.madde;
+ return {T:state.T,Tmin:m.olcekMin,Tmax:m.olcekMax,oran:state.oran,
+  faz:state.isitiyor?'acik':'kapali',madde:m,kayit:state.kayit||[],yaniyor:state.bozuldu}}
+function isitCiz(r){
+ const m=r.madde;
+ $('#stage').innerHTML=SAHNE.ocak(isitDurum(r))+
+  `<div class="gozlem-satir">${esc(state.gozlem||m.gozlem0)}</div>`+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=
+  (r.gorev?`<div class="istek">${esc(r.gorev)}</div>`:'')+
+  `<button class="isit-dugme ${state.isitiyor?'basili':''}" id="isitBtn">${state.isitiyor?'Isıtılıyor…':'Ocağı yak (basılı tut)'}</button>`+
+  `<button class="choice" id="durBtn">Ocağı kapat</button>`+
+  `<div class="hint">${esc(r.ipucu||'Maddeye bak: ne zaman duracağına sen karar ver.')}</div>`;
+ const b=$('#isitBtn');
+ const bas=e=>{e.preventDefault();if(locked||state.bozuldu)return;state.isitiyor=true;isitAdim(r);isitCiz(r)};
+ const birak=e=>{e.preventDefault();if(!state.isitiyor)return;state.isitiyor=false;isitCiz(r)};
+ b.onpointerdown=bas;b.onpointerup=birak;b.onpointercancel=birak;b.onpointerleave=birak;
+ $('#durBtn').onclick=()=>{if(locked)return;state.isitiyor=false;isitKarar(r)}}
+function isitAdim(r){
+ if(state.tik)return;
+ const m=r.madde,tur=roundIndex;
+ const adim=()=>{
+  if(roundIndex!==tur){state.tik=false;return}
+  if(!state.isitiyor||locked||state.bozuldu){state.tik=false;return isitCiz(r)}
+  const h=FAST?9:1.15;                       /* saniyede değil kare başına ısı */
+  if(state.oran>=1){state.T+=h*m.hizSonra}
+  else if(state.T<m.degisimC-0.01){state.T=Math.min(m.degisimC,state.T+h*m.hizOnce)}
+  else {                                     /* HÂL DEĞİŞİMİ: sıcaklık SABİT */
+   state.T=m.degisimC;
+   state.oran=Math.min(1,state.oran+h*m.hizDegisim)}
+  state.kayit=(state.kayit||[]).concat(state.T);
+  if(state.kayit.length>90)state.kayit=state.kayit.filter((_,i)=>i%2===0);
+  state.gozlem = state.oran>=1
+   ? (state.T>m.bozulmaC?m.gozlemBozuk:m.gozlem2)
+   : (state.oran>0?m.gozlem1:m.gozlem0);
+  if(state.T>m.bozulmaC&&state.oran>=1){state.bozuldu=true;state.isitiyor=false;
+   isitCiz(r);return wrong(m.bozukHint)}
+  isitCiz(r);state.tik=true;kareIste(()=>{state.tik=false;adim()})};
+ state.tik=true;kareIste(()=>{state.tik=false;adim()})}
+function isitKarar(r){
+ const m=r.madde;
+ if(state.oran<1)return wrong(m.erkenHint);
+ if(state.T>m.bozulmaC)return wrong(m.bozukHint);
+ state.not=m.sonuc||'';isitCiz(r);good('Tam zamanında!')}
+function renderIsit(r){const m=r.madde;
+ state.T=m.baslangicC;state.oran=0;state.kayit=[m.baslangicC];state.isitiyor=false;
+ state.bozuldu=false;state.tik=false;state.gozlem=m.gozlem0;state.not='';isitCiz(r)}
+
 function renderRound(){const r=round();if(!r)return;
  const fn={sinifla:renderSinifla,karar:renderKarar,sira:renderSira,esle:renderEsle,
-  kur:renderKur,sozdiz:renderSozdiz,yaz:renderYaz,hafiza:renderHafiza,gozlem:renderGozlem}[r.kind];
+  kur:renderKur,sozdiz:renderSozdiz,yaz:renderYaz,hafiza:renderHafiza,gozlem:renderGozlem,isit:renderIsit}[r.kind];
  (fn||renderKarar)(r)}
 
 const GAMES={};
@@ -1949,6 +2091,509 @@ GAMES.f16={title:'Dünya\'nın Şekli',theme:'dunya',
   ornekCevap:'Uzaklaşan geminin önce gövdesi kaybolur. Bu bir kanıttır çünkü düz bir yüzeyde böyle olmazdı.',
   result:'Kanıtı gerekçesiyle açıkladın.'}]};
 
+/* ---- f17 Dünya'nın Süreleri (tren-tünel kaldırıldı: süre, dönen Dünya ve
+        yanındaki sayaç gözlenerek belirleniyor) ---- */
+GAMES.f17={title:'Dünya\'nın Süreleri',theme:'dunya',
+ finish:'Dönmenin bir günde, dolanmanın bir yılda tamamlandığını sayaçtan okudun ve hangi hareketin hangi süreye karşılık geldiğini gerekçelendirdin.',rounds:[
+ {kind:'gozlem',prompt:'Dünya bir tam tur dönerken sayacı izle.',
+  animasyon:{sure:5200,dugme:'Bir tam tur döndür',
+   ciz:(t)=>SAHNE.dunyaGunes(t,{kip:'donme'}),
+   bitti:'Bir tam tur bitti. Sayaç nerede durdu?'},
+  gorev:'Dünya kendi ekseni etrafında bir tam tur atıyor. Yanındaki sayacı izle.',
+  ipucu:'Önce gözlemi izle; seçenekler ondan sonra açılır.',
+  sorular:[
+   {soru:'Bir tam tur kaç saat sürdü?',
+    hint:'Tur bitince sayaç kaçta durdu?',
+    secenekler:[{t:'24 saat',dogru:true},{t:'12 saat'},{t:'365 saat'}],
+    neden:'Bir tam dönme 24 saat sürer; bu süreye bir gün denir.'},
+   {soru:'Bu süreye ne ad veririz?',
+    hint:'24 saatlik süreye günlük hayatta ne diyoruz?',
+    secenekler:[{t:'Bir gün',dogru:true},{t:'Bir yıl'},{t:'Bir mevsim'}],
+    neden:'Gün, Dünya\'nın kendi ekseni etrafındaki bir turudur.'}]},
+ {kind:'gozlem',prompt:'Şimdi Güneş etrafındaki turu izle.',
+  animasyon:{sure:6000,dugme:'Güneş etrafında dolandır',
+   ciz:(t)=>SAHNE.dunyaGunes(t,{kip:'dolanma'}),
+   bitti:'Bir tam dolanma bitti. Sayaç gün sayıyordu.'},
+  gorev:'Dünya bu kez Güneş\'in çevresinde bir tam tur atıyor. Sayaç gün sayıyor.',
+  sorular:[
+   {soru:'Bir tam dolanma kaç gün sürdü?',
+    hint:'Tur bitince gün sayacı kaçta durdu?',
+    secenekler:[{t:'365 gün',dogru:true},{t:'24 gün'},{t:'30 gün'}],
+    neden:'Dünya Güneş çevresindeki turunu yaklaşık 365 günde tamamlar.'},
+   {soru:'Bu süre boyunca kaç mevsim geçti?',
+    hint:'Bir yıl içinde kaç mevsim yaşarız?',
+    secenekler:[{t:'4 mevsim',dogru:true},{t:'2 mevsim'},{t:'12 mevsim'}],
+    neden:'Dolanma bir yıl sürer ve bu süreye dört mevsim sığar.'},
+   {soru:'İki hareketin süresi neden bu kadar farklı?',
+    hint:'Hangi yol daha uzun: kendi çevresi mi, Güneş\'in çevresi mi?',
+    secenekler:[
+     {t:'Güneş çevresindeki yol, kendi çevresinden çok daha uzun',dogru:true},
+     {t:'Dünya dolanırken daha yavaş gittiği için'}],
+    neden:'Uzun yol uzun sürer: biri bir gün, öteki bir yıl.'}]},
+ {kind:'yaz',prompt:'Hangi hareket hangi süreye karşılık geliyor?',
+  sahne:(st)=>SAHNE.dunyaGunes(1,{kip:'dolanma'}),
+  gorev:'Dünya\'nın iki hareketini ve sürelerini kendi cümlelerinle yaz. Neden farklı sürdüklerini de açıkla.',
+  ornek:'Kalıp: "… hareketi … sürer, … hareketi … sürer çünkü …"',
+  yerTutucu:'İki hareket ve süreleri…',
+  enAzKelime:14,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'iki hareketin adını da yaz (dönme ve dolanma)',desen:'dön[mn]'},
+   {ad:'"dolan" sözcüğünü kullan',desen:'dolan'},
+   {ad:'süreleri sayıyla yaz',desen:'\\d'}],
+  ornekCevap:'Dönme hareketi 24 saat sürer, dolanma hareketi 365 gün sürer çünkü Güneş çevresindeki yol çok daha uzundur.',
+  result:'İki hareketi süreleriyle ve gerekçesiyle anlattın.'}]};
+
+/* ---- f18 Küre Kartları (uzay zemini kaldırıldı: kartlar Dünya kesitinin
+        önünde, can 3, her eşleşme gerekçeyle onaylanıyor) ---- */
+GAMES.f18={title:'Küre Kartları',theme:'dunya',
+ finish:'Küreleri içerikleriyle eşleştirdin, küreler arası geçiş bölgelerini gördün ve bir küreyi kendi cümlenle tanıttın.',rounds:[
+ {kind:'hafiza',prompt:'Kartları çevir: küreyi içeriğiyle eşle.',
+  sahne:(st)=>SAHNE.kure(st,''),
+  soru:'Hangi iki kart aynı küreyi anlatıyor?',
+  ipucu:'Yanlış çiftte kartlar açık kalır; ikisini yan yana oku.',
+  farkSoru:'Bu iki kart aynı küreden mi söz ediyor? Farkı ne?',
+  ciftler:[
+   {a:'Hava küre',b:'Oksijen ve azot gibi gazlar',
+    neden:'Dünya\'yı saran gaz katmanı hava küredir.',
+    gerekce:{soru:'Bu küre olmasa ne olurdu?',
+     secenekler:[{t:'Soluk alamazdık',dogru:true},{t:'Denizler donardı'}],
+     hint:'Bu kürede ne var?'}},
+   {a:'Su küre',b:'Deniz, göl, akarsu ve buzullar',
+    neden:'Yeryüzündeki bütün sular, katı hâldekiler dahil, su küreyi oluşturur.',
+    gerekce:{soru:'Buzullar neden bu küreye girer?',
+     secenekler:[{t:'Buz da sudur, yalnız hâli farklıdır',dogru:true},{t:'Buz taş sayıldığı için'}],
+     hint:'Buz eriyince ne oluyor?'}},
+   {a:'Taş küre',b:'Yer kabuğu, manto ve çekirdek',
+    neden:'Dünya\'nın bütün katı yapısı taş küredir.',
+    gerekce:{soru:'Bu küre nereye kadar uzanır?',
+     secenekler:[{t:'Yüzeyden merkeze kadar',dogru:true},{t:'Yalnız toprağın ilk metresine'}],
+     hint:'Kartta hangi katmanlar sayılıyor?'}},
+   {a:'Canlı küre',b:'Bitkiler, hayvanlar ve insanlar',
+    neden:'Yaşayan her varlık, nerede yaşarsa yaşasın canlı küreye girer.',
+    gerekce:{soru:'Denizdeki balık hangi küreye girer?',
+     secenekler:[{t:'Canlı küreye; yaşadığı yer bunu değiştirmez',dogru:true},{t:'Yalnız su küreye'}],
+     hint:'Balık yaşıyor mu?'}}]},
+ {kind:'karar',prompt:'Küreler nerede birbirine karışıyor?',
+  sahne:(st,ek)=>SAHNE.kure(st,ek),
+  sorular:[
+   {durum:'Deniz yüzeyi: altında su, üstünde hava var. Dalgalar ikisini sürekli karıştırıyor.',
+    sahneEk:'su',
+    soru:'Deniz yüzeyi için ne söylenebilir?',
+    ipucu:'Bu bir sınır mı, bir geçiş bölgesi mi?',
+    hint:'Burada kaç küre birden bulunuyor?',
+    secenekler:[
+     {t:'İki kürenin buluştuğu geçiş bölgesidir; oksijen suya, su buharı havaya geçer',dogru:true},
+     {t:'Yalnız su küreye aittir, hava oraya karışmaz'},
+     {t:'Hiçbir küreye ait değildir'}],
+    neden:'Küreler keskin sınırlarla ayrılmaz; yüzeyler alışveriş bölgeleridir.',
+    gerekce:{soru:'Bu alışverişe günlük hayattan bir örnek nedir?',
+     secenekler:[
+      {t:'Denizden buharlaşan suyun bulut olması',dogru:true},
+      {t:'Dağların yükselmesi'}],
+     neden:'Su döngüsü, küreler arası alışverişin en bilinen örneğidir.'}},
+   {durum:'Toprak: içinde kayaç taneleri, su, hava boşlukları ve solucanlar var.',
+    sahneEk:'canli',
+    soru:'Toprak hangi küreleri barındırır?',
+    hint:'Sayılan şeylerin her biri hangi küreye giriyor?',
+    secenekler:[
+     {t:'Dördünü birden: kayaç, su, hava ve canlılar',dogru:true},
+     {t:'Yalnız taş küreyi'},
+     {t:'Yalnız canlı küreyi'}],
+    neden:'Toprak, dört kürenin de buluştuğu bir karışımdır.'},
+   {durum:'Yağmur: gökyüzünden düşüp toprağa ve denize karışıyor.',
+    sahneEk:'hava',
+    soru:'Yağmur hangi küreler arasında geçiş yapar?',
+    hint:'Yağmur nereden çıkıp nereye varıyor?',
+    secenekler:[
+     {t:'Hava küreden su küreye ve taş küreye',dogru:true},
+     {t:'Yalnız hava kürede kalır'}],
+    neden:'Bir su damlası tek bir küreye ait değildir; küreler arasında dolaşır.'}]},
+ {kind:'yaz',prompt:'Bir küreyi kendi cümlenle tanıt.',
+  sahne:(st)=>SAHNE.kure(st,''),
+  gorev:'Dört küreden birini seç. Adını, içinde nelerin bulunduğunu ve bir örneğini kendi cümlenle yaz.',
+  ornek:'Kalıp: "… küre … içerir. Örneğin …"',
+  yerTutucu:'Küre ve içeriği…',
+  enAzKelime:10,bitis:'.',
+  denetim:[{ad:'"küre" sözcüğünü kullan',desen:'küre'},
+   {ad:'bir örnek ver ("örneğin" ya da "gibi")',desen:'örneğin|gibi|mesela'}],
+  ornekCevap:'Su küre yeryüzündeki bütün suları içerir; örneğin denizler, göller ve buzullar ona girer.',
+  result:'Küreyi içeriğiyle tanıttın.'}]};
+
+/* ---- f19 Hâl Değişimi Defteri (bant kaldırıldı: olay kartı sabit ve tam
+        görünür. KRİTİK: kart metinleri hâl değişiminin adını çağrıştıran
+        sözcük içermez — denemede "Çaydanlıktan buhar çıkar" ifadesinden
+        yalnız "buhar" görünüyor ve cevabı tek başına ele veriyordu. ---- */
+GAMES.f19={title:'Hâl Değişimi Defteri',theme:'lab',
+ finish:'Gözlediğin olayları hâl değişimi adlarıyla eşleştirdin, maddenin hangi hâlden hangi hâle geçtiğini izledin ve kendi gözlemini yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Gözlenen olay hangi hâl değişimidir?',sahne:SAHNE.lab,
+  soru:'Bu olayda madde hangi değişimi yaşıyor?',
+  kutular:['ERİME (katı→sıvı)','DONMA (sıvı→katı)','BUHARLAŞMA (sıvı→gaz)','YOĞUŞMA (gaz→sıvı)'],
+  ipucu:'Önce sor: madde önce hangi hâldeydi, sonra hangi hâle geçti?',
+  kartlar:[
+   {t:'Bardağa attığın sert küpler yavaşça kaybolup bardağı dolduruyor',dogru:0,
+    neden:'Katı hâldeki madde sıvı hâle geçti.',
+    hint:'Madde başlangıçta sert miydi, akıcı mıydı? Sonunda ne oldu?'},
+   {t:'Dolapta bıraktığın kaptaki akışkan madde sertleşip kalıp oluyor',dogru:1,
+    neden:'Sıvı hâldeki madde katı hâle geçti.',
+    hint:'Başta akıyordu, sonunda akıyor mu?'},
+   {t:'Güneşte asılı ıslak çamaşır bir süre sonra kupkuru oluyor',dogru:2,
+    neden:'Sıvı hâldeki su gaz hâline geçip havaya karıştı.',
+    hint:'Kumaştaki ıslaklık nereye gitti; yere mi damladı?'},
+   {t:'Buzlu içeceğin bardağının dışı ıslanıyor, oysa bardak delik değil',dogru:3,
+    neden:'Havadaki gaz hâlindeki su, soğuk yüzeyde sıvı hâle döndü.',
+    hint:'Bardağın dışındaki ıslaklık nereden geldi; içeriden sızmadıysa?'},
+   {t:'Tavaya attığın katı sarı blok yayılıp tabanı kaplıyor',dogru:0,
+    neden:'Isı alan katı madde sıvı hâle geçti.',
+    hint:'Blok başta biçimini koruyordu; şimdi koruyor mu?'},
+   {t:'Sabah camın iç yüzeyinde küçük damlacıklar birikmiş',dogru:3,
+    neden:'Odadaki gaz hâlindeki su, soğuk cama değince sıvıya döndü.',
+    hint:'Damlacıklar camın içinden mi çıktı, havadan mı geldi?'}]},
+ {kind:'karar',prompt:'Madde hangi hâlden hangi hâle geçti?',sahne:SAHNE.lab,
+  sorular:[
+   {durum:'Kışın gölün üstü tutuyor; üzerinde yürünebiliyor. Altta ise madde hâlâ akıyor.',
+    soru:'Gölün üstünde ne oldu?',
+    ipucu:'Yüzeydeki madde ile alttaki madde aynı mı?',
+    hint:'Üstteki tabaka akıyor mu, biçimini koruyor mu?',
+    secenekler:[
+     {t:'Sıvı hâldeki su katı hâle geçti',dogru:true},
+     {t:'Sıvı hâldeki su gaz hâline geçti'},
+     {t:'Gaz hâldeki su sıvıya döndü'}],
+    neden:'Isı veren su katılaşır; bu olayın adı donmadır.',
+    gerekce:{soru:'Bu değişim için madde ısı aldı mı, verdi mi?',
+     secenekler:[{t:'Isı verdi, soğudu',dogru:true},{t:'Isı aldı, ısındı'}],
+     neden:'Katılaşma için maddenin ısı kaybetmesi gerekir.'}},
+   {durum:'Kaynayan tencerenin kapağını kaldırdın; kapağın alt yüzeyi damlacıklarla kaplı.',
+    soru:'Kapağın altında ne oldu?',
+    hint:'Damlacıklar kapağın metalinden mi çıktı?',
+    secenekler:[
+     {t:'Gaz hâlindeki su, soğuk kapakta sıvı hâle döndü',dogru:true},
+     {t:'Kapak eridi'},
+     {t:'Su doğrudan katı hâle geçti'}],
+    neden:'Yükselen su buharı soğuk yüzeyde yoğuşur.'},
+   {durum:'Aynı olayda iki değişim art arda oluyor: tencerede su azalıyor, kapakta damla birikiyor.',
+    soru:'Bu iki değişimin adı sırasıyla nedir?',
+    hint:'Önce tencerede ne oldu, sonra kapakta ne oldu?',
+    secenekler:[
+     {t:'Önce buharlaşma, sonra yoğuşma',dogru:true},
+     {t:'Önce erime, sonra donma'},
+     {t:'Önce yoğuşma, sonra buharlaşma'}],
+    neden:'Su döngüsü de tam olarak bu iki değişimin art arda gelmesidir.'}]},
+ {kind:'yaz',prompt:'Evinde gözlediğin bir hâl değişimini anlat.',sahne:SAHNE.lab,
+  gorev:'Evinde gördüğün bir hâl değişimi yaz: ne gözledin, maddenin hâli nasıl değişti ve bu değişimin adı ne?',
+  ornek:'Kalıp: "… gözledim. Madde … hâlden … hâle geçti; bu … dır."',
+  yerTutucu:'Gözlemin ve adı…',
+  enAzKelime:12,bitis:'.',
+  denetim:[{ad:'değişimin adını yaz (erime, donma, buharlaşma, yoğuşma)',
+    desen:'erime|donma|buharlaş|yoğuş'},
+   {ad:'maddenin hâlini yaz (katı, sıvı ya da gaz)',desen:'katı|sıvı|gaz'}],
+  ornekCevap:'Dondurmam tabakta yumuşayıp aktı. Madde katı hâlden sıvı hâle geçti; bu olayın adı erimedir.',
+  result:'Gözlemini adlandırdın.'}]};
+
+/* ---- f20 Isı Alır mı Verir mi (köprü kaldırıldı: karar verildikten sonra
+        ısının maddeye girdiği ya da çıktığı ok olarak gösteriliyor) ---- */
+GAMES.f20={title:'Isı Alır mı, Verir mi?',theme:'lab',
+ finish:'Hâl değişimlerinde ısının yönünü buldun, ısı alan ve veren değişimleri karşılaştırdın ve birini gerekçesiyle anlattın.',rounds:[
+ {kind:'sinifla',prompt:'Bu değişim için madde ısı alır mı, verir mi?',
+  sahne:(st)=>SAHNE.isi(st),
+  soru:'Bu değişimin olması için madde ne yapmalı?',
+  kutular:['ISI ALIR (ısıtılır)','ISI VERİR (soğutulur)'],
+  ipucu:'Karar verdikten sonra ısının yönü ok olarak görünür.',
+  kartlar:[
+   {t:'Buzun suya dönüşmesi (erime)',dogru:0,vurgu:'alir',
+    neden:'Katıyı sıvı yapmak için maddeye ısı vermek gerekir.',
+    hint:'Buzu eritmek için onu buzluğa mı koyarsın, dışarı mı çıkarırsın?'},
+   {t:'Suyun buza dönüşmesi (donma)',dogru:1,vurgu:'verir',
+    neden:'Sıvı katılaşırken ısı kaybeder.',
+    hint:'Suyu dondurmak için onu nereye koyarsın?'},
+   {t:'Suyun buhara dönüşmesi (buharlaşma)',dogru:0,vurgu:'alir',
+    neden:'Sıvıyı gaz yapmak için ısı gerekir.',
+    hint:'Çamaşır güneşte mi daha çabuk kurur, gölgede mi?'},
+   {t:'Buharın suya dönüşmesi (yoğuşma)',dogru:1,vurgu:'verir',
+    neden:'Gaz sıvıya dönerken ısı kaybeder.',
+    hint:'Damlacıklar sıcak yüzeyde mi oluşuyor, soğuk yüzeyde mi?'}]},
+ {kind:'karar',prompt:'Isı alan ve veren değişimleri karşılaştır.',
+  sahne:(st,ek)=>SAHNE.isi({vurgu:ek}),
+  sorular:[
+   {durum:'Erime ile donma yan yana: biri buzu suya, öteki suyu buza çeviriyor.',
+    soru:'Bu iki değişim arasındaki ilişki nedir?',
+    ipucu:'Biri ısı alıyorsa öteki ne yapar?',
+    hint:'İki değişim aynı yönde mi gidiyor?',
+    secenekler:[
+     {t:'Birbirinin tersidir: biri ısı alır, öteki verir',dogru:true},
+     {t:'İkisi de ısı alır'},
+     {t:'İkisi de ısı verir'}],
+    neden:'Her hâl değişiminin ters yönde bir eşi vardır.',
+    gerekce:{soru:'Buz 0 °C\'de erir. Su kaç derecede donar?',
+     secenekler:[{t:'Aynı sıcaklıkta: 0 °C',dogru:true},{t:'Çok daha düşük bir sıcaklıkta'}],
+     neden:'Ters değişimler aynı sıcaklıkta olur; yalnız ısının yönü değişir.'}},
+   {durum:'Terleyince vücudumuz serinler.',sahneEk:'alir',
+    soru:'Ter neden serinletir?',
+    hint:'Terin buharlaşması için gereken ısıyı nereden alır?',
+    secenekler:[
+     {t:'Ter buharlaşırken derimizden ısı alır',dogru:true},
+     {t:'Ter soğuk olduğu için'},
+     {t:'Ter ısı verdiği için'}],
+    neden:'Buharlaşma ısı alan bir değişimdir; ısıyı temas ettiği yerden alır.'},
+   {durum:'Kışın camın iç yüzeyinde damlacıklar oluşuyor.',sahneEk:'verir',
+    soru:'Bu değişimde ısı ne yapar?',
+    hint:'Gaz sıvıya dönerken ısı kazanır mı, kaybeder mi?',
+    secenekler:[
+     {t:'Su buharı ısı vererek sıvıya döner',dogru:true},
+     {t:'Su buharı ısı alarak sıvıya döner'}],
+    neden:'Yoğuşma ısı veren bir değişimdir.'}]},
+ {kind:'yaz',prompt:'Bir hâl değişiminde ısının yönünü anlat.',
+  sahne:(st)=>SAHNE.isi({vurgu:'alir'}),
+  gorev:'Bir hâl değişimi seç. Maddenin ısı alıp mı verdiğini, nedenini yaz.',
+  ornek:'Kalıp: "… olurken madde ısı … çünkü …"',
+  yerTutucu:'Değişim ve ısının yönü…',
+  enAzKelime:10,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'değişimin adını yaz (erime, donma, buharlaşma, yoğuşma)',
+    desen:'eri[mryi]|don[maur]|buharlaş|yoğuş'},
+   {ad:'"ısı" sözcüğünü kullan',desen:'ısı'}],
+  ornekCevap:'Buz erirken madde ısı alır çünkü katıyı sıvı yapmak için onu ısıtmak gerekir.',
+  result:'Isının yönünü gerekçesiyle anlattın.'}]};
+
+/* ---- f21 Isıtma Deneyi — bu dersin EN KRİTİK düzeltmesi.
+     Eskiden: ekranın ortasında bir KRONOMETRE vardı; ocak, kap, madde ve
+     termometre yoktu. Hedef sıcaklık üç ayrı yerde yazılıydı (görev metni,
+     "Hedef 100 °C" satırı, ölçek üzerindeki sarı çizgi) ve gösterge sıfırdan
+     hedefe DÜZ DOĞRUSAL artıyordu — yani hâl değişimi sırasında sıcaklığın
+     sabit kaldığı, bu temanın çekirdek kavramı, tam tersiyle öğretiliyordu.
+     Şimdi: gerçek ocak, kap, madde ve termometre var. Hedef hiçbir yerde
+     yazılı değil; öğrenci MADDEDE gördüğü değişime bakarak ocağı kapatıyor.
+     Sıcaklık-zaman çizgisi hâl değişimi boyunca düz gidiyor. ---- */
+GAMES.f21={title:'Isıtma Deneyi',theme:'lab',
+ finish:'Isıtmayı sayıya değil maddede gördüğün değişime bakarak durdurdun ve hâl değişimi sürerken sıcaklığın sabit kaldığını çizgide gördün.',rounds:[
+ {kind:'isit',prompt:'Buzun hepsi eriyene kadar ısıt, sonra ocağı kapat.',
+  gorev:'Kaptaki buzu eritmek istiyoruz. Buza bak: hepsi eridiğinde ocağı kapat. Fazla ısıtırsan su kaynamaya başlar.',
+  ipucu:'Termometreye değil kaptaki maddeye bak. Sağdaki çizgi ne yapıyor?',
+  madde:{ad:'buz',olcekMin:-20,olcekMax:120,baslangicC:-18,degisimC:0,bozulmaC:26,
+   hizOnce:0.15,hizDegisim:0.0056,hizSonra:0.12,
+   kati:'#dff0f7',sivi:'#4a9fd0',katiCiz:true,kaynar:false,
+   gozlem0:'Kaptaki buz katı; henüz erimeye başlamadı.',
+   gozlem1:'Buz eriyor: parçalar küçülüyor, su artıyor. Termometreye dikkat et — kıpırdamıyor.',
+   gozlem2:'Buzun hepsi eridi; kapta yalnız su var.',
+   gozlemBozuk:'Su fazla ısındı, kaynamaya başladı.',
+   erkenHint:'Kapta hâlâ katı parçalar var. Deney bitti mi?',
+   bozukHint:'Erime bittikten sonra ısıtmayı sürdürdün. Deneyin amacı neydi?',
+   sonuc:'Erime sürerken sıcaklık sabit kaldı; verilen ısı sıcaklığı değil hâli değiştirdi.'},
+  result:'Buzun hepsi eridi ve tam zamanında durdun.'},
+ {kind:'isit',prompt:'Su kaynamaya başlayıp iyice kaynayana kadar ısıt.',
+  gorev:'Bu kez kaptaki su kaynatılacak. Suya bak: kaynama iyice yerleşince ocağı kapat. Kap kuruyana kadar sürdürme.',
+  ipucu:'Kaynarken termometre ne yapıyor? Sağdaki çizgiyi izle.',
+  madde:{ad:'su',olcekMin:0,olcekMax:130,baslangicC:18,degisimC:100,bozulmaC:118,
+   hizOnce:0.46,hizDegisim:0.0056,hizSonra:0.10,
+   kati:'#dff0f7',sivi:'#4a9fd0',katiCiz:false,kaynar:true,
+   gozlem0:'Su ılık; henüz kabarcık yok.',
+   gozlem1:'Su kaynıyor: kabarcıklar yükseliyor, buhar çıkıyor. Termometre yerinde duruyor.',
+   gozlem2:'Kaynama iyice yerleşti; su hızla buharlaşıyor.',
+   gozlemBozuk:'Kap neredeyse kurudu; su bitiyor.',
+   erkenHint:'Su henüz kaynamaya başlamadı. Kabarcıkları görüyor musun?',
+   bozukHint:'Kaynamayı çok uzattın, kap kuruyor. Deneyin amacı neydi?',
+   sonuc:'Su kaynarken de sıcaklık sabit kaldı: 100 °C\'de çizgi düzleşti.'},
+  result:'Kaynamayı gözleyip tam zamanında durdun.'},
+ {kind:'yaz',prompt:'Isıtmayı ne zaman durduracağını nasıl anladın?',
+  sahne:()=>SAHNE.ocak({T:100,Tmin:0,Tmax:130,oran:0.6,faz:'kapali',
+   madde:{kati:'#dff0f7',sivi:'#4a9fd0',katiCiz:false,kaynar:true},
+   kayit:[18,34,52,70,88,100,100,100,100,100,100],yaniyor:false}),
+  gorev:'İki deneyde de ocağı ne zaman kapatacağına neye bakarak karar verdin? Bir de sıcaklık-zaman çizgisinin hâl değişimi sırasında ne yaptığını yaz.',
+  ornek:'Kalıp: "… gördüğümde durdurdum. Hâl değişirken sıcaklık … "',
+  yerTutucu:'Kararın ve çizgide gördüğün…',
+  enAzKelime:14,bitis:'.',
+  denetim:[{ad:'neye baktığını yaz (madde, buz, su, kabarcık)',desen:'madde|buz|su\\b|kabarcık|eridi|kayna'},
+   {ad:'"sabit" ya da "değişmedi" yaz',desen:'sabit|değişmedi|aynı kaldı|düz'},
+   {ad:'"sıcaklık" sözcüğünü kullan',desen:'sıcaklık'}],
+  ornekCevap:'Buzun hepsinin eridiğini gördüğümde durdurdum. Hâl değişirken sıcaklık sabit kaldı, çizgi düz gitti.',
+  result:'Kararını gözleme dayandırdın ve sabit sıcaklığı fark ettin.'}]};
+
+/* ---- f22 Su Döngüsü (roket kaldırıldı: damla şemanın üzerinde ilerliyor) ---- */
+GAMES.f22={title:'Su Döngüsü',theme:'doga',
+ finish:'Su damlasının yolculuğunu sıraladın, her adımdaki hâl değişimini adlandırdın ve döngüyü kendi cümlelerinle anlattın.',rounds:[
+ {kind:'sira',prompt:'Damlanın yolculuğunu baştan sona sırala.',sahne:SAHNE.dongu,
+  gorev:'Su damlasının yolculuğu karıştı. Şemadaki sırayla yerleştir.',
+  ipucu:'Seçtiğin adım şemada canlanıyor.',
+  kartlar:[
+   {t:'Güneş denizdeki suyu ısıtır',neden:'Döngünün enerjisi Güneş\'ten gelir.'},
+   {t:'Su gaz hâline geçip yükselir',neden:'Bu adımın adı buharlaşmadır.'},
+   {t:'Yükselen gaz soğur ve küçük damlacıklara dönüşüp bulut olur',neden:'Bu adımın adı yoğuşmadır.'},
+   {t:'Bulut ağırlaşınca damlalar yağış olarak düşer',neden:'Damlacıklar birleşip düşecek kadar ağırlaşır.'},
+   {t:'Yağan su akarak denize geri döner',neden:'Döngü kapanır ve baştan başlar.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Döngüyü başlatan enerji nereden geliyor?',
+   'Isınan su bir sonraki adımda ne yapar?',
+   'Yükselen gaz yukarıda soğuyunca ne olur?',
+   'Bulut oluştuktan sonra ne olur?','']},
+ {kind:'karar',prompt:'Bu adımda hangi hâl değişimi oluyor?',sahne:SAHNE.dongu,
+  sorular:[
+   {durum:'Denizdeki su ısınıp gözden kayboluyor ve yukarı çıkıyor.',
+    soru:'Bu adımın adı nedir?',
+    ipucu:'Madde hangi hâlden hangi hâle geçti?',
+    hint:'Su sıvıyken başladı; yukarı çıkarken hangi hâlde?',
+    secenekler:[
+     {t:'Buharlaşma (sıvı → gaz)',dogru:true},
+     {t:'Yoğuşma (gaz → sıvı)'},
+     {t:'Donma (sıvı → katı)'}],
+    neden:'Isı alan su gaz hâline geçer ve yükselir.',
+    gerekce:{soru:'Bu adım için madde ısı aldı mı, verdi mi?',
+     secenekler:[{t:'Isı aldı',dogru:true},{t:'Isı verdi'}],
+     neden:'Güneş\'ten gelen ısı bu değişimi sağlar.'}},
+   {durum:'Yükselen gaz yukarıda soğuyor ve küçük damlacıklar hâlinde bulut oluşuyor.',
+    soru:'Bu adımın adı nedir?',
+    hint:'Gaz hâlindeki madde soğuyunca ne oluyor?',
+    secenekler:[
+     {t:'Yoğuşma (gaz → sıvı)',dogru:true},
+     {t:'Buharlaşma (sıvı → gaz)'},
+     {t:'Erime (katı → sıvı)'}],
+    neden:'Soğuyan gaz ısı vererek sıvıya döner.'},
+   {durum:'Kışın bulutlardaki damlacıklar çok soğuyunca kar tanesi olarak düşüyor.',
+    soru:'Kar oluşurken hangi değişim yaşanır?',
+    hint:'Damlacık sıvıydı; kar tanesi hangi hâlde?',
+    secenekler:[
+     {t:'Donma (sıvı → katı)',dogru:true},
+     {t:'Erime (katı → sıvı)'},
+     {t:'Buharlaşma (sıvı → gaz)'}],
+    neden:'Yeterince soğuyan su katı hâle geçer; yağış kar olarak düşer.'}]},
+ {kind:'yaz',prompt:'Su döngüsünü hâl değişimi adlarıyla anlat.',sahne:SAHNE.dongu,
+  gorev:'Su döngüsünü kendi cümlelerinle anlat. En az iki hâl değişiminin adını kullan.',
+  ornek:'Kalıp: "Güneş suyu ısıtır, su … olur, sonra … ile bulut olur …"',
+  yerTutucu:'Döngünün anlatımı…',
+  enAzKelime:15,bitis:'.',
+  denetim:[{ad:'"buharlaş" sözcüğünü kullan',desen:'buharlaş'},
+   {ad:'"yoğuş" sözcüğünü kullan',desen:'yoğuş'},
+   {ad:'"Güneş" ya da "ısı" sözcüğünü kullan',desen:'güneş|ısı'}],
+  ornekCevap:'Güneş denizi ısıtır, su buharlaşarak yükselir, yukarıda yoğuşarak bulut olur ve yağmur olarak denize geri döner.',
+  result:'Döngüyü hâl değişimi adlarıyla anlattın.'}]};
+
+/* ---- f23 Erime ve Kaynama Noktası (tren-tünel kaldırıldı: ısınan madde ve
+        termometre ekranda, sıcaklık maddeyle birlikte değişiyor) ---- */
+GAMES.f23={title:'Erime ve Kaynama Noktası',theme:'lab',
+ finish:'Suyun hâl değiştirdiği sıcaklığı gözleyerek buldun, farklı maddelerin noktalarını karşılaştırdın ve gözlemini yazdın.',rounds:[
+ {kind:'isit',prompt:'Buzu ısıt ve hangi sıcaklıkta eridiğini gözle.',
+  gorev:'Kaptaki buzu ısıt. Erime başladığında termometrenin kaçta durduğuna dikkat et; hepsi eriyince ocağı kapat.',
+  ipucu:'Erime sürerken termometre kıpırdamıyor. Kaçta duruyor?',
+  madde:{ad:'buz',olcekMin:-20,olcekMax:120,baslangicC:-16,degisimC:0,bozulmaC:24,
+   hizOnce:0.15,hizDegisim:0.0056,hizSonra:0.12,
+   kati:'#dff0f7',sivi:'#4a9fd0',katiCiz:true,kaynar:false,
+   gozlem0:'Buz henüz erimiyor; termometre yükseliyor.',
+   gozlem1:'Erime başladı. Termometre bir yerde takılı kaldı — kaçta?',
+   gozlem2:'Buzun hepsi eridi; termometre yeniden yükselmeye başladı.',
+   gozlemBozuk:'Su fazla ısındı.',
+   erkenHint:'Kapta hâlâ buz var; erime bitmedi.',
+   bozukHint:'Erime bittikten sonra ısıtmayı sürdürdün.',
+   sonuc:'Erime boyunca termometre 0 °C\'de durdu: suyun erime noktası budur.'},
+  result:'Erime noktasını gözleyerek buldun.'},
+ {kind:'karar',prompt:'Maddelerin erime ve kaynama noktalarını karşılaştır.',
+  sahne:()=>SAHNE.ocak({T:20,Tmin:0,Tmax:130,oran:0,faz:'kapali',
+   madde:{kati:'#dff0f7',sivi:'#4a9fd0',katiCiz:false,kaynar:false},kayit:[],yaniyor:false}),
+  sorular:[
+   {durum:'Ölçüm tablosu — Su: erir 0 °C, kaynar 100 °C · Zeytinyağı: donar −6 °C · Demir: erir 1538 °C · Çikolata: erir 34 °C',
+    soru:'Hangi madde en düşük sıcaklıkta erir?',
+    ipucu:'Tablodaki erime sıcaklıklarını karşılaştır.',
+    hint:'Tabloda eksi işaretli bir sayı var mı?',
+    secenekler:[{t:'Zeytinyağı',dogru:true},{t:'Demir'},{t:'Çikolata'}],
+    neden:'Her maddenin kendine özgü bir erime noktası vardır.',
+    gerekce:{soru:'Buradan çıkan genel kural nedir?',
+     secenekler:[
+      {t:'Erime noktası maddeye göre değişir',dogru:true},
+      {t:'Bütün maddeler aynı sıcaklıkta erir'}],
+     neden:'Erime noktası maddeyi tanımaya yarayan bir özelliktir.'}},
+   {durum:'Aynı tablo ekranda duruyor.',
+    soru:'Bir demir çubuğu mutfak ocağında eritebilir misin?',
+    hint:'Ocak birkaç yüz dereceye çıkar; demirin erime sıcaklığı kaç?',
+    secenekler:[
+     {t:'Eritemem; demirin erime sıcaklığı ocağın çok üstünde',dogru:true},
+     {t:'Eritirim; yeterince beklersem erir'}],
+    neden:'Isıtma süresini uzatmak sıcaklığı maddenin erime noktasına çıkarmaz.'},
+   {durum:'Buz 0 °C\'de erir. Aynı suyu dondurmak istiyorsun.',
+    soru:'Su kaç derecede donar?',
+    hint:'Ters değişimler hangi sıcaklıkta olur?',
+    secenekler:[
+     {t:'0 °C — erime noktasıyla aynı',dogru:true},
+     {t:'−20 °C'},
+     {t:'100 °C'}],
+    neden:'Donma noktası ile erime noktası aynıdır; yalnız ısının yönü değişir.'}]},
+ {kind:'yaz',prompt:'Gözlediğin sıcaklığı ve nedenini yaz.',
+  sahne:()=>SAHNE.ocak({T:0,Tmin:-20,Tmax:120,oran:0.5,faz:'kapali',
+   madde:{kati:'#dff0f7',sivi:'#4a9fd0',katiCiz:true,kaynar:false},
+   kayit:[-16,-10,-4,0,0,0,0,0],yaniyor:false}),
+  gorev:'Deneyde buz hangi sıcaklıkta eridi? Termometrenin o sırada ne yaptığını da yaz.',
+  ornek:'Kalıp: "Buz … derecede eridi. Erime sürerken termometre … "',
+  yerTutucu:'Sıcaklık ve gözlemin…',
+  enAzKelime:10,bitis:'.',
+  denetim:[{ad:'sıcaklığı sayıyla yaz',desen:'\\d'},
+   {ad:'"sabit", "durdu" ya da "değişmedi" yaz',desen:'sabit|durdu|değişmedi|aynı kaldı'}],
+  ornekCevap:'Buz 0 derecede eridi. Erime sürerken termometre hiç değişmedi, aynı yerde durdu.',
+  result:'Gözlemini sayıyla birlikte yazdın.'}]};
+
+/* ---- f24 Deney Düzeneği (tepsi kaldırıldı: seçilen malzeme tezgâha
+        yerleşiyor ve düzenek ekranda gerçekten kuruluyor) ---- */
+GAMES.f24={title:'Deney Düzeneği',theme:'lab',
+ finish:'Deney düzeneğini ekranda kurdun, güvenlik malzemelerini ayrı bir ölçüt olarak ekledin ve kendi deneyinin malzeme listesini yazdın.',rounds:[
+ {kind:'kur',prompt:'İstenen malzemeyi tezgâha koy; düzenek ekranda kuruluyor.',
+  kap:{ciz:(ic)=>`<div class="kap"><div class="kap-ad">🧪 Deney tezgâhı — kurulan düzenek</div>`+
+   SAHNE.duzenek(ic)+`<div class="kap-ad">${ic.length?ic.map(h=>h.ad).join(' · '):'tezgâh boş'}</div></div>`},
+  kapKalsin:true,
+  ipucu:'Tezgâha konan her parça düzenekte görünür.',
+  havuz:[
+   {id:'bardak',ad:'Isıya dayanıklı kap',neden:'Isıtılacak maddeyi içine koyacağız.'},
+   {id:'su',ad:'Su',neden:'Deneyde ısıtacağımız madde.'},
+   {id:'termometre',ad:'Termometre',neden:'Sıcaklığı ölçmeden hâl değişimini izleyemeyiz.'},
+   {id:'defter',ad:'Kayıt defteri',neden:'Ölçümü yazmadan sonuç sınanamaz.'},
+   {id:'gozluk',ad:'Koruyucu gözlük',neden:'Sıçrama gözü koruyacak biçimde engellenir.'},
+   {id:'eldiven',ad:'Isı eldiveni',neden:'Sıcak kaba çıplak elle dokunulmaz.'},
+   {id:'cetvel',ad:'Cetvel',hint:'Bu deneyde uzunluk mu ölçüyoruz, sıcaklık mı?'},
+   {id:'mıknatıs',ad:'Mıknatıs',hint:'Bu deneyin konusu manyetizma mı, ısı mı?'}],
+  istekler:[
+   {metin:'Öğretmenin: "Önce ısıtılacak maddeyi ve onu koyacağın kabı tezgâha al."',
+    gerekli:['bardak','su'],tamam:'Kap ve madde tezgâhta.',
+    hint:'Isıtacağımız madde ve onu tutacak kap gerekli.'},
+   {metin:'Öğretmenin: "Şimdi ölçmek ve kaydetmek için gerekenleri ekle."',
+    gerekli:['termometre','defter'],tamam:'Ölçüm ve kayıt araçları da tezgâhta.',
+    hint:'Sıcaklığı neyle ölçeriz, sonucu nereye yazarız?'},
+   {metin:'Öğretmenin: "Son olarak GÜVENLİK malzemelerini ekle; onlarsız deney başlamaz."',
+    gerekli:['gozluk','eldiven'],tamam:'Düzenek tamam: madde, ölçüm, kayıt ve güvenlik.',
+    hint:'Gözünü ve elini ne korur?'}]},
+ {kind:'karar',prompt:'Düzenekte eksik olan ne?',
+  sahne:()=>SAHNE.duzenek([{id:'bardak'},{id:'su'},{id:'defter'}]),
+  sorular:[
+   {durum:'Tezgâhta kap, su ve defter var. Öğrenci suyu ısıtıp "kaynadı" diye yazmış.',
+    soru:'Bu deneyde ne eksik?',
+    ipucu:'Tezgâhta görünenleri say.',
+    hint:'"Kaynadı" demek için neyi ölçmek gerekirdi?',
+    secenekler:[
+     {t:'Termometre eksik; sıcaklık ölçülmeden kaynama noktası söylenemez',dogru:true},
+     {t:'Defter eksik'},
+     {t:'Hiçbir şey eksik değil'}],
+    neden:'Ölçüm aracı olmadan yazılan sonuç bir gözlem değil tahmindir.',
+    gerekce:{soru:'Ölçüm aracı olmadan yazılan sonuç nedir?',
+     secenekler:[{t:'Kanıtsız bir iddia',dogru:true},{t:'Bilimsel bir sonuç'}],
+     neden:'Bilimsel sonuç ölçüme dayanır.'}},
+   {durum:'Bir öğrenci sıcak kabı çıplak elle tutmak istiyor.',
+    soru:'Ne yapmalı?',
+    hint:'Tezgâhta eli koruyan bir malzeme vardı.',
+    secenekler:[
+     {t:'Isı eldiveni takmalı',dogru:true},
+     {t:'Hızlıca tutup bırakmalı'},
+     {t:'Kabı üfleyip soğutmalı'}],
+    neden:'Güvenlik malzemesi süs değildir; deneyin parçasıdır.'},
+   {durum:'Deney bitti, öğrenci ölçümleri deftere yazmadan tezgâhı topladı.',
+    soru:'Ne kaybedildi?',
+    hint:'Ölçüm kaydedilmezse geriye ne kalır?',
+    secenekler:[
+     {t:'Ölçümler kayboldu; sonuç başkasınca kontrol edilemez',dogru:true},
+     {t:'Hiçbir şey; sonuç aklında kalır'}],
+    neden:'Kaydedilmeyen ölçüm, olmamış ölçüm gibidir.'}]},
+ {kind:'yaz',prompt:'Kendi deneyin için malzeme listesi yaz.',
+  sahne:()=>SAHNE.duzenek([{id:'bardak'},{id:'su'},{id:'termometre'},{id:'defter'},{id:'gozluk'},{id:'eldiven'}]),
+  gorev:'Kendi ısıtma deneyin için bir malzeme listesi yaz. Ölçüm aracını ve en az bir güvenlik malzemesini unutma.',
+  ornek:'Kalıp: "… , … , … ve güvenlik için … kullanırım."',
+  yerTutucu:'Malzeme listen…',
+  enAzKelime:12,bitis:'.',
+  denetim:[{ad:'ölçüm aracını yaz (termometre)',desen:'termometre'},
+   {ad:'bir güvenlik malzemesi yaz (gözlük ya da eldiven)',desen:'gözlük|eldiven'},
+   {ad:'malzemeleri virgülle ayırarak say',desen:'[^,]+,[^,]+,'}],
+  ornekCevap:'Isıya dayanıklı kap, su, termometre, kayıt defteri ve güvenlik için koruyucu gözlük kullanırım.',
+  result:'Listeni ölçüm ve güvenlik ölçütleriyle yazdın.'}]};
+
 /* ===== Motora gömülü öz denetim =====
    Bir oyunu tarayıcıda tek tek açmadan altı kabul ölçütünün metin
    üzerinden sınanabilen kısmını tarar. Kullanım: window.__TEST__.denetle() */
@@ -2003,6 +2648,18 @@ window.__TEST__={
       if(dz.length!==(r.sozcukler||[]).length)kusur.push(et+' dizi'+(di+1)+': sözcük sayısı tutmuyor')});
      if((r.noktalar||['.','?','!']).indexOf(r.dogruNokta)<0)
       kusur.push(et+': doğru noktalama seçenekler arasında yok')}
+    if(r.kind==='isit'){
+     const m=r.madde||{};
+     /* şartnamenin f21 maddesi: hedef sıcaklık görev metninde, "Hedef"
+        satırında ve ölçek işaretinde YAZILI OLMAYACAK. Öğrenci maddeye
+        bakarak karar verecek. */
+     const metin=[r.prompt,r.gorev,r.ipucu,m.gozlem0,m.gozlem1,m.erkenHint].join(' ');
+     if(m.degisimC!=null&&new RegExp('(^|[^0-9-])'+m.degisimC+'([^0-9]|$)').test(metin))
+      kusur.push(et+': hedef sıcaklık ('+m.degisimC+') yönerge metinlerinde yazılı');
+     if(!(m.hizDegisim>0))kusur.push(et+': hâl değişimi süresi yok, sıcaklık düzlüğü oluşmaz');
+     if(!(m.bozulmaC>m.degisimC))kusur.push(et+': aşırı ısıtma sınırı hâl değişiminin üstünde değil');
+     if(!m.gozlem1||!m.gozlem2)kusur.push(et+': maddedeki değişimi anlatan gözlem metni eksik');
+    }
     if(r.kind==='yaz'){
      const c=r.ornekCevap||'';
      olcutDurum(r,c).filter(x=>!x.tam).forEach(x=>

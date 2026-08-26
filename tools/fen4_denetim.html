@@ -116,7 +116,14 @@ function sizintiDenetle(W,r){
     const i=Number(W.eval('String(state.ix||0)'))||0;
     const s=(r.sorular||[])[i];
     const d=s&&(s.secenekler||[]).filter(o=>o.dogru)[0];
-    if(d&&icerir(sahne,d.t)) kusur.push('doğru seçenek sahnede yazılı: "'+String(d.t).slice(0,40)+'"');
+    /* Rakip seçenekler de sahnede geçiyorsa (ör. bütün maddeleri sayan ölçüm
+       tablosu) bu sızıntı değil; ölçüt 3 zaten o veriyi ekranda istiyor. */
+    /* rakip sayarken kısa adlar da sayılmalı: "Demir" ve "Çikolata" tabloda
+       geçiyorsa "Zeytinyağı"nın geçmesi karşılaştırmayı bozmaz */
+    const adGecer=ad=>{const a=sade(ad);return a.length>=4&&sahne.includes(a)};
+    const rakipGecen=s?(s.secenekler||[]).filter(o=>!o.dogru&&adGecer(o.t)).length:0;
+    if(d&&icerir(sahne,d.t)&&!rakipGecen)
+      kusur.push('yalnız doğru seçenek sahnede yazılı: "'+String(d.t).slice(0,40)+'"');
     /* ölçüt 3: seçenekler sabit dursun, düşen kapsül olmasın */
     const acik = D.querySelectorAll('[data-sec]').length;
     if(!acik) kusur.push('seçenek yok');
@@ -165,8 +172,18 @@ function sizintiDenetle(W,r){
     if(W.eval('String(!!(round().animasyon&&round().animasyon.ciz))')!=='true')
       kusur.push('gözlem turunda animasyon yok');
   }
+  if(r.kind==='isit'){
+    if(!D.querySelector('#isitBtn')) kusur.push('ocak düğmesi yok');
+    if(!D.querySelector('.gozlem-satir')) kusur.push('maddedeki değişimi anlatan gözlem satırı yok');
+    /* f21'in çekirdek kusuru: hedef sıcaklık ekranda yazılıysa karar
+       öğrenciden alınmış olur */
+    const hedef=(r.madde||{}).degisimC;
+    const ekran=sahne+' '+sade((D.querySelector('#task')||{}).textContent)+' '+yonerge;
+    if(hedef!=null && new RegExp('(^|[^0-9-])'+hedef+'([^0-9]|$)').test(ekran))
+      kusur.push('hedef sıcaklık ('+hedef+') ekranda yazılı');
+  }
   if(r.kind==='kur'){
-    if(!D.querySelector('.kap,.kap-icerik')) kusur.push('kurulan şey ekranda görünmüyor');
+    if(!D.querySelector('.kap,.kap-icerik,#stage svg')) kusur.push('kurulan şey ekranda görünmüyor');
   }
   return kusur;
 }

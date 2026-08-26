@@ -110,7 +110,15 @@ Her parti iki araçla sınanıyor:
 | f14 Taş Kürenin İçi | roket | katmanlar kesitte içten dışa oluşur, ölçüm tablosu ekranda | ✅ uygulandı |
 | f15 Dünya'nın Hareketleri | köprü + tren | **gözlem kipi**: Dünya döner, gece-gündüz gözlenerek bulunur | ✅ uygulandı |
 | f16 Dünya'nın Şekli | radar | gemi/gölge/uydu kanıtları sahnede, kanıt-duyum ayrımı | ✅ uygulandı |
-| f17–f48 | — | — | PDF'de |
+| f17 Dünya'nın Süreleri | tren-tünel | dönen Dünya + sayaç; süre gözlenerek bulunuyor | ✅ uygulandı |
+| f18 Küre Kartları | hafıza | Dünya kesiti önünde kart, geçiş bölgeleri turu | ✅ uygulandı |
+| f19 Hâl Değişimi Defteri | bant | kart sabit ve tam görünür; metinler değişimin adını çağrıştırmıyor | ✅ uygulandı |
+| f20 Isı Alır mı Verir mi | köprü | karardan sonra ısı oku maddeye girip çıkıyor | ✅ uygulandı |
+| **f21 Isıtma Deneyi** | kronometre | **ocak/kap/madde/termometre; hâl değişiminde sıcaklık SABİT** | ✅ uygulandı |
+| f22 Su Döngüsü | roket | damla şemanın üzerinde ilerliyor | ✅ uygulandı |
+| f23 Erime ve Kaynama Noktası | tren-tünel | madde ısınıyor, sıcaklık onunla değişiyor | ✅ uygulandı |
+| f24 Deney Düzeneği | tepsi | seçilen malzeme tezgâha yerleşiyor, düzenek kuruluyor | ✅ uygulandı |
+| f25–f48 | — | — | PDF'de |
 
 Parti 1'de (f01–f08) kapatılan doğrulanmış hatalar: **#1** wrongHint sızıntısı
 (bu partideki bant oyunları f01 ve f07'de ipuçları artık doğru kutunun adını
@@ -149,3 +157,39 @@ Sınama sırasında bulunan ve düzeltilen üç gerçek kusur:
 Sınama: `fen4_denetim.html` f01–f16 için 48 turun tamamında temiz;
 `fen4_kosum.html` on altı oyunu baştan sona oynayıp can kaybetmeden bitiriyor;
 `window.__TEST__.denetle()` 16 oyunda kusursuz.
+
+### Parti 3 (f17–f24) notları — takip listesinin 1. önceliği kapandı
+
+**Hata #2 (hâl değişimi yanlış modelleniyor) düzeltildi.** Eskiden f21'in
+ekranında ocak, kap, madde ve termometre yoktu; ortada bir KRONOMETRE duruyordu.
+Hedef sıcaklık üç ayrı yerde yazılıydı (görev metni + "Hedef 100 °C" satırı +
+ölçek üzerindeki sarı çizgi) ve gösterge sıfırdan hedefe **düz doğrusal**
+artıyordu — yani bu temanın çekirdek kavramı tam tersiyle öğretiliyordu.
+
+Şimdi yeni **ısıt** kipi var:
+- Ekranda gerçek ocak, kap, madde ve termometre bulunuyor.
+- Hedef sıcaklık **hiçbir yerde yazılı değil**; öğrenci kaptaki maddeye bakarak
+  (buz parçaları bitti mi, kabarcıklar çıktı mı) ocağı kapatıyor. Motorun öz
+  denetimi ve `fen4_denetim.html` hedef sayının hiçbir metinde ve ekranda
+  geçmediğini ayrıca sınıyor.
+- Isıtma üç evreli: yükseliş → **hâl değişimi boyunca sıcaklık sabit** →
+  yeniden yükseliş. Sağdaki sıcaklık-zaman çizgisi bu düzlüğü gözle görünür
+  kılıyor; kavramın kendisi ekranda.
+- Erken durdurma ("kapta hâlâ katı var") ve aşırı ısıtma ayrı ayrı uyarılıyor,
+  ipuçları hedef sayıyı söylemiyor.
+- Hızlar 60 fps'te yükseliş ~2 sn, düzlük ~3 sn, tepki payı ~3 sn olacak
+  biçimde ayarlandı: düzlük gerçekten izlenebiliyor.
+
+Aynı kip f23'te erime noktasını gözleyerek buldurmak için de kullanıldı.
+
+Sınamada bulunan iki gerçek kusur: kısa etiketli havuz kartı 44 px'in altına
+düşüyordu ("Su" 42 px, `.etiket`e `min-width:48px` eklendi) ve f24'ün düzeneği
+`.kap` kutusuna alınmamıştı.
+
+Denetim aracındaki yanlış alarm da giderildi: ölçüm tablosu bütün adayları
+saydığında (ölçüt 3 zaten bu veriyi ekranda istiyor) doğru seçeneğin adının
+geçmesi sızıntı değil. Artık yalnız rakiplerinin hiç geçmediği durum bildiriliyor
+ve rakip sayarken kısa adlar da sayılıyor.
+
+Sınama: `fen4_denetim.html` f01–f24 için 72 turun tamamında temiz;
+`fen4_kosum.html` 24/24 oyunu can kaybetmeden bitiriyor.
