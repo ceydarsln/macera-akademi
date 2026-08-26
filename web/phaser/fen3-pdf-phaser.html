@@ -66,7 +66,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .yuva .kondu{flex:0 0 auto;max-width:44%;font-weight:900;font-size:12px;color:#0b6a48;line-height:1.2;overflow-wrap:break-word}
 /* parça yazısı çipe TAM sığar: kesme yok, sarma var (ölçüt: dragMatch) */
 .etiketler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.etiket{min-height:46px;max-width:200px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;white-space:normal}
+.etiket{min-height:46px;min-width:46px;max-width:200px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;white-space:normal}
 .etiket.secili{border-color:var(--gold);background:#fff7e2}
 .etiket.bitti{visibility:hidden}
 .feedback{position:absolute;left:50%;top:46%;z-index:150;transform:translate(-50%,-50%) scale(.7);opacity:0;pointer-events:none;background:#fff;border:4px solid var(--ok);border-radius:22px;padding:14px 19px;min-width:200px;text-align:center;font-size:clamp(17px,4.6vw,25px);font-weight:1000;box-shadow:0 12px 38px rgba(0,0,0,.27)}
@@ -82,7 +82,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .big{font-size:clamp(38px,11vw,64px)}
 /* TOPLA — çanta/plan/pano gerçekten dolar; seçilen şey ekranda görünür */
 .depo{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.depo button{min-height:48px;max-width:200px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word}
+.depo button{min-height:48px;min-width:48px;max-width:200px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word}
 .depo button.bitti{visibility:hidden}
 .canta{width:min(330px,96%);min-height:96px;border:3px solid var(--toprak);border-radius:16px 16px 20px 20px;background:#fdf3e6;padding:8px 9px;display:flex;flex-direction:column;gap:5px}
 .canta .bas{font-size:12px;font-weight:950;color:#7a4e2c;text-align:center}
@@ -154,7 +154,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .cumle-yuva{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;width:min(330px,96%);min-height:56px;padding:7px;border:3px dashed #9fb0c4;border-radius:13px;background:#fff;align-items:center}
 .cumle-yuva span{min-height:40px;display:flex;align-items:center;padding:4px 8px;border-radius:9px;background:#eef6fc;border:2px solid var(--line);font-size:14px;font-weight:900}
 .kelimeler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.kelime{min-height:46px;border:3px solid #fff;border-radius:13px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:6px 11px;font-size:14px;font-weight:900}
+.kelime{min-height:46px;min-width:46px;border:3px solid #fff;border-radius:13px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:6px 11px;font-size:14px;font-weight:900}
 .kelime.bitti{visibility:hidden}
 /* YAZ — gerçek üretim; hazır kart dizmek başarı sayılmaz */
 .yazi-alan{flex:0 0 auto;width:min(330px,96%);min-height:92px;border:3px solid #8fb4cd;border-radius:15px;padding:9px 11px;font:inherit;font-size:15px;font-weight:800;line-height:1.4;resize:none;background:#fff}
@@ -797,9 +797,15 @@ function cumleCiz(r){
    if(!s.correct)return wrong(s.hint||'Cümle nasıl başlar, nasıl biter?');
    good()});
   return}
+ if(!state.dizilim){
+  let idx=tohumlu(r.kelimeler.length,turTohum('cumle'));
+  /* ekran dizilişi kabul edilen sıralardan hiçbirine eşit olmasın */
+  let guv=0;
+  while(r.kabul.some(k=>String(idx)===String(k))&&guv++<8)idx.push(idx.shift());
+  state.dizilim=idx}
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru||'Sözcükleri anlamlı bir cümle olacak biçimde sırala.')}</div>`+
-  `<div class="kelimeler">${r.kelimeler.map((k,i)=>
-    `<button class="kelime ${d.indexOf(i)>=0?'bitti':''}" data-kel="${i}">${esc(k)}</button>`).join('')}</div>`+
+  `<div class="kelimeler">${state.dizilim.map(i=>
+    `<button class="kelime ${d.indexOf(i)>=0?'bitti':''}" data-kel="${i}">${esc(r.kelimeler[i])}</button>`).join('')}</div>`+
   `<div class="hint">${d.length?'Son sözcüğü geri almak için "Geri al".':''} ${esc(r.ipucu||'')}</div>`+
   (d.length?`<button class="choice" id="geriAl">Geri al</button>`:'');
  const ga=$('#geriAl');
@@ -818,7 +824,7 @@ function cumleCiz(r){
   if(yeni.length===r.kelimeler.length){state.faz=1;feedback('Sıra tamam');
    return gecisBasla(()=>cumleCiz(r),FAST?30:520)}
   cumleCiz(r)})}
-function renderCumle(r){state.dizi=[];state.faz=0;state.not='';cumleCiz(r)}
+function renderCumle(r){state.dizi=[];state.faz=0;state.not='';state.dizilim=null;cumleCiz(r)}
 
 /* ===== GOZLEM (eski codeGrid) =====
    Izgara düz labirent değil gerçek bir gözlem alanı: patika, gözlem
@@ -2973,6 +2979,436 @@ GAMES.g40={title:'Fideyi Sula',theme:'tarla',
   yasak:['Toprak ıslanınca duruyorum çünkü yeter.'],
   ornekCevap:'Toprağın üstü koyulaşıp parmağımı batırdığımda nemli gelince sulamayı durduruyorum çünkü suyun yüzeyde göllenmesi kökü çürütür.',
   result:'Sulama kararını gözlenebilir bir ölçüte bağladın.'}
+]};
+
+/* ---- g41 Ekim Çantası (tepsi kaldırıldı: malzeme bahçeye yerleşiyor) ---- */
+GAMES.g41={title:'Ekim Çantası',theme:'tarla',
+ finish:'Ekim malzemelerini topladın, mevsime uymayan seçimleri ayıkladın ve bir sebze için gerekenleri kendin sıraladın.',rounds:[
+ {kind:'topla',prompt:'Ekim için gerekenleri bahçeye taşı.',sahne:SAHNE.tarla,
+  gorev:'Bahçenin bir köşesine marul ekeceğiz. Toprağı hazırlamak, ekmek ve sulamak için gerekenleri al.',
+  soru:'Bu malzeme ekim için gerekli mi?',
+  cantaAd:'EKİM ÇANTASI',bosMetin:'Çanta boş — ekim için ne gerekir?',
+  ipucu:'Üç iş var: toprağı hazırlamak, tohumu ekmek, sulamak.',
+  ogeler:[
+   {t:'Marul tohumu',neden:'Ekilecek şey olmadan ekim yapılamaz.'},
+   {t:'Küçük el küreği',neden:'Toprağı gevşetmek ve çukur açmak için gerekir.'},
+   {t:'Sulama kabı',neden:'Tohumun çimlenmesi için su gerekir.'},
+   {t:'Torba mineralli toprak',neden:'Besinli toprak kökün gelişmesini sağlar.'},
+   {t:'Etiket ve kalem',neden:'Nereye ne ektiğini yazmak gerekir.'},
+   {t:'Boya fırçası',hint:'Bu alet ekimin hangi işinde kullanılır?'},
+   {t:'Bir top misket',hint:'Bunu çantaya koyarsan bahçede ne yaparsın?'},
+   {t:'Buz torbası',hint:'Bunu toprağa koysan tohuma ne olur?'}],
+  gerekli:[0,1,2,3,4]},
+ {kind:'topla',prompt:'Bu kez mevsime dikkat et.',sahne:SAHNE.tarla,
+  gorev:'Kış ortasındayız ve elimizde yalnız açık bahçe var; sera yok. Bu mevsimde ekilebilecek ya da yapılabilecek işleri seç.',
+  soru:'Bu iş kışın açık bahçede yapılabilir mi?',
+  cantaAd:'KIŞ İŞLERİ',bosMetin:'Liste boş — kışın ne yapılabilir?',
+  ipucu:'Donan toprakta çimlenme olmaz; kış çoğunlukla hazırlık mevsimidir.',
+  ogeler:[
+   {t:'Toprağı belleyip yabancı otlarından temizlemek',neden:'Toprak hazırlığı kışın yapılabilir.'},
+   {t:'Ağaçların dibine gübre vermek',neden:'Kış gübrelemesi baharda köke yarar.'},
+   {t:'Bahar için ekim planı çizmek',neden:'Planlama her mevsim yapılabilir.'},
+   {t:'Domates fidesini açık toprağa dikmek',hint:'Domates sıcak sever; donan toprakta ne olur?'},
+   {t:'Karpuz tohumu ekmek',hint:'Bu bitki hangi mevsimde yetişir?'},
+   {t:'Fesleğen saksısını gece bahçede bırakmak',hint:'Bu bitki soğuğa dayanır mı?'}],
+  gerekli:[0,1,2]},
+ {kind:'yaz',prompt:'Bir sebze için gerekenleri sırala.',sahne:SAHNE.defter,
+  gorev:'Yetiştirmek istediğin bir sebzeyi yaz ve onu ekmek için nelere ihtiyacın olduğunu sırala.',
+  ornek:'Kalıp: "… ekmek için … gerekir."',
+  enAzKelime:14,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'"tohum" ya da "fide" sözcüğünü kullan',desen:'tohum|fide',bayrak:'i'},
+   {ad:'"toprak" sözcüğünü kullan',desen:'toprak|toprağ',bayrak:'i'}],
+  ipucuMetin:'… ekmek için … gerekir.',
+  yasak:['Marul ekmek için tohum ve toprak gerekir.'],
+  ornekCevap:'Balkon saksısında maydanoz ekmek için tohum, mineralli toprak, küçük bir kürek ve sulama kabı gerekir.',
+  result:'Ekim için gerekenleri kendi ürününe göre sıraladın.'}
+]};
+
+/* ---- g42 Ürün Kartları (uzay zemini yok, can 3, gerekçe adımı var) ---- */
+GAMES.g42={title:'Ürün Kartları',theme:'tarla',
+ finish:'Ürünleri yetişme biçimleriyle eşledin, ortak ve farklı koşulları karşılaştırdın ve bir ürünün nasıl yetiştiğini anlattın.',rounds:[
+ {kind:'hafiza',prompt:'Ürünü yetiştiği yerle eşle.',sahne:SAHNE.tarla,
+  soru:'İki kartı aç ve eşleşen çifti bul.',
+  ipucu:'Ürünün toprağın altında mı üstünde mi yoksa ağaçta mı yetiştiğine bak.',
+  ciftler:[
+   {a:'Patates',b:'Toprağın altında yumru olarak büyür',
+    soru:'Bu ürünü toplamak için ne gerekir?',
+    secenekler:[
+     {label:'Toprağı kazmak',correct:true},
+     {label:'Ağaca çıkmak',hint:'Kart toprağın altından söz ediyor.'},
+     {label:'Dalları silkelemek',hint:'Bu ürün dalda değil, toprakta.'}],
+    neden:'Toprak altında büyüyen ürünler kazılarak çıkarılır.',
+    fark:'Biri ürünün adı, öteki nerede yetiştiği; ikisini yan yana oku.'},
+   {a:'Elma',b:'Ağacın dallarında olgunlaşır',
+    soru:'Bu ürün için her yıl yeniden ekim yapılır mı?',
+    secenekler:[
+     {label:'Yapılmaz; aynı ağaç yıllarca ürün verir',correct:true},
+     {label:'Yapılır; her yıl yeni tohum ekilir',hint:'Meyve ağaçları bir kez dikilir.'},
+     {label:'Yapılır; her hasattan sonra ağaç sökülür',hint:'Ağaç sökülürse ertesi yıl meyve olmaz.'}],
+    neden:'Meyve ağaçları bir kez dikilir, yıllarca ürün verir.',
+    fark:'Bu iki kart farklı şeyleri anlatıyor; birini ad, ötekini yetişme yeri olarak oku.'},
+   {a:'Buğday',b:'Tarlada başak olarak yetişir, biçilerek toplanır',
+    soru:'Bu ürün neye dönüştürülür?',
+    secenekler:[
+     {label:'Öğütülüp una, sonra ekmeğe',correct:true},
+     {label:'Sıkılıp yağa',hint:'Yağ başka ürünlerden çıkarılır.'},
+     {label:'Kaynatılıp şuruba',hint:'Kart tahıldan söz ediyor.'}],
+    neden:'Buğday öğütülerek un olur.',fark:'Biri ürünün adı, öteki yetişme biçimi.'},
+   {a:'Havuç',b:'Toprağın altında uzayan kök olarak büyür',
+    soru:'Bu ürünün yenen bölümü nedir?',
+    secenekler:[
+     {label:'Kökü',correct:true},
+     {label:'Çiçeği',hint:'Kart toprak altındaki bölümden söz ediyor.'},
+     {label:'Tohumu',hint:'Yenen kısım tohum değil, toprak altındaki bölüm.'}],
+    neden:'Havuçta yenen bölüm köküdür.',fark:'Biri ürünün adı, öteki nerede geliştiği.'},
+   {a:'Çilek',b:'Toprağa yakın kısa gövdede, yerin hemen üstünde olgunlaşır',
+    soru:'Bu ürün neden hasat sırasında kolay zedelenir?',
+    secenekler:[
+     {label:'Yumuşak olduğu ve toprağa çok yakın durduğu için',correct:true},
+     {label:'Çok yükseklerde yetiştiği için',hint:'Kart yerin hemen üstünden söz ediyor.'},
+     {label:'Sert kabuğu olduğu için',hint:'Sert kabuklu ürünler kolay zedelenmez.'}],
+    neden:'Yumuşak ve yere yakın ürünler dikkatle toplanır.',
+    fark:'Biri ürünün adı, öteki yetişme yeri.'}]},
+ {kind:'sinifla',prompt:'Bu ürünün yenen bölümü nerede yetişir?',sahne:SAHNE.tarla,
+  soru:'Bu ürünün yediğimiz bölümü nerede gelişir?',
+  kutular:[{ad:'TOPRAK ALTINDA'},{ad:'TOPRAK ÜSTÜNDE',alt:'gövdede ya da dalda'},
+   {ad:'AĞAÇTA',alt:'çok yıllık ağaçta'}],
+  ipucu:'Ürünün yenen bölümünü düşün: kök mü, yaprak mı, meyve mi?',
+  kartlar:[
+   {t:'Soğan — katmanlı bölümü toprakta gelişir',dogru:0,
+    neden:'Soğanın yenen bölümü toprak altındadır.',hint:'Bu ürünü toplamak için kazmak gerekir mi?'},
+   {t:'Marul — yaprakları toprağın üstünde açılır',dogru:1,
+    neden:'Yaprakları yenen ürünler toprak üstünde gelişir.',hint:'Yediğimiz bölüm yaprak mı, kök mü?'},
+   {t:'Kiraz — yıllardır aynı ağacın dallarında olgunlaşır',dogru:2,
+    neden:'Çok yıllık ağaçlarda yetişen meyvelerdir.',hint:'Bu ürün için her yıl tohum ekilir mi?'},
+   {t:'Turp — yuvarlak bölümü toprağın içinde büyür',dogru:0,
+    neden:'Kök olarak gelişen ürünlerdir.',hint:'Bu ürünün yenen bölümü görünüyor mu?'},
+   {t:'Biber — kısa gövdenin dallarında olgunlaşır',dogru:1,
+    neden:'Tek yıllık bitkinin gövdesinde gelişir.',hint:'Bu bitki bir ağaç mı, mevsimlik bir bitki mi?'},
+   {t:'Ceviz — büyük bir ağacın dallarında olgunlaşır',dogru:2,
+    neden:'Uzun ömürlü ağaçlarda yetişir.',hint:'Bu bitki kaç yıl yaşar?'}]},
+ {kind:'yaz',prompt:'Bir ürünün nasıl yetiştiğini anlat.',sahne:SAHNE.tarla,
+  gorev:'Sevdiğin bir ürünü seç ve nerede, nasıl yetiştiğini yaz.',
+  ornek:'Kalıp: "… , … yetişir ve … toplanır."',
+  enAzKelime:14,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'"toprak", "dal" ya da "ağaç" sözcüklerinden birini kullan',
+    desen:'toprak|toprağ|dal|ağaç|ağac',bayrak:'i'}],
+  ipucuMetin:'… , … yetişir ve … toplanır.',
+  yasak:['Elma ağaçta yetişir ve toplanır.'],
+  ornekCevap:'Karpuz sıcak yaz aylarında tarlada toprağın üstünde yayılan gövdesinde yetişir ve olgunlaşınca sapından kesilerek toplanır.',
+  result:'Bir ürünün yetişme biçimini anlattın.'}
+]};
+
+/* ---- g43 Yaşam Alanları (bant kaldırıldı; dört kutu etiketi kutu içinde) ---- */
+GAMES.g43={title:'Yaşam Alanları',theme:'golet',
+ finish:'Canlıları yaşam alanlarına yerleştirdin, birden çok alanda yaşayanları çözdün ve bir canlının uyumunu anlattın.',rounds:[
+ {kind:'sinifla',prompt:'Bu canlı nerede yaşar?',sahne:SAHNE.golet,
+  soru:'Bu canlının yaşam alanı hangisidir?',
+  kutular:[{ad:'SUDA'},{ad:'ORMANDA'},{ad:'ÇÖLDE'},{ad:'KUTUPTA'}],
+  ipucu:'Kartta yazan uyum özelliğine bak: bu özellik hangi ortamda işe yarar?',
+  kartlar:[
+   {t:'Solungaçlarıyla suda çözünmüş havayı alır, yüzgeçleriyle yüzer',dogru:0,
+    neden:'Solungaç ve yüzgeç suda yaşamaya uyumdur.',hint:'Solungaç hangi ortamda işe yarar?'},
+   {t:'Kalın yağ tabakası ve sıkı tüyleri onu dondurucu soğuktan korur',dogru:3,
+    neden:'Yağ tabakası aşırı soğuğa uyumdur.',hint:'Bu özellik sıcakta mı soğukta mı gerekir?'},
+   {t:'Hörgücündeki yağla günlerce susuz kalabilir, ayakları sıcak kuma batmaz',dogru:2,
+    neden:'Susuzluğa dayanmak kurak sıcak ortama uyumdur.',hint:'Susuzluğa dayanmak hangi ortamda gerekir?'},
+   {t:'Ağaç kovuğunda barınır, tırnaklarıyla gövdeye tutunup fındık toplar',dogru:1,
+    neden:'Ağaca tutunma ve kovukta barınma ormana uyumdur.',hint:'Bu canlının barınağı nerede?'},
+   {t:'Geniş patileri karda batmasını önler, beyaz kürkü karda gizler',dogru:3,
+    neden:'Beyaz kürk karlı ortamda gizlenmeye yarar.',hint:'Beyaz renk hangi zeminde gizler?'},
+   {t:'Dikenleri suyu buharlaşmaktan korur, kökleri geniş alana yayılır',dogru:2,
+    neden:'Su tutma ve yayılan kök kurak ortama uyumdur.',hint:'Su tutmak hangi ortamda önemli?'},
+   {t:'Yapraklarını suyun yüzünde açar, kökleri dipteki çamura tutunur',dogru:0,
+    neden:'Yüzen yaprak ve dipte kök suya uyumdur.',hint:'Bu bitkinin kökü nereye tutunuyor?'},
+   {t:'Yükseğe tırmanıp yapraklarla beslenir, gölgede serinler',dogru:1,
+    neden:'Ağaçlı gölgeli ortama uyumludur.',hint:'Bu canlı gölgeyi nerede bulur?'}]},
+ {kind:'sinifla',prompt:'Bu canlılar birden çok alanda yaşayabiliyor.',sahne:SAHNE.golet,
+  soru:'Bu canlı yaşamını nerede geçirir?',
+  kutular:[{ad:'YALNIZ SUDA'},{ad:'HEM SUDA HEM KARADA'},{ad:'YALNIZ KARADA'}],
+  ipucu:'Canlının nasıl soluduğuna ve nerede beslendiğine bak.',
+  kartlar:[
+   {t:'Kurbağa — iribaşken suda solungaçla, büyüyünce karada akciğerle solur',dogru:1,
+    neden:'Yaşamının bir bölümü suda, bir bölümü karada geçer.',
+    hint:'Bu canlı yaşamı boyunca aynı yerde mi kalıyor?'},
+   {t:'Sazan — solungacı yalnız suda çalışır, sudan çıkınca soluyamaz',dogru:0,
+    neden:'Yalnız suda solunum yapabilen canlılardır.',hint:'Bu canlı karada soluyabilir mi?'},
+   {t:'Kaplumbağa (kara) — kabuğuyla karada dolaşır, suda yalnız serinler',dogru:2,
+    neden:'Beslenmesi ve barınması karada geçer.',hint:'Bu canlı suda beslenip barınıyor mu?'},
+   {t:'Ördek — suda yüzer, beslenir ama karada yuva kurup akciğerle solur',dogru:1,
+    neden:'Suyu da karayı da kullanır.',hint:'Yuvasını nerede kuruyor, nerede besleniyor?'},
+   {t:'Fok — suda avlanır, doğurmak ve dinlenmek için karaya çıkar',dogru:1,
+    neden:'İki ortamı birlikte kullanır.',hint:'Bu canlı yavrusunu nerede doğuruyor?'},
+   {t:'Deve — susuzluğa dayanır, yaşamı boyunca suya girmez',dogru:2,
+    neden:'Yalnız karada yaşayan canlılardır.',hint:'Bu canlı suda vakit geçiriyor mu?'}]},
+ {kind:'yaz',prompt:'Bir canlının uyumunu anlat.',sahne:SAHNE.golet,
+  gorev:'Bir canlı seç ve yaşadığı yere hangi özelliğiyle uyum sağladığını yaz.',
+  ornek:'Kalıp: "… , … özelliğiyle … uyum sağlar çünkü …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… , … özelliğiyle … uyum sağlar çünkü …',
+  yasak:['Kutup ayısı kürküyle uyum sağlar çünkü soğuktur.'],
+  ornekCevap:'Baykuş büyük gözleriyle karanlık ormana uyum sağlar çünkü çok az ışıkta bile avını seçebiliyor.',
+  result:'Uyumu somut bir özellikle açıkladın.'}
+]};
+
+/* ---- g44 Canlı Çeşitliliği Sayımı (grup sayıları artık ekranda; ölçek var) ---- */
+GAMES.g44={title:'Canlı Çeşitliliği Sayımı',theme:'bahce',
+ finish:'Sayım verilerini grafiğe döktün, hangi grubun daha çeşitli olduğunu yorumladın ve bahçe için bir gözlem notu yazdın.',rounds:[
+ {kind:'grafik',prompt:'Bahçe sayımını grafiğe dök.',sahne:SAHNE.bahce,
+  soru:'Her grup için sütununa o kadar blok koy.',
+  ipucu:'Veri satırını oku, sonra o sütuna dokun.',
+  veri:{bas:'Okul bahçesinde bulunan farklı canlı türü sayısı',
+   satirlar:[{ad:'Bitkiler',deger:7},{ad:'Böcekler',deger:5},{ad:'Kuşlar',deger:3},{ad:'Mantarlar',deger:2}]},
+  gruplar:[
+   {ad:'Bitkiler',sayi:7,hint:'Bitkiler satırında kaç tür yazıyor?'},
+   {ad:'Böcekler',sayi:5,hint:'Böcekler satırını yeniden oku.'},
+   {ad:'Kuşlar',sayi:3,hint:'Kuşlar satırında kaç tür var?'},
+   {ad:'Mantarlar',sayi:2,hint:'Mantarlar satırını yeniden oku.'}],
+  enCok:8,
+  result:'Sayıları grafiğe döktün; artık grupları karşılaştırabilirsin.'},
+ {kind:'karar',prompt:'Kurduğun grafiği yorumla.',sahne:SAHNE.bahce,
+  durum:'Grafikte her blok bahçede bulunan bir farklı canlı türünü gösteriyor.',
+  veri:{bas:'Okul bahçesinde bulunan farklı canlı türü sayısı',
+   satirlar:[{ad:'Bitkiler',deger:7},{ad:'Böcekler',deger:5},{ad:'Kuşlar',deger:3},{ad:'Mantarlar',deger:2}]},
+  soru:'Bitkiler ile kuşlar arasında kaç tür fark var?',
+  secenekler:[
+   {label:'4 tür',correct:true},
+   {label:'10 tür',hint:'İki sütunun toplamını değil, farkını al.'},
+   {label:'2 tür',hint:'İki sütunu yeniden say: aradaki blok farkı ne?'},
+   {label:'7 tür',hint:'Bu, yalnız bir sütunun yüksekliği; fark soruluyor.'}],
+  neden:{soru:'Bu bahçede en çeşitli grup hangisidir ve "çeşitli" ne demek?',
+   secenekler:[
+    {label:'Bitkiler; çünkü o grupta en çok sayıda farklı tür bulunuyor',correct:true},
+    {label:'O gruptan en çok canlının sayılması',
+     hint:'Grafik tür sayısını gösteriyor; aynı türden kaç canlı olduğunu değil.'},
+    {label:'O grubun en büyük canlılardan oluşması',hint:'Grafikte boy bilgisi yok, tür sayısı var.'}]},
+  araSoz:'Doğru. Peki en çeşitli grup hangisi?',
+  ipucu:'İki sütunu say, sonra aradaki farkı bul.',
+  result:'Çeşitlilik, farklı tür sayısının çokluğudur.'},
+ {kind:'yaz',prompt:'Bahçe için bir gözlem notu yaz.',sahne:SAHNE.bahce,
+  gorev:'Grafiğe göre bahçe hakkında bir gözlem notu yaz: hangi grup çok, hangisi az ve bu sence neden böyle?',
+  veri:{bas:'Okul bahçesinde bulunan farklı canlı türü sayısı',
+   satirlar:[{ad:'Bitkiler',deger:7},{ad:'Böcekler',deger:5},{ad:'Kuşlar',deger:3},{ad:'Mantarlar',deger:2}]},
+  ornek:'Kalıp: "Bahçemizde en çok … , en az … Bunun nedeni …"',
+  enAzKelime:16,enAzCumle:2,buyukHarf:true,
+  denetim:[{ad:'"en çok" sözünü kullan',desen:'en çok',bayrak:'i'},
+   {ad:'"neden" ya da "çünkü" sözcüğünü kullan',desen:'neden|çünkü',bayrak:'i'}],
+  ipucuMetin:'Bahçemizde en çok … , en az … Bunun nedeni …',
+  yasak:['Bahçemizde en çok bitki var en az mantar var. Bunun nedeni budur.'],
+  ornekCevap:'Bahçemizde en çok bitki türü, en az mantar türü sayıldı. Bunun nedeni mantarların nemli ve gölgeli yer istemesi, bahçemizin ise çoğunlukla güneşli olması olabilir.',
+  result:'Veriyi bir gözlem notuna çevirdin.'}
+]};
+
+/* ---- g45 Yaşam Alanı Köprüsü (alan ile özellik arasında simge kopyası yok) ---- */
+GAMES.g45={title:'Yaşam Alanı Köprüsü',theme:'golet',
+ finish:'Yaşam alanlarını özellikleriyle eşledin, benzer görünen alanları ayırdın ve bir alanı özellikleriyle tanıttın.',rounds:[
+ {kind:'esle',prompt:'Her alanı özelliğiyle eşle.',sahne:SAHNE.golet,
+  soru:'Önce alttan bir yaşam alanı seç, sonra özelliğine dokun.',
+  ipucu:'Üç şeye bak: sıcaklık, yağış ve bitki örtüsü.',
+  yuvalar:[
+   {hedef:'Yağış çok az, gündüz çok sıcak, bitkiler seyrek ve dikenli',dogru:0,
+    neden:'Kurak ve sıcak alanlarda bitkiler suyu tutacak biçimde gelişir.',
+    hint:'Bu alanda su mu bol, sıcaklık mı yüksek?'},
+   {hedef:'Yağış bol, ağaçlar sık ve yüksek, gölge çok',dogru:1,
+    neden:'Bol yağış sık ve yüksek bitki örtüsü oluşturur.',hint:'Bu alanda gölgeyi ne sağlıyor?'},
+   {hedef:'Yıl boyu çok soğuk, kar ve buz örtüsü var, bitki neredeyse yok',dogru:2,
+    neden:'Aşırı soğukta bitki örtüsü gelişemez.',hint:'Bu alanda ağaç yetişebilir mi?'},
+   {hedef:'Suyla kaplı, kıyısında sazlıklar var, canlılar yüzerek dolaşır',dogru:3,
+    neden:'Su alanları yüzen ve suda soluyan canlılara ev olur.',
+    hint:'Bu alanda canlılar nasıl dolaşıyor?'},
+   {hedef:'Geniş otlaklar var, ağaç azdır, hayvanlar sürü hâlinde otlar',dogru:4,
+    neden:'Otlaklar ot yiyen hayvan sürülerini besler.',hint:'Bu alanda ağaç mı ot mu baskın?'}],
+  etiketler:[{t:'Çöl'},{t:'Yağmur ormanı'},{t:'Kutup'},{t:'Gölet'},{t:'Bozkır'}]},
+ {kind:'esle',prompt:'Bu alanlar birbirine benziyor; farkı bul.',sahne:SAHNE.golet,
+  soru:'Her özelliği tam olarak ait olduğu alanla eşle.',
+  ipucu:'Çöl de kutup da kuraktır; ayıran şey sıcaklıktır.',
+  yuvalar:[
+   {hedef:'Kurak ve çok sıcak; su buharlaşarak kaybolur',dogru:0,
+    neden:'Çölde kuraklığın nedeni yüksek sıcaklık ve az yağıştır.',
+    hint:'Burada su neden bulunmuyor: donduğu için mi, buharlaştığı için mi?'},
+   {hedef:'Kurak ve çok soğuk; su buz hâlinde olduğu için canlılar kullanamaz',dogru:1,
+    neden:'Kutupta su vardır ama donmuş olduğu için içilemez.',
+    hint:'Burada su var mı, hangi hâlde?'},
+   {hedef:'Yağış bol ve hava sıcak; bitkiler hızla büyür',dogru:2,
+    neden:'Sıcak ve yağışlı ortam en zengin bitki örtüsünü oluşturur.',
+    hint:'Burada hem su hem sıcaklık bol mu?'},
+   {hedef:'Yağış orta, kışı soğuk yazı sıcak; ağaçlar yaprağını döker',dogru:3,
+    neden:'Mevsimleri belirgin ormanlarda ağaçlar kışa hazırlanır.',
+    hint:'Burada mevsimler arasında büyük fark var mı?'}],
+  etiketler:[{t:'Çöl'},{t:'Kutup'},{t:'Yağmur ormanı'},{t:'Yaprak döken orman'}]},
+ {kind:'yaz',prompt:'Bir yaşam alanını tanıt.',sahne:SAHNE.golet,
+  gorev:'Bir yaşam alanı seç ve onu üç özellikle tanıt: sıcaklığı, suyu ve orada yaşayan bir canlı.',
+  ornek:'Kalıp: "… , … Orada … yaşar."',
+  enAzKelime:16,enAzCumle:2,buyukHarf:true,
+  denetim:[{ad:'"sıcak" ya da "soğuk" sözcüğünü kullan',desen:'sıcak|soğuk',bayrak:'i'},
+   {ad:'"su", "yağış" ya da "kurak" sözcüklerinden birini kullan',desen:'\\bsu|yağış|kurak',bayrak:'i'}],
+  ipucuMetin:'… , … Orada … yaşar.',
+  yasak:['Çöl sıcaktır ve kuraktır. Orada deve yaşar.'],
+  ornekCevap:'Kutup bölgesi yıl boyu çok soğuktur ve suyun neredeyse tamamı buz hâlindedir. Orada kalın yağ tabakasıyla korunan foklar yaşar.',
+  result:'Bir yaşam alanını üç özellikle tanıttın.'}
+]};
+
+/* ---- g46 Yaşam Alanını Koruma (radar kaldırıldı: davranışlar doğa sahnesinde) ---- */
+GAMES.g46={title:'Yaşam Alanını Koruma',theme:'doga',
+ finish:'Koruma davranışlarını ayırdın, iyi niyetli ama zararlı davranışları tanıdın ve bir koruma sözü yazdın.',rounds:[
+ {kind:'karar',prompt:'Bu davranış yaşam alanına ne yapar?',sahne:SAHNE.doga,
+  durum:'Piknik sonrası bir grup, çöplerini poşetleyip yanlarında götürdü. Yandaki grup ise plastik şişeleri göletin kıyısında bıraktı.',
+  soru:'Bırakılan şişeler gölete ne yapar?',
+  secenekler:[
+   {label:'Suya karışıp orada yaşayan canlılara zarar verir',correct:true},
+   {label:'Zamanla toprak olur, zararı yoktur',
+    hint:'Plastik toprakta çürümez; yüzlerce yıl kalır.'},
+   {label:'Canlılara barınak olur',hint:'Şişeler barınak değil; suya karışan parçaları canlılara zarar verir.'},
+   {label:'Suyu temizler',hint:'Suya karışan plastik onu temizlemez.'}],
+  neden:{soru:'Peki bu neden uzun süreli bir sorun?',
+   secenekler:[
+    {label:'Plastik doğada çürümediği için yıllarca orada kalır',correct:true},
+    {label:'Şişeler ağır olduğu için',hint:'Sorun ağırlık değil, çürümemesi.'},
+    {label:'Şişeler renkli olduğu için',hint:'Renk değil, dayanıklılığı sorun.'}]},
+  araSoz:'Doğru. Peki bu neden uzun süreli bir sorun?',
+  ipucu:'Plastiğin doğada ne kadar kaldığını düşün.',
+  result:'Doğada çürümeyen atıklar yaşam alanına uzun süre zarar verir.'},
+ {kind:'sinifla',prompt:'İyi niyet her zaman yeterli mi?',sahne:SAHNE.doga,
+  soru:'Bu davranış yaşam alanına gerçekten yararlı mı?',
+  kutular:[{ad:'GERÇEKTEN YARARLI'},{ad:'İYİ NİYETLİ AMA ZARARLI'}],
+  ipucu:'Niyete değil sonuca bak: canlıya ya da alana ne oluyor?',
+  kartlar:[
+   {t:'Yaralı bir yavru kuşu evine götürüp beslemek',dogru:1,
+    neden:'Yabanıl yavru insan elinde büyürse doğaya dönemez; doğru olan yetkiliye haber vermektir.',
+    hint:'Bu yavru büyüdüğünde doğada yaşamayı öğrenebilir mi?'},
+   {t:'Göletteki ördeklere ekmek atmak',dogru:1,
+    neden:'Ekmek ördeğin doğal besini değildir; suyu da kirletir.',
+    hint:'Bu yiyecek o canlının doğal besini mi?'},
+   {t:'Piknik çöplerini poşetleyip yanında götürmek',dogru:0,
+    neden:'Alanı bulduğun gibi bırakmak en etkili korumadır.',hint:'Bu davranıştan sonra alanda ne kalıyor?'},
+   {t:'Ormandaki çiçekleri toplayıp sınıfa getirmek',dogru:1,
+    neden:'Toplanan çiçek tohum bırakamaz; alanda o bitki azalır.',
+    hint:'Koparılan çiçek ertesi yıl tohum verebilir mi?'},
+   {t:'Ağaç dikip ilk yıl düzenli sulamak',dogru:0,
+    neden:'Bakımı yapılan fidan tutar ve alana kalıcı katkı sağlar.',
+    hint:'Bu davranış alanda kalıcı bir şey bırakıyor mu?'},
+   {t:'Kışın kuşlar için uygun yem koyup yemliği temiz tutmak',dogru:0,
+    neden:'Doğru yemle ve temiz yemlikle yapılan besleme yararlıdır.',
+    hint:'Burada verilen şey o canlıya uygun mu?'}]},
+ {kind:'yaz',prompt:'Bir yaşam alanını korumak için ne yapacaksın?',sahne:SAHNE.doga,
+  gorev:'Yakınındaki bir yaşam alanını (park, gölet, orman, bahçe) korumak için yapacağın bir şeyi yaz ve nedenini belirt.',
+  ornek:'Kalıp: "… yapacağım çünkü …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… yapacağım çünkü …',
+  yasak:['Çöp atmayacağım çünkü kirletir.'],
+  ornekCevap:'Parktaki ağaçların dibine biriken poşetleri toplayıp geri dönüşüm kutusuna atacağım çünkü rüzgâr onları gölete taşıyor.',
+  result:'Koruma sözünü somut bir işe bağladın.'}
+]};
+
+/* ---- g47 Koruma Projesi (tepsi kaldırıldı: proje panosu ekranda kuruluyor) ---- */
+GAMES.g47={title:'Koruma Projesi',theme:'bahce',
+ finish:'Proje panosunu kurdun, bilgilerin kaynağını denetledin ve kendi koruma projeni üç maddeyle anlattın.',rounds:[
+ {kind:'topla',prompt:'Proje panosunu kur.',sahne:SAHNE.bahce,
+  gorev:'Okul bahçesindeki kuşları korumak için bir proje hazırlıyoruz. Panoya yalnız projeyi gerçekten kuran ögeleri as.',
+  soru:'Bu öge projenin bir parçası mı?',
+  cantaAd:'PROJE PANOSU',bosMetin:'Pano boş — ilk ögeyi as.',
+  ipucu:'Bir projede şunlar bulunur: sorun, amaç, yapılacak iş, ölçme yolu.',
+  ogeler:[
+   {t:'SORUN: Bahçede kuşların içeceği su yok',neden:'Proje bir sorunu adlandırmakla başlar.'},
+   {t:'AMAÇ: Bahçeye gelen kuş türü sayısını artırmak',neden:'Amaç, ulaşılacak sonucu söyler.'},
+   {t:'YAPILACAK İŞ: İki suluk asıp haftada bir suyunu değiştirmek',
+    neden:'Yapılacak iş, somut ve yapılabilir olmalıdır.'},
+   {t:'ÖLÇME: Her hafta gelen kuş türlerini deftere kaydetmek',
+    neden:'Ölçmeden projenin işe yarayıp yaramadığı bilinemez.'},
+   {t:'Panoya renkli bir kuş resmi çizmek',hint:'Bu öge projenin hangi bölümünü oluşturuyor?'},
+   {t:'Bahçeye yeni bir bank koymak',hint:'Bu iş projenin amacına hizmet ediyor mu?'},
+   {t:'Sınıfa akvaryum almak',hint:'Bu, bahçedeki kuşlarla ilgili mi?'}],
+  gerekli:[0,1,2,3]},
+ {kind:'topla',prompt:'Şimdi bilgilerin kaynağını denetle.',sahne:SAHNE.defter,
+  gorev:'Projede kullanacağın bilgiler için kaynak göstermelisin. Yalnız güvenilir ve konuya uygun kaynakları panoya ekle.',
+  soru:'Bu kaynak projede kullanılabilir mi?',
+  cantaAd:'KAYNAK LİSTESİ',bosMetin:'Liste boş — güvenilir kaynak seç.',
+  ipucu:'Kaynakta kimin yazdığı belli olmalı ve konu senin projenle ilgili olmalı.',
+  ogeler:[
+   {t:'Kuş gözlem derneğinin yayımladığı bilgi kitapçığı',
+    neden:'Konunun uzmanı bir kurumun yayınıdır.'},
+   {t:'Bir kuş bilimcisiyle yapılmış söyleşi',neden:'Uzman görüşü doğrudan kaynaktır.'},
+   {t:'Kendi tuttuğun haftalık kuş sayım defteri',neden:'Kendi ölçtüğün veri en yakın kaynaktır.'},
+   {t:'Adı belirtilmemiş bir paylaşımda okuduğun bilgi',
+    hint:'Bunu kimin yazdığı belli mi, nasıl denetlersin?'},
+   {t:'Kuş yemi satan bir firmanın reklam broşürü',
+    hint:'Bu metnin amacı bilgi vermek mi, ürün satmak mı?'},
+   {t:'Güvenilir bir yıldız haritası kitabı',hint:'Kitap güvenilir; peki senin konunla ilgili mi?'}],
+  gerekli:[0,1,2]},
+ {kind:'yaz',prompt:'Kendi koruma projeni üç maddeyle anlat.',sahne:SAHNE.defter,
+  gorev:'Kendi koruma projeni yaz: sorun ne, ne yapacaksın, işe yaradığını nasıl ölçeceksin?',
+  ornek:'Üç maddeyi ayrı cümleler olarak yaz.',
+  enAzKelime:20,enAzCumle:3,buyukHarf:true,
+  denetim:[{ad:'"sorun" ya da "problem" sözcüğünü kullan',desen:'sorun|problem',bayrak:'i'},
+   {ad:'"say", "ölç" ya da "kaydet" sözcüklerinden birini kullan',desen:'say|ölç|kayded|kaydet',bayrak:'i'}],
+  ipucuMetin:'Sorun: … Yapacağım: … Ölçeceğim: …',
+  yasak:['Sorun var. Yapacağım. Ölçeceğim.'],
+  ornekCevap:'Sorun sokağımızdaki kedilerin kışın içecek su bulamaması. Bahçe kapısının önüne devrilmeyen bir su kabı koyup her sabah tazeleyeceğim. İşe yaradığını kaba gelen kedileri bir ay boyunca sayıp deftere yazarak ölçeceğim.',
+  result:'Projeni sorun, iş ve ölçme adımlarıyla kurdun.'}
+]};
+
+/* ---- g48 Doğa Gözlem Yürüyüşü (düz labirent kaldırıldı: patika, gözlem
+        noktaları ve kayıt defteri var; engele çarpınca yalnız hatalı adım
+        işaretlenir, program silinmez) ---- */
+GAMES.g48={title:'Doğa Gözlem Yürüyüşü',theme:'doga',
+ finish:'Gözlem alanında patikayı programladın, noktalardaki canlıları deftere kaydettin ve topladığın veriyi özetledin.',rounds:[
+ {kind:'gozlem',prompt:'Gözlem noktalarına ulaş ve gördüğünü kaydet.',
+  en:6,boy:5,basla:[0,4],
+  engeller:[[1,3],[2,2],[4,3],[0,1],[5,3]],
+  patika:[[1,4],[2,4],[3,4],[3,3],[3,2],[3,1],[4,1],[5,1]],
+  ipucu:'Yön bloklarını dizip yürü; çalılıklardan geçemezsin.',
+  noktalar:[
+   {x:3,y:4,soru:'Çürüyen kütüğün üstünde şapkalı, yeşil yaprağı olmayan canlılar var. Bunlar hangi gruptan?',
+    secenekler:[
+     {label:'Mantarlar',correct:true},
+     {label:'Bitkiler',hint:'Yeşil yaprağı yok; besinini kendi üretemiyor.'},
+     {label:'Böcekler',hint:'Bu canlılar yer değiştirmiyor.'}],
+    kayit:'1. nokta: çürüyen kütükte 2 mantar türü'},
+   {x:5,y:1,soru:'Çalının dalında altı bacaklı, kanatlı küçük canlılar dolaşıyor. Bunlar hangi gruptan?',
+    secenekler:[
+     {label:'Böcekler',correct:true},
+     {label:'Kuşlar',hint:'Kuşların iki bacağı ve gagası olur.'},
+     {label:'Mantarlar',hint:'Bu canlılar hareket ediyor ve bacakları var.'}],
+    kayit:'2. nokta: çalıda 3 böcek türü'}],
+  result:'İki gözlem noktasına ulaşıp gördüklerini deftere yazdın.'},
+ {kind:'gozlem',prompt:'Bu kez üç noktada veri topla.',
+  en:6,boy:5,basla:[0,0],
+  engeller:[[1,1],[3,1],[4,0],[1,3],[4,2]],
+  patika:[[1,0],[2,0],[2,1],[2,2],[2,3],[3,3],[4,3],[5,3],[5,4],[4,4],[3,4],[2,4],[1,4]],
+  ipucu:'Üç noktayı sırayla topla; her noktada gördüğünü kaydet.',
+  noktalar:[
+   {x:2,y:0,soru:'Gölet kıyısındaki sazlıkta kökleri suya inen, yeşil ve uzun canlılar var. Bunlar hangi gruptan?',
+    secenekler:[
+     {label:'Bitkiler',correct:true},
+     {label:'Mantarlar',hint:'Bu canlılar yeşil ve besinini kendi üretiyor.'},
+     {label:'Kuşlar',hint:'Bu canlılar yer değiştirmiyor.'}],
+    kayit:'1. nokta: sazlıkta 4 bitki türü'},
+   {x:5,y:3,soru:'Ağacın dalında gagasıyla tohum kıran, tüylü ve iki bacaklı canlılar var. Bunlar hangi gruptan?',
+    secenekler:[
+     {label:'Kuşlar',correct:true},
+     {label:'Böcekler',hint:'Böceklerin altı bacağı olur ve gagası yoktur.'},
+     {label:'Bitkiler',hint:'Bu canlılar uçuyor ve besinini hazır alıyor.'}],
+    kayit:'2. nokta: ağaçta 3 kuş türü'},
+   {x:0,y:4,soru:'Taşın altında nemli toprakta ilerleyen, bacaksız uzun canlılar var. Bu canlıların yaşam alanı için önemi ne?',
+    secenekler:[
+     {label:'Toprağı kazarak havalandırır ve artıkları parçalar',correct:true},
+     {label:'Yaprakta besin üretir',hint:'Bu canlının yeşil yaprağı yok.'},
+     {label:'Tohum taşıyarak bitkileri yayar',hint:'Bu iş daha çok kuşların ve rüzgârın işi.'}],
+    kayit:'3. nokta: taş altında 2 solucan türü'}],
+  result:'Üç noktadan veri toplayıp bir veri seti oluşturdun.'},
+ {kind:'yaz',prompt:'Topladığın gözlem verisini özetle.',sahne:SAHNE.doga,
+  gorev:'Defterindeki kayıtlara göre bir özet yaz: kaç noktada gözlem yaptın, hangi gruptan en çok tür buldun?',
+  veri:{bas:'Gözlem defteri — bulunan farklı tür sayısı',
+   satirlar:[{ad:'Bitkiler',deger:4},{ad:'Kuşlar',deger:3},{ad:'Böcekler',deger:3},
+    {ad:'Mantarlar',deger:2},{ad:'Solucanlar',deger:2}]},
+  ornek:'Kalıp: "… noktada gözlem yaptım. En çok … türü buldum."',
+  enAzKelime:16,enAzCumle:2,buyukHarf:true,
+  denetim:[{ad:'"nokta" sözcüğünü kullan',desen:'nokta',bayrak:'i'},
+   {ad:'"en çok" sözünü kullan',desen:'en çok',bayrak:'i'}],
+  ipucuMetin:'… noktada gözlem yaptım. En çok … türü buldum.',
+  yasak:['Üç noktada gözlem yaptım. En çok bitki türü buldum.'],
+  ornekCevap:'Bahçenin üç ayrı noktasında gözlem yaptım ve defterime beş grup kaydettim. En çok bitki türü buldum çünkü gölet kıyısındaki sazlık çok çeşitliydi.',
+  result:'Topladığın veriyi sayıp özetledin: veri seti böyle yorumlanır.'}
 ]};
 
 /* ===== OYUN VERİSİ BURADA BİTER (yeni parti bu satırın üstüne eklenir) ===== */

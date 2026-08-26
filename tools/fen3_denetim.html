@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>3. sınıf fen bilimleri — kabul ölçütü denetimi</title>
+<style>
+body{font:13px/1.45 system-ui;margin:0;display:grid;grid-template-columns:400px 1fr;height:100vh}
+#panel{overflow:auto;padding:10px;border-right:2px solid #ccc}
+#panel div{padding:1px 0}
+.g{color:#0a6b45}.b{color:#b3261e;font-weight:700}.n{color:#666}
+iframe{width:390px;height:844px;border:0;justify-self:center;align-self:center;box-shadow:0 0 0 2px #ccc}
+</style>
+</head>
+<body>
+<div id="panel"></div>
+<iframe id="cerceve"></iframe>
+<script>
+'use strict';
+/* 2. sınıf hayat bilgisi motorunun 36 oyunu × 3 turu için şartnamenin
+   kabul ölçütlerini tarar. Yalnız bu motora bakar; başka motorlara dokunmaz.
+     ölçüt 2 — cevap ekranın hiçbir yerinde yazılı olmayacak
+     ölçüt 4 — parça/kutu etiketlerinde emoji ipucu olmayacak
+     ölçüt 5 — 390x844'te kırpılma yok, dokunma alanı >= 44 px           */
+const IDS = Array.from({length:48},(_,i)=>'g'+String(i+1).padStart(2,'0'));
+const MOTOR = '../web/phaser/fen3-pdf-phaser.html';
+const panel = document.getElementById('panel');
+const cerceve = document.getElementById('cerceve');
+const yaz = (m,c)=>{panel.insertAdjacentHTML('beforeend','<div class="'+(c||'')+'">'+m+'</div>');panel.scrollTop=panel.scrollHeight};
+const bekle = ms => new Promise(r=>{
+  if(!document.hidden) return void setTimeout(r,ms);
+  const son=Date.now()+ms,k=new MessageChannel();
+  k.port1.onmessage=()=>(Date.now()>=son?r():k.port2.postMessage(0));
+  k.port2.postMessage(0);
+});
+const sade = s => String(s||'').toLocaleLowerCase('tr').replace(/[^\wçğıöşü]+/g,' ').replace(/\s+/g,' ').trim();
+const EMOJI = /\p{Extended_Pictographic}/u;
+
+function turVerisi(W){
+  return JSON.parse(W.eval('JSON.stringify(round(),(k,v)=>typeof v==="function"?undefined:v)'));
+}
+
+/* ölçüt 5a — hiçbir kutu yatayda taşmasın, hiçbir yazı kırpılmasın */
+function kirpilmaDenetle(W){
+  const kusur=[];
+  const D=W.document;
+  if(D.documentElement.scrollWidth > D.documentElement.clientWidth+1)
+    kusur.push('sayfa yatayda kayıyor ('+D.documentElement.scrollWidth+'>'+D.documentElement.clientWidth+')');
+  D.querySelectorAll('.kart,.kutu,.choice,.etiket,.sirakart,.yuva .hedef,.konus-balon,.hkart,.depo button,.canta .icerik span,.gsutun .ad,.veri-satir,.tablo .h,.kelime,.cumle-yuva span,.program span,.yonler button,.defter .kayit,.ekran,.tuslar button,.olcut div,.sahne-not,.hint')
+   .forEach(el=>{
+    if(el.scrollWidth > el.clientWidth+1) kusur.push('yatayda kırpılıyor: "'+el.textContent.trim().slice(0,42)+'"');
+    if(el.scrollHeight > el.clientHeight+2) kusur.push('dikeyde kırpılıyor: "'+el.textContent.trim().slice(0,42)+'"');
+  });
+  return kusur;
+}
+
+/* ölçüt 5b — dokunma alanı en az 44 px ve merkezinden gerçekten isabet alıyor.
+   getBoundingClientRect ince SVG çizgilerinde stroke'u saymadığı için
+   isabet ayrıca elementFromPoint ile sınanıyor. */
+function dokunmaDenetle(W){
+  const kusur=[];
+  W.document.querySelectorAll('button,[data-kutu],[data-sec],[data-neden],[data-kart],[data-et],[data-yuva],[data-oge],[data-hk],[data-hs],[data-sut],[data-kel],[data-bit],[data-gs],[data-yon],[data-tus],[data-tr],[data-bank],input[type=range],textarea')
+   .forEach(el=>{
+    const r=el.getBoundingClientRect();
+    if(!r.width || !r.height) return;                    /* gizli öğe */
+    if(r.width<44 || r.height<44)
+      kusur.push('dokunma alanı küçük ('+Math.round(r.width)+'x'+Math.round(r.height)+'): "'+el.textContent.trim().slice(0,26)+'"');
+    const h=W.document.elementFromPoint(r.left+r.width/2, r.top+r.height/2);
+    if(h && h!==el && !el.contains(h) && !h.contains(el))
+      kusur.push('merkezine başka öğe biniyor: "'+el.textContent.trim().slice(0,26)+'"');
+  });
+  return kusur;
+}
+
+/* ölçüt 4 — sınıflandırma ve eşleştirmede emoji ipucu olmasın */
+function emojiDenetle(r){
+  const kusur=[];
+  const bak=(ad,s)=>{ if(EMOJI.test(String(s||''))) kusur.push('emoji ipucu ('+ad+'): "'+String(s).slice(0,34)+'"') };
+  (r.kutular||[]).forEach(k=>bak('kutu',k));
+  (r.kartlar||[]).forEach(k=>bak('kart',k.t));
+  (r.etiketler||[]).forEach(e=>bak('etiket',e.t));
+  (r.yuvalar||[]).forEach(y=>bak('hedef',y.hedef));
+  (r.secenekler||[]).forEach(c=>bak('seçenek',c.label));
+  (r.satirlar||[]).forEach(sa=>bak('satır',sa));
+  (r.ogeler||[]).forEach(o=>bak('öge',o.t));
+  (r.ciftler||[]).forEach(c=>{bak('hafıza kartı',c.a);bak('hafıza kartı',c.b)});
+  (r.gruplar||[]).forEach(g=>bak('grafik grubu',g.ad));
+  (r.kelimeler||[]).forEach(k=>bak('sözcük',k));
+  (r.bitirme||[]).forEach(b=>bak('bitirme',b.label));
+  ((r.veri||{}).satirlar||[]).forEach(sa=>bak('veri satırı',sa.ad));
+  ((r.tablo||{}).satirlar||[]).forEach(sa=>bak('tablo satırı',sa[0]));
+  (r.noktalar||[]).forEach(n=>(n.secenekler||[]).forEach(c=>bak('gözlem seçeneği',c.label)));
+  if(r.neden)(r.neden.secenekler||[]).forEach(c=>bak('gerekçe',c.label));
+  return kusur;
+}
+
+/* ölçüt 2 — cevap ekranda yazılı olmasın */
+function sizintiDenetle(W,r){
+  const kusur=[];
+  const D=W.document;
+  const sahne = sade((D.querySelector('#stage')||{}).textContent) + ' ' +
+                sade((D.querySelector('.prompt')||{}).textContent);
+  const icerir = (metin,parca)=>{
+    const p=sade(parca);
+    return p.length>=6 && sade(metin).includes(p);
+  };
+  if(r.kind==='karar'){
+    (r.secenekler||[]).filter(c=>c.correct).forEach(c=>{
+      if(icerir(sahne,c.label)) kusur.push('doğru seçenek sahnede yazılı: "'+c.label.slice(0,40)+'"');
+    });
+  }
+  if(r.kind==='sinifla'){
+    const k=r.kartlar[Number(W.eval('String(state.ix)'))||0];
+    if(k){ const kutu=r.kutular[k.dogru];
+      if(icerir(k.t,kutu)) kusur.push('kart kendi kutusunun adını söylüyor: "'+k.t.slice(0,40)+'"'); }
+  }
+  if(r.kind==='esle'){
+    (r.yuvalar||[]).forEach((y,i)=>{
+      const et=(r.etiketler[y.dogru]||{}).t||'';
+      if(icerir(y.hedef||'',et)) kusur.push('hedef doğru etiketi içeriyor (satır '+(i+1)+')');
+    });
+  }
+  if(r.kind==='sira'){
+    /* kartlar dizi sırasında çizilir ve doğru sıra [0,1,2,...] ise, doğru
+       cevap kartların ekrandaki dizilişidir — sıralama kipinde en kolay
+       gözden kaçan sızıntı. Ekran dizilişi doğru sırayla aynı olmamalı. */
+    let dizilim=null;
+    try{ dizilim=JSON.parse(W.eval('JSON.stringify(state.dizilim)')); }catch(e){}
+    const ekran = dizilim || [...Array(r.kartlar.length).keys()];
+    if(String(ekran)===String(r.dogru)) kusur.push('kartların ekran dizilişi doğru sıranın aynısı');
+    const dom = Array.from(D.querySelectorAll('[data-kart]')).map(b=>Number(b.dataset.kart));
+    if(dom.length && String(dom)===String(r.dogru)) kusur.push('DOM sırası doğru sırayla birebir aynı');
+  }
+  if(r.kind==='topla'){
+    /* çeldiricinin ipucu doğru ögenin adını söylememeli */
+    (r.ogeler||[]).forEach((o,i)=>{
+      if((r.gerekli||[]).indexOf(i)>=0) return;
+      (r.gerekli||[]).forEach(j=>{ if(o.hint && icerir(o.hint, r.ogeler[j].t))
+        kusur.push('çeldirici ipucu gerekli ögenin adını söylüyor: "'+String(o.hint).slice(0,40)+'"') });
+    });
+  }
+  if(r.kind==='hafiza'){
+    (r.ciftler||[]).forEach((c,i)=>{
+      const dogru=(c.secenekler||[]).find(x=>x.correct);
+      if(dogru && (icerir(c.a,dogru.label)||icerir(c.b,dogru.label)))
+        kusur.push('gerekçenin doğru seçeneği kartta yazılı (çift '+(i+1)+')');
+    });
+  }
+  if(r.kind==='grafik'){
+    /* hedef sayı ekranda okunur OLMALI (bulgu 3) — eksikliği kusur */
+    const tum = sade((D.getElementById('app')||D.body).textContent);
+    (r.gruplar||[]).forEach(g=>{
+      if(!tum.includes(sade(g.ad))) kusur.push('grup adı ekranda yok: '+g.ad);
+    });
+    if(!r.veri) kusur.push('grup sayıları için veri kutusu yok');
+  }
+  if(r.kind==='olcum'){
+    const sahneMetin = sade((D.getElementById('stage')||{}).textContent);
+    if(sahneMetin.includes(sade(String(r.dogru)+' '+(r.birim||''))))
+      kusur.push('doğru değer sahnede yazılı: '+r.dogru);
+    if(!D.querySelector('svg.sahne')) kusur.push('ölçülen olgu (dinamometre) ekranda çizilmemiş');
+  }
+  if(r.kind==='sula'){
+    /* KRİTİK bulgu: hedef miktar hiçbir yerde yazılı olmayacak */
+    const tum = (D.getElementById('app')||D.body).textContent;
+    const gorunen = tum.replace(/Tur \d+\/3/,'');
+    if(/[0-9]/.test(gorunen)) kusur.push('ekranda sayı var (hedef sızıntısı): "'+gorunen.match(/[^\s]*[0-9][^\s]*/)[0]+'"');
+    if(!D.querySelector('svg.sahne')) kusur.push('saksı/fide ekranda çizilmemiş');
+  }
+  if(r.kind==='tus'){
+    const tum = sade((D.getElementById('app')||D.body).textContent);
+    if(tum.split(' ').includes(String(r.dogru))) kusur.push('cevap ekranda yazılı: '+r.dogru);
+    if(!D.querySelector('.tablo')) kusur.push('ölçüm tablosu ekranda yok');
+  }
+  if(r.kind==='cumle'){
+    (r.kelimeler||[]).forEach((k,i)=>{
+      if(/^[A-ZÇĞİÖŞÜ]/.test(k)) kusur.push('kart büyük harfle başlıyor (diziliş sızıntısı): "'+k+'"');
+      if(/[.!?]/.test(k)) kusur.push('kartta noktalama var: "'+k+'"');
+    });
+    const dom = Array.from(D.querySelectorAll('[data-kel]')).map(b=>Number(b.dataset.kel));
+    if(dom.length && (r.kabul||[]).some(kb=>String(dom)===String(kb)))
+      kusur.push('sözcüklerin ekran dizilişi kabul edilen sıranın aynısı');
+  }
+  if(r.kind==='gozlem'){
+    if(!D.querySelector('.defter')) kusur.push('kayıt defteri ekranda yok');
+    if(!D.querySelector('.hucre.nokta')) kusur.push('gözlem noktası ekranda görünmüyor');
+    (r.noktalar||[]).forEach((n,i)=>{
+      const dogru=(n.secenekler||[]).find(x=>x.correct);
+      if(dogru && icerir(n.soru||'',dogru.label))
+        kusur.push('gözlem sorusu doğru cevabı söylüyor (nokta '+(i+1)+')');
+    });
+  }
+  if(r.kind==='yaz'){
+    /* örnek cevap ekranda yazılı olmamalı */
+    const tum = sade((D.getElementById('app')||D.body).textContent);
+    if(r.ornekCevap && icerir(tum, r.ornekCevap)) kusur.push('örnek cevap ekranda yazılı');
+  }
+  return kusur;
+}
+
+window.SONUC={bitti:false,kusurlu:[],rapor:[],toplamTur:0};
+
+(async()=>{
+  yaz('denetim: '+IDS.length+' oyun × 3 tur');
+  for(const id of IDS){
+    const bulgular=[];
+    for(let t=0;t<3;t++){
+      await new Promise(coz=>{ cerceve.onload=()=>coz();
+        cerceve.src = MOTOR + '?test=1&denetim='+id+t+'#oyun='+id; });
+      const W=cerceve.contentWindow;
+      /* motorun ilk çizimini bekle */
+      for(let k=0;k<80 && !W.document.querySelector('.hud .round');k++) await bekle(60);
+      if(t>0){ W.eval('roundIndex='+t+';render()'); await bekle(160); }
+      for(let k=0;k<40 && !W.document.querySelector('#task');k++) await bekle(50);
+      await bekle(120);
+      let r; try{ r=turVerisi(W); }catch(e){ bulgular.push('tur '+(t+1)+': tur verisi okunamadı — '+e.message); continue }
+      window.SONUC.toplamTur++;
+      [].concat(
+        kirpilmaDenetle(W), dokunmaDenetle(W), emojiDenetle(r), sizintiDenetle(W,r)
+      ).forEach(k=>bulgular.push('tur '+(t+1)+' ('+r.kind+'): '+k));
+    }
+    if(bulgular.length){ window.SONUC.kusurlu.push(id);
+      window.SONUC.rapor.push({id,bulgular});
+      yaz('✗ '+id+' — '+bulgular.length+' bulgu','b');
+      bulgular.forEach(b=>yaz('&nbsp;&nbsp;'+b,'n'));
+    } else yaz('✓ '+id,'g');
+  }
+  window.SONUC.bitti=true;
+  yaz('<br>BİTTİ · temiz '+(IDS.length-window.SONUC.kusurlu.length)+'/'+IDS.length+
+      ' · taranan tur '+window.SONUC.toplamTur);
+})();
+</script>
+</body>
+</html>
