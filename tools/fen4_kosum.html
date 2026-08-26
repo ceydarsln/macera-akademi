@@ -77,6 +77,25 @@ async function turuCoz(W,adim){
     tikla(W,'#buyukBtn'); await bekle(60);
     tikla(W,'[data-nk="'+r.dogruNokta+'"]'); await bekle(60);
     tikla(W,'#onayBtn'); await bekle(adim);
+  } else if(r.kind==='hafiza'){
+    for(let n=0;n<r.ciftler.length;n++){
+      const k=JSON.parse(W.eval('JSON.stringify((state.kartlar||[]).map(c=>c.cift))'));
+      const c=k.reduce((a,v,i)=>(v===n?a.concat(i):a),[]);
+      tikla(W,'[data-k="'+c[0]+'"]'); await bekle(70);
+      tikla(W,'[data-k="'+c[1]+'"]'); await bekle(adim);
+      const g=r.ciftler[n].gerekce;
+      if(g){ const j=g.secenekler.findIndex(o=>o.dogru);
+        tikla(W,'[data-ger="'+j+'"]'); await bekle(adim) }
+    }
+  } else if(r.kind==='gozlem'){
+    tikla(W,'#oynatBtn');
+    for(let k=0;k<200 && Number(W.eval('String(state.oynuyor?1:0)'));k++) await bekle(50);
+    await bekle(adim);
+    for(let n=0;n<r.sorular.length;n++){
+      const i=Number(W.eval('String(state.ix||0)'))||0;
+      const j=r.sorular[i].secenekler.findIndex(o=>o.dogru);
+      tikla(W,'[data-sec="'+j+'"]'); await bekle(adim);
+    }
   } else if(r.kind==='yaz'){
     const ta=W.document.querySelector('#yaziAlan');
     ta.value=r.ornekCevap; ta.dispatchEvent(new W.Event('input'));

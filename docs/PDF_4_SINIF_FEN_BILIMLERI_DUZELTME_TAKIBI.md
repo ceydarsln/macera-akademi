@@ -102,10 +102,50 @@ Her parti iki araçla sınanıyor:
 | f06 Araştırma Sorusu Defteri | matbaa | kartlar küçük harfle gelir, baş harf ve "?" öğrencinin kararı | ✅ uygulandı |
 | f07 Besin İçeriği Masası | bant | besin masası + içerik etiketi (sayılar ekranda) | ✅ uygulandı |
 | f08 Vitamin Pazarı | köprü | pazar tezgâhı, etiketlerde simge yok (tek sızıntı noktası kapandı) | ✅ uygulandı |
-| f09–f48 | — | — | PDF'de |
+| f09 Dengeli Tabak | tepsi | tabak ekranda gerçekten dolar, eksik grup yazılı · kur → karar → yaz | ✅ uygulandı |
+| f10 Besin İşlevi Kartları | hafıza | vücut şeması önünde kart, can 3, her eşleşme gerekçeli | ✅ uygulandı |
+| f11 Besin Testi Deneyi | roket | deney tezgâhı, değişken kontrolü · sıra → karar → yaz | ✅ uygulandı |
+| f12 Beslenme ve Sağlık | radar | öncesi-sonrası sahnesi, kısa/uzun vade ayrımı | ✅ uygulandı |
+| f13 Küre Kesiti | bant (4 kutu) | öge kesitte vurgulanır, kutu etiketi kutuda kalır | ✅ uygulandı |
+| f14 Taş Kürenin İçi | roket | katmanlar kesitte içten dışa oluşur, ölçüm tablosu ekranda | ✅ uygulandı |
+| f15 Dünya'nın Hareketleri | köprü + tren | **gözlem kipi**: Dünya döner, gece-gündüz gözlenerek bulunur | ✅ uygulandı |
+| f16 Dünya'nın Şekli | radar | gemi/gölge/uydu kanıtları sahnede, kanıt-duyum ayrımı | ✅ uygulandı |
+| f17–f48 | — | — | PDF'de |
 
 Parti 1'de (f01–f08) kapatılan doğrulanmış hatalar: **#1** wrongHint sızıntısı
 (bu partideki bant oyunları f01 ve f07'de ipuçları artık doğru kutunun adını
 içermiyor, motorun öz denetimi bunu sınıyor), **#5** bant kartının kırpılması
 (kart artık sabit ve tam genişlikte), **#6** ortak radar yönergesi (f02 kendi
 konusunu anlatıyor) ve köprüdeki tek simge sızıntısı (f08).
+
+### Parti 2 (f09–f16) notları
+
+Kapatılan doğrulanmış hatalar: **#6** radar yönergesi (f12 ve f16 kendi konularını
+anlatıyor, seçenekler sabit), **#5/#1** bant kusurları (f13'te dört kutulu tur;
+etiketler kutu içinde kalıyor, ipuçları kutu adını söylemiyor), roket sahnesi
+(f11, f14) ve hafıza motorunun uzay zemini ile 6 canı (f10 artık 3 can, kartlar
+konunun sahnesinde ve her açılışta karışıyor).
+
+Bu partide iki yeni kip yazıldı:
+- **gözlem** — tren-tünel ve kronometrenin yerine geçiyor. Ölçülen olgu ekranda
+  canlanıyor; gözlem yapılmadan seçenekler açılmıyor, yeniden izlemek ceza değil.
+- **hafıza** — yanlış çiftte kartlar hemen kapanmıyor, iki içerik yan yana okunup
+  farkı soruluyor; her doğru çift bir gerekçe adımıyla doğrulanıyor.
+
+Sınama sırasında bulunan ve düzeltilen üç gerçek kusur:
+1. **Gizli sekmede `requestAnimationFrame` hiç çalışmıyor.** Yalnız ona bağlanan
+   gözlem animasyonu orada sonsuza kilitleniyor ve tur çözülemez hâle geliyordu
+   (uygulama arka plana alındığında öğrenci hiç cevap veremezdi). Kare isteği
+   artık rAF ile zamanlayıcının ilk çalışanına bağlanıyor; `t` duvar saatinden
+   hesaplandığı için seyrek tik animasyonu yavaşlatır ama durdurmaz.
+2. **Aydınlık yarım küre Güneş'in tersine bakıyordu.** Dünya-Güneş sahnesi
+   kuzey kutbunun üstünden bakış olarak yeniden çizildi; karanlık yarım küre
+   her zaman Güneş'ten kaçıyor ve şehrin gündüz mü gece mi olduğu yazıyor.
+   Bu, f15'in öğretmek istediği kavramın ta kendisiydi.
+3. **f14'te seçenek metni ölçüm satırındaki sayıyı birebir tekrar ediyordu**
+   ("Manto (~2900 km)"); karar karşılaştırma olmaktan çıkıp eşleştirmeye
+   dönüyordu. Tablo ekranda kaldı (ölçüt 3), sayı seçeneklerden kaldırıldı.
+
+Sınama: `fen4_denetim.html` f01–f16 için 48 turun tamamında temiz;
+`fen4_kosum.html` on altı oyunu baştan sona oynayıp can kaybetmeden bitiriyor;
+`window.__TEST__.denetle()` 16 oyunda kusursuz.

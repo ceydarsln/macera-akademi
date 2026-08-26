@@ -106,6 +106,16 @@ button{font:inherit;color:inherit;cursor:pointer}
 .gozlem-dugme:active{transform:translateY(3px);box-shadow:0 1px 0 #1c5580}
 .sayaclar{width:min(330px,96%);display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
 .sayaclar div{flex:1 1 44%;min-width:130px;border:2px solid var(--line);border-radius:11px;background:#fff;padding:6px 9px;font-size:13px;font-weight:900;display:flex;justify-content:space-between;gap:6px}
+/* hafıza — uzay zemini yok, kartlar sahnenin içinde; can standardı 3 */
+.kartlik{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:min(330px,96%)}
+.hkart{min-height:60px;border:3px solid #fff;border-radius:14px;background:var(--blue);color:#fff;
+ padding:7px 8px;font-weight:900;font-size:clamp(11px,2.9vw,13px);line-height:1.22;text-align:center;
+ overflow-wrap:break-word;box-shadow:0 3px 0 rgba(30,72,104,.28);display:flex;align-items:center;justify-content:center}
+.hkart.acik{background:#fff;color:var(--ink);border-color:var(--gold)}
+.hkart.esles{background:#e8f6ef;color:#0a6349;border-color:var(--ok);box-shadow:none}
+.hkart.yanlis{background:#fdeceb;color:#8d2f28;border-color:var(--bad)}
+/* gözlem — ölçülen olgu ekranda gerçekten canlanır, sayaç onunla birlikte ilerler */
+.gozlem-sar{width:min(330px,96%);display:flex;flex-direction:column;align-items:center;gap:7px}
 .olcek{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:min(330px,96%);height:48px;min-height:48px;background:transparent;margin:0}
 .olcek::-webkit-slider-runnable-track{height:14px;border-radius:8px;background:#dae7ef;border:2px solid #a6bece}
 .olcek::-moz-range-track{height:14px;border-radius:8px;background:#dae7ef;border:2px solid #a6bece}
@@ -167,7 +177,7 @@ function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locke
  $('.sound').onclick=()=>{const r=round();if(r)speak(r.prompt,true)};
  /* rAF geri çağrısı bir sonraki karede çalışır; o ana kadar tur değişmiş
     olabilir (gizli sekmede kuyrukta bekliyor). round() boşsa okuma. */
- renderRound();requestAnimationFrame(()=>{const t=roundIndex,r=round();
+ renderRound();kareIste(()=>{const t=roundIndex,r=round();
   if(r&&roundIndex===t)speak(r.prompt)})}
 function feedback(msg,bad=false){const f=$('.feedback');if(!f)return;f.textContent=msg;f.className='feedback show'+(bad?' bad':'');setTimeout(()=>{if(f)f.className='feedback'},950)}
 /* Hızlı çift dokunuş tek hata için iki can götürmesin. */
@@ -185,6 +195,13 @@ function good(message){if(locked)return;locked=true;score+=10;const r=round();
  feedback(message||'Doğru!');speak(r.result||message||'Doğru.');
  const st=$('#stage');if(st)st.classList.add('success-motion');
  setTimeout(()=>{roundIndex++;if(roundIndex>=3)parentComplete();else render()},WAIT)}
+/* Sekme arka plandayken requestAnimationFrame hiç çalışmaz; yalnız ona bağlanan
+   bir animasyon orada sonsuza kilitlenir ve tur çözülemez hâle gelir. Kare isteği
+   bu yüzden rAF ile zamanlayıcının ilk çalışanına bağlanıyor. */
+function kareIste(fn){let verildi=false;
+ const sar=()=>{if(verildi)return;verildi=true;fn()};
+ try{requestAnimationFrame(sar)}catch(e){}
+ setTimeout(sar,FAST?16:60)}
 function ertele(fn,ms){const t=roundIndex;setTimeout(()=>{if(roundIndex===t&&!locked)fn()},ms)}
 function gecisBasla(fn,ms){state.gecis=true;ertele(()=>{state.gecis=false;fn()},ms)}
 /* Cihaz klavyeleri kesme işaretini ’ olarak üretebiliyor; desenler ' arıyor. */
@@ -287,6 +304,137 @@ const SAHNE={
   `<text x="241" y="42" font-size="10" font-weight="900" text-anchor="middle" fill="#a45f56">İÇERİK ETİKETİ</text>`+
   `<line x1="200" y1="50" x2="282" y2="50" stroke="#e2cbc6" stroke-width="2"/><line x1="200" y1="62" x2="282" y2="62" stroke="#e2cbc6" stroke-width="2"/><line x1="200" y1="74" x2="282" y2="74" stroke="#e2cbc6" stroke-width="2"/><line x1="200" y1="86" x2="262" y2="86" stroke="#e2cbc6" stroke-width="2"/>`+
   `<rect x="24" y="30" width="14" height="44" rx="3" fill="#8fbf6a"/><rect x="46" y="42" width="14" height="32" rx="3" fill="#e0a53c"/><rect x="68" y="36" width="14" height="38" rx="3" fill="#cf6a5f"/>`)},
+
+ /* kantin tezgâhı — tabak kap.ciz ile ayrıca kuruluyor */
+ kantin:()=>SVG(320,120,
+  `<rect width="320" height="120" fill="#fdf0ef"/><rect x="0" y="88" width="320" height="32" fill="#c4796f"/>`+
+  `<rect x="0" y="84" width="320" height="6" fill="#a45f56"/>`+
+  kisi(46,38,11,'#f4f7f9')+
+  `<rect x="96" y="52" width="196" height="32" rx="4" fill="#e6d5c8" stroke="#a98d80" stroke-width="2"/>`+
+  `<rect x="104" y="58" width="40" height="20" rx="3" fill="#8fbf6a"/><rect x="150" y="58" width="40" height="20" rx="3" fill="#e0a53c"/>`+
+  `<rect x="196" y="58" width="40" height="20" rx="3" fill="#cf6a5f"/><rect x="242" y="58" width="42" height="20" rx="3" fill="#f0f0ec"/>`+
+  `<text x="194" y="46" font-size="10" font-weight="900" text-anchor="middle" fill="#a45f56">OKUL KANTİNİ</text>`),
+ /* vücut şeması — içeriğin görevi ilgili bölgede vurgulanır */
+ vucut:(st,ek)=>{const v=ek||'';
+  const isik=(x,y,rx,ry)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#ffd97a" opacity=".85"/>`;
+  return SVG(320,150,
+  `<rect width="320" height="150" fill="#fdf0ef"/>`+
+  `<circle cx="160" cy="28" r="17" fill="#f0c9a4" stroke="#c9915f" stroke-width="2.5"/>`+
+  `<path d="M136 50 h48 v52 h-48 z" fill="#e9eef3" stroke="#8aa9c0" stroke-width="2.5"/>`+
+  `<path d="M136 54 l-22 34 M184 54 l22 34" stroke="#8aa9c0" stroke-width="7" stroke-linecap="round"/>`+
+  `<path d="M146 102 v38 M174 102 v38" stroke="#8aa9c0" stroke-width="9" stroke-linecap="round"/>`+
+  (v==='kas'?isik(160,74,20,24)+`<text x="230" y="78" font-size="11" font-weight="900" fill="#a45f56">kaslar onarılıyor</text>`:'')+
+  (v==='enerji'?isik(160,66,15,15)+`<text x="228" y="70" font-size="11" font-weight="900" fill="#a45f56">enerji üretiliyor</text>`:'')+
+  (v==='kemik'?`<rect x="142" y="104" width="8" height="34" rx="4" fill="#fff" stroke="#c9a24a" stroke-width="2.5"/><rect x="170" y="104" width="8" height="34" rx="4" fill="#fff" stroke="#c9a24a" stroke-width="2.5"/><text x="216" y="126" font-size="11" font-weight="900" fill="#a45f56">kemikler güçleniyor</text>`:'')+
+  (v==='savunma'?`<path d="M160 60 l16 8 v14 q0 12 -16 18 q-16 -6 -16 -18 v-14 z" fill="#8fbf6a" stroke="#4f7f3a" stroke-width="2.5"/><text x="228" y="80" font-size="11" font-weight="900" fill="#a45f56">bağışıklık</text>`:'')+
+  (v==='tasima'?`<path d="M150 58 q22 18 0 36 q-22 18 0 40" fill="none" stroke="#4a9fd0" stroke-width="3" stroke-dasharray="5 4"/><text x="222" y="96" font-size="11" font-weight="900" fill="#a45f56">taşıma sürüyor</text>`:''))},
+ /* deney tezgâhı — adımlar tezgâhta uygulanan işler */
+ tezgah:(st)=>{const n=((st&&st.dizi)||[]).length;
+  return SVG(320,132,
+  `<rect width="320" height="132" fill="#e6f4f2"/><rect x="0" y="94" width="320" height="38" fill="#6fa89a"/>`+
+  `<rect x="0" y="92" width="320" height="6" fill="#4f8577"/>`+
+  kisi(44,42,11,'#f2f6f8')+
+  `<rect x="92" y="66" width="52" height="26" rx="3" fill="#fffdf3" stroke="#c9b48b" stroke-width="2.5"/>`+
+  `<text x="118" y="83" font-size="10" font-weight="900" text-anchor="middle" fill="#a5915f">ÖRNEKLER</text>`+
+  `<rect x="156" y="60" width="34" height="32" rx="3" fill="#f6f2e4" stroke="#c9b48b" stroke-width="2.5"/>`+
+  Array.from({length:Math.min(n,5)},(_,i)=>`<circle cx="${164+i*6}" cy="${76}" r="2.6" fill="#c98a3a" opacity=".8"/>`).join('')+
+  `<rect x="206" y="52" width="46" height="40" rx="4" fill="#dfeef6" stroke="#7fa8bd" stroke-width="2.5"/>`+
+  `<text x="229" y="76" font-size="10" font-weight="900" text-anchor="middle" fill="#4a7f92">TABLO</text>`+
+  `<path d="M272 58 l6 26 h-14 z" fill="none" stroke="#4a7f92" stroke-width="3"/>`+
+  `<text x="160" y="118" font-size="11" font-weight="900" text-anchor="middle" fill="#eaf6f2">${n}/5 adım uygulandı</text>`)},
+ /* öncesi-sonrası — beslenme ile sağlık arasındaki bağ sahnede görünür */
+ saglik:(st,ek)=>{const v=ek||'';
+  return SVG(320,132,
+  `<rect width="320" height="132" fill="#fdf0ef"/><rect x="0" y="98" width="320" height="34" fill="#c4796f"/>`+
+  `<rect x="14" y="14" width="136" height="80" rx="8" fill="#fffdf6" stroke="#b98d86" stroke-width="2.5"/>`+
+  `<rect x="170" y="14" width="136" height="80" rx="8" fill="#fffdf6" stroke="#b98d86" stroke-width="2.5"/>`+
+  `<text x="82" y="30" font-size="10" font-weight="900" text-anchor="middle" fill="#a45f56">ÖNCE</text>`+
+  `<text x="238" y="30" font-size="10" font-weight="900" text-anchor="middle" fill="#a45f56">SONRA</text>`+
+  kisi(82,52,10,'#8fbf6a')+
+  (v==='iyi'?kisi(238,50,11,'#8fbf6a'):'')+
+  (v==='kotu'?kisi(238,56,9,'#c9a24a'):'')+
+  (!v?`<text x="238" y="62" font-size="11" font-weight="900" text-anchor="middle" fill="#b0a09c">?</text>`:'')+
+  (v==='iyi'?`<text x="238" y="86" font-size="9.5" font-weight="800" text-anchor="middle" fill="#4f7f3a">güçlü ve dinç</text>`:'')+
+  (v==='kotu'?`<text x="238" y="86" font-size="9.5" font-weight="800" text-anchor="middle" fill="#a45f56">halsiz</text>`:''))},
+ /* Dünya kesiti — dört küre kesitin üzerinde işaretli */
+ kure:(st,ek)=>{const v=ek||'';
+  const vur=k=>v===k?' stroke="#d99b20" stroke-width="4"':' stroke="#5b7183" stroke-width="2"';
+  return SVG(320,140,
+  `<rect width="320" height="140" fill="#0d1c3a"/>`+
+  `<circle cx="160" cy="150" r="118" fill="#3c6f4a"${vur('tas')}/>`+
+  `<path d="M42 150 a118 118 0 0 1 236 0 z" fill="#3c6f4a"/>`+
+  `<path d="M62 116 q40 -16 78 4 q34 18 74 -2 q22 -10 44 2 l0 30 h-196 z" fill="#2f6f9e"${vur('su')}/>`+
+  `<ellipse cx="100" cy="52" rx="34" ry="14" fill="#e8f1f8" opacity=".92"${vur('hava')}/>`+
+  `<ellipse cx="212" cy="42" rx="28" ry="12" fill="#e8f1f8" opacity=".92"/>`+
+  `<path d="M132 108 v-16 M126 96 q6 -10 12 0" fill="none" stroke="#7ec46a" stroke-width="3"${v==='canli'?' stroke="#d99b20" stroke-width="4"':''}/>`+
+  `<circle cx="132" cy="88" r="9" fill="#4f9c4a"${vur('canli')}/>`+
+  `<text x="160" y="20" font-size="10.5" font-weight="900" text-anchor="middle" fill="#cfe0f0">DÜNYA KESİTİ</text>`)},
+ /* taş kürenin içi — katmanlar içten dışa yerine oturur */
+ kesit:(st)=>{const n=((st&&st.dizi)||[]).length;
+  const ad=['İç çekirdek','Dış çekirdek','Manto','Yer kabuğu'];
+  const renk=['#fff4d6','#f0a93c','#c9522f','#5f7d4a'];
+  return SVG(320,150,
+  `<rect width="320" height="150" fill="#0d1c3a"/>`+
+  [3,2,1,0].map(i=>n>i?`<circle cx="106" cy="75" r="${26+i*16}" fill="${renk[i]}" stroke="#0d1c3a" stroke-width="2"/>`:'').join('')+
+  `<circle cx="106" cy="75" r="74" fill="none" stroke="#7f93a8" stroke-width="2" stroke-dasharray="5 5"/>`+
+  ad.map((a,i)=>`<text x="196" y="${34+i*26}" font-size="11" font-weight="900" fill="${n>i?renk[i]:'#4a5a70'}">${n>i?(i+1)+'. '+a:'—'}</text>`).join(''))},
+ /* Dünya-Güneş — dönme ve dolanma gerçekten canlanır, saat onunla ilerler.
+    Sahne kuzey kutbunun ÜSTÜNDEN bakış: aydınlık yarım küre her zaman
+    Güneş'e döner, karanlık yarım küre ondan kaçar. Kırmızı nokta bir şehir;
+    dönerken bir kez aydınlıktan, bir kez karanlıktan geçer. */
+ dunyaGunes:(t,st)=>{const p=(st&&st.kip)||'donme';
+  const rad=t*2*Math.PI;
+  const gx=(p==='dolanma')?160:278, gy=(p==='dolanma')?78:40;
+  const dx=(p==='dolanma')?160+96*Math.cos(rad-Math.PI/2):110;
+  const dy=(p==='dolanma')?78+42*Math.sin(rad-Math.PI/2):78;
+  const R=(p==='dolanma')?17:30;
+  /* karanlık yarım küre Güneş'in tam tersine bakar */
+  const geceAci=Math.atan2(dy-gy,dx-gx)*180/Math.PI;
+  const sehirAci=(p==='dolanma'?rad*4:rad)-Math.PI/2;
+  const sx=(R*0.62)*Math.cos(sehirAci), sy=(R*0.62)*Math.sin(sehirAci);
+  /* şehir gündüz mü? Güneş yönüyle arasındaki açı 90 dereceden küçükse evet */
+  const gunesAci=Math.atan2(gy-dy,gx-dx);
+  const gunduz=Math.cos(sehirAci-gunesAci)>0;
+  const saat=Math.round(t*24), gun=Math.round(t*365);
+  return SVG(320,152,
+  `<rect width="320" height="152" fill="#0d1c3a"/>`+
+  (p==='dolanma'?`<ellipse cx="160" cy="78" rx="96" ry="42" fill="none" stroke="#33465f" stroke-width="2" stroke-dasharray="5 6"/>`:'')+
+  `<circle cx="${gx}" cy="${gy}" r="${p==='dolanma'?20:17}" fill="#f6c944"/>`+
+  `<circle cx="${gx}" cy="${gy}" r="${p==='dolanma'?27:24}" fill="#f6c944" opacity=".22"/>`+
+  `<g transform="translate(${dx.toFixed(1)},${dy.toFixed(1)})">`+
+   `<circle r="${R}" fill="#4a90c4"/>`+
+   `<path d="M0 -${R} a${R} ${R} 0 0 1 0 ${2*R} z" fill="#14304a" transform="rotate(${geceAci.toFixed(1)})"/>`+
+   `<circle r="${R}" fill="none" stroke="#9fb6c9" stroke-width="1.5"/>`+
+   `<circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${p==='dolanma'?3:4.5}" `+
+    `fill="${gunduz?'#e14b3c':'#8d3128'}" stroke="#fff" stroke-width="1.4"/>`+
+   (p==='dolanma'?'':`<circle r="2.5" fill="#cfe0f0"/>`)+
+  `</g>`+
+  (p==='dolanma'?'':`<text x="110" y="122" font-size="9" font-weight="800" text-anchor="middle" fill="#8ba4bc">kuzey kutbunun üstünden bakış</text>`)+
+  `<rect x="${p==='dolanma'?18:196}" y="104" width="106" height="32" rx="7" fill="#16324c" stroke="#3d5a78" stroke-width="2"/>`+
+  `<text x="${p==='dolanma'?71:249}" y="126" font-size="14" font-weight="900" text-anchor="middle" fill="#e8f1f8">`+
+   `${p==='dolanma'?gun+' gün':saat+' saat'}</text>`+
+  `<text x="160" y="18" font-size="10.5" font-weight="900" text-anchor="middle" fill="#cfe0f0">`+
+   `${p==='dolanma'?'GÜNEŞ ETRAFINDA DOLANMA':'KENDİ EKSENİ ETRAFINDA DÖNME'}</text>`+
+  (p==='dolanma'?'':`<text x="110" y="36" font-size="9.5" font-weight="800" text-anchor="middle" fill="${gunduz?'#f6c944':'#7f93a8'}">şehir: ${gunduz?'gündüz':'gece'}</text>`))},
+ /* Dünya'nın şekline dair kanıtlar — gözlenebilir kanıt sahnede */
+ kanit:(st,ek)=>{const v=ek||'gemi';
+  if(v==='golge')return SVG(320,132,
+   `<rect width="320" height="132" fill="#0d1c3a"/>`+
+   `<circle cx="96" cy="66" r="30" fill="#2f6f9e"/><circle cx="212" cy="66" r="24" fill="#d8d4c8"/>`+
+   `<path d="M212 66 m-24 0 a24 24 0 0 1 24 -24 a26 26 0 0 0 0 48 a24 24 0 0 1 -24 -24 z" fill="#3a3f4d"/>`+
+   `<text x="160" y="118" font-size="11" font-weight="900" text-anchor="middle" fill="#cfe0f0">Ay tutulmasında Dünya'nın gölgesi</text>`);
+  if(v==='uydu')return SVG(320,132,
+   `<rect width="320" height="132" fill="#0d1c3a"/>`+
+   `<circle cx="160" cy="62" r="40" fill="#2f6f9e"/>`+
+   `<path d="M130 46 q22 -10 38 2 q16 12 30 2 l0 26 q-20 12 -38 0 q-18 -12 -30 -2 z" fill="#3c6f4a"/>`+
+   `<rect x="238" y="30" width="16" height="12" fill="#c9d3dd"/><rect x="256" y="26" width="18" height="20" fill="#4a7f92"/>`+
+   `<text x="160" y="118" font-size="11" font-weight="900" text-anchor="middle" fill="#cfe0f0">Uzaydan çekilen fotoğraf</text>`);
+  return SVG(320,132,
+   `<rect width="320" height="132" fill="#dbeefb"/>`+
+   `<path d="M0 74 q80 -8 160 0 q80 8 160 0 v58 h-320 z" fill="#2f6f9e"/>`+
+   `<rect x="40" y="52" width="34" height="16" fill="#8a5a3c"/><rect x="52" y="34" width="6" height="18" fill="#5b4636"/>`+
+   `<rect x="216" y="66" width="26" height="8" fill="#8a5a3c"/><rect x="226" y="48" width="5" height="18" fill="#5b4636"/>`+
+   `<text x="160" y="118" font-size="11" font-weight="900" text-anchor="middle" fill="#1a3a52">Uzaklaşan geminin önce gövdesi kayboluyor</text>`)},
  /* pazar tezgâhı — vitamin kaynakları gerçek besinlerle */
  pazar:()=>SVG(320,132,
   `<rect width="320" height="132" fill="#fdf3e4"/><rect x="0" y="96" width="320" height="36" fill="#bd8c58"/>`+
@@ -546,9 +694,108 @@ function yazCiz(r){
   good('Deftere yazıldı!')}}
 function renderYaz(r){state.yazi=r.baslangic||'';state.not='';yazCiz(r)}
 
+/* ===== HAFIZA: uzay zemini yok, kartlar konunun sahnesinde durur. Kart
+   konumları her açılışta karışır, can standardı 3'tür ve yanlış çiftte
+   kartlar hemen kapanmaz — iki içerik yan yana okunup farkları sorulur.
+   Her doğru çift bir gerekçe adımıyla doğrulanır. ===== */
+const ACILIS=Math.floor((typeof performance!=='undefined'?performance.now():0)*1000)+1;
+function hafizaCiz(r){
+ const g=state.gerekce;
+ $('#stage').innerHTML=sahneHtml(r)+
+  ilerleme(r.ciftler.length,(state.eslesen||[]).length)+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ if(g){
+  $('#task').innerHTML=`<div class="caption soru">${esc(g.soru)}</div>`+
+   `<div class="choices">${g.secenekler.map((o,j)=>`<button class="choice" data-ger="${j}">${esc(o.t)}</button>`).join('')}</div>`;
+  $$('[data-ger]').forEach(b=>b.onclick=()=>{
+   if(locked)return;const o=g.secenekler[+b.dataset.ger];
+   if(!o.dogru)return wrong(g.hint||'İki kartı yeniden oku.');
+   state.gerekce=null;state.acik=[];
+   if((state.eslesen||[]).length>=r.ciftler.length){hafizaCiz(r);return good()}
+   feedback('Doğru');hafizaCiz(r)});
+  return}
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<div class="kartlik">${state.kartlar.map((k,i)=>{
+    const acik=(state.acik||[]).indexOf(i)>=0, esles=(state.eslesen||[]).indexOf(k.cift)>=0;
+    const yanlis=state.yanlisAcik&&acik;
+    return `<button class="hkart ${esles?'esles':(acik?'acik':'')} ${yanlis?'yanlis':''}" data-k="${i}">`+
+     `${esles||acik?esc(k.t):'?'}</button>`}).join('')}</div>`+
+  (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
+ $$('[data-k]').forEach(b=>b.onclick=()=>{
+  if(locked||state.gecis||state.gerekce)return;
+  const i=+b.dataset.k,k=state.kartlar[i];
+  if((state.eslesen||[]).indexOf(k.cift)>=0)return;
+  const acik=state.acik||[];
+  if(acik.indexOf(i)>=0)return;
+  if(acik.length>=2)return;
+  state.acik=acik.concat(i);
+  if(state.acik.length<2)return hafizaCiz(r);
+  const [a,b2]=state.acik.map(x=>state.kartlar[x]);
+  if(a.cift!==b2.cift){
+   /* kartlar hemen kapanmaz: iki içerik yan yana okunup farkı sorulur */
+   state.yanlisAcik=true;state.not=r.farkSoru||'İki kartı yan yana oku: ikisi aynı şeyi mi anlatıyor?';
+   hafizaCiz(r);wrong(state.not);
+   return gecisBasla(()=>{state.acik=[];state.yanlisAcik=false;state.not='';hafizaCiz(r)},FAST?40:1500)}
+  const c=r.ciftler[a.cift];
+  state.eslesen=(state.eslesen||[]).concat(a.cift);
+  state.not=c.neden||'';state.gerekce=c.gerekce||null;
+  if(!state.gerekce){state.acik=[];
+   if(state.eslesen.length>=r.ciftler.length){hafizaCiz(r);return good()}
+   feedback('Eşleşti')}
+  hafizaCiz(r)})}
+function renderHafiza(r){
+ const n=r.ciftler.length;
+ const havuz=[];r.ciftler.forEach((c,i)=>{havuz.push({cift:i,t:c.a});havuz.push({cift:i,t:c.b})});
+ /* her açılışta yeni diziliş: konum ezberi fen başarısı sayılmasın */
+ const d=dizilimUret(havuz.length,tohum('hafiza')+ACILIS);
+ state.kartlar=d.map(i=>havuz[i]);
+ state.acik=[];state.eslesen=[];state.not='';state.gerekce=null;state.yanlisAcik=false;
+ hafizaCiz(r)}
+
+/* ===== GOZLEM: tren-tünel ve kronometre yok. Ölçülen olgu ekranda canlanır
+   (Dünya döner, madde ısınır) ve karar bu gözleme dayanır. Yeniden izlemek
+   ceza değildir; gözlem yapılmadan seçenekler açılmaz. ===== */
+function gozlemCiz(r){
+ const i=state.ix||0,s=r.sorular[i];
+ const a=r.animasyon||{};
+ $('#stage').innerHTML=
+  `<div class="gozlem-sar">${a.ciz?a.ciz(state.t||0,state):sahneHtml(r)}</div>`+
+  (r.gorev?`<div class="kart">${esc(r.gorev)}</div>`:'')+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ const izledi=(state.izleme||0)>0;
+ $('#task').innerHTML=
+  `<button class="gozlem-dugme" id="oynatBtn">${state.oynuyor?'İzleniyor…':(izledi?'Yeniden izle':(a.dugme||'Gözlemi başlat'))}</button>`+
+  `<div class="hint">${izledi?state.izleme+' kez izledin (yeniden izlemek ceza değildir)':(r.ipucu||'Önce gözlemi izle.')}</div>`+
+  (izledi&&s?`<div class="caption soru">${esc(s.soru)}</div>`+
+   `<div class="choices">${s.secenekler.map((o,j)=>`<button class="choice" data-sec="${j}">${esc(o.t)}${o.alt?`<span class="alt">${esc(o.alt)}</span>`:''}</button>`).join('')}</div>`:'')+
+  (izledi?ilerleme(r.sorular.length,i):'');
+ $('#oynatBtn').onclick=()=>{if(state.oynuyor||locked)return;gozlemOynat(r)};
+ $$('[data-sec]').forEach(b=>b.onclick=()=>{
+  if(locked||state.oynuyor)return;
+  const o=s.secenekler[+b.dataset.sec];
+  if(!o.dogru)return wrong(o.hint||s.hint||'Gözlemi yeniden izle ve tekrar düşün.');
+  state.ix=i+1;state.not=s.neden||'';
+  if(state.ix>=r.sorular.length){gozlemCiz(r);return good()}
+  feedback('Doğru');gecisBasla(()=>gozlemCiz(r),FAST?30:520)})}
+function gozlemOynat(r){
+ const a=r.animasyon||{},sure=FAST?60:(a.sure||4000);
+ state.oynuyor=true;state.t=0;gozlemCiz(r);
+ const t0=(typeof performance!=='undefined'?performance.now():Date.now()),tur=roundIndex;
+ const adim=()=>{
+  if(roundIndex!==tur)return;
+  const su=(typeof performance!=='undefined'?performance.now():Date.now());
+  state.t=Math.min(1,(su-t0)/sure);
+  const s=$('.gozlem-sar');
+  if(s&&a.ciz)s.innerHTML=a.ciz(state.t,state);
+  if(state.t<1)return kareIste(adim);
+  state.oynuyor=false;state.izleme=(state.izleme||0)+1;
+  state.not=a.bitti||'';gozlemCiz(r)};
+ kareIste(adim)}
+function renderGozlem(r){state.ix=0;state.t=0;state.izleme=0;state.oynuyor=false;state.not='';gozlemCiz(r)}
+
 function renderRound(){const r=round();if(!r)return;
  const fn={sinifla:renderSinifla,karar:renderKarar,sira:renderSira,esle:renderEsle,
-  kur:renderKur,sozdiz:renderSozdiz,yaz:renderYaz}[r.kind];
+  kur:renderKur,sozdiz:renderSozdiz,yaz:renderYaz,hafiza:renderHafiza,gozlem:renderGozlem}[r.kind];
  (fn||renderKarar)(r)}
 
 const GAMES={};
@@ -1120,6 +1367,587 @@ GAMES.f08={title:'Vitamin Pazarı',theme:'masa',
     desen:'havuç|ıspanak|kayısı|portakal|biber|maydanoz|balık|yumurta|ceviz|badem|süt|limon|domates|brokoli'}],
   ornekCevap:'C vitamini portakalda bulunur ve yaraların daha çabuk iyileşmesine yardım eder.',
   result:'Vitamini kaynağı ve göreviyle anlattın.'}]};
+
+/* Tabak — kur kipinde seçilen besin tabağa gerçekten yerleşir ve tabağın
+   dengesi (protein / karbonhidrat / sebze-meyve) görsel olarak oluşur. */
+const TABAK=(secilen)=>{
+ const gruplar=[{k:'protein',ad:'protein',renk:'#cf6a5f'},
+  {k:'karbonhidrat',ad:'karbonhidrat',renk:'#e0a53c'},
+  {k:'sebze',ad:'sebze-meyve',kisa:'sebze',renk:'#8fbf6a'}];
+ const say=g=>secilen.filter(h=>h.grup===g).length;
+ const ekstra=secilen.filter(h=>['sut','yag'].indexOf(h.grup)>=0);
+ const dilim=(i,dolu,renk)=>{
+  const a0=(-90+i*120)*Math.PI/180, a1=(-90+(i+1)*120)*Math.PI/180, R=46;
+  const x0=80+R*Math.cos(a0), y0=58+R*Math.sin(a0), x1=80+R*Math.cos(a1), y1=58+R*Math.sin(a1);
+  return `<path d="M80 58 L${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)} Z" `+
+   `fill="${dolu?renk:'#f4f1ea'}" stroke="#b9a9a2" stroke-width="2"/>`};
+ const eksik=gruplar.filter(g=>!say(g.k)).map(g=>g.ad);
+ return `<div class="kap"><div class="kap-ad">🍱 Tabak — üç ana grup dolunca dengeli olur</div>`+
+  SVG(320,124,
+   `<rect width="320" height="124" fill="#fffdfa"/>`+
+   `<circle cx="80" cy="58" r="52" fill="#fdf7f4" stroke="#c9a7a2" stroke-width="3"/>`+
+   gruplar.map((g,i)=>dilim(i,say(g.k)>0,g.renk)).join('')+
+   /* etiketler tabağın çevresine yazılıyor; kenardan taşmasın diye
+      konum kırpılıyor ve en dardaki etiket kısa yazılıyor */
+   gruplar.map((g,i)=>{const a=(-90+i*120+60)*Math.PI/180;
+    const x=Math.min(300,Math.max(28,80+62*Math.cos(a)));
+    const y=Math.min(116,Math.max(16,58+62*Math.sin(a)));
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="9.5" `+
+     `font-weight="900" text-anchor="middle" fill="${say(g.k)?g.renk:'#b0a49f'}">${g.kisa||g.ad}</text>`}).join('')+
+   `<text x="228" y="26" font-size="10.5" font-weight="900" text-anchor="middle" fill="#8a5a52">TABAKTAKİLER</text>`+
+   secilen.slice(0,6).map((h,i)=>
+    `<text x="164" y="${44+i*13}" font-size="10" font-weight="800" fill="#5b4a45">• ${esc(h.ad).slice(0,22)}</text>`).join('')+
+   (secilen.length?'':`<text x="228" y="60" font-size="10.5" font-weight="800" text-anchor="middle" fill="#b0a49f">tabak boş</text>`)+
+   (ekstra.length?`<text x="164" y="${44+Math.min(secilen.length,6)*13}" font-size="9.5" font-weight="800" fill="#8a7a72">yanında: ${esc(ekstra.map(h=>h.grup==='sut'?'süt grubu':'sağlıklı yağ').join(', '))}</text>`:''))+
+  `<div class="kap-ad">${eksik.length?'eksik grup: '+esc(eksik.join(', ')):'üç ana grup da tabakta'}</div></div>`};
+
+/* ---- f09 Dengeli Tabak (tepsi kaldırıldı: besin tabağa yerleşiyor,
+        tabağın dengesi ve eksik grup ekranda görünüyor) ---- */
+GAMES.f09={title:'Dengeli Tabak',theme:'mutfak',
+ finish:'Tabağı üç ana besin grubuyla dengeledin, dengesiz tabaklarda eksik grubu buldun ve kendi dengeli öğününü kurup açıkladın.',rounds:[
+ {kind:'kur',prompt:'İstenen besinleri tabağa koy; tabağın dengesi ekranda oluşuyor.',sahne:SAHNE.kantin,
+  kap:{ciz:(ic)=>TABAK(ic)},kapKalsin:true,
+  ipucu:'Tabaktaki dilimler dolan gruplara göre renkleniyor.',
+  havuz:[
+   {id:'p',ad:'Tavuk',grup:'protein',neden:'Protein büyümeyi ve onarımı sağlar.'},
+   {id:'k',ad:'Bulgur pilavı',grup:'karbonhidrat',neden:'Karbonhidrat günlük enerjiyi verir.'},
+   {id:'s',ad:'Mevsim salatası',grup:'sebze',neden:'Sebzeler vitamin ve lif taşır.'},
+   {id:'m',ad:'Elma',grup:'sebze',neden:'Meyveler vitamin ve su kaynağıdır.'},
+   {id:'y',ad:'Yoğurt',grup:'sut',neden:'Süt grubu kalsiyum verir, kemikleri güçlendirir.'},
+   {id:'z',ad:'Zeytinyağı',grup:'yag',neden:'Az miktarda sağlıklı yağ da öğünün parçasıdır.'},
+   {id:'x1',ad:'Gazlı içecek',hint:'Bunun içinde hangi besin grubu var? Şekerden başka ne veriyor?'},
+   {id:'x2',ad:'Cips',hint:'Bu besin hangi gruba giriyor, tabağa ne katıyor?'}],
+  istekler:[
+   {metin:'Öğrenci: "Kaslarım için protein, enerjim için karbonhidrat istiyorum."',
+    gerekli:['p','k'],tamam:'İki dilim doldu; sebze-meyve dilimi hâlâ boş.',
+    hint:'Kas için ve enerji için olan iki besini bul.'},
+   {metin:'Öğrenci: "Bağışıklığım için bir sebze ve bir meyve ekle."',
+    gerekli:['s','m'],tamam:'Üç ana grup da tabakta: tabak dengelendi.',
+    hint:'Sebze ve meyve grubundan birer besin aranıyor.'},
+   {metin:'Öğrenci: "Yanına kemiklerim için süt grubundan bir şey ve azıcık sağlıklı yağ koy."',
+    gerekli:['y','z'],tamam:'Tabak tamam: üç ana grup + süt grubu + az yağ.',
+    hint:'Kalsiyum veren ve sağlıklı yağ olan besinleri bul.'}]},
+ {kind:'karar',prompt:'Bu tabakta hangi grup eksik?',sahne:SAHNE.kantin,
+  sorular:[
+   {durum:'Tabakta: makarna, ekmek ve pilav var. Başka hiçbir şey yok.',
+    soru:'Bu tabakta hangi grup eksik?',
+    ipucu:'Üç ana grubu say: protein, karbonhidrat, sebze-meyve.',
+    hint:'Tabaktaki üç besin de aynı gruptan; geriye hangi gruplar kalıyor?',
+    secenekler:[
+     {t:'Protein ve sebze-meyve eksik',dogru:true},
+     {t:'Karbonhidrat eksik'},
+     {t:'Hiçbir şey eksik değil, tabak dolu'}],
+    neden:'Tabağın dolu olması dengeli olduğu anlamına gelmez; gruplara bakarız.',
+    gerekce:{soru:'"Dengeli tabak" derken neye bakıyoruz?',
+     secenekler:[
+      {t:'Farklı besin gruplarının hepsinin bulunmasına',dogru:true},
+      {t:'Tabaktaki yiyecek miktarının çokluğuna'}],
+     neden:'Denge miktarla değil çeşitle kurulur.'}},
+   {durum:'Tabakta: haşlanmış yumurta, peynir ve tavuk var.',
+    soru:'Bu tabakta hangi grup eksik?',
+    hint:'Üçü de aynı işi yapıyor; enerji ve vitamin nereden gelecek?',
+    secenekler:[
+     {t:'Karbonhidrat ve sebze-meyve eksik',dogru:true},
+     {t:'Protein eksik'},
+     {t:'Yağ eksik'}],
+    neden:'Yalnız protein yiyen biri günlük enerjisini ve vitaminini alamaz.'},
+   {durum:'Tabakta: salata, elma ve portakal var.',
+    soru:'Bu tabakta hangi grup eksik?',
+    hint:'Bu tabak vitamin veriyor; büyüme ve enerji nereden gelecek?',
+    secenekler:[
+     {t:'Protein ve karbonhidrat eksik',dogru:true},
+     {t:'Sebze-meyve eksik'},
+     {t:'Hiçbiri eksik değil'}],
+    neden:'Sağlıklı besinlerden oluşan bir tabak da dengesiz olabilir.'}]},
+ {kind:'yaz',prompt:'Kendi dengeli öğününü kur ve açıkla.',sahne:SAHNE.kantin,
+  gorev:'Kendi dengeli öğününü yaz: üç ana gruptan birer besin say ve neden dengeli olduğunu açıkla.',
+  ornek:'Kalıp: "… , … ve … koyardım. Dengeli çünkü …"',
+  yerTutucu:'Öğünün ve nedeni…',
+  enAzKelime:14,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'üç besini virgülle ayırarak say',desen:'[^,]+,[^,]+,'},
+   {ad:'bir besin grubunun adını yaz (protein, karbonhidrat, sebze, meyve)',
+    desen:'protein|karbonhidrat|sebze|meyve'}],
+  ornekCevap:'Tabağıma tavuk, bulgur, salata koyardım. Dengeli çünkü protein, karbonhidrat ve sebze grubu birlikte var.',
+  result:'Kendi dengeli öğününü gerekçesiyle kurdun.'}]};
+
+/* ---- f10 Besin İşlevi Kartları (uzay zemini kaldırıldı: kartlar vücut
+        şemasının önünde; can 6 değil 3, her eşleşme gerekçeyle onaylanıyor) ---- */
+GAMES.f10={title:'Besin İşlevi Kartları',theme:'mutfak',
+ finish:'Besin içeriklerini vücuttaki görevleriyle eşleştirdin, bir içeriğin birden çok görevi olabildiğini gördün ve bir görevi kendi cümlenle anlattın.',rounds:[
+ {kind:'hafiza',prompt:'Kartları çevir: içeriği vücuttaki göreviyle eşle.',
+  sahne:(st)=>SAHNE.vucut(st,st&&st.vurgu),
+  soru:'Hangi iki kart aynı içeriği anlatıyor?',
+  ipucu:'Yanlış çiftte kartlar açık kalır; ikisini yan yana oku.',
+  farkSoru:'Bu iki kart aynı içerikten mi söz ediyor? Farkı ne?',
+  ciftler:[
+   {a:'Karbonhidrat',b:'Günlük enerjiyi verir',
+    neden:'Karbonhidrat vücudun ilk enerji kaynağıdır.',
+    gerekce:{soru:'Karbonhidrat azalırsa ilk ne hissedilir?',
+     secenekler:[{t:'Halsizlik, enerji düşüklüğü',dogru:true},{t:'Kemiklerin zayıflaması'}],
+     hint:'Bu içeriğin görevi neydi?'}},
+   {a:'Protein',b:'Büyümeyi ve onarımı sağlar',
+    neden:'Protein yeni doku yapımında ve yaraların onarımında kullanılır.',
+    gerekce:{soru:'Yara iyileşirken hangi içeriğe ihtiyaç artar?',
+     secenekler:[{t:'Onarımı sağlayan içeriğe',dogru:true},{t:'Enerji veren içeriğe'}],
+     hint:'Onarım hangi içeriğin işiydi?'}},
+   {a:'Mineral',b:'Kemik ve dişleri güçlendirir',
+    neden:'Kalsiyum ve fosfor gibi mineraller kemik yapısını sağlar.',
+    gerekce:{soru:'Süt ve yoğurt hangi görevi destekler?',
+     secenekler:[{t:'Kemik ve diş sağlamlığını',dogru:true},{t:'Bağışıklığı'}],
+     hint:'Süt grubu neyi güçlendiriyordu?'}},
+   {a:'Su',b:'Vücutta taşımayı sağlar',
+    neden:'Besinler ve oksijen vücutta suyla taşınır, atıklar suyla atılır.',
+    gerekce:{soru:'Su azalınca ilk ne aksar?',
+     secenekler:[{t:'Besin ve atıkların taşınması',dogru:true},{t:'Kemiklerin uzaması'}],
+     hint:'Suyun görevi neydi?'}}]},
+ {kind:'karar',prompt:'Bir içeriğin birden çok görevi olabilir.',
+  sahne:(st,ek)=>SAHNE.vucut(st,ek),
+  sorular:[
+   {durum:'Yağ hakkında üç ifade var.',sahneEk:'enerji',
+    soru:'Yağın vücuttaki görevi nedir?',
+    ipucu:'Bir içerik yalnız tek iş yapmak zorunda değil.',
+    hint:'Yağ yalnız depolama mı yapıyor, başka işi de var mı?',
+    secenekler:[
+     {t:'Enerji depolar, organları korur ve vücudu sıcak tutar',dogru:true},
+     {t:'Yalnız enerji depolar'},
+     {t:'Hiçbir görevi yoktur, zararlıdır'}],
+    neden:'Yağ birden çok görev üstlenir; sorun yağın kendisi değil aşırısıdır.',
+    gerekce:{soru:'Buradan çıkan genel kural nedir?',
+     secenekler:[
+      {t:'Bir besin içeriği birden çok görev üstlenebilir',dogru:true},
+      {t:'Her besin içeriğinin tek bir görevi vardır'}],
+     neden:'Görevler örtüşür; bu yüzden çeşitli beslenmek gerekir.'}},
+   {durum:'Protein hakkında bir soru.',sahneEk:'kas',
+    soru:'Protein yalnız büyümeye mi yarar?',
+    hint:'Karbonhidrat yetmediğinde vücut ne kullanır?',
+    secenekler:[
+     {t:'Hayır; onarımda da kullanılır, gerekirse enerji de verir',dogru:true},
+     {t:'Evet, yalnız büyümeye yarar'}],
+    neden:'Protein öncelikle yapı ve onarım içindir ama gerektiğinde enerjiye de çevrilir.'},
+   {durum:'Su hakkında bir soru.',sahneEk:'tasima',
+    soru:'Su bir besin içeriği sayılır mı?',
+    hint:'Su enerji vermiyor ama vücutta bir iş yapıyor mu?',
+    secenekler:[
+     {t:'Sayılır; enerji vermez ama taşıma ve sıcaklık dengesi için gereklidir',dogru:true},
+     {t:'Sayılmaz; enerji vermediği için besin değildir'}],
+    neden:'Enerji vermeyen ama yaşamsal görevi olan içerikler de besin içeriğidir.'}]},
+ {kind:'yaz',prompt:'Bir içeriğin görevini kendi cümlenle anlat.',
+  sahne:(st)=>SAHNE.vucut(st,'kas'),
+  gorev:'Bir besin içeriği seç (protein, karbonhidrat, yağ, vitamin, mineral ya da su). Vücutta ne iş yaptığını kendi cümlenle yaz.',
+  ornek:'Kalıp: "… vücutta … işini yapar çünkü …"',
+  yerTutucu:'İçerik ve görevi…',
+  enAzKelime:10,bitis:'.',
+  denetim:[{ad:'bir içeriğin adını yaz',desen:'protein|karbonhidrat|yağ|vitamin|mineral|su\\b'},
+   {ad:'görevi anlatan bir eylem yaz (verir, sağlar, güçlendirir, taşır, korur)',
+    desen:'verir|sağlar|güçlendir|taşı|korur|onar'}],
+  ornekCevap:'Protein vücutta büyümeyi ve yaraların onarılmasını sağlar, bu yüzden her gün gerekir.',
+  result:'İçeriğin görevini kendi cümlenle anlattın.'}]};
+
+/* ---- f11 Deney Adımları (roket kaldırıldı: adımlar tezgâhta uygulanıyor) ---- */
+GAMES.f11={title:'Besin Testi Deneyi',theme:'lab',
+ finish:'Besin testi deneyinin adımlarını sıraladın, hangi değişkeni sabit tuttuğunu belirledin ve kendi deneyini anlattın.',rounds:[
+ {kind:'sira',prompt:'Deney adımlarını tezgâhta baştan sona uygula.',sahne:SAHNE.tezgah,
+  gorev:'"Hangi besinde yağ var?" testini kuruyorsun. Adımları doğru sırayla uygula.',
+  ipucu:'Uygulanan adımlar tezgâhta görünür.',
+  kartlar:[
+   {t:'Araştırma sorumu yazarım: hangi besinde yağ var?',neden:'Soru, neyi ölçeceğimizi belirler.'},
+   {t:'Her besinden eşit miktarda örnek alırım',neden:'Miktarı sabit tutmazsak farkın nereden geldiğini bilemeyiz.'},
+   {t:'Örnekleri kâğıda bastırıp aynı süre beklerim',neden:'Süreyi de sabit tutarız; yalnız besin değişir.'},
+   {t:'Kâğıttaki saydam lekeleri karşılaştırırım',neden:'Ölçüm burada yapılır: leke varsa yağ vardır.'},
+   {t:'Sonucu tabloya yazıp paylaşırım',neden:'Kayıt ve paylaşım olmadan sonuç sınanamaz.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Tezgâha dokunmadan önce neyi aradığını yazmalısın.',
+   'Ölçüme başlamadan önce örnekleri nasıl eşitlersin?',
+   'Kâğıda bastırmadan önce örnekler hazır olmalı.',
+   'Karşılaştırmadan önce lekelerin oluşması gerekir.','']},
+ {kind:'karar',prompt:'Hangi değişkeni sabit tutuyoruz?',sahne:SAHNE.tezgah,
+  sorular:[
+   {durum:'Ceviz ve elmayı karşılaştıracaksın. Cevizden bir avuç, elmadan bir dilim aldın.',
+    soru:'Bu deneyde ne yanlış?',
+    ipucu:'Yalnız bir şey değişmeli, geri kalanı aynı kalmalı.',
+    hint:'İki örneğin miktarı aynı mı?',
+    secenekler:[
+     {t:'Miktarlar eşit değil; farkın besinden mi miktardan mı geldiği belli olmaz',dogru:true},
+     {t:'Ceviz ve elma karşılaştırılamaz'},
+     {t:'Hiçbir yanlış yok'}],
+    neden:'Karşılaştırma yapmak için değişen tek şey besinin kendisi olmalı.',
+    gerekce:{soru:'Bu deneyde değişmesi gereken tek şey nedir?',
+     secenekler:[
+      {t:'Test edilen besin',dogru:true},
+      {t:'Bekleme süresi'}],
+     neden:'Diğer her şey sabit tutulur; buna değişken kontrolü denir.'}},
+   {durum:'Bir örneği 1 dakika, diğerini 10 dakika beklettin.',
+    soru:'Sonuç güvenilir mi?',
+    hint:'Bekleme süresi lekeyi etkiler mi?',
+    secenekler:[
+     {t:'Değil; süre de değiştiği için farkın nedeni belirsiz',dogru:true},
+     {t:'Güvenilir; süre önemli değil'}],
+    neden:'Aynı anda iki şey değişirse hangisinin etkisi olduğunu ayıramayız.'},
+   {durum:'Aynı deneyi üç kez tekrarladın ve üçünde de aynı sonucu aldın.',
+    soru:'Bu tekrar ne sağlar?',
+    hint:'Bir kez çıkan sonuç rastlantı olabilir miydi?',
+    secenekler:[
+     {t:'Sonucun rastlantı olmadığını gösterir',dogru:true},
+     {t:'Deneyi daha hızlı bitirir'}],
+    neden:'Tekrarlanan ölçüm sonucu güçlendirir.'}]},
+ {kind:'yaz',prompt:'Kendi besin testi deneyini anlat.',sahne:SAHNE.tezgah,
+  gorev:'Bir besin testi deneyi tasarla. Neyi ölçeceğini, neyi sabit tutacağını yaz.',
+  ornek:'Kalıp: "… ölçerim. … sabit tutarım çünkü …"',
+  yerTutucu:'Deneyin…',
+  enAzKelime:14,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"sabit" sözcüğünü kullan',desen:'sabit|aynı tutar|eşit tutar'},
+   {ad:'ölçeceğin şeyi yaz ("ölç" ya da "karşılaştır")',desen:'ölç|karşılaştır'}],
+  ornekCevap:'Ekmek ve cevizin yağını ölçerim. Miktarı ve bekleme süresini sabit tutarım çünkü yalnız besin değişmeli.',
+  result:'Deneyini değişken kontrolüyle birlikte anlattın.'}]};
+
+/* ---- f12 Beslenme ve Sağlık (radar kaldırıldı: ilişki öncesi-sonrası
+        sahnesinde görünüyor, seçenekler sabit duruyor) ---- */
+GAMES.f12={title:'Beslenme ve Sağlık',theme:'mutfak',
+ finish:'Beslenme alışkanlıklarının sonuçlarını neden-sonuç kurarak okudun, kısa ve uzun vadeli etkileri ayırdın ve kendi örneğini yazdın.',rounds:[
+ {kind:'karar',prompt:'Bu beslenme alışkanlığının sonucu ne olur?',
+  sahne:(st,ek)=>SAHNE.saglik(st,ek),
+  sorular:[
+   {durum:'Bir çocuk aylardır öğünlerinde neredeyse hiç protein almıyor.',sahneEk:'kotu',
+    soru:'Bunun sonucu ne olur?',
+    ipucu:'Önce eksilen içeriğin görevini düşün.',
+    hint:'Protein hangi işi yapıyordu; o iş aksarsa ne olur?',
+    secenekler:[
+     {t:'Büyüme yavaşlar, yaralar geç iyileşir',dogru:true},
+     {t:'Daha hızlı büyür'},
+     {t:'Hiçbir şey değişmez'}],
+    neden:'Protein büyüme ve onarımı sağlar; eksikliğinde bu işler aksar.',
+    gerekce:{soru:'Bu çıkarımı nasıl kurduk?',
+     secenekler:[
+      {t:'İçeriğin görevinden yola çıkıp eksikliğinin sonucunu düşündük',dogru:true},
+      {t:'Tahmin ettik'}],
+     neden:'Neden-sonuç kurmak, görevden sonuca gitmektir.'}},
+   {durum:'Bir çocuk uzun süredir yeterli kalsiyum almıyor.',sahneEk:'kotu',
+    soru:'Bunun sonucu ne olur?',
+    hint:'Kalsiyum hangi yapıyı güçlendiriyordu?',
+    secenekler:[
+     {t:'Kemikler ve dişler zayıflar',dogru:true},
+     {t:'Saçlar daha hızlı uzar'},
+     {t:'Görme keskinleşir'}],
+    neden:'Kalsiyum kemik ve diş yapısında kullanılır.'},
+   {durum:'Bir çocuk her gün düzenli su içmeye, sebze ve meyve yemeye başladı.',sahneEk:'iyi',
+    soru:'Zamanla ne bekleriz?',
+    hint:'Suyun ve vitaminlerin görevleri neydi?',
+    secenekler:[
+     {t:'Taşıma düzelir, bağışıklık güçlenir, halsizlik azalır',dogru:true},
+     {t:'Boyu bir haftada iki katına çıkar'},
+     {t:'Hiçbir değişiklik olmaz'}],
+    neden:'Düzenli ve çeşitli beslenme etkisini zaman içinde gösterir.'}]},
+ {kind:'karar',prompt:'Kısa vadeli mi, uzun vadeli mi?',
+  sahne:(st,ek)=>SAHNE.saglik(st,ek),
+  sorular:[
+   {durum:'Sabah kahvaltı etmeyen bir öğrenci ilk derste dikkatini toplayamıyor.',sahneEk:'kotu',
+    soru:'Bu etki ne zaman ortaya çıktı?',
+    ipucu:'Etkinin görünmesi saatler mi aldı, aylar mı?',
+    hint:'Kahvaltı ile ders arasında ne kadar süre var?',
+    secenekler:[
+     {t:'Aynı gün içinde: kısa vadeli bir etki',dogru:true},
+     {t:'Yıllar sonra: uzun vadeli bir etki'}],
+    neden:'Enerji eksikliği aynı gün hissedilir; bu kısa vadeli bir etkidir.',
+    gerekce:{soru:'Kısa vadeli etkiyi ne belirler?',
+     secenekler:[
+      {t:'Sonucun kısa sürede ortaya çıkması',dogru:true},
+      {t:'Sonucun önemsiz olması'}],
+     neden:'Kısa vadeli olması etkinin küçük olduğu anlamına gelmez.'}},
+   {durum:'Yıllarca aşırı şekerli beslenen bir kişide diş çürükleri ve sağlık sorunları artıyor.',sahneEk:'kotu',
+    soru:'Bu etki ne türdür?',
+    hint:'Bu sonuç bir günde mi ortaya çıktı?',
+    secenekler:[
+     {t:'Uzun vadeli: yıllar içinde birikerek ortaya çıktı',dogru:true},
+     {t:'Kısa vadeli: aynı gün ortaya çıktı'}],
+    neden:'Bazı etkiler hemen görünmez, birikerek ortaya çıkar.'},
+   {durum:'Bir öğün çok tuzlu yemek yiyen biri o akşam çok susuyor.',sahneEk:'kotu',
+    soru:'Bu etki ne türdür?',
+    hint:'Susama ne zaman başladı?',
+    secenekler:[
+     {t:'Kısa vadeli: aynı gün ortaya çıktı',dogru:true},
+     {t:'Uzun vadeli: yıllar sonra ortaya çıkacak'}],
+    neden:'Kısa vadeli etkiler alışkanlığı fark etmemizi kolaylaştırır.'}]},
+ {kind:'yaz',prompt:'Bir alışkanlığın etkisini neden-sonuç kurarak yaz.',
+  sahne:(st)=>SAHNE.saglik(st,'iyi'),
+  gorev:'Bir beslenme alışkanlığı seç. Bu alışkanlığın sağlığa etkisini neden-sonuç kurarak yaz.',
+  ornek:'Kalıp: "… yaparsam … olur çünkü …"',
+  yerTutucu:'Alışkanlık ve etkisi…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'bir sonuç bildiren söz kullan (olur, artar, azalır, güçlenir, zayıflar)',
+    desen:'olur|artar|azal|güçlen|zayıfla|düzel'}],
+  ornekCevap:'Her gün kahvaltı yaparsam derste dikkatim artar çünkü beynim sabah boyunca enerjisiz kalmaz.',
+  result:'Neden-sonuç ilişkisini kendi örneğinle kurdun.'}]};
+
+/* ---- f13 Küre Kesiti (bant kaldırıldı: öge kesitin üzerinde vurgulanıyor,
+        dört kutu etiketi kutunun içinde kalıyor) ---- */
+GAMES.f13={title:'Küre Kesiti',theme:'dunya',
+ finish:'Dünya\'nın dört küresini ayırt ettin, birden çok küreye ait olabilen ögeleri gerekçeyle yerleştirdin ve çevrenden bir örneği açıkladın.',rounds:[
+ {kind:'sinifla',prompt:'Bu öge Dünya\'nın hangi küresine ait?',
+  sahne:(st,ek)=>SAHNE.kure(st,ek),
+  soru:'Bu öge hangi küreye aittir?',
+  kutular:['HAVA KÜRE','SU KÜRE','TAŞ KÜRE','CANLI KÜRE'],
+  ipucu:'Öge kesitin üzerinde işaretleniyor.',
+  kartlar:[
+   {t:'Soluduğumuz oksijen ve azot',sahneEk:'hava',dogru:0,
+    neden:'Gazlar Dünya\'yı saran gaz katmanında bulunur.',
+    hint:'Bu maddeler katı mı, sıvı mı, gaz mı?'},
+   {t:'Okyanuslar ve göller',sahneEk:'su',dogru:1,
+    neden:'Yeryüzündeki tuzlu ve tatlı suların tamamı su küreyi oluşturur.',
+    hint:'Bu ögenin maddesi hangi hâlde?'},
+   {t:'Dağlar, kayalar, manto ve çekirdek',sahneEk:'tas',dogru:2,
+    neden:'Yerkabuğundan çekirdeğe kadar bütün katı yapı taş küredir.',
+    hint:'Bu öge Dünya\'nın sert ve katı bölümü mü?'},
+   {t:'Ormandaki ağaçlar ve denizdeki balıklar',sahneEk:'canli',dogru:3,
+    neden:'Yaşayan her varlık canlı küreye girer, nerede yaşarsa yaşasın.',
+    hint:'Bu ögeler yaşıyor mu?'},
+   {t:'Kutuplardaki buzullar',sahneEk:'su',dogru:1,
+    neden:'Buz da sudur; katı hâlde olması onu su küreden çıkarmaz.',
+    hint:'Buz eriyince ne oluyor? Maddesi değişiyor mu?'},
+   {t:'Toprağın altındaki kayaç tabakası',sahneEk:'tas',dogru:2,
+    neden:'Yerin altındaki kayaçlar da Dünya\'nın katı yapısının parçasıdır.',
+    hint:'Bu tabaka canlı mı, gaz mı, yoksa sert bir madde mi?'}]},
+ {kind:'karar',prompt:'Birden çok küreye değen ögeler.',
+  sahne:(st,ek)=>SAHNE.kure(st,ek),
+  sorular:[
+   {durum:'Bulut: gökyüzünde duruyor ama su damlacıklarından oluşuyor.',sahneEk:'hava',
+    soru:'Bulut hangi küreye örnektir?',
+    ipucu:'İki küre birden ilgili olabilir; hangisinde bulunduğuna bak.',
+    hint:'Bulutun maddesi ne, bulunduğu yer neresi?',
+    secenekler:[
+     {t:'Gaz katmanında bulunur ama maddesi sudur: iki küre burada buluşur',dogru:true},
+     {t:'Yalnız gaz katmanına aittir, suyla ilgisi yoktur'},
+     {t:'Yalnız su ile ilgilidir, bulunduğu yer önemsizdir'}],
+    neden:'Küreler birbirinden kopuk değildir; su buharlaşıp gaz katmanına çıkar.',
+    gerekce:{soru:'Bu neyi gösteriyor?',
+     secenekler:[
+      {t:'Küreler birbiriyle sürekli madde alışverişi yapar',dogru:true},
+      {t:'Küreler tamamen ayrıdır, birbirine karışmaz'}],
+     neden:'Su döngüsü tam olarak bu alışverişin adıdır.'}},
+   {durum:'Kuru bir nehir yatağı: içinde su yok, taş ve çakıl var.',sahneEk:'tas',
+    soru:'Şu anki hâliyle hangi küreye örnektir?',
+    hint:'Şu anda içinde ne var: su mu, kayaç mı?',
+    secenekler:[
+     {t:'Katı yapıya; içinde su olmadığı için şu an kayaç ve çakıldan oluşuyor',dogru:true},
+     {t:'Su ile ilgili küreye; adında "nehir" geçiyor'}],
+    neden:'Adına değil, o anda hangi maddeden oluştuğuna bakarız.'},
+   {durum:'Toprakta yaşayan solucan.',sahneEk:'canli',
+    soru:'Solucan hangi küreye aittir?',
+    hint:'Solucan yaşayan bir varlık mı?',
+    secenekler:[
+     {t:'Yaşayan varlıklar küresine; toprakta yaşaması bunu değiştirmez',dogru:true},
+     {t:'Katı yapıya; toprağın içinde olduğu için'}],
+    neden:'Canlının nerede yaşadığı değil, yaşıyor olması belirleyicidir.'}]},
+ {kind:'yaz',prompt:'Çevrenden bir ögeyi gerekçesiyle yerleştir.',
+  sahne:(st)=>SAHNE.kure(st,''),
+  gorev:'Çevrenden bir öge seç (bir taş, bir kuş, bir gölet, rüzgâr…). Hangi küreye koyacağını nedeniyle yaz.',
+  ornek:'Kalıp: "… küresine koyarım çünkü …"',
+  yerTutucu:'Öge ve gerekçen…',
+  enAzKelime:10,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"küre" sözcüğünü kullan',desen:'küre'}],
+  ornekCevap:'Bahçedeki serçeyi canlı küreye koyarım çünkü serçe yaşayan bir varlıktır.',
+  result:'Ögeyi gerekçesiyle yerleştirdin.'}]};
+
+/* ---- f14 Taş Kürenin İçi (roket kaldırıldı: katmanlar kesitin üzerine
+        içten dışa gerçekten yerleşiyor) ---- */
+GAMES.f14={title:'Taş Kürenin İçi',theme:'dunya',
+ finish:'Taş kürenin katmanlarını içten dışa dizdin, kalınlık ve sıcaklık farklarını okudun ve katmanları kendi sözcüklerinle anlattın.',rounds:[
+ {kind:'sira',prompt:'Katmanları en içten en dışa doğru yerleştir.',sahne:SAHNE.kesit,
+  gorev:'Kesit boş. Katmanları en içten başlayarak yerleştir; her seçtiğin katman kesitte oluşacak.',
+  ipucu:'Yerleşen katmanlar solda halka halka büyüyor.',
+  kartlar:[
+   {t:'İç çekirdek — en içteki, en sıcak bölüm',neden:'Merkezdeki bu bölüm çok yüksek basınç altında katıdır.'},
+   {t:'Dış çekirdek — erimiş hâlde',neden:'Basınç merkeze göre daha az olduğu için burası sıvı hâldedir.'},
+   {t:'Manto — en kalın katman',neden:'Dünya hacminin büyük bölümünü manto kaplar.'},
+   {t:'Yer kabuğu — üzerinde yaşadığımız ince kabuk',neden:'En dıştaki ve en ince katman budur.'}],
+  dogru:[0,1,2,3],
+  ipucular:['En içte hangisi olmalı: merkez mi, üzerinde yürüdüğümüz yer mi?',
+   'Merkezden bir adım dışarı çıkınca hangi bölüm gelir?',
+   'Çekirdeklerden sonra gelen, hacmin çoğunu kaplayan katman hangisi?','']},
+ {kind:'karar',prompt:'Katmanların kalınlığı ve sıcaklığı.',sahne:SAHNE.kesit,
+  sorular:[
+   {durum:'Ölçüm tablosu — Yer kabuğu: ~35 km · Manto: ~2900 km · Dış çekirdek: ~2200 km · İç çekirdek: ~1200 km yarıçap',
+    soru:'Hangi katman en kalındır?',
+    ipucu:'Tablodaki sayıları karşılaştır.',
+    hint:'Tablodaki en büyük sayı hangi satırda?',
+    secenekler:[
+     {t:'Manto',dogru:true},
+     {t:'Yer kabuğu'},
+     {t:'İç çekirdek'}],
+    neden:'Üzerinde yaşadığımız kabuk, Dünya\'nın en ince katmanıdır.',
+    gerekce:{soru:'Yer kabuğu için ne söylenebilir?',
+     secenekler:[
+      {t:'Dünya\'ya göre çok ince bir kabuktur',dogru:true},
+      {t:'Dünya\'nın en kalın bölümüdür'}],
+     neden:'35 km, 2900 km yanında çok incedir.'}},
+   {durum:'Sıcaklık tablosu — Yer kabuğu yüzeyi: ~15 °C · Manto: 500–4000 °C · Çekirdek: 4000–6000 °C',
+    soru:'Merkeze doğru gidildikçe sıcaklık ne olur?',
+    hint:'Tabloda yüzeyden merkeze doğru sayılar nasıl değişiyor?',
+    secenekler:[
+     {t:'Artar',dogru:true},
+     {t:'Azalır'},
+     {t:'Değişmez'}],
+    neden:'Dünya\'nın iç ısısı merkeze doğru artar.'},
+   {durum:'Dış çekirdek erimiş hâlde, iç çekirdek ise katıdır. İkisi de çok sıcaktır.',
+    soru:'İç çekirdek daha sıcak olduğu hâlde neden katıdır?',
+    hint:'Merkezde sıcaklıktan başka ne çok yüksektir?',
+    secenekler:[
+     {t:'Üzerindeki basınç çok yüksek olduğu için',dogru:true},
+     {t:'Aslında dış çekirdekten daha soğuk olduğu için'},
+     {t:'Farklı bir maddeden yapıldığı için'}],
+    neden:'Yüksek basınç, maddeyi yüksek sıcaklıkta bile katı tutabilir.'}]},
+ {kind:'yaz',prompt:'Katmanları kendi sözcüklerinle anlat.',sahne:SAHNE.kesit,
+  gorev:'Taş kürenin katmanlarını en içten en dışa doğru kendi cümlelerinle yaz.',
+  ornek:'Kalıp: "En içte … , sonra … , sonra … , en dışta … "',
+  yerTutucu:'Katmanlar…',
+  enAzKelime:12,bitis:'.',
+  denetim:[{ad:'"çekirdek" sözcüğünü kullan',desen:'çekirdek'},
+   {ad:'"manto" sözcüğünü kullan',desen:'manto'},
+   {ad:'"kabuk" sözcüğünü kullan',desen:'kabu'}],
+  ornekCevap:'En içte çekirdek vardır, sonra manto gelir, en dışta ise üzerinde yaşadığımız ince yer kabuğu bulunur.',
+  result:'Katmanları içten dışa anlattın.'}]};
+
+/* ---- f15 Dünya'nın Hareketleri (köprü kaldırıldı: hareket ekranda
+        gerçekten oluyor, gece-gündüz gözlenerek anlaşılıyor) ---- */
+GAMES.f15={title:'Dünya\'nın Hareketleri',theme:'dunya',
+ finish:'Dünya\'nın dönmesini gözleyip gece-gündüzü sen buldun, dönme ile dolanmayı ayırdın ve gözlediğin sonucu yazdın.',rounds:[
+ {kind:'gozlem',prompt:'Dünya\'yı döndür ve ne olduğunu gözle.',
+  animasyon:{sure:5200,dugme:'Dünya\'yı döndür',
+   ciz:(t)=>SAHNE.dunyaGunes(t,{kip:'donme'}),
+   bitti:'Bir tam tur tamamlandı: kırmızı nokta bir kez aydınlık, bir kez karanlık taraftan geçti.'},
+  gorev:'Kırmızı nokta bir şehir. Dünya kendi ekseni etrafında dönerken o şehirde ne oluyor?',
+  ipucu:'Önce gözlemi izle; seçenekler ondan sonra açılır.',
+  sorular:[
+   {soru:'Şehir dönerken ne yaşadı?',
+    hint:'Nokta Güneş\'e bakan taraftan karanlık tarafa geçti mi?',
+    secenekler:[
+     {t:'Bir kez gündüz, bir kez gece yaşadı',dogru:true},
+     {t:'Sürekli gündüz kaldı'},
+     {t:'Sürekli gece kaldı'}],
+    neden:'Dünya dönerken bir yüzü Güneş\'e bakar, öteki yüzü karanlıkta kalır.'},
+   {soru:'Gece ve gündüz neden oluşur?',
+    hint:'Güneş mi Dünya\'nın etrafında döndü, Dünya mı kendi ekseninde?',
+    secenekler:[
+     {t:'Dünya kendi ekseni etrafında döndüğü için',dogru:true},
+     {t:'Güneş söndüğü için'},
+     {t:'Güneş Dünya\'nın etrafında döndüğü için'}],
+    neden:'Gözlemde dönen Dünya\'ydı; Güneş yerinde durdu.'},
+   {soru:'Güneş\'in doğup batıyor görünmesi neden olur?',
+    hint:'Sen dönen bir şeyin üzerindeysen çevren nasıl görünür?',
+    secenekler:[
+     {t:'Biz dönen Dünya\'nın üzerinde olduğumuz için',dogru:true},
+     {t:'Güneş gökyüzünde yürüdüğü için'}],
+    neden:'Hareket eden biz olduğumuz hâlde Güneş hareket ediyormuş gibi görünür.'}]},
+ {kind:'esle',prompt:'Hareketi sonucuyla ve süresiyle eşle.',
+  sahne:(st)=>SAHNE.dunyaGunes(st&&st.kipT||1,{kip:'dolanma'}),
+  soru:'Bu satır hangi hareketi anlatıyor?',
+  ipucu:'Önce alttaki karta, sonra üstteki satıra dokun.',
+  yuvalar:[
+   {t:'Gece ile gündüzün birbirini izlemesine yol açar',
+    neden:'Az önce gözlediğin hareket buydu.',
+    gerekce:{soru:'Bu hareket ne kadar sürer?',
+     secenekler:[{t:'24 saat, yani bir gün',dogru:true},{t:'365 gün, yani bir yıl'}],
+     hint:'Bir kez gündüz bir kez gece ne kadar sürüyor?'}},
+   {t:'Mevsimlerin birbirini izlemesine yol açar',
+    neden:'Güneş çevresindeki yolculuk mevsimleri getirir.',
+    gerekce:{soru:'Bu hareket ne kadar sürer?',
+     secenekler:[{t:'365 gün, yani bir yıl',dogru:true},{t:'24 saat, yani bir gün'}],
+     hint:'Dört mevsimin tamamlanması ne kadar sürer?'}}],
+  parcalar:[
+   {t:'Kendi ekseni etrafında dönme',yuva:0,hint:'Bu hareket bir günde mi bir yılda mı tamamlanıyor?'},
+   {t:'Güneş etrafında dolanma',yuva:1,hint:'Bu hareket hangi sonucu doğuruyor?'}]},
+ {kind:'yaz',prompt:'Gözlediğin sonucu kendi cümlenle anlat.',
+  sahne:(st)=>SAHNE.dunyaGunes(1,{kip:'donme'}),
+  gorev:'Dünya\'nın hareketlerinden birini seç. Bu hareketin sonucunu, gözlediklerine dayanarak yaz.',
+  ornek:'Kalıp: "Dünya … hareket edince … olur çünkü …"',
+  yerTutucu:'Hareket ve sonucu…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'hareketin adını yaz (dönme ya da dolanma)',desen:'dön|dolan'},
+   {ad:'sonucunu yaz (gece, gündüz, mevsim, gün, yıl)',desen:'gece|gündüz|mevsim|gün|yıl'}],
+  ornekCevap:'Dünya kendi ekseninde dönünce gece ve gündüz oluşur çünkü bir yüzü Güneş görürken öteki yüzü karanlıkta kalır.',
+  result:'Gözlediğin sonucu gerekçesiyle anlattın.'}]};
+
+/* ---- f16 Dünya'nın Şekli (radar kaldırıldı: kanıtlar gözlenebilir
+        sahnelerle sunuluyor, seçenekler sabit duruyor) ---- */
+GAMES.f16={title:'Dünya\'nın Şekli',theme:'dunya',
+ finish:'Dünya\'nın şekline dair kanıtları okudun, gözleme dayalı kanıtı duyuma dayalı iddiadan ayırdın ve bir kanıtı kendi cümlenle açıkladın.',rounds:[
+ {kind:'karar',prompt:'Sahnedeki gözlem neyi kanıtlıyor?',
+  sahne:(st,ek)=>SAHNE.kanit(st,ek),
+  sorular:[
+   {durum:'Kıyıdan uzaklaşan gemi izleniyor: önce gövdesi kayboluyor, direği bir süre daha görünüyor.',
+    sahneEk:'gemi',
+    soru:'Bu gözlem neyi gösterir?',
+    ipucu:'Düz bir yüzeyde uzaklaşan bir şey nasıl kaybolurdu?',
+    hint:'Yüzey düz olsaydı gemi hangi yönde küçülerek kaybolurdu?',
+    secenekler:[
+     {t:'Deniz yüzeyi kavislidir; Dünya yuvarlaktır',dogru:true},
+     {t:'Gemi uzaklaşırken küçülmektedir'},
+     {t:'Deniz suyu yükselmektedir'}],
+    neden:'Düz bir yüzeyde gemi bütün hâlinde küçülerek kaybolurdu, alttan değil.',
+    gerekce:{soru:'Bu kanıtı güçlü yapan nedir?',
+     secenekler:[
+      {t:'Herkesin kıyıda tekrar tekrar gözleyebilmesi',dogru:true},
+      {t:'Çok kişinin böyle söylemesi'}],
+     neden:'Tekrarlanabilir gözlem, duyumdan güçlüdür.'}},
+   {durum:'Ay tutulması sırasında Ay\'ın üzerine düşen gölgenin kenarı izleniyor.',
+    sahneEk:'golge',
+    soru:'Gölgenin kenarı neyi gösterir?',
+    hint:'Gölgeyi düşüren cismin kenarı nasılsa gölge de öyle olur.',
+    secenekler:[
+     {t:'Gölgeyi düşüren cisim yuvarlaktır',dogru:true},
+     {t:'Ay\'ın yüzeyi eğridir'},
+     {t:'Güneş yuvarlaktır'}],
+    neden:'Her tutulmada gölge yay biçiminde çıkar; bunu yalnız küre yapar.'},
+   {durum:'Uzaydan çekilen fotoğraflarda Dünya bütün hâlde görünüyor.',
+    sahneEk:'uydu',
+    soru:'Dünya\'nın şekli en doğru nasıl tanımlanır?',
+    hint:'Kutuplarda tam küreden küçük bir sapma ölçülmüş.',
+    secenekler:[
+     {t:'Kutuplardan hafifçe basık bir küre',dogru:true},
+     {t:'Tam düz bir tabak'},
+     {t:'Kusursuz bir küre'}],
+    neden:'Ölçümler kutup çapının ekvator çapından biraz kısa olduğunu gösterir.'}]},
+ {kind:'karar',prompt:'Kanıt mı, duyum mu?',
+  sahne:(st,ek)=>SAHNE.kanit(st,ek),
+  sorular:[
+   {durum:'"Kıyıda durup dürbünle 10 gemi izledim, onunda da önce gövde kayboldu." · "Bir videoda öyle olmadığını söylüyorlardı."',
+    sahneEk:'gemi',
+    soru:'Hangisi gözleme dayalı kanıttır?',
+    ipucu:'Kanıtta kim, neyi, kaç kez ölçmüş?',
+    hint:'Hangi ifadede tekrar edilmiş bir gözlem var?',
+    secenekler:[
+     {t:'Dürbünle 10 gemi izlenmiş olması',dogru:true},
+     {t:'Videoda öyle söylenmiş olması'}],
+    neden:'Gözlem tekrar edilebilir; duyum edilemez.',
+    gerekce:{soru:'Duyumu kanıt yapmak için ne gerekir?',
+     secenekler:[
+      {t:'Kendimizin de gözleyip ölçmesi',dogru:true},
+      {t:'Daha çok kişinin aynı şeyi söylemesi'}],
+     neden:'Tekrar sayısı değil, ölçüm kanıt yapar.'}},
+   {durum:'"Uydu fotoğrafında görünüyor." · "Dedem böyle olmadığını söylerdi."',
+    sahneEk:'uydu',
+    soru:'Hangisi kanıttır?',
+    hint:'Hangisi başkasınca da kontrol edilebilir?',
+    secenekler:[
+     {t:'Uydu fotoğrafı; başkaları da bakıp doğrulayabilir',dogru:true},
+     {t:'Dedenin anlattığı'}],
+    neden:'Kanıt, herkesin bakabileceği bir kayda dayanır.'},
+   {durum:'"Ay tutulmasını kendim izledim, gölge yaydı." · "Bir paylaşımda gölgenin köşeli olduğu yazıyordu."',
+    sahneEk:'golge',
+    soru:'Hangisine güvenirsin?',
+    hint:'Hangisi bir gözleme dayanıyor?',
+    secenekler:[
+     {t:'Kendi izlediğim tutulmaya; istersem bir sonrakini de izlerim',dogru:true},
+     {t:'Paylaşımda yazana'}],
+    neden:'Gözlem tekrarlanabilir olduğu için sınanabilir.'}]},
+ {kind:'yaz',prompt:'Bir kanıtı kendi cümlenle açıkla.',
+  sahne:(st)=>SAHNE.kanit(st,'gemi'),
+  gorev:'Dünya\'nın yuvarlak olduğuna dair bir kanıt seç. Neyi gözlediğimizi ve bunun neden kanıt olduğunu yaz.',
+  ornek:'Kalıp: "… gözlenir. Bu bir kanıttır çünkü …"',
+  yerTutucu:'Kanıt ve gerekçesi…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'bir kanıt söyle (gemi, gölge, fotoğraf, ufuk)',desen:'gemi|gölge|fotoğraf|ufuk|tutulma'}],
+  ornekCevap:'Uzaklaşan geminin önce gövdesi kaybolur. Bu bir kanıttır çünkü düz bir yüzeyde böyle olmazdı.',
+  result:'Kanıtı gerekçesiyle açıkladın.'}]};
 
 /* ===== Motora gömülü öz denetim =====
    Bir oyunu tarayıcıda tek tek açmadan altı kabul ölçütünün metin

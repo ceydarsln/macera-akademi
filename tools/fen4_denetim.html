@@ -144,6 +144,27 @@ function sizintiDenetle(W,r){
     if(sozler.some(s=>/[.?!]/.test(s)))
       kusur.push('noktalama kartı var, son konumu ele veriyor');
   }
+  if(r.kind==='hafiza'){
+    const kart=[...D.querySelectorAll('[data-k]')];
+    if(kart.length!==(r.ciftler||[]).length*2) kusur.push('kart sayısı çift sayısının iki katı değil');
+    /* kapalı kart içeriğini göstermemeli: konum ezberi yerine okuma istiyoruz */
+    if(kart.some(b=>b.textContent.trim()!=='?'&&!b.classList.contains('acik')&&!b.classList.contains('esles')))
+      kusur.push('kapalı kart içeriğini gösteriyor');
+    /* diziliş çift sırasında olursa eşleşme okumadan çözülür */
+    const c=JSON.parse(W.eval('JSON.stringify((state.kartlar||[]).map(x=>x.cift))'));
+    if(c.length && c.every((v,i)=>v===Math.floor(i/2)))
+      kusur.push('kartlar çift çift yan yana diziliyor, eşleşme okumadan çözülüyor');
+  }
+  if(r.kind==='gozlem'){
+    /* ölçüt: gözlem yapılmadan seçenekler açılmasın */
+    if(!Number(W.eval('String(state.izleme||0)')) && D.querySelectorAll('[data-sec]').length)
+      kusur.push('seçenekler gözlem yapılmadan açık');
+    if(!D.querySelector('#oynatBtn')) kusur.push('gözlemi başlatan düğme yok');
+    /* turVerisi işlevleri ayıkladığı için animasyon.ciz kopyada görünmez;
+       varlığı motorun kendi penceresinde sorulur. */
+    if(W.eval('String(!!(round().animasyon&&round().animasyon.ciz))')!=='true')
+      kusur.push('gözlem turunda animasyon yok');
+  }
   if(r.kind==='kur'){
     if(!D.querySelector('.kap,.kap-icerik')) kusur.push('kurulan şey ekranda görünmüyor');
   }
