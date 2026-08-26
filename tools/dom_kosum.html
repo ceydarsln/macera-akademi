@@ -29,6 +29,7 @@ const ENGINE3 = 'w01,w02,w03,w04,w05,w06,w07,w08,w09,w10,w11,w12,w13,w14,w15,w16
 const ENGINE5 = Array.from({length:56},(_,i)=>'p'+String(i+1).padStart(2,'0'));   /* 4. sınıf matematik: partiler hâlinde büyüyor */
 const ENGINE8 = Array.from({length:64},(_,i)=>'y'+String(i+1).padStart(2,'0'));   /* 3. sınıf Türkçe: partiler hâlinde büyüyor */
 const ENGINE7 = Array.from({length:36},(_,i)=>'h'+String(i+1).padStart(2,'0'));
+const ENGINE10 = Array.from({length:9},(_,i)=>'t'+String(i+1).padStart(2,'0')); /* 1. sınıf Türkçe */
 const ENGINE9 = Array.from({length:56},(_,i)=>'z'+String(i+1).padStart(2,'0'));  /* 4. sınıf Türkçe: partiler hâlinde büyüyor */
 
 const panel = document.getElementById('panel');
@@ -53,6 +54,7 @@ function motorDosyasi(id){
   if (id[0] === 'y') return '../app/src/main/assets/phaser/turkce3-pdf.html';
   if (id[0] === 'h') return '../app/src/main/assets/phaser/hayatbilgisi2-pdf.html';
   if (id[0] === 'z') return '../app/src/main/assets/phaser/turkce4-pdf.html';
+  if (id[0] === 't') return '../app/src/main/assets/phaser/turkce1-pdf.html';
   return '../app/src/main/assets/phaser/matematik-pdf.html';
 }
 
@@ -1267,6 +1269,112 @@ async function tur9(W){
 /* ---------- koşucu ---------- */
 window.SONUC = { bitti:false, gecti:[], kaldi:[], hatalar:[] };
 
+/* ---------- motor 10 (t oyunları · 1. sınıf Türkçe) ----------
+   Şartname sahnelerinde hız/refleks yok; her tur deterministik bir karar
+   dizisiyle çözülüyor. Harf yazma turu gerçek işaretçi olaylarıyla çiziliyor. */
+async function harfCiz(W){
+  const tur0 = Number(W.eval('String(roundIndex)'));
+  for (let k = 0; k < 14; k++){
+    const d = JSON.parse(W.eval('JSON.stringify({ri:roundIndex,h:state.hamle,n:(state.yollar||[]).length,f:state.faz,l:locked})'));
+    if (d.ri !== tur0 || d.l || d.f !== 0 || !d.n || d.h >= d.n) return;
+    W.eval('(function(){const sv=document.querySelector("#izKatman svg");if(!sv)return;' +
+           'const p=izNoktaEkran();if(!p)return;' +
+           'sv.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true,pointerId:1,clientX:p[0],clientY:p[1]}));' +
+           'for(let i=0;i<80;i++){if(locked)break;' +
+           'if(document.querySelector("#izKatman svg")!==sv)break;' +
+           'if(state.faz!==0)break;' +
+           'const q=izNoktaEkran();if(!q)break;' +
+           'sv.dispatchEvent(new PointerEvent("pointermove",{bubbles:true,pointerId:1,clientX:q[0],clientY:q[1]}))}' +
+           'sv.dispatchEvent(new PointerEvent("pointerup",{bubbles:true,pointerId:1}))})()');
+    await bekle(110);
+  }
+}
+async function tur10(W){
+  const r = turVerisi(W);
+  const asamalar = r.asamalar && r.asamalar.length ? r.asamalar : [r];
+  switch (r.kind){
+    case 'ciz':
+      await harfCiz(W);
+      if (r.sesEsle){
+        await bekle(240);
+        await tikla(W, '[data-sec="' + r.sesEsle.secenekler.findIndex(c => c.correct) + '"]');
+      }
+      break;
+    case 'sepet':
+      for (let i = 0; i < r.nesneler.length; i++){
+        await tikla(W, '[data-n="' + i + '"]');          /* adını dinle + seç */
+        await tikla(W, '[data-sepet="' + r.nesneler[i].sepet + '"]');
+        await bekle(60);
+      }
+      break;
+    case 'konum':
+      for (const n of r.nesneler){ await tikla(W, '[data-k="' + n.konum + '"]'); await bekle(90); }
+      break;
+    case 'balon':
+      for (let i = 0; i < r.baloncuklar.length; i++){
+        if (r.baloncuklar[i].dogru){ await tikla(W, '[data-b="' + i + '"]'); await bekle(60); }
+      }
+      break;
+    case 'tren':
+      for (const a of asamalar){
+        await tikla(W, '[data-ses="' + a.dogru[0] + '"]');
+        await tikla(W, '[data-ses="' + a.dogru[1] + '"]');
+        if (a.tip){ await bekle(120); await tikla(W, '[data-tip="' + a.tip + '"]'); }
+        await bekle(120);
+      }
+      break;
+    case 'kurbaga':
+      for (const h of r.hedefler){
+        await tikla(W, '[data-y="' + r.yapraklar.indexOf(h) + '"]');
+        await bekle(90);
+      }
+      break;
+    case 'uzay':
+      for (const a of asamalar){
+        await tikla(W, '[data-m="' + a.dogru[0] + '"]');
+        await tikla(W, '[data-m="' + a.dogru[1] + '"]');
+        if (a.kelimeSec){
+          await bekle(120);
+          await tikla(W, '[data-k="' + a.kelimeSec.secenekler.findIndex(c => c.correct) + '"]');
+        }
+        await bekle(120);
+      }
+      break;
+    case 'fabrika':
+      for (const a of asamalar){
+        for (const j of a.dogru){ await tikla(W, '[data-h="' + j + '"]'); await bekle(50); }
+        if (a.anlamSec){
+          await bekle(120);
+          await tikla(W, '[data-a="' + a.anlamSec.secenekler.findIndex(c => c.correct) + '"]');
+        }
+        await bekle(120);
+      }
+      break;
+    case 'sandik':
+      await tikla(W, '[data-a="' + r.anahtarlar.findIndex(a => a.correct) + '"]');
+      if (r.soru){
+        await bekle(160);
+        await tikla(W, '[data-s="' + r.soru.secenekler.findIndex(c => c.correct) + '"]');
+      }
+      break;
+    case 'dikte':
+      for (const a of asamalar){
+        for (const ch of a.kelime){
+          await tikla(W, '[data-hp="' + ch + '"]');
+          await bekle(40);
+        }
+        if (a.resimSec){
+          await bekle(140);
+          await tikla(W, '[data-r="' + a.resimSec.secenekler.findIndex(c => c.correct) + '"]');
+        }
+        await bekle(140);
+      }
+      break;
+    default: throw new Error('bilinmeyen mekanik (Türkçe 1): ' + r.kind);
+  }
+}
+
+
 async function oyunuOyna(id){
   const dosya = motorDosyasi(id);
   /* src değişimi eski belgeyi hemen düşürmez: load olayını bekle,
@@ -1288,6 +1396,7 @@ async function oyunuOyna(id){
     else if (id[0]==='h') await tur7(W);
     else if (id[0]==='z') await tur9(W);
     else if (id[0]==='p') await tur5(W);
+    else if (id[0]==='t') await tur10(W);
     else if (id[0]==='s' || id[0]==='n') await tur4(W);
     else if (id[0]==='v' || id[0]==='w') await tur2(W); else await tur1(W);
     if (n < 3) await kosul(() => S(W,'.hud .round') && S(W,'.hud .round').textContent.trim() === 'Tur '+(n+1)+'/3', 15000, id+' tur '+(n+1));
@@ -1298,7 +1407,7 @@ async function oyunuOyna(id){
 
 (async () => {
   const p = new URLSearchParams(location.hash.slice(1));
-  const ids = p.get('ids') ? p.get('ids').split(',') : [...ENGINE1, ...ENGINE2, ...ENGINE3, ...ENGINE4, ...ENGINE5, ...ENGINE8, ...ENGINE6, ...ENGINE7, ...ENGINE9];
+  const ids = p.get('ids') ? p.get('ids').split(',') : [...ENGINE1, ...ENGINE2, ...ENGINE3, ...ENGINE4, ...ENGINE5, ...ENGINE8, ...ENGINE6, ...ENGINE7, ...ENGINE9, ...ENGINE10];
   panel.textContent = '';
   yaz('koşum: ' + ids.length + ' oyun');
   for (const id of ids){

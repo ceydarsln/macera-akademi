@@ -1,0 +1,335 @@
+[
+ {
+  "n": 1,
+  "theme": "Tema 1",
+  "title": "Gökyüzü Çizeri",
+  "sub": "Harf yönü, çizgi sırası ve yazma hazırlığı",
+  "observed": [
+   "Oyun büyük A harfini üç çizgiyle izletiyor. Başlangıç noktası ve gri kılavuz açık; sol alttan tepeye, tepeden sağ alta ve orta çizgi sırası kullanılıyor.",
+   "Başlık gökyüzü/uçak temasını taşısa da ilerleme göstergesi '0/1 rakam' yazıyor. Harf yalnız tek bir büyük A örneğiyle ve tek ölçekte çalışılıyor; küçük a, kalem kaldırma, serbest yazma ve farklı satır boyutu yok."
+  ],
+  "risk": [
+   "Harf çalışmasının 'rakam' diye etiketlenmesi kavram ve seslendirme tutarlılığını bozar.",
+   "Yalnız noktaları takip etmek, kılavuz ortadan kalkınca aynı harfi bağımsız yazabildiğini göstermez.",
+   "Çizginin dışına küçük bir motor sapması can kaybettirirse el-göz koordinasyonu ile harf bilgisini birbirine karıştırır."
+  ],
+  "new": [
+   "İlerleme etiketi 'harf' olarak düzeltilsin; uçak yalnız yazım çizgisinin üzerinde ilerlesin ve her hamlede kalem kaldırma noktası açıkça gösterilsin.",
+   "İlk aşamada yoğun noktalar, ikinci aşamada yalnız başlangıç-bitiş noktaları, üçüncü aşamada çizgisiz satır kullanılsın.",
+   "Büyük A'dan sonra aynı sesin küçük a biçimi ayrı ve yaş düzeyine uygun yazı karakteriyle çalışılsın.",
+   "Çizgi toleransı geniş ve kademeli olsun; yanlış yönde tüm harf silinmeden yalnız son bölüm geri alınabilsin.",
+   "Harf tamamlanınca çocuk sesi dinlesin, A/a kartını ve A sesiyle başlayan bir görseli eşleştirerek yazıyı sesten koparmasın."
+  ],
+  "rounds": [
+   "Yoğun noktalı büyük A: üç çizgi doğru sırayla izlenir; her hamlenin yön oku görünür.",
+   "Seyrek noktalı büyük A ve küçük a: başlangıç-bitiş işaretleriyle, daha az kılavuzla yazılır.",
+   "Çizgisiz satırda A/a bağımsız yazılır; ardından 'arı' görselindeki başlangıç sesiyle eşleştirilir."
+  ],
+  "feedback": [
+   "Yanlış yönde uçak son doğru noktada dursun; 'başlangıçtan tepeye doğru' gibi yön ipucu verilsin, çizgi tamamı silinmesin.",
+   "Doğru hamlede iz yalnız görsel efektle değil, başlangıç ve bitiş noktalarının sırayla numaralanmasıyla doğrulansın.",
+   "Bitişte harf adı yerine önce ses /a/ dinletilsin; büyük ve küçük biçimler yan yana gösterilsin."
+  ],
+  "acceptance": [
+   "Sayaçta 'rakam' sözcüğü hiçbir yerde görünmeyecek; metin, ses ve ilerleme 'harf' diyecek.",
+   "Üç kılavuz düzeyi ve en az bir bağımsız yazma turu tamamlanmadan oyun bitmeyecek.",
+   "Çizim kabulü yalnız doğru şekle değil doğru başlangıç, yön ve hamle sırasına bağlı olacak; motor sapması ağır ceza almayacak."
+  ]
+ },
+ {
+  "n": 2,
+  "theme": "Tema 1",
+  "title": "Sesli Sepet",
+  "sub": "Kelime içindeki hedef sesi işitsel olarak ayırt etme",
+  "observed": [
+   "A sesi geçen Elma, Armut ve Ayı; Top, Kedi ve Kuş çeldiricileriyle birlikte su altı kartlarında gösteriliyor. Alt bölümde sepet bulunmasına karşın sahnenin ana görünümü balık/balon motoru.",
+   "Bütün nesnelerin hem resmi hem yazılı adı açık. Tek hedef A ve tek sabit altılı grup kullanılıyor; çocuk sesi dinlemeden kelimelerin yazımındaki A harfini görerek de doğru seçim yapabiliyor."
+  ],
+  "risk": [
+   "İşitsel tanıma kazanımı, yazılı kelimede harf arama görevine dönüşebilir.",
+   "A sesinin kelime başında, ortasında ve sonunda bulunduğu konumlar ayrı ayrı fark ettirilmediği için ses çözümleme yüzeysel kalır.",
+   "Balık/sepet karışımı tema, 'sesi sepete toplama' hikâyesini zayıflatır ve seçilen nesnelerin gerçekten sepete girmesini göstermiyor."
+  ],
+  "new": [
+   "Ana sahne gerçek bir pazar/oyuncak sepeti olsun; nesne kartlarında ilk turda yalnız resim bulunsun, kelime yazısı cevap sonrasında açılsın.",
+   "Her nesnenin adı ayrı dinleme düğmesiyle ve doğal hece vurgusuyla çalınsın; otomatik konuşma bittikten sonra tekrar dinlenebilsin.",
+   "Çocuk hedef sesi duyduğu konumu baş-orta-son şeridinde işaretlesin; sonra nesneyi sepete sürüklesin.",
+   "Bir turda yalnız hedef sesi seçme, bir turda hedef sesi olmayanları ayırma, bir turda iki yakın sesi karşılaştırma kullanılmalı.",
+   "Aynı nesne havuzu her açılışta tekrarlanmasın; yazılı etiket yalnız işitsel karar kaydedildikten sonra doğrulama olarak gösterilsin."
+  ],
+  "rounds": [
+   "Resim + ses: arı, elma, masa, top ve kuş dinlenir; /a/ içerenler sepete alınır.",
+   "Hedef sesin yeri: arı başta, masa ortada, elma sonda /a/ sesiyle baş-orta-son şeridine yerleştirilir.",
+   "Yakın karşılaştırma: /a/ ve /e/ dinlenir; anne, elma, ev, at ve kedi iki ayrı sepete ayrılır."
+  ],
+  "feedback": [
+   "Yanlış seçimde nesnenin adı yavaş ve hecelenmeden doğal biçimde tekrar çalınsın; hedef sesin geçtiği harf doğrudan gösterilmesin.",
+   "Doğru seçimde nesne gerçekten sepete düşsün; sesin bulunduğu konum renkli bir noktayla ancak cevap sonrasında açılsın.",
+   "Bitişte seçilen sözcükler sesli tekrar edilirken yazılı biçimleri görünür olsun; işitsel ve görsel temsil bağlansın."
+  ],
+  "acceptance": [
+   "İlk turda kelime yazıları gizli olacak; başarı yalnız görsel harf aramayla elde edilemeyecek.",
+   "Baş, orta ve son konumlarının üçü de en az ikişer örnekle çalışılacak.",
+   "Seslendirme ile ekrandaki nesne adı birebir tutarlı olacak; yanlışta can eksiltmeden tekrar dinleme sağlanacak."
+  ]
+ },
+ {
+  "n": 3,
+  "theme": "Tema 1",
+  "title": "Su Altı Baloncukları",
+  "sub": "Büyük-küçük harfi görsel olarak ayırt etme",
+  "observed": [
+   "Hedef N/n; N, M, n, H, N, Z ve K kartları su altı sahnesinde gösteriliyor. Yönerge baloncuk patlatmayı söylese de kartlar balık simgesi taşıyor ve seçilenler alt sepet/kova alanına gidiyor.",
+   "İki büyük N ve bir küçük n doğru kabul ediliyor. Harfler tek yazı tipinde, tek boyutta ve tek sabit dizide; benzer biçimli harflerin hangi özelliğe göre ayrıldığı gösterilmiyor."
+  ],
+  "risk": [
+   "Baloncuk-balık-sepet kavramlarının karışması, çocuğun neye dokunacağını gereksiz yere zorlaştırır.",
+   "Tek fontta doğru harfi seçmek, farklı kitap/yazı biçimlerinde N/n'yi tanımayı garanti etmez.",
+   "Sadece hızla patlatma hedeflenirse biçim ayrıntısını incelemek yerine deneme-yanılma ve motor hız ödüllenir."
+  ],
+  "new": [
+   "Gerçek yuvarlak baloncuklar kullanılsın; seçilince patlasın, sepet/kova kaldırılarak tek tema korunsun.",
+   "Hedef kart büyük N ve küçük n biçimini yan yana göstersin; çocuk önce ortak ses ilişkisini dinlesin.",
+   "Çeldiriciler N-M, n-m, N-H gibi anlamlı görsel yakınlıklardan seçilsin; fark çizgileri cevap sonrasında büyütülsün.",
+   "İkinci ve üçüncü turda harf boyutu, konumu ve iki güvenli okul yazı tipi değişsin; aşırı dekoratif font kullanılmasın.",
+   "Süre baskısı ilk düzeyde kapalı olsun; doğru seçim sayısından önce yanlış seçimin türü kaydedilsin."
+  ],
+  "rounds": [
+   "Sabit büyük kartlarda N, M, H, Z arasından bütün N'ler seçilir.",
+   "N/n birlikte hedeflenir; n-m-h küçük harfleri farklı boyut ve konumlarda ayırt edilir.",
+   "Karışık büyük-küçük turda aynı sesi gösteren N ve n eşleştirilir; M/m ayrı aileye gönderilir."
+  ],
+  "feedback": [
+   "Yanlış M seçiminde N ile M yan yana büyütülüp orta çizgi/çapraz yapı karşılaştırılsın; doğru harf söylenip geçilmesin.",
+   "Doğru baloncuk gerçek patlama ve kısa /n/ sesiyle doğrulansın; harf adı uzun biçimde tekrar edilmesin.",
+   "Bitişte N-n harf ailesi ile 'nar' görseli eşleştirilsin; görsel tanıma sesle ilişkilendirilsin."
+  ],
+  "acceptance": [
+   "Yönerge, görsel nesne ve sonuç alanı aynı baloncuk temasını kullanacak.",
+   "En az iki yazı boyutu ve iki güvenli yazı biçimi test edilecek; küçük n ile m/h çeldiricileri bulunacak.",
+   "İlk düzeyde süre veya hareket baskısı olmayacak; bütün harfler karar verilene kadar sabit ve tam görünür kalacak."
+  ]
+ },
+ {
+  "n": 4,
+  "theme": "Tema 2",
+  "title": "Hece Treni",
+  "sub": "Sesleri birleştirerek açık ve kapalı hece kurma",
+  "observed": [
+   "Başlık tren olsa da oyun köprü/eşleştirme motorunda açılıyor. Ekranda yalnız hedef T ve kaynak A bulunuyor; A kartını T yuvasına taşıyınca AT oluşuyor.",
+   "Yönerge ve üst konuşma cevabı 'AT' diye baştan söylüyor. Oyun yalnız bir kapalı hece örneği içeriyor; alt başlıktaki açık ve kapalı hece karşılaştırması, ses uzatma ve birleştirme süreci yok."
+  ],
+  "risk": [
+   "Çocuk /a/ ve /t/ seslerini soldan sağa birleştirmek yerine hazır A kartını tek hedefe sürüklüyor.",
+   "Tek örnek, ünlüyle biten açık hece ile ünsüzle biten kapalı hece farkını öğretmez.",
+   "Tren hikâyesinin görünmemesi ve cevabın baştan yazılması, görevi anlamlı okuma yerine zorunlu sürüklemeye indirger."
+  ],
+  "new": [
+   "Gerçek tren lokomotifi ve iki vagon çizilsin; her vagonda bir ses kartı bulunsun, vagonlar birleşirken sesler aralıksız kaynaşsın.",
+   "Çocuk sesi tek tek dinlesin, vagonları soldan sağa dizsin ve birleşik heceyi ancak sonrasında görsün.",
+   "Açık hece için ünsüz+ünlü (NA, NE), kapalı hece için ünlü+ünsüz (AN, AT) ayrı renkli istasyonlarda karşılaştırılsın.",
+   "Tek doğru hedef yerine iki veya üç olası ses kartı verilsin; hedef görseli/sesi heceyi doğrudan yazmadan yönlendirsin.",
+   "Son turda vagon sırası değiştirilerek AN-NA gibi aynı iki sesten farklı hecelerin ve anlamlı kelime parçalarının oluştuğu gösterilsin."
+  ],
+  "rounds": [
+   "/a/ + /t/ sesleri yavaşça yaklaştırılır; çocuk AT'ı dinleyip kurar, yazı sonuçta açılır.",
+   "/n/ + /a/ = NA açık hecesi ve /a/ + /n/ = AN kapalı hecesi karşılaştırılır.",
+   "NE, EN, TA, AT heceleri karışık ses vagonlarından kurulur; çocuk heceyi dinleyip doğru iki vagonu ve sırayı seçer."
+  ],
+  "feedback": [
+   "Yanlış sırada vagonlar çarpışmamalı; iki ses ayrı ayrı çalınıp aralarındaki sıra oku vurgulansın.",
+   "Doğru birleşmede sesler kopuk harf adlarıyla değil kesintisiz /aaa-t/ veya /nnn-a/ biçiminde kaynaştırılsın.",
+   "Bitişte açık-kapalı etiketi, hecenin son sesine bakılarak çocuk tarafından seçilsin; etiket otomatik verilmesin."
+  ],
+  "acceptance": [
+   "Ekranda gerçek tren/vagon sahnesi bulunacak; köprü motoru ve tek boş hedef kullanılmayacak.",
+   "En az iki açık ve iki kapalı hece, aynı seslerin ters sırasını da içerecek şekilde çalışılacak.",
+   "Hedef hece başlangıçta yazılı olarak gösterilmeyecek; öğrenci sesi birleştirmeden doğru cevabı kopyalayamayacak."
+  ]
+ },
+ {
+  "n": 5,
+  "theme": "Tema 2",
+  "title": "Zıp Zıp Kurbağa",
+  "sub": "Heceleri akıcı ve doğru tanıma",
+  "observed": [
+   "Başlık kurbağa ve nilüfer yaprağını anlatıyor; gerçek ekran su altındaki balık kartları ve kova/sepet motorunu kullanıyor. AN, EN, İN, NA ve NE aynı anda görünür; hedef NE konuşma alanında yazılıdır.",
+   "Yalnız tek hedef hece ve tek sabit seçenek grubu var. 'Hızlı okuma/görsel hafıza' alt başlığına rağmen kartlar saklanmıyor, tur tekrarlanmıyor ve okuma süresi doğruluk sonrası ölçülmüyor."
+  ],
+  "risk": [
+   "Çocuk sesli komutu dinlemeden üstte yazan NE'yi görüp aynı etiketi seçebilir.",
+   "Balık-kova sahnesi kurbağa/nilüfer hikâyesiyle çelişir; doğru seçim zıplama eylemine dönüşmez.",
+   "Hız ödülü erken verilirse benzer AN-NA, EN-NE hecelerinde doğruluk ve yön sırası zarar görebilir."
+  ],
+  "new": [
+   "Gerçek gölet, kurbağa ve sabit nilüfer yaprakları çizilsin; her yaprakta bir hece büyük ve yüksek kontrastla gösterilsin.",
+   "İlk turda hedef yalnız sesli verilsin; yazılı hedef karar sonrasında açılarak kopyalama engellensin.",
+   "Kurbağa yalnız doğru yaprağa zıplasın; kartlar hareket etmesin ve süre ilk iki turda değerlendirilmesin.",
+   "Akıcılık düzeyinde heceler kısa süre gösterilip kapanabilir, fakat önce doğruluk eşiği geçilmeli; yanlışta süre değil ses-sıra ilişkisi açıklanmalı.",
+   "AN-NA ve EN-NE gibi ters sıralı heceler özellikle karşılaştırılsın; her sesin soldan sağa okuma yönü parmak iziyle izlenebilsin."
+  ],
+  "rounds": [
+   "Sesli hedef NE; AN, EN, NA, NE yaprakları sabitken doğru yaprağa zıplanır, hedef yazısı gizlidir.",
+   "AN-NA ve EN-NE çiftleri art arda dinlenir; aynı harflerin sırasının heceyi değiştirdiği görülür.",
+   "Beş hecelik akıcılık dizisi doğru okunduktan sonra süre kaydedilir; yanlış hece tekrar dinlenip dizi yeniden başlatılmaz."
+  ],
+  "feedback": [
+   "Yanlış yaprakta kurbağa başlangıçta kalsın; seçilen ve duyulan hecenin ilk/son sesleri farklı renkle gösterilsin.",
+   "Doğru zıplayışta hece sesli okunup yaprakta kısa süre büyüsün; yalnız konfetiyle geçilmesin.",
+   "Bitişte önce doğruluk yüzdesi, sonra isteğe bağlı akıcılık süresi gösterilsin; hız tek başarı ölçütü olmasın."
+  ],
+  "acceptance": [
+   "Kurbağa, gölet ve nilüfer görselleri gerçekten kullanılacak; balık/kova motoru görünmeyecek.",
+   "Hedef hece ilk turda yazıyla gösterilmeyecek ve en az dört farklı hedef hece rastgele kullanılacak.",
+   "Akıcılık puanı yalnız yüzde 90 ve üzeri doğruluktan sonra hesaplanacak; motor hatası can kaybettirmeyecek."
+  ]
+ },
+ {
+  "n": 6,
+  "theme": "Tema 2",
+  "title": "Mıknatıslı Uzay Gemisi",
+  "sub": "Ses sırasını seçerek hece inşa etme",
+  "observed": [
+   "Roket ve yakıt hunisi uzay temasına kısmen uyuyor; E, T, K ve S kartları roket çevresinde hareket ediyor. Hedef ET hem yönergede hem konuşma alanında yazılı; ayrıca 'önce E, sonra T' ifadesi çözüm sırasını doğrudan veriyor.",
+   "Tek sabit ET hecesi iki dokunuşla tamamlanıyor. Meteor/mıknatıs çekme görseli gerçek bir birleşme şeridi oluşturmuyor; yanlış sıra ile oluşan farklı hece seslendirilmiyor."
+  ],
+  "risk": [
+   "Çocuk hece kurmak yerine açıkça söylenen iki harfe sırayla dokunuyor.",
+   "Hareketli kartı yakalama motor becerisi, sesleri doğru sırada birleştirme becerisine karışıyor.",
+   "Tek ET örneği, aynı harflerle TE'nin farklı bir hece olduğuna veya başka ünlü-ünsüz birleşimlerine genellenmiyor."
+  ],
+  "new": [
+   "Harf meteorları karar verilene kadar sabit yörüngede dursun; geminin mıknatısı seçilen harfi görünür hece şeridine çeksin.",
+   "Hedef ilk düzeyde resim ve sesle verilsin, yazıyla hece gösterilmesin; yönerge 'önce E sonra T' gibi cevabı söylemesin.",
+   "İlk ve ikinci ses yuvası ayrı olsun; seçilen harfler soldan sağa yerleşirken sürekli birleştirme sesi çalınsın.",
+   "ET-TE, EN-NE, AT-TA çiftleri aynı iki harfle karşılaştırılsın; sıra değişiminin ses ve anlamı değiştirdiği gözlensin.",
+   "Son turda çocuk duyduğu heceyi kurduktan sonra aynı heceyle başlayan/bitiren basit kelime görselini seçsin."
+  ],
+  "rounds": [
+   "Sesli hedef /et/; E ve T meteorları seçilip ET kurulur, yazı sonuçta görünür.",
+   "Aynı E-T meteorları ters sırada TE olur; ET ve TE sesleri karşılaştırılır.",
+   "EN, NE, AT ve TA karışık dört harf havuzundan dinlenerek kurulur; uygun kelime görseliyle ilişkilendirilir."
+  ],
+  "feedback": [
+   "Yanlış harf şeritte kalıcı ceza oluşturmasın; geri gönder düğmesiyle yalnız son seçim düzeltilebilsin.",
+   "Yanlış sırada iki ses ayrı ve birleşik biçimde dinletilsin; hedefin yazılı cevabı açılmasın.",
+   "Doğru hecede gemi iki meteoru tek kapsülde birleştirsin ve heceyi doğal biçimde seslendirsin."
+  ],
+  "acceptance": [
+   "Yönerge hedef harfleri ve sırasını doğrudan söylemeyecek; hedef yazısı cevap kaydedilmeden görünmeyecek.",
+   "Kartlar hareket etmeyecek; en az üç ters sıra çifti ve dört farklı hece kullanılacak.",
+   "Seçilen harflerin ekrandaki sırası, seslendirme sırası ve oluşan hece her tur birebir aynı olacak."
+  ]
+ },
+ {
+  "n": 7,
+  "theme": "Tema 3",
+  "title": "Kelime Fabrikası",
+  "sub": "Heceleri birleştirerek anlamlı kelime oluşturma",
+  "observed": [
+   "Başlık fabrika olsa da oyun köprü/eşleştirme motorunda açılıyor. İki hedef '1. Hece' ve '2. Hece'; parçalar NE, A, LET ve AN. Üst konuşma alanı ALET cevabını baştan gösteriyor.",
+   "A ve LET kartlarını yuvalara sürüklemek tek doğru çözüm. Kelimenin resmi/anlamı, hecelerin sesli kaynaşması, hece sınırı ve yeni kelime turu yok; 'fabrika üretimi' yalnız etiket eşlemesi olarak kalıyor."
+  ],
+  "risk": [
+   "Çocuk kelimeyi sentezlemek yerine ekrandaki ALET yazısını kopyalayıp A-LET parçalarını yerleştirir.",
+   "Tek kelime ve sabit hece sınırı, farklı iki/üç heceli kelimelere aktarım sağlamaz.",
+   "Doğru kelimenin anlamını seçme aşaması olmadığı için rastlantısal veya mekanik parça sırası da başarı sayılabilir."
+  ],
+  "new": [
+   "Gerçek üretim bandında hece kasaları, soldan sağa iki veya üç montaj yuvası ve sonunda resim paketi bulunsun.",
+   "Hedef ilk turda resim + ses, ikinci turda yalnız resim, üçüncü turda kısa bağlam cümlesiyle verilsin; kelime yazısı başlangıçta gizlensin.",
+   "Heceler yuvaya geldiğinde ayrı ayrı ve sonra kesintisiz kelime olarak seslendirilsin; hece sınırı kısa renk geçişiyle gösterilsin.",
+   "Anlamlı kelime oluşunca doğru resim üretim bandından çıksın; anlamsız dizide fabrika durup ses sırasını tekrar dinletsin.",
+   "ALET dışında NANE, ANNE, ELMA gibi öğretim grubuna uygun kelimeler ve en az bir üç heceli sözcük kullanılmalı."
+  ],
+  "rounds": [
+   "Alet resmi/sesi verilir; A + LET seçilir, ALET yazısı yalnız üretim sonunda açılır.",
+   "NANE için NA + NE; ANNE için AN + NE heceleri benzer çeldiriciler arasından sıralanır.",
+   "Üç heceli basit bir kelime resim/bağlamdan kurulur; çocuk oluşan kelimeyi cümlede uygun boşluğa yerleştirir."
+  ],
+  "feedback": [
+   "Yanlış hecede kart yerine dönerken iki parçanın birleşik sesi çalınsın; cevap kelime doğrudan gösterilmesin.",
+   "Doğru kelimede heceler ayrı renklerini koruyup ardından tek renk kelime kartında birleşsin; anlam resmi görünür olsun.",
+   "Bitişte çocuk kelimeyi bir kez sesli dinlesin ve doğru görseli seçsin; yalnız yuvaları doldurmak yeterli olmasın."
+  ],
+  "acceptance": [
+   "Fabrika sahnesi gerçekten kullanılacak; köprü hedefleri ve başlangıçta görünen cevap kaldırılacak.",
+   "En az dört farklı iki heceli ve bir üç heceli kelime, her açılışta değişen sırayla kullanılacak.",
+   "Başarı için hem doğru hece sırası hem doğru anlam görseli tamamlanacak; anlamsız hece dizisi kabul edilmeyecek."
+  ]
+ },
+ {
+  "n": 8,
+  "theme": "Tema 3",
+  "title": "Gizemli Sandık",
+  "sub": "Kelimeyi okuyup anlamıyla eşleştirme",
+  "observed": [
+   "Yönerge sandıkta ANNE yazdığını ve doğru resimli anahtarı seçmeyi söylüyor; gerçek sahne su altındaki balık kartları ve kova/sepet. Sandık, kilit veya anahtar görünmüyor.",
+   "Seçenekler 'Anne', 'Baba', 'Elma', 'Kedi' diye hem resim hem aynı yazılı etiketle sunuluyor. Hedef ANNE ile doğru seçenek Anne birebir yazı eşlemesi; yalnız tek soru var."
+  ],
+  "risk": [
+   "Okuduğunu anlama, aynı kelimeyi büyük-küçük harfle bulma görevine dönüşüyor.",
+   "Metin, cümle veya bağlam olmadığı için kelimenin anlamını çıkarma ve mekanik okumadan anlama geçişi gerçekleşmiyor.",
+   "Başlık-sahne çelişkisi çocuğun beklenen eylemini belirsizleştiriyor; yanlış seçimin neden yanlış olduğuna dair anlam geri bildirimi yok."
+  ],
+  "new": [
+   "Gerçek sandık ve üç-dört görsel anahtar çizilsin; anahtarların üzerinde kelime yazısı bulunmasın, yalnız resim olsun.",
+   "İlk turda sandıkta tek kelime; ikinci turda kısa cümle; üçüncü turda iki cümlelik mini durum verilsin.",
+   "Çocuk metni dinleyebilir fakat otomatik ses, okumadan önce cevabı vurgulamasın; dinleme düğmesi erişim desteği olarak açıkça işaretlensin.",
+   "Doğru anahtar seçilince sandık açılıp kelimenin/cümlenin anlamına uygun nesne veya kısa olay animasyonu çıksın.",
+   "Sözcük havuzu ANNE ile sınırlı kalmasın; resimsel olarak açık, öğretim grubuna uygun kelimeler ve basit kim/ne/nerede soruları kullanılmalı."
+  ],
+  "rounds": [
+   "Sandıkta 'ANNE' yazısı; etiket taşımayan anne-baba-elma-kedi resim anahtarlarından anne seçilir.",
+   "'Nane al.' kısa cümlesi okunur; nane görseli bulunan anahtar seçilir ve sandıktan nane çıkar.",
+   "'Ece elma alır. Elma nerede?' mini metninde doğru nesne/konum anahtarı seçilip bir anlam sorusu yanıtlanır."
+  ],
+  "feedback": [
+   "Yanlış resimde hedef kelime yeniden gösterilir ve görselin adı sesli söylenir; doğru resim doğrudan parlatılmaz.",
+   "Doğru anahtar kilide gerçekten girsin; sandıktan çıkan nesne metindeki anlamı görsel olarak doğrulasın.",
+   "Bitişte çocuk kelimeyi/cümleyi tekrar okuyup bir anlam sorusunu yanıtlasın; yalnız tek dokunuşla bitmesin."
+  ],
+  "acceptance": [
+   "Sandık, kilit ve anahtar görselleri gerçek sahnede bulunacak; balık/kova motoru kullanılmayacak.",
+   "Doğru seçenek üzerinde hedef kelimenin aynısı yazmayacak; karar resim/anlam üzerinden verilecek.",
+   "En az üç farklı kelime, iki kısa cümle ve bir mini metin turu olmadan 'okuduğunu anlama' oyunu tamamlanmış sayılmayacak."
+  ]
+ },
+ {
+  "n": 9,
+  "theme": "Tema 3",
+  "title": "Sihirli Daktilo",
+  "sub": "Duyduğu kelimeyi görmeden doğru harflerle yazma",
+  "observed": [
+   "Oyun NANE kelimesini dinletip dört boşluğa harf seçtiriyor. Fakat üst konuşma alanında NANE açıkça yazıyor; 'bakmadan yazma' daha başlamadan bozuluyor.",
+   "Harf paletinin ilk satırı N-A-N-E biçiminde doğru kelime sırasıyla dizilmiş. GÖSTER düğmesi başlangıçtan erişilebilir; yalnız tek kelime ve tek macera var."
+  ],
+  "risk": [
+   "Çocuk sesi çözümleyip dikte yapmak yerine üstteki kelimeyi kopyalayabilir veya ilk sıradaki dört harfe soldan sağa basabilir.",
+   "Hazır GÖSTER ve sabit harf dizilimi deneme-yanılmayı teşvik eder; işitsel kısa süreli bellek ölçülmez.",
+   "Tek NANE örneği, farklı ses sayısı, yinelenen harf, hece sınırı ve yazım doğruluğuna genellenmez."
+  ],
+  "new": [
+   "Konuşma alanında hedef kelime asla yazılmasın; yalnız nötr 'Dinle ve yaz' yönergesi bulunsun. Ekran okuyucu metni de hedefi açıklamamalı.",
+   "Harf paleti her denemede karıştırılsın; hedef harfler aynı satırda doğru sırayla dizilmesin ve gerekli yinelenen harf adedi teknik olarak doğru çalışsın.",
+   "DİNLE sınırsız veya yaşa uygun sayıda tekrar edilebilsin; tekrar dinleme ceza oluşturmasın. GÖSTER ancak iki bağımsız denemeden sonra, kademeli ipucu olarak açılsın.",
+   "İlk ipucu hece sayısı, ikinci ipucu ilk ses, son yardım kısa süreli kelime ön izlemesi olsun; ön izleme kapandıktan sonra giriş temiz değil korunmuş biçimde düzeltilebilsin.",
+   "Kelime havuzu NANE, ANNE, ALET, ELMA gibi farklı yapıdaki sözcüklerden oluşsun; son tur kısa iki kelimelik öbeğe geçsin."
+  ],
+  "rounds": [
+   "NANE yalnız sesle dinlenir; karışık harflerden N-A-N-E yazılır, hedef hiçbir yerde görünmez.",
+   "ANNE ve ALET dönüşümlü gelir; çift N ile tek N farkı işitsel/hece desteğiyle yazılır.",
+   "'ELMA AL' gibi kısa öbek dinlenir; boşluk ayrı bir tuş/yuva olarak kullanılır ve yazım sonrasında resimle anlam kontrolü yapılır."
+  ],
+  "feedback": [
+   "Yanlış harfte bütün kelime silinmesin; hatalı konum boş kalıp ses yeniden dinlenebilsin. Hangi doğru harfin gerektiği doğrudan söylenmesin.",
+   "Doğru yazımda daktilo kâğıdı kelimeyi hece sınırı göstermeden doğal bütün olarak yazsın; ardından sesle karşılaştırılsın.",
+   "Bitişte yazılan kelimeye uygun resim seçilerek rastlantısal harf dizisinin değil doğru sözcüğün üretildiği doğrulansın."
+  ],
+  "acceptance": [
+   "Hedef kelime konuşma balonunda, erişilebilir metinde veya başka bir ekranda yazılı görünmeyecek.",
+   "Harfler her tur karışık olacak; hedef kelimenin harfleri doğru sırada aynı satırda dizilmeyecek.",
+   "GÖSTER ilk iki denemede kapalı olacak; en az dört kelime ve bir kısa öbek bağımsız dikteyle tamamlanacaktır."
+  ]
+ }
+]
