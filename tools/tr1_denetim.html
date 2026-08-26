@@ -22,7 +22,7 @@ iframe{width:390px;height:844px;border:0;justify-self:center;align-self:center;b
      ölçüt 4 — etiket/kart/seçeneklerde emoji ipucu olmayacak
      ölçüt 5 — 390x844'te kırpılma yok, dokunma alanı >= 44 px
      kip kuralı — dinleme turunda metin ve cevap anahtarı ekranda olmayacak */
-const IDS = Array.from({length:9},(_,i)=>'t'+String(i+1).padStart(2,'0'));
+const IDS = Array.from({length:64},(_,i)=>'t'+String(i+1).padStart(2,'0'));
 const MOTOR = '../web/phaser/turkce1-pdf-phaser.html';
 const panel = document.getElementById('panel');
 const cerceve = document.getElementById('cerceve');
@@ -107,8 +107,15 @@ function sizintiDenetle(W,r){
   if(r.kind==='ciz' && /\brakam\b/i.test(ekran)) kusur.push("ilerleme metninde 'rakam' sözcüğü var");
   /* Tema 2 — hedef hece cevaptan önce yazılı olmayacak, yönerge sırayı söylemeyecek */
   if(r.kind==='kurbaga'){
-    (r.hedefler||[]).forEach(h=>{ if(gecer(h))
-      kusur.push('hedef hece ekranda yazılı: "'+h+'"') });
+    /* Yapraklardaki heceler seçeneklerdir; yazılı olmaları mekaniğin kendisidir
+       (çocuk duyduğu heceyi yazıyla eşliyor), seçenek kümesini yönergede anmak
+       da sızıntı değildir. Gerçek kusur, hedeflerin SIRASINI ele veren bir
+       sözcüğün yönergede geçmesidir: hedefler KE-LE-BEK iken görevde
+       "KELEBEK" yazması gibi. Kontrol yalnız bunu arar. */
+    const yonerge=sade(r.prompt+' '+(r.gorev||''));
+    const dizi=sade((r.hedefler||[]).join(''));
+    if(dizi.length>=4 && yonerge.replace(/ /g,'').includes(dizi))
+      kusur.push('yönerge hedeflerin sırasını ele veriyor: "'+(r.hedefler||[]).join('-')+'"');
   }
   if(r.kind==='tren'||r.kind==='uzay'){
     const a=(r.asamalar&&r.asamalar[0])||r;
