@@ -111,6 +111,17 @@ function sizintiDenetle(W,r){
       if(icerir(y.hedef||'',et)) kusur.push('hedef doğru etiketi içeriyor (satır '+(i+1)+')');
     });
   }
+  if(r.kind==='sira'){
+    /* kartlar dizi sırasında çizilir ve doğru sıra [0,1,2,...] ise, doğru
+       cevap kartların ekrandaki dizilişidir — sıralama kipinde en kolay
+       gözden kaçan sızıntı. Ekran dizilişi doğru sırayla aynı olmamalı. */
+    let dizilim=null;
+    try{ dizilim=JSON.parse(W.eval('JSON.stringify(state.dizilim)')); }catch(e){}
+    const ekran = dizilim || [...Array(r.kartlar.length).keys()];
+    if(String(ekran)===String(r.dogru)) kusur.push('kartların ekran dizilişi doğru sıranın aynısı');
+    const dom = Array.from(D.querySelectorAll('[data-kart]')).map(b=>Number(b.dataset.kart));
+    if(dom.length && String(dom)===String(r.dogru)) kusur.push('DOM sırası doğru sırayla birebir aynı');
+  }
   if(r.kind==='cetele'){
     const o=r.oylar[Number(W.eval('String(state.ix)'))||0];
     if(o && icerir(o.t, r.satirlar[o.dogru])) kusur.push('oy cümlesi satır adını birebir içeriyor: "'+o.t.slice(0,40)+'"');
