@@ -120,7 +120,7 @@ async function katalogBagiOnKontrol(){
   const cer=document.createElement('iframe');
   cer.style.cssText='width:390px;height:600px;position:absolute;left:-9999px';
   document.body.appendChild(cer);
-  await new Promise(coz=>{ cer.onload=()=>coz(); cer.src='../web/macera-akademi.html?kosum=1'; });
+  await new Promise(coz=>{ cer.onload=()=>coz(); cer.src='../web/macera-akademi.html?kosum='+IDS.join('-'); });
   const W=cer.contentWindow;
   for(let k=0;k<100 && !W.eval('typeof PHASER_OYUNLAR!=="undefined"');k++) await bekle(80);
   try{

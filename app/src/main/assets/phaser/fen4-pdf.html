@@ -387,6 +387,97 @@ const SAHNE={
   `<circle cx="106" cy="75" r="74" fill="none" stroke="#7f93a8" stroke-width="2" stroke-dasharray="5 5"/>`+
   ad.map((a,i)=>`<text x="196" y="${34+i*26}" font-size="11" font-weight="900" fill="${n>i?renk[i]:'#4a5a70'}">${n>i?(i+1)+'. '+a:'—'}</text>`).join(''))},
 
+
+ /* mıknatıs ve malzeme kutusu — karardan SONRA çekilip çekilmediği canlanır */
+ miknatis:(st)=>{const v=(st&&st.vurgu)||'';
+  const d=v==='ceker'?26:0;
+  return SVG(320,132,
+  `<rect width="320" height="132" fill="#e9eef3"/><rect x="0" y="102" width="320" height="30" fill="#78899b"/>`+
+  `<path d="M60 44 h22 v34 a11 11 0 0 0 22 0 v-34 h22 v34 a33 33 0 0 1 -66 0 z" fill="#c0392b"/>`+
+  `<rect x="60" y="34" width="22" height="10" fill="#ecf0f1"/><rect x="104" y="34" width="22" height="10" fill="#ecf0f1"/>`+
+  `<text x="93" y="96" font-size="10" font-weight="900" text-anchor="middle" fill="#8a3b30">mıknatıs</text>`+
+  `<rect x="${222-d}" y="56" width="34" height="22" rx="4" fill="${v==='ceker'?'#7f8c8d':'#b7c3cc'}" stroke="#5d6f7d" stroke-width="2.5"/>`+
+  `<text x="${239-d}" y="96" font-size="10" font-weight="900" text-anchor="middle" fill="#4d6a80">madde</text>`+
+  (v==='ceker'?`<path d="M150 67 h40" stroke="#c0392b" stroke-width="4" stroke-dasharray="7 5"/>`+
+    `<path d="M196 67 l-14 -7 v14 z" fill="#c0392b" transform="rotate(180 189 67)"/>`+
+    `<text x="170" y="42" font-size="11" font-weight="900" text-anchor="middle" fill="#c0392b">çekildi</text>`:'')+
+  (v==='cekmez'?`<text x="200" y="42" font-size="11" font-weight="900" text-anchor="middle" fill="#4d6a80">hiç kımıldamadı</text>`+
+    `<path d="M164 60 l18 18 M182 60 l-18 18" stroke="#8fa3b3" stroke-width="4" stroke-linecap="round"/>`:''))},
+ /* iki mıknatıs — kutuplar yaklaştırılınca itme/çekme canlanır */
+ kutup:(st,ek)=>{const v=(st&&st.vurgu)||'';const cift=ek||'NS';
+  const d=v==='iter'?18:(v==='ceker'?-14:0);
+  const mk=(x,sol,sag)=>`<rect x="${x}" y="54" width="46" height="26" rx="4" fill="${sol==='N'?'#c0392b':'#2a75ad'}"/>`+
+   `<rect x="${x+46}" y="54" width="46" height="26" rx="4" fill="${sag==='N'?'#c0392b':'#2a75ad'}"/>`+
+   `<text x="${x+23}" y="72" font-size="14" font-weight="950" text-anchor="middle" fill="#fff">${sol}</text>`+
+   `<text x="${x+69}" y="72" font-size="14" font-weight="950" text-anchor="middle" fill="#fff">${sag}</text>`;
+  const [a,b]=cift==='NN'?['N','N']:(cift==='SS'?['S','S']:(cift==='SN'?['S','N']:['N','S']));
+  return SVG(320,132,
+  `<rect width="320" height="132" fill="#e9eef3"/><rect x="0" y="102" width="320" height="30" fill="#78899b"/>`+
+  mk(24-d,'S',a)+mk(204+d,b,'N')+
+  (v==='iter'?`<path d="M136 67 h-18 M184 67 h18" stroke="#c0392b" stroke-width="4"/>`+
+    `<path d="M112 67 l14 -7 v14 z" fill="#c0392b"/><path d="M208 67 l-14 -7 v14 z" fill="#c0392b" transform="rotate(180 201 67)"/>`+
+    `<text x="160" y="42" font-size="11" font-weight="900" text-anchor="middle" fill="#c0392b">birbirini itti</text>`:'')+
+  (v==='ceker'?`<path d="M124 67 h22 M174 67 h22" stroke="#12805a" stroke-width="4"/>`+
+    `<text x="160" y="42" font-size="11" font-weight="900" text-anchor="middle" fill="#12805a">birbirini çekti</text>`:'')+
+  `<text x="160" y="120" font-size="10" font-weight="800" text-anchor="middle" fill="#eef4f7">N kuzey kutup · S güney kutup</text>`)},
+ /* mıknatısın kullanıldığı gerçek nesneler */
+ kullanim:(st,ek)=>{const v=ek||'';
+  const ic={
+   pusula:`<circle cx="160" cy="66" r="34" fill="#fffdf6" stroke="#8a6a2c" stroke-width="3"/>`+
+    `<path d="M160 40 l7 24 h-14 z" fill="#c0392b"/><path d="M160 92 l7 -24 h-14 z" fill="#dfe4e8"/>`+
+    `<text x="160" y="30" font-size="10" font-weight="900" text-anchor="middle" fill="#8a6a2c">K</text>`,
+   vinc:`<rect x="40" y="26" width="10" height="52" fill="#5d6f7d"/><rect x="40" y="26" width="120" height="9" fill="#5d6f7d"/>`+
+    `<line x1="152" y1="35" x2="152" y2="52" stroke="#40505c" stroke-width="3"/>`+
+    `<path d="M132 52 h40 a20 20 0 0 1 -40 0 z" fill="#c0392b"/>`+
+    `<rect x="140" y="70" width="14" height="10" fill="#7f8c8d"/><rect x="158" y="74" width="12" height="8" fill="#7f8c8d"/>`+
+    `<text x="240" y="66" font-size="11" font-weight="900" text-anchor="middle" fill="#4d6a80">demir ayrılıyor</text>`,
+   dolap:`<rect x="112" y="20" width="96" height="80" rx="6" fill="#dfe4e8" stroke="#8fa3b3" stroke-width="3"/>`+
+    `<line x1="112" y1="56" x2="208" y2="56" stroke="#8fa3b3" stroke-width="3"/>`+
+    `<rect x="196" y="30" width="8" height="60" rx="4" fill="#c0392b"/>`+
+    `<text x="240" y="66" font-size="11" font-weight="900" text-anchor="middle" fill="#4d6a80">lastikte mıknatıs</text>`,
+   hoparlor:`<rect x="118" y="26" width="84" height="72" rx="8" fill="#40505c"/>`+
+    `<circle cx="160" cy="62" r="24" fill="#5d6f7d" stroke="#2f3b45" stroke-width="2"/>`+
+    `<circle cx="160" cy="62" r="10" fill="#c0392b"/>`+
+    Array.from({length:3},(_,i)=>`<path d="M${210+i*10} ${52-i*5} a${14+i*8} ${14+i*8} 0 0 1 0 ${20+i*10}" fill="none" stroke="#4d6a80" stroke-width="2.5"/>`).join(''),
+  }[v]||`<text x="160" y="66" font-size="12" font-weight="900" text-anchor="middle" fill="#8fa3b3">mıknatıs nerede kullanılıyor?</text>`;
+  return SVG(320,124,`<rect width="320" height="124" fill="#e9eef3"/><rect x="0" y="100" width="320" height="24" fill="#78899b"/>`+ic)},
+ /* pusula atölyesi — seçilen malzeme takılır, tamamlanınca iğne kuzeyi gösterir */
+ pusula:(m)=>{const v=a=>m.some(x=>x.id===a);
+  const tam=v('i')&&v('m')&&v('k')&&v('s');
+  return SVG(320,140,
+  `<rect width="320" height="140" fill="#e9eef3"/><rect x="0" y="112" width="320" height="28" fill="#78899b"/>`+
+  (v('s')?`<path d="M96 62 a56 26 0 0 0 112 0 z" fill="none" stroke="#7a8c99" stroke-width="3"/>`+
+    `<path d="M100 66 a52 22 0 0 0 104 0 z" fill="#bfe0f0" opacity=".8"/>`:
+    `<path d="M96 62 a56 26 0 0 0 112 0 z" fill="none" stroke="#b8c6d2" stroke-width="2" stroke-dasharray="5 4"/>`)+
+  (v('k')?`<ellipse cx="152" cy="70" rx="20" ry="7" fill="#d8b98a" stroke="#a9895c" stroke-width="2"/>`:'')+
+  (v('i')?`<line x1="${tam?134:136}" y1="${tam?68:64}" x2="${tam?170:168}" y2="${tam?68:76}" stroke="#5d6f7d" stroke-width="3"/>`+
+    (tam?`<path d="M170 68 l-9 -4 v8 z" fill="#c0392b"/>`:''):'')+
+  (v('m')?`<rect x="34" y="36" width="40" height="16" rx="3" fill="#c0392b"/><text x="54" y="66" font-size="9.5" font-weight="800" text-anchor="middle" fill="#4d6a80">mıknatıs</text>`:'')+
+  (v('y')?`<text x="152" y="34" font-size="12" font-weight="950" text-anchor="middle" fill="#2a75ad">K</text>`+
+    `<text x="152" y="106" font-size="11" font-weight="900" text-anchor="middle" fill="#8fa3b3">G</text>`:'')+
+  (tam?`<text x="252" y="60" font-size="11" font-weight="900" text-anchor="middle" fill="#12805a">iğne</text>`+
+    `<text x="252" y="74" font-size="11" font-weight="900" text-anchor="middle" fill="#12805a">kuzeyi</text>`+
+    `<text x="252" y="88" font-size="11" font-weight="900" text-anchor="middle" fill="#12805a">gösteriyor</text>`:'')+
+  `<text x="160" y="130" font-size="10.5" font-weight="900" text-anchor="middle" fill="#eef4f7">${tam?'pusula çalışıyor':'pusula henüz tamamlanmadı'}</text>`)},
+ /* devre — eleman yerine oturunca görevi çalışırken görünür, ampul yanar */
+ devre:(st,ek)=>{const kur=(st&&st.kurulan)||[];const v=a=>kur.indexOf(a)>=0||ek===a;
+  const kapali=v('anahtar'), calisir=v('pil')&&v('kablo')&&v('ampul')&&kapali;
+  return SVG(320,140,
+  `<rect width="320" height="140" fill="#e9eef3"/><rect x="0" y="114" width="320" height="26" fill="#78899b"/>`+
+  `<rect x="44" y="34" width="232" height="70" rx="8" fill="none" stroke="${v('kablo')?'#40505c':'#c3ccd4'}" stroke-width="${v('kablo')?4:2}" ${v('kablo')?'':'stroke-dasharray="6 5"'}/>`+
+  (v('pil')?`<rect x="128" y="94" width="64" height="20" rx="3" fill="#e8b62c" stroke="#a97c14" stroke-width="2.5"/>`+
+    `<text x="160" y="109" font-size="11" font-weight="950" text-anchor="middle" fill="#6b4d08">+  −</text>`
+   :`<rect x="128" y="94" width="64" height="20" rx="3" fill="none" stroke="#c3ccd4" stroke-width="2" stroke-dasharray="5 4"/>`)+
+  (v('ampul')?`<circle cx="160" cy="34" r="18" fill="${calisir?'#ffe066':'#dfe4e8'}" stroke="${calisir?'#d99b20':'#8fa3b3'}" stroke-width="3"/>`+
+    `<rect x="153" y="50" width="14" height="8" fill="#8fa3b3"/>`+
+    (calisir?Array.from({length:6},(_,i)=>`<line x1="${160+24*Math.cos(i*Math.PI/3)}" y1="${34+24*Math.sin(i*Math.PI/3)}" x2="${160+32*Math.cos(i*Math.PI/3)}" y2="${34+32*Math.sin(i*Math.PI/3)}" stroke="#d99b20" stroke-width="3"/>`).join(''):'')
+   :`<circle cx="160" cy="34" r="18" fill="none" stroke="#c3ccd4" stroke-width="2" stroke-dasharray="5 4"/>`)+
+  (v('anahtar')?`<circle cx="44" cy="70" r="5" fill="#40505c"/><circle cx="44" cy="94" r="5" fill="#40505c"/>`+
+    `<line x1="44" y1="70" x2="44" y2="94" stroke="#40505c" stroke-width="4"/>`
+   :`<circle cx="44" cy="70" r="5" fill="#c3ccd4"/><circle cx="44" cy="94" r="5" fill="#c3ccd4"/>`+
+    `<line x1="44" y1="70" x2="62" y2="86" stroke="#c3ccd4" stroke-width="4"/>`)+
+  `<text x="160" y="132" font-size="10.5" font-weight="900" text-anchor="middle" fill="#eef4f7">${
+    calisir?'devre kapalı — ampul yanıyor':'devre henüz çalışmıyor'}</text>`)},
  /* ocak + kap + madde + termometre; sağda sıcaklık-zaman çizgisi birikir */
  ocak:(d)=>{const {T,Tmin,Tmax,oran,faz,madde,kayit,yaniyor}=d;
   const y=v=>112-((v-Tmin)/(Tmax-Tmin))*92;
@@ -637,6 +728,7 @@ function esleCiz(r){
    if(locked)return;const o=g.secenekler[+b.dataset.ger];
    if(!o.dogru)return wrong(g.hint||'İlişkiyi yeniden düşün.');
    state.gerekce=null;state.canlan=g.canlan||'';
+   if(g.canlan)state.kurulan=(state.kurulan||[]).concat(g.canlan);
    if((state.yerlesen||[]).every(v=>v!=null)){esleCiz(r);return good()}
    feedback('Doğru');esleCiz(r)});
   return}
@@ -662,10 +754,11 @@ function esleCiz(r){
   state.yerlesen[i]=j;state.secParca=null;state.not=r.yuvalar[i].neden||'';
   state.gerekce=r.yuvalar[i].gerekce||null;
   if(!state.gerekce){state.canlan=r.yuvalar[i].canlan||'';
+   if(state.canlan)state.kurulan=(state.kurulan||[]).concat(state.canlan);
    if(state.yerlesen.every(v=>v!=null)){esleCiz(r);return good()}
    feedback('Doğru')}
   esleCiz(r)})}
-function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secParca=null;state.not='';
+function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secParca=null;state.not='';state.kurulan=[];
  state.gerekce=null;state.canlan='';state.dizilim=null;esleCiz(r)}
 
 /* ===== KUR: seçilen öge ekranda GERÇEKTEN bir şey oluşturur — çanta dolar,
@@ -2593,6 +2686,559 @@ GAMES.f24={title:'Deney Düzeneği',theme:'lab',
    {ad:'malzemeleri virgülle ayırarak say',desen:'[^,]+,[^,]+,'}],
   ornekCevap:'Isıya dayanıklı kap, su, termometre, kayıt defteri ve güvenlik için koruyucu gözlük kullanırım.',
   result:'Listeni ölçüm ve güvenlik ölçütleriyle yazdın.'}]};
+
+/* ---- f25 Mıknatıs Kutusu (bant kaldırıldı: madde mıknatısa yaklaştırılınca
+        çekilip çekilmediği karardan SONRA canlanıyor) ---- */
+GAMES.f25={title:'Mıknatıs Kutusu',theme:'atolye',
+ finish:'Mıknatısın hangi maddeleri çektiğini test ettin, "her metal çekilmez" kuralını kurdun ve kendi tahminini yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Mıknatıs bu maddeyi çeker mi?',sahne:(st)=>SAHNE.miknatis(st),
+  soru:'Mıknatıs bu maddeyi çeker mi?',
+  kutular:['ÇEKER','ÇEKMEZ'],
+  ipucu:'Karar verdikten sonra maddenin ne yaptığını göreceksin.',
+  kartlar:[
+   {t:'Demir çivi',dogru:0,vurgu:'ceker',neden:'Demir, mıknatısın çektiği maddelerdendir.',
+    hint:'Bu madde neyden yapılmış?'},
+   {t:'Plastik kaşık',dogru:1,vurgu:'cekmez',neden:'Plastik mıknatıstan etkilenmez.',
+    hint:'Bu madde bir metal mi?'},
+   {t:'Çelik ataç',dogru:0,vurgu:'ceker',neden:'Çeliğin içinde demir vardır.',
+    hint:'Çeliğin içinde hangi madde bulunur?'},
+   {t:'Cam bardak',dogru:1,vurgu:'cekmez',neden:'Cam mıknatıstan etkilenmez.',
+    hint:'Bu madde bir metal mi?'},
+   {t:'Alüminyum folyo',dogru:1,vurgu:'cekmez',neden:'Alüminyum bir metaldir ama mıknatıstan etkilenmez.',
+    hint:'Metal olmak tek başına yeter mi? Hangi metaller etkileniyordu?'},
+   {t:'Bakır tel',dogru:1,vurgu:'cekmez',neden:'Bakır da metaldir ama mıknatıstan etkilenmez.',
+    hint:'Bu metal demir, nikel ya da kobalt mı?'},
+   {t:'Nikel para',dogru:0,vurgu:'ceker',neden:'Nikel, mıknatısın etkilediği metallerdendir.',
+    hint:'Bu metal, etkilenen üç metalden biri mi?'},
+   {t:'Tahta kalem',dogru:1,vurgu:'cekmez',neden:'Tahta mıknatıstan etkilenmez.',
+    hint:'Bu madde bir metal mi?'}]},
+ {kind:'karar',prompt:'"Her metal çekilir" doğru mu?',sahne:(st,ek)=>SAHNE.miknatis({vurgu:ek}),
+  sorular:[
+   {durum:'Deney tablosu — Demir: çekildi · Çelik: çekildi · Nikel: çekildi · Alüminyum: çekilmedi · Bakır: çekilmedi · Altın: çekilmedi',
+    soru:'Tablodan hangi kural çıkar?',
+    ipucu:'Çekilenlerle çekilmeyenleri karşılaştır: hepsi metal.',
+    hint:'Çekilmeyenlerin arasında da metal var mı?',
+    secenekler:[
+     {t:'Her metal çekilmez; yalnız demir, nikel ve kobalt içerenler çekilir',dogru:true},
+     {t:'Bütün metaller çekilir'},
+     {t:'Hiçbir metal çekilmez'}],
+    neden:'Alüminyum, bakır ve altın metaldir ama mıknatıstan etkilenmez.',
+    gerekce:{soru:'Bu kuralı kurarken neye dayandık?',
+     secenekler:[
+      {t:'Tablodaki test sonuçlarına',dogru:true},
+      {t:'Metallerin parlak görünmesine'}],
+     neden:'Genelleme, tek tek yapılan testlerin sonucundan çıkarılır.'}},
+   {durum:'Bir öğrenci "parlaksa çekilir" diyor. Tabloda altın parlak ama çekilmemiş.',
+    soru:'Bu kural doğru mu?',
+    hint:'Tabloda bu kuralı çürüten bir satır var mı?',
+    secenekler:[
+     {t:'Doğru değil; altın parlak olduğu hâlde çekilmemiş',dogru:true},
+     {t:'Doğru; parlaklık belirleyicidir'}],
+    neden:'Tek bir karşı örnek, kuralı çürütmeye yeter.'},
+   {durum:'Bir konserve kutusunun gövdesi çekildi, kapağı çekilmedi.',
+    soru:'Bu nasıl olabilir?',
+    hint:'İki parça aynı maddeden mi yapılmış olmalı?',
+    secenekler:[
+     {t:'İki parça farklı metallerden yapılmış olabilir',dogru:true},
+     {t:'Mıknatıs yorulmuştur'},
+     {t:'Kapak çok küçüktür'}],
+    neden:'Aynı nesnenin parçaları farklı maddelerden yapılmış olabilir.'}]},
+ {kind:'yaz',prompt:'Evinden bir nesne için tahmin yaz.',sahne:(st)=>SAHNE.miknatis({vurgu:''}),
+  gorev:'Evinden bir nesne seç. Mıknatısın onu çekip çekmeyeceğini tahmin et ve nedenini yaz.',
+  ornek:'Kalıp: "… çekilir/çekilmez diye tahmin ediyorum çünkü …"',
+  yerTutucu:'Nesne ve tahminin…',
+  enAzKelime:10,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"çekil" sözcüğünü kullan',desen:'çekil|çeker|çekmez'},
+   {ad:'nesnenin yapıldığı maddeyi yaz (demir, çelik, plastik, tahta, cam, alüminyum…)',
+    desen:'demir|çelik|nikel|plastik|tahta|cam|alüminyum|bakır|kâğıt|kagit'}],
+  ornekCevap:'Buzdolabı kapağındaki çelik tutamak çekilir diye tahmin ediyorum çünkü çelik demir içerir.',
+  result:'Tahminini maddeye dayandırdın.'}]};
+
+/* ---- f26 Kutuplar (köprü kaldırıldı: kutuplar yaklaştırılınca itme/çekme
+        karardan SONRA ekranda gerçekleşiyor) ---- */
+GAMES.f26={title:'Kutuplar',theme:'atolye',
+ finish:'Aynı ve zıt kutupların ne yaptığını gözledin, örüntüyü fark ettin ve kuralı kendi cümlenle yazdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu iki kutup yaklaşınca ne olur?',sahne:(st,ek)=>SAHNE.kutup(st,ek),
+  soru:'Bu iki kutup birbirine yaklaştırılırsa ne olur?',
+  kutular:['İTER','ÇEKER'],
+  ipucu:'N kuzey kutup, S güney kutup. Karardan sonra ne olduğunu göreceksin.',
+  kartlar:[
+   {t:'Kuzey kutup (N) ile kuzey kutup (N) karşı karşıya',sahneEk:'NN',dogru:0,vurgu:'iter',
+    neden:'İki kutup da aynı türden; birbirlerini uzaklaştırdılar.',
+    hint:'Bu iki kutup aynı tür mü, farklı tür mü?'},
+   {t:'Kuzey kutup (N) ile güney kutup (S) karşı karşıya',sahneEk:'NS',dogru:1,vurgu:'ceker',
+    neden:'Kutuplar farklı türden; birbirlerine yapıştılar.',
+    hint:'Bu iki kutup aynı tür mü, farklı tür mü?'},
+   {t:'Güney kutup (S) ile güney kutup (S) karşı karşıya',sahneEk:'SS',dogru:0,vurgu:'iter',
+    neden:'Yine aynı tür iki kutup; sonuç değişmedi.',
+    hint:'Bir öncekiyle karşılaştır: kutuplar aynı mı?'},
+   {t:'Güney kutup (S) ile kuzey kutup (N) karşı karşıya',sahneEk:'SN',dogru:1,vurgu:'ceker',
+    neden:'Farklı tür kutuplar; sıraları değişse de sonuç aynı.',
+    hint:'Sıra değişti ama kutuplar aynı tür mü?'}]},
+ {kind:'karar',prompt:'Örüntüyü bul ve genelle.',sahne:(st,ek)=>SAHNE.kutup({vurgu:ek}),
+  sorular:[
+   {durum:'Sonuç tablosu — N-N: itti · S-S: itti · N-S: çekti · S-N: çekti',
+    soru:'Tablodaki örüntü nedir?',
+    ipucu:'İten iki satırın ortak yanı ne, çeken iki satırın ortak yanı ne?',
+    hint:'İten satırlarda kutuplar aynı mı farklı mı?',
+    secenekler:[
+     {t:'Aynı kutuplar iter, zıt kutuplar çeker',dogru:true},
+     {t:'Kuzey kutuplar hep çeker'},
+     {t:'Sonuç rastgele değişir'}],
+    neden:'Dört denemenin hepsi aynı kurala uyuyor.',
+    gerekce:{soru:'Bu bir genelleme olmak için ne gerekiyordu?',
+     secenekler:[
+      {t:'Birden çok denemenin aynı sonucu vermesi',dogru:true},
+      {t:'Tek bir denemenin yapılması'}],
+     neden:'Tek deneme örüntü kurmaya yetmez.'}},
+   {durum:'İki mıknatıs birbirini itiyor. Birini ters çeviriyorsun.',
+    soru:'Şimdi ne olur?',
+    hint:'Ters çevirince karşı karşıya gelen kutup değişir mi?',
+    secenekler:[
+     {t:'Çekmeye başlarlar; artık zıt kutuplar karşı karşıya',dogru:true},
+     {t:'Yine iterler'},
+     {t:'Hiçbir şey olmaz'}],
+    neden:'Mıknatısı çevirmek karşı karşıya gelen kutbu değiştirir.'},
+   {durum:'Bir mıknatıs ortadan ikiye bölünüyor.',
+    soru:'Parçalar için ne söylenebilir?',
+    hint:'Bir mıknatısın tek kutuplu olduğu görülmüş müdür?',
+    secenekler:[
+     {t:'Her parçanın yine bir kuzey ve bir güney kutbu olur',dogru:true},
+     {t:'Bir parça yalnız kuzey, öteki yalnız güney olur'}],
+    neden:'Mıknatıslar her zaman iki kutupludur; tek kutuplu mıknatıs yoktur.'}]},
+ {kind:'yaz',prompt:'Kuralı kendi cümlenle yaz.',sahne:(st)=>SAHNE.kutup({vurgu:'ceker'}),
+  gorev:'Kutuplarla ilgili bulduğun kuralı kendi cümlenle yaz. "Aynı kutuplar…" diye başlayabilirsin.',
+  ornek:'Kalıp: "Aynı kutuplar … , zıt kutuplar … "',
+  yerTutucu:'Kuralın…',
+  enAzKelime:8,bitis:'.',
+  denetim:[{ad:'"aynı" sözcüğünü kullan',desen:'aynı'},
+   {ad:'"zıt" ya da "farklı" sözcüğünü kullan',desen:'zıt|farklı'},
+   {ad:'"iter" ve "çeker" sonuçlarını yaz',desen:'it[ei]'},
+   {ad:'"çek" sözcüğünü kullan',desen:'çek'}],
+  ornekCevap:'Aynı kutuplar birbirini iter, zıt kutuplar birbirini çeker.',
+  result:'Kuralı kendi cümlenle ifade ettin.'}]};
+
+/* ---- f27 Mıknatıs Nerede? (radar kaldırıldı: mıknatısın kullanıldığı
+        gerçek nesneler sahnede, seçenekler sabit) ---- */
+GAMES.f27={title:'Mıknatıs Nerede?',theme:'atolye',
+ finish:'Mıknatısın günlük hayattaki işlerini gerekçesiyle açıkladın, görünmeyen kullanımlarını öğrendin ve evinden bir örnek yazdın.',rounds:[
+ {kind:'karar',prompt:'Bu nesnede mıknatıs ne işe yarıyor?',sahne:(st,ek)=>SAHNE.kullanim(st,ek),
+  sorular:[
+   {durum:'Pusulanın iğnesi serbest bırakıldığında hep aynı yöne dönüyor.',sahneEk:'pusula',
+    soru:'İğne neden hep aynı yöne dönüyor?',
+    ipucu:'İğnenin kendisi de küçük bir mıknatıs.',
+    hint:'İğneyi çeken şey nerede olabilir?',
+    secenekler:[
+     {t:'Dünya\'nın kendisi bir mıknatıs gibi davranır ve iğneyi yönlendirir',dogru:true},
+     {t:'İğnenin bir ucu daha ağırdır'},
+     {t:'Güneş iğneyi çeker'}],
+    neden:'Dünya\'nın da kutupları vardır; pusula iğnesi onlara göre yönelir.',
+    gerekce:{soru:'Bu, hangi kuralın sonucudur?',
+     secenekler:[
+      {t:'Zıt kutupların birbirini çekmesi',dogru:true},
+      {t:'Aynı kutupların birbirini çekmesi'}],
+     neden:'İğnenin kuzeyi gösteren ucu, Dünya\'nın zıt kutbuna yönelir.'}},
+   {durum:'Geri dönüşüm tesisinde karışık atık yığını bir vincin altından geçiyor; bazı parçalar yukarı kalkıyor.',
+    sahneEk:'vinc',
+    soru:'Vinçteki mıknatıs ne yapıyor?',
+    hint:'Yukarı kalkan parçalar hangi maddeden olabilir?',
+    secenekler:[
+     {t:'Demir içeren atıkları çekip ayırıyor',dogru:true},
+     {t:'Plastikleri ayırıyor'},
+     {t:'Camları kırıyor'}],
+    neden:'Mıknatıs yalnız demir, nikel ve kobalt içerenleri çeker; ayırma işi böyle yapılır.'},
+   {durum:'Buzdolabının kapağı biraz itilince kendiliğinden kapanıp yapışıyor.',sahneEk:'dolap',
+    soru:'Kapağı tutan nedir?',
+    hint:'Kapağın kenarındaki lastiğin içinde ne olabilir?',
+    secenekler:[
+     {t:'Kapak lastiğinin içindeki mıknatıs',dogru:true},
+     {t:'Kapaktaki yay'},
+     {t:'Elektrik akımı'}],
+    neden:'Lastik şeridin içindeki mıknatıs, dolabın demir gövdesine yapışır.'}]},
+ {kind:'karar',prompt:'Görünmeyen mıknatıslar.',sahne:(st,ek)=>SAHNE.kullanim(st,ek),
+  sorular:[
+   {durum:'Hoparlörün içi açıldığında koninin arkasında halka biçiminde bir mıknatıs görülüyor.',
+    sahneEk:'hoparlor',
+    soru:'Hoparlördeki mıknatıs ne yapar?',
+    ipucu:'Ses, havanın titreşmesiyle oluşur.',
+    hint:'Sesin oluşması için koninin ne yapması gerekir?',
+    secenekler:[
+     {t:'Koniyi ileri geri titreştirerek ses üretir',dogru:true},
+     {t:'Sesi kaydeder'},
+     {t:'Işık üretir'}],
+    neden:'Değişen akım ve mıknatıs birlikte koniyi titreştirir; titreşim sesi doğurur.',
+    gerekce:{soru:'Bu kullanımı fark etmek neden zor?',
+     secenekler:[
+      {t:'Mıknatıs cihazın içinde, görünmüyor',dogru:true},
+      {t:'Hoparlörde mıknatıs yok'}],
+     neden:'Mıknatısın birçok kullanımı cihazların içinde gizlidir.'}},
+   {durum:'Banka kartının arkasındaki koyu şerit okuyucudan geçirilince bilgi okunuyor.',
+    soru:'Bu şeritte ne var?',
+    hint:'Şeridin adı ne olabilir?',
+    secenekler:[
+     {t:'Manyetik madde; bilgi mıknatıslanma düzeniyle saklanıyor',dogru:true},
+     {t:'Küçük bir pil'},
+     {t:'Basılı yazı'}],
+    neden:'Manyetik şeritler bilgiyi mıknatıslanma yönüyle tutar.'},
+   {durum:'Bazı hızlı trenler raya değmeden, havada yüzerek ilerliyor.',
+    soru:'Treni havada tutan nedir?',
+    hint:'Aynı kutuplar karşı karşıya gelirse ne olurdu?',
+    secenekler:[
+     {t:'Aynı kutupların birbirini itmesi',dogru:true},
+     {t:'Zıt kutupların birbirini çekmesi'},
+     {t:'Trenin hafif olması'}],
+    neden:'İtme kuvveti treni raydan birkaç santim yukarıda tutar.'}]},
+ {kind:'yaz',prompt:'Evinde mıknatıs kullanılan bir yer bul.',sahne:(st)=>SAHNE.kullanim(st,'dolap'),
+  gorev:'Evinde mıknatıs kullanılan bir yer bul. Nerede olduğunu ve orada ne işe yaradığını yaz.',
+  ornek:'Kalıp: "… mıknatıs var. Orada … işini yapıyor."',
+  yerTutucu:'Yer ve işi…',
+  enAzKelime:10,bitis:'.',
+  denetim:[{ad:'"mıknatıs" sözcüğünü kullan',desen:'mıknatıs'},
+   {ad:'ne işe yaradığını yaz (tutar, çeker, kapatır, ayırır, yön…)',
+    desen:'tut|çek|kapa|ayır|yön|ses|titre'}],
+  ornekCevap:'Buzdolabımızın kapak lastiğinde mıknatıs var. Orada kapağı çekip sıkıca kapatma işini yapıyor.',
+  result:'Kendi çevrenden bir kullanım buldun.'}]};
+
+/* ---- f28 Mıknatıs Kartları (uzay zemini kaldırıldı: kartlar kullanım
+        sahnesinin önünde, can 3, her eşleşme gerekçeyle onaylanıyor) ---- */
+GAMES.f28={title:'Mıknatıs Kartları',theme:'atolye',
+ finish:'Mıknatısın kullanımlarını yerleriyle eşleştirdin, aynı işin farklı yerlerde karşımıza çıktığını gördün ve birini gerekçesiyle anlattın.',rounds:[
+ {kind:'hafiza',prompt:'Kartları çevir: kullanımı yeriyle eşle.',
+  sahne:(st)=>SAHNE.kullanim(st,''),
+  soru:'Hangi iki kart aynı kullanımı anlatıyor?',
+  ipucu:'Yanlış çiftte kartlar açık kalır; ikisini yan yana oku.',
+  farkSoru:'Bu iki kart aynı kullanımdan mı söz ediyor? Farkı ne?',
+  ciftler:[
+   {a:'Pusula iğnesi',b:'Yön bulmada kullanılır',
+    neden:'İğne, Dünya\'nın manyetik kutuplarına göre yönelir.',
+    gerekce:{soru:'Pusula hangi kurala dayanır?',
+     secenekler:[{t:'Zıt kutupların çekmesine',dogru:true},{t:'Aynı kutupların çekmesine'}],
+     hint:'İğnenin ucu neye yöneliyordu?'}},
+   {a:'Dev mıknatıslı vinç',b:'Geri dönüşümde demiri ayırmada',
+    neden:'Yalnız demir içeren atıklar çekilir, gerisi kalır.',
+    gerekce:{soru:'Vinç plastiği de ayırabilir mi?',
+     secenekler:[{t:'Ayıramaz; plastik mıknatıstan etkilenmez',dogru:true},{t:'Ayırır'}],
+     hint:'Mıknatıs hangi maddeleri çekiyordu?'}},
+   {a:'Kapak lastiğindeki şerit',b:'Buzdolabı kapağını kapalı tutmada',
+    neden:'Şerit mıknatıs, dolabın demir gövdesine yapışır.',
+    gerekce:{soru:'Bu iş için neye ihtiyaç var?',
+     secenekler:[{t:'Gövdenin demir içermesine',dogru:true},{t:'Gövdenin plastik olmasına'}],
+     hint:'Mıknatıs neye yapışır?'}},
+   {a:'Hoparlördeki halka mıknatıs',b:'Ses üretmede',
+    neden:'Mıknatıs koniyi titreştirir, titreşim ses olur.',
+    gerekce:{soru:'Ses nasıl oluşuyor?',
+     secenekler:[{t:'Koninin titreşmesiyle',dogru:true},{t:'Mıknatısın ışık vermesiyle'}],
+     hint:'Kartta hangi iş yazıyor?'}}]},
+ {kind:'karar',prompt:'Aynı iş, farklı yerler.',sahne:(st,ek)=>SAHNE.kullanim(st,ek),
+  sorular:[
+   {durum:'Buzdolabı kapağı, kalemlik kapağı ve çanta kilidi — üçü de tık diye kapanıyor.',
+    sahneEk:'dolap',
+    soru:'Üçünde ortak olan iş nedir?',
+    ipucu:'Mıknatısın burada yaptığı iş ne?',
+    hint:'Üçünde de mıknatıs neyi neye yapıştırıyor?',
+    secenekler:[
+     {t:'Tutturma: mıknatıs iki parçayı bir arada tutuyor',dogru:true},
+     {t:'Yön bulma'},
+     {t:'Ses üretme'}],
+    neden:'Aynı iş (tutturma) çok farklı nesnelerde karşımıza çıkar.',
+    gerekce:{soru:'Bu ortaklığı görmek ne sağlar?',
+     secenekler:[
+      {t:'Yeni bir nesnede mıknatısın işini tahmin edebilmeyi',dogru:true},
+      {t:'Nesneleri daha hızlı saymayı'}],
+     neden:'İşlevi tanımak, yeni örnekleri açıklamayı kolaylaştırır.'}},
+   {durum:'Pusula ve maglev tren — ikisi de mıknatısla çalışıyor ama işleri farklı.',
+    soru:'Aradaki fark nedir?',
+    hint:'Biri yön gösteriyor, öteki ne yapıyor?',
+    secenekler:[
+     {t:'Pusula yön buluyor, tren itme kuvvetiyle havada duruyor',dogru:true},
+     {t:'İkisi de yön buluyor'},
+     {t:'İkisi de tutturma yapıyor'}],
+    neden:'Mıknatısın tek bir işi yoktur; yön, ayırma, tutturma, ses ve taşıma için kullanılır.'},
+   {durum:'Bir öğrenci "mıknatıs yalnız oyuncaklarda kullanılır" diyor.',
+    soru:'Bu doğru mu?',
+    hint:'Bugün kaç farklı yerde mıknatıs gördün?',
+    secenekler:[
+     {t:'Değil; pusula, hoparlör, buzdolabı ve geri dönüşümde de kullanılır',dogru:true},
+     {t:'Doğru'}],
+    neden:'Mıknatıs günlük hayatın birçok yerinde, çoğu zaman görünmeden çalışır.'}]},
+ {kind:'yaz',prompt:'Bir kullanımı ve nedenini anlat.',sahne:(st)=>SAHNE.kullanim(st,'vinc'),
+  gorev:'Mıknatısın bir kullanımını seç. Nerede kullanıldığını ve neden orada mıknatıs tercih edildiğini yaz.',
+  ornek:'Kalıp: "… mıknatıs kullanılır çünkü …"',
+  yerTutucu:'Kullanım ve nedeni…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'bir kullanım yeri yaz (pusula, hoparlör, buzdolabı, geri dönüşüm, tren, kart)',
+    desen:'pusula|hoparlör|buzdolab|geri dönüş|tren|kart|vinç'}],
+  ornekCevap:'Geri dönüşüm tesisinde mıknatıs kullanılır çünkü demir atıkları diğer çöplerden çok hızlı biçimde ayırabiliyor.',
+  result:'Kullanımı gerekçesiyle anlattın.'}]};
+
+/* ---- f29 Mıknatıs Deneyi (roket kaldırıldı: adımlar tezgâhta uygulanıyor,
+        tahmin-test-sonuç döngüsü vurgulanıyor) ---- */
+GAMES.f29={title:'Mıknatıs Deneyi',theme:'atolye',
+ finish:'Tahmin-test-sonuç döngüsünü sıraladın, tahmin yanlış çıkınca ne yapılacağını öğrendin ve kendi deneyini tahminiyle anlattın.',rounds:[
+ {kind:'sira',prompt:'Deney adımlarını tezgâhta baştan sona uygula.',sahne:SAHNE.tezgah,
+  gorev:'Mıknatısın hangi maddeleri çektiğini bulacaksın. Adımları doğru sırayla uygula.',
+  ipucu:'Uygulanan adımlar tezgâhta görünür.',
+  kartlar:[
+   {t:'Farklı maddelerden örnekler toplarım',neden:'Test edilecek maddeler önce hazır olmalı.'},
+   {t:'Her biri için tahminimi yazarım',neden:'Tahmin testten ÖNCE yazılır; yoksa sonucu tahmin sanırız.'},
+   {t:'Mıknatısı her maddeye tek tek yaklaştırırım',neden:'Test aşaması: her madde ayrı ayrı denenir.'},
+   {t:'Sonuçları tabloya yazıp tahminimle karşılaştırırım',neden:'Tahmin ile sonucu karşılaştırmak öğrenmenin olduğu yerdir.'},
+   {t:'"Demir, nikel ve kobalt içerenler çekilir" genellemesini yaparım',neden:'Genelleme en sonda, veriye bakarak yapılır.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Test edeceğin maddeler elinde olmadan başlayabilir misin?',
+   'Denemeden önce ne yazman gerekiyor?',
+   'Tahminini yazdın; şimdi sıra neye geldi?',
+   'Genelleme yapmadan önce sonuçları neyle karşılaştırmalısın?','']},
+ {kind:'karar',prompt:'Tahmin yanlış çıkarsa ne yapılır?',sahne:SAHNE.tezgah,
+  sorular:[
+   {durum:'Alüminyum folyonun çekileceğini tahmin ettin. Test ettin, çekilmedi.',
+    soru:'Şimdi ne yaparsın?',
+    ipucu:'Bilimde yanlış tahmin bir başarısızlık değildir.',
+    hint:'Tahmini mi düzeltmeli, sonucu mu?',
+    secenekler:[
+     {t:'Sonucu yazar, tahminimin neden tutmadığını düşünürüm',dogru:true},
+     {t:'Sonucu silip tahminime uyduracak şekilde yazarım'},
+     {t:'Deneyi yapmamış sayarım'}],
+    neden:'Tutmayan tahmin, kuralı düzeltmemizi sağlar; asıl öğrenme oradadır.',
+    gerekce:{soru:'Tutmayan tahmin ne kazandırdı?',
+     secenekler:[
+      {t:'"Her metal çekilmez" bilgisini',dogru:true},
+      {t:'Hiçbir şey; boşa deneme oldu'}],
+     neden:'Beklenmeyen sonuç yeni bilgiye götürür.'}},
+   {durum:'Bir öğrenci tahminini test bittikten sonra yazıyor ve hep tutturuyor.',
+    soru:'Burada ne yanlış?',
+    hint:'Tahmin ne zaman yazılmalıydı?',
+    secenekler:[
+     {t:'Tahmin testten sonra yazılırsa tahmin değil, sonucu kopyalamak olur',dogru:true},
+     {t:'Hiçbir yanlış yok, sonuç doğru'}],
+    neden:'Tahminin değeri, testten önce yazılmasından gelir.'},
+   {durum:'İki öğrenci aynı maddeyi test etti; biri "çekildi", öteki "çekilmedi" yazdı.',
+    soru:'Ne yapılmalı?',
+    hint:'Hangi bilgiye güveneceğimizi nasıl belirleriz?',
+    secenekler:[
+     {t:'Deney birlikte tekrarlanmalı, aynı mıknatıs ve madde kullanılmalı',dogru:true},
+     {t:'Daha yüksek sesle söyleyenin sonucu alınmalı'},
+     {t:'İkisi de silinmeli'}],
+    neden:'Çelişen sonuçlar, koşulları eşitleyip tekrarlayarak çözülür.'}]},
+ {kind:'yaz',prompt:'Kendi mıknatıs deneyini tahminiyle anlat.',sahne:SAHNE.tezgah,
+  gorev:'Bir mıknatıs deneyi tasarla. Neyi test edeceğini, tahminini ve tahmin tutmazsa ne yapacağını yaz.',
+  ornek:'Kalıp: "… test ederim. Tahminim … . Tutmazsa … "',
+  yerTutucu:'Deneyin ve tahminin…',
+  enAzKelime:14,bitis:'.',
+  denetim:[{ad:'"tahmin" sözcüğünü kullan',desen:'tahmin'},
+   {ad:'"test" ya da "dene" sözcüğünü kullan',desen:'test|dene'}],
+  ornekCevap:'Kalemliğimdeki ataçları mıknatısla test ederim. Tahminim hepsinin çekileceği. Tutmazsa gerçek sonucu yazıp nedenini araştırırım.',
+  result:'Deneyini tahminiyle birlikte anlattın.'}]};
+
+/* ---- f30 Pusula Atölyesi (tepsi kaldırıldı: seçilen malzeme takılıyor,
+        pusula adım adım kuruluyor ve sonunda iğne kuzeyi gösteriyor) ---- */
+GAMES.f30={title:'Pusula Atölyesi',theme:'atolye',
+ finish:'Pusulayı ekranda gerçekten kurdun, iğnenin kuzeyi göstermesini sağladın ve nedenini açıkladın.',rounds:[
+ {kind:'kur',prompt:'İstenen malzemeyi al; pusula ekranda kuruluyor.',
+  kap:{ciz:(ic)=>`<div class="kap"><div class="kap-ad">🧭 Pusula — kurulum</div>`+
+   SAHNE.pusula(ic)+`<div class="kap-ad">${ic.length?ic.map(h=>h.ad).join(' · '):'henüz malzeme yok'}</div></div>`},
+  kapKalsin:true,
+  ipucu:'Takılan her parça pusulada görünür.',
+  havuz:[
+   {id:'i',ad:'Dikiş iğnesi (demir)',neden:'İğne demir olduğu için mıknatıslanabilir.'},
+   {id:'m',ad:'Mıknatıs',neden:'İğneyi mıknatısla sürterek onu küçük bir mıknatıs yapacağız.'},
+   {id:'k',ad:'Mantar parçası',neden:'Mantar iğneyi suda yüzdürür; iğne serbestçe dönebilsin diye.'},
+   {id:'s',ad:'Su dolu kap',neden:'Su, sürtünmeyi azaltıp iğnenin rahat dönmesini sağlar.'},
+   {id:'y',ad:'Yön kartı (K-G-D-B)',neden:'Yönü okuyabilmek için altına yön kartı koyarız.'},
+   {id:'x1',ad:'Plastik çubuk',hint:'Bu madde mıknatıslanabilir mi?'},
+   {id:'x2',ad:'Pil',hint:'Bu pusula elektrikle mi çalışıyor?'},
+   {id:'x3',ad:'Cetvel',hint:'Bu düzenekte uzunluk mu ölçeceğiz?'}],
+  istekler:[
+   {metin:'Usta: "Önce mıknatıslanacak parçayı ve onu mıknatıslayacak şeyi al."',
+    gerekli:['i','m'],tamam:'İğne mıknatısla sürtüldü; artık küçük bir mıknatıs.',
+    hint:'Hangi malzeme demirden? Onu neyle mıknatıslarız?'},
+   {metin:'Usta: "Şimdi iğnenin serbestçe dönebilmesi için gerekenleri al."',
+    gerekli:['k','s'],tamam:'İğne mantarın üstünde suda yüzüyor ve serbestçe dönüyor.',
+    hint:'İğne neyin üstünde yüzmeli, nerede?'},
+   {metin:'Usta: "Son olarak yönü okuyabilmemiz için gerekeni ekle."',
+    gerekli:['y'],tamam:'Pusula tamam: iğne kuzeyi gösteriyor.',
+    hint:'Yönü neye bakarak okuruz?'}]},
+ {kind:'karar',prompt:'Pusula neden kuzeyi gösteriyor?',
+  sahne:()=>SAHNE.pusula([{id:'i'},{id:'m'},{id:'k'},{id:'s'},{id:'y'}]),
+  sorular:[
+   {durum:'İğne suda serbest bırakıldı; birkaç kez döndükten sonra hep aynı yönde durdu.',
+    soru:'İğneyi bu yöne çeviren nedir?',
+    ipucu:'İğne artık küçük bir mıknatıs.',
+    hint:'Bu kadar büyük ve her yerde etkili olan mıknatıs ne olabilir?',
+    secenekler:[
+     {t:'Dünya\'nın manyetik alanı; iğne onun kutuplarına göre yöneliyor',dogru:true},
+     {t:'Suyun akıntısı'},
+     {t:'Mantarın ağırlığı'}],
+    neden:'Dünya bir mıknatıs gibi davranır; serbest bırakılan her mıknatıs ona göre yönelir.',
+    gerekce:{soru:'İğnenin suda yüzmesi neden gerekliydi?',
+     secenekler:[
+      {t:'Serbestçe dönebilsin diye; sürtünme onu durdururdu',dogru:true},
+      {t:'Islanınca daha iyi mıknatıslandığı için'}],
+     neden:'Pusulanın çalışması için iğnenin engelsiz dönebilmesi şarttır.'}},
+   {durum:'Pusulanın yanına güçlü bir mıknatıs getiriliyor.',
+    soru:'İğne ne yapar?',
+    hint:'Yakındaki güçlü bir mıknatıs mı, uzaktaki Dünya mı daha çok etkiler?',
+    secenekler:[
+     {t:'Yakındaki mıknatısa yönelir; pusula yanlış gösterir',dogru:true},
+     {t:'Yine kuzeyi gösterir'},
+     {t:'Hiç dönmez'}],
+    neden:'Bu yüzden pusula, mıknatıslardan ve demir yığınlarından uzakta kullanılır.'},
+   {durum:'İğne mıknatısla hiç sürtülmeden suya bırakılıyor.',
+    soru:'Pusula çalışır mı?',
+    hint:'İğnenin kendisi mıknatıs olmadan Dünya onu yönlendirebilir mi?',
+    secenekler:[
+     {t:'Çalışmaz; iğne mıknatıslanmadığı için belirli bir yöne dönmez',dogru:true},
+     {t:'Çalışır; demir olması yeter'}],
+    neden:'Demir olmak yetmez; iğnenin mıknatıslanmış olması gerekir.'}]},
+ {kind:'yaz',prompt:'Pusulanın neden kuzeyi gösterdiğini açıkla.',
+  sahne:()=>SAHNE.pusula([{id:'i'},{id:'m'},{id:'k'},{id:'s'},{id:'y'}]),
+  gorev:'Yaptığın pusulanın neden hep kuzeyi gösterdiğini kendi cümlelerinle açıkla.',
+  ornek:'Kalıp: "İğne … çünkü Dünya … "',
+  yerTutucu:'Açıklaman…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"Dünya" sözcüğünü kullan',desen:'dünya'},
+   {ad:'"mıknatıs" sözcüğünü kullan',desen:'mıknatıs'}],
+  ornekCevap:'İğne kuzeyi gösteriyor çünkü Dünya bir mıknatıs gibidir ve mıknatıslanmış iğneyi kutbuna doğru çeker.',
+  result:'Pusulanın çalışmasını açıkladın.'}]};
+
+/* ---- f31 Devre Elemanları (köprü kaldırıldı: eşleşen eleman devrede
+        yerini alıyor ve görevi çalışırken görünüyor — son eşleşmede
+        ampul yanıyor) ---- */
+GAMES.f31={title:'Devre Elemanları',theme:'atolye',
+ finish:'Devre elemanlarını görevleriyle eşleştirdin, devreyi çalıştırdın, benzer görevli elemanları ayırdın ve birinin görevini yazdın.',rounds:[
+ {kind:'esle',prompt:'Elemanı görevine eşle; devre kurulunca ampul yanacak.',
+  sahne:(st,ek)=>SAHNE.devre(st,ek),
+  soru:'Bu görevi hangi eleman yapar?',
+  ipucu:'Önce alttaki elemana, sonra üstteki görev satırına dokun.',
+  yuvalar:[
+   {t:'Devreye enerji verir; akımı başlatan kaynaktır',
+    neden:'Pil olmadan devrede akım olmaz.',canlan:'pil',
+    gerekce:{soru:'Pil çıkarılırsa ne olur?',
+     secenekler:[{t:'Akım kesilir, ampul sönik kalır',dogru:true},{t:'Ampul daha parlak yanar'}],
+     canlan:'pil',hint:'Enerjiyi veren neydi?'}},
+   {t:'Akımın geçtiği yolu oluşturur; elemanları birbirine bağlar',
+    neden:'Kablo, akımın izlediği yoldur.',canlan:'kablo',
+    gerekce:{soru:'Kablonun bir ucu koparsa ne olur?',
+     secenekler:[{t:'Yol kesilir, devre çalışmaz',dogru:true},{t:'Akım havadan devam eder'}],
+     canlan:'kablo',hint:'Akım neyin üzerinden gidiyordu?'}},
+   {t:'Elektrik enerjisini ışığa çevirir',
+    neden:'Ampul, devrenin işini görünür kılan elemandır.',canlan:'ampul',
+    gerekce:{soru:'Ampul ne zaman yanar?',
+     secenekler:[{t:'Devre kapalı olduğunda',dogru:true},{t:'Devre açık olduğunda'}],
+     canlan:'ampul',hint:'Akımın tam tur atması gerekiyor mu?'}},
+   {t:'Akımı başlatıp durdurur; devreyi açıp kapatır',
+    neden:'Anahtar kapanınca yol tamamlanır ve ampul yanar.',canlan:'anahtar',
+    gerekce:{soru:'Anahtar açıkken devre ne durumdadır?',
+     secenekler:[{t:'Yol kesiktir; akım geçmez',dogru:true},{t:'Yol tamdır; akım geçer'}],
+     canlan:'anahtar',hint:'Açık anahtar yolu tamamlıyor mu?'}}],
+  parcalar:[
+   {t:'Pil',yuva:0,hint:'Bu eleman enerji mi veriyor, ışık mı üretiyor?'},
+   {t:'Kablo',yuva:1,hint:'Bu eleman bir yol mu, bir kaynak mı?'},
+   {t:'Ampul',yuva:2,hint:'Bu elemanın işi görünür bir sonuç mu üretiyor?'},
+   {t:'Anahtar',yuva:3,hint:'Bu eleman akımı üretiyor mu, denetliyor mu?'}]},
+ {kind:'karar',prompt:'Benzer görünen elemanları ayır.',sahne:(st,ek)=>SAHNE.devre(st,ek),
+  sorular:[
+   {durum:'Anahtar ile duy karıştırılıyor. İkisi de devrenin ortasında duruyor.',
+    soru:'Aralarındaki fark nedir?',
+    ipucu:'Biri akımı denetler, öteki bir elemanı tutar.',
+    hint:'Hangisi ampulü yerinde tutmak için var?',
+    secenekler:[
+     {t:'Anahtar akımı açıp kapatır; duy ampulü tutup devreye bağlar',dogru:true},
+     {t:'İkisi de akımı açıp kapatır'},
+     {t:'İkisi de enerji üretir'}],
+    neden:'Duy bir bağlantı parçasıdır, akımı denetlemez.',
+    gerekce:{soru:'Duy olmadan ampul devreye bağlanabilir mi?',
+     secenekler:[
+      {t:'Zor; duy ampulü hem tutar hem bağlantıyı sağlar',dogru:true},
+      {t:'Duy olmadan ampul yine de yanar'}],
+     neden:'Her elemanın devrede belirli bir işi vardır.'}},
+   {durum:'Devrede pil var, kablo var, ampul var ama anahtar açık.',sahneEk:'ampul',
+    soru:'Ampul yanar mı?',
+    hint:'Akımın tam tur atabilmesi için yolun kesiksiz olması gerekir.',
+    secenekler:[
+     {t:'Yanmaz; anahtar açıkken yol kesiktir',dogru:true},
+     {t:'Yanar; pil bağlı olduğu için'}],
+    neden:'Devrenin çalışması için yolun kapalı (kesiksiz) olması gerekir.'},
+   {durum:'Bir öğrenci pili ters takıyor.',
+    soru:'Basit bir ampul devresinde ne olur?',
+    hint:'Ampul akımın hangi yönde geçtiğine bakar mı?',
+    secenekler:[
+     {t:'Ampul yine yanar; akımın yönü ampul için fark etmez',dogru:true},
+     {t:'Devre bozulur ve hiç çalışmaz'}],
+    neden:'Basit ampul devresinde yön önemli değildir; motor gibi bazı elemanlarda önemlidir.'}]},
+ {kind:'yaz',prompt:'Bir devre elemanının görevini yaz.',
+  sahne:()=>SAHNE.devre({kurulan:['pil','kablo','ampul','anahtar']}),
+  gorev:'Bir devre elemanı seç (pil, kablo, ampul ya da anahtar). Devredeki görevini kendi cümlenle yaz.',
+  ornek:'Kalıp: "… devrede … işini yapar."',
+  yerTutucu:'Eleman ve görevi…',
+  enAzKelime:10,bitis:'.',
+  denetim:[{ad:'elemanın adını yaz (pil, kablo, ampul, anahtar)',desen:'pil|kablo|ampul|anahtar'},
+   {ad:'görevini anlatan bir eylem yaz (verir, sağlar, çevirir, açar, kapatır…)',
+    desen:'verir|sağla|çevir|aç|kapa|ileti|taşı|üret'}],
+  ornekCevap:'Anahtar devrede akımı başlatma ve durdurma işini yapar, devreyi açıp kapatır.',
+  result:'Elemanın görevini anlattın.'}]};
+
+/* ---- f32 Devre Kurma (roket kaldırıldı: adımlar devre masasında
+        uygulanıyor ve son adımda devre gerçekten çalışıyor) ---- */
+GAMES.f32={title:'Devre Kurma',theme:'atolye',
+ finish:'Devreyi adım adım kurup çalıştırdın, yanlış sırada kurulan devrenin neden çalışmadığını gördün ve adımları kendi sözcüklerinle yazdın.',rounds:[
+ {kind:'sira',prompt:'Devreyi kurma adımlarını sırayla uygula.',
+  sahne:(st)=>SAHNE.devre({kurulan:(st&&st.dizi||[]).map(i=>['pil','kablo','ampul','anahtar','test'][i])}),
+  gorev:'Masada pil, kablo, ampul ve anahtar var. Devreyi doğru sırayla kur; son adımda çalışacak.',
+  ipucu:'Kurulan parçalar devre şemasında görünür.',
+  kartlar:[
+   {t:'Pili masaya yerleştiririm',neden:'Enerji kaynağı olmadan devre kurulmaya başlanamaz.'},
+   {t:'Kabloları pilin uçlarına bağlarım',neden:'Akımın izleyeceği yol böyle başlar.'},
+   {t:'Ampulü duyuna takıp kabloya bağlarım',neden:'Devrenin işini görünür kılan eleman yerine oturur.'},
+   {t:'Anahtarı devreye bağlarım',neden:'Akımı denetleyecek eleman da yola eklenir.'},
+   {t:'Anahtarı kapatıp devreyi test ederim',neden:'Yol kesiksiz olunca akım geçer ve ampul yanar.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Enerjiyi verecek eleman olmadan başlayabilir misin?',
+   'Pili koydun; akımın gideceği yolu neyle kurarsın?',
+   'Yol kuruldu; şimdi ışığı üretecek elemanı ekle.',
+   'Test etmeden önce akımı denetleyecek eleman takılmalı.','']},
+ {kind:'karar',prompt:'Devre neden çalışmıyor?',sahne:(st,ek)=>SAHNE.devre(st,ek),
+  sorular:[
+   {durum:'Bir öğrenci ampulü ve anahtarı bağladı ama pili hiç takmadı. Anahtarı kapattı, ampul yanmadı.',
+    soru:'Neden çalışmadı?',
+    ipucu:'Devrede hangi eleman eksik?',
+    hint:'Akımı başlatacak eleman devrede var mı?',
+    secenekler:[
+     {t:'Enerji kaynağı yok; pil olmadan akım oluşmaz',dogru:true},
+     {t:'Anahtar bozuk'},
+     {t:'Ampul çok küçük'}],
+    neden:'Devre ancak enerji kaynağı, kesiksiz yol ve tüketici birlikteyken çalışır.',
+    gerekce:{soru:'Basit bir devrede en az neler bulunmalı?',
+     secenekler:[
+      {t:'Pil, kablo ve ampul',dogru:true},
+      {t:'Yalnız ampul ve anahtar'}],
+     neden:'Kaynak, yol ve tüketici üçlüsü olmadan devre olmaz.'}},
+   {durum:'Her şey bağlı ama bir kablonun ucu pilden çıkmış.',sahneEk:'ampul',
+    soru:'Ampul yanar mı?',
+    hint:'Akımın tam tur atması gerekiyordu; yol kesiksiz mi?',
+    secenekler:[
+     {t:'Yanmaz; yol kesildiği için akım tamamlanamaz',dogru:true},
+     {t:'Yanar; diğer uç bağlı olduğu için'}],
+    neden:'Tek bir kopukluk bile devrenin tamamını durdurur.'},
+   {durum:'Devre kuruldu, anahtar kapatıldı ve ampul yandı. Sonra anahtar açıldı.',
+    soru:'Ne olur?',
+    hint:'Anahtar açılınca yol ne durumda olur?',
+    secenekler:[
+     {t:'Ampul söner; yol kesildiği için akım durur',dogru:true},
+     {t:'Ampul yanmaya devam eder'}],
+    neden:'Anahtar, akımı istediğimizde kesmemizi sağlar.'}]},
+ {kind:'yaz',prompt:'Devre kurma adımlarını kendi sözcüklerinle yaz.',
+  sahne:()=>SAHNE.devre({kurulan:['pil','kablo','ampul','anahtar']}),
+  gorev:'Bir ampulü yakmak için devreyi nasıl kurarsın? Adımları sırayla kendi cümlelerinle yaz.',
+  ornek:'Kalıp: "Önce … , sonra … , en son … "',
+  yerTutucu:'Adımların…',
+  enAzKelime:15,bitis:'.',
+  denetim:[{ad:'"önce" sözcüğünü kullan',desen:'önce'},
+   {ad:'"sonra" sözcüğünü kullan',desen:'sonra'},
+   {ad:'"pil" sözcüğünü kullan',desen:'pil'},
+   {ad:'"ampul" sözcüğünü kullan',desen:'ampul'}],
+  ornekCevap:'Önce pili koyarım, sonra kabloları uçlarına bağlarım, ampulü takarım ve en son anahtarı kapatıp yakarım.',
+  result:'Devre kurma adımlarını kendin anlattın.'}]};
 
 /* ===== Motora gömülü öz denetim =====
    Bir oyunu tarayıcıda tek tek açmadan altı kabul ölçütünün metin

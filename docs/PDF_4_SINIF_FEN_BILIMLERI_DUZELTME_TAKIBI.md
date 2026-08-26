@@ -118,7 +118,15 @@ Her parti iki araçla sınanıyor:
 | f22 Su Döngüsü | roket | damla şemanın üzerinde ilerliyor | ✅ uygulandı |
 | f23 Erime ve Kaynama Noktası | tren-tünel | madde ısınıyor, sıcaklık onunla değişiyor | ✅ uygulandı |
 | f24 Deney Düzeneği | tepsi | seçilen malzeme tezgâha yerleşiyor, düzenek kuruluyor | ✅ uygulandı |
-| f25–f48 | — | — | PDF'de |
+| f25 Mıknatıs Kutusu | bant | madde mıknatısa yaklaşınca karardan sonra canlanır; alüminyum/bakır çeldiricisi | ✅ uygulandı |
+| f26 Kutuplar | köprü | kutuplar yaklaşınca itme/çekme ekranda gerçekleşir, örüntüden genelleme | ✅ uygulandı |
+| f27 Mıknatıs Nerede? | radar | pusula, vinç, buzdolabı, hoparlör sahnede; görünmeyen kullanımlar turu | ✅ uygulandı |
+| f28 Mıknatıs Kartları | hafıza | kullanım sahnesi önünde kart, can 3, her eşleşme gerekçeli | ✅ uygulandı |
+| f29 Mıknatıs Deneyi | roket | tezgâhta tahmin-test-sonuç; tahmin tutmazsa ne yapılır turu | ✅ uygulandı |
+| f30 Pusula Atölyesi | tepsi | **pusula adım adım kurulur, sonunda iğne kuzeyi gösterir** | ✅ uygulandı |
+| f31 Devre Elemanları | köprü | **eleman devrede yerini alır, son eşleşmede ampul yanar** | ✅ uygulandı |
+| f32 Devre Kurma | roket | adımlar devre masasında uygulanır, son adımda devre çalışır | ✅ uygulandı |
+| f33–f48 | — | — | PDF'de |
 
 Parti 1'de (f01–f08) kapatılan doğrulanmış hatalar: **#1** wrongHint sızıntısı
 (bu partideki bant oyunları f01 ve f07'de ipuçları artık doğru kutunun adını
@@ -193,3 +201,29 @@ ve rakip sayarken kısa adlar da sayılıyor.
 
 Sınama: `fen4_denetim.html` f01–f24 için 72 turun tamamında temiz;
 `fen4_kosum.html` 24/24 oyunu can kaybetmeden bitiriyor.
+
+### Parti 4 (f25–f32) notları
+
+Uygulama sırası önerisindeki **7. madde** (ürün/model kazanımlarında ekranda gerçek
+inşa) bu partide iki oyunda kapandı: f30'da pusula malzeme malzeme kuruluyor ve
+tamamlanınca iğne kuzeyi gösteriyor; f31'de eşleşen her eleman devrede yerini alıyor
+ve dördü tamamlanınca ampul gerçekten yanıyor. f32 de son adımda devreyi çalıştırıyor.
+
+Ayrıca kapananlar: **#6** radar yönergesi (f27), bant (f25), köprü (f26, f31),
+roket (f29, f32) ve hafıza motorunun uzay zemini ile 6 canı (f28).
+
+`esle` kipine birikim eklendi: eşleşen parçaların `canlan` değerleri `state.kurulan`
+dizisinde toplanıyor, böylece devre gibi sahneler parça parça kuruluyor.
+
+Sınamada bulunan iki gerçek kusur:
+1. **Koşum aracının katalog ön kontrolü kataloğu önbellekten okuyordu** ve yeni
+   bağlanan oyunlar için "hiç bağlı değil" diyordu. Ön kontrol artık her koşumda
+   kataloğu taze yüklüyor. (Ön kontrolün kendisi bu partide işini yaptı: f25–f32
+   bağlanmadan önce koşumu haklı olarak durdurdu.)
+2. **f25'in yönergesi doğru kutunun adını içeriyordu** — "Mıknatıs bu maddeyi çeker
+   mi?" sorusunda "çeker" kutusunun adı geçiyordu ve rakibi "ÇEKMEZ" geçmiyordu.
+   Soru "Mıknatıs bu maddeye ne yapar?" biçimine çevrildi.
+
+Sınama: `fen4_denetim.html` f01–f32 için **96 turun tamamında temiz**;
+`fen4_kosum.html` 32/32 oyunu can kaybetmeden bitiriyor (katalog bağlantısı
+ön kontrolü dahil); `window.__TEST__.denetle()` 32 oyunda kusursuz.
