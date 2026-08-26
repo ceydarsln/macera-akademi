@@ -1,0 +1,556 @@
+[
+ {
+  "id": "h37",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Gelişim Basamakları",
+  "sub": "Kısa ve uzun vadeli plan yap",
+  "kaz": "HB.3.1.1.a / b / c — Kendini geliştirmek istediği alanı belirler, benzer deneyimleri inceler, kısa ve uzun vadeli planlarını belirler.",
+  "type": "jumpPath",
+  "instruction": "Hedefe giden basamaklarda zıpla! Her adımda sıradaki doğru planı seç",
+  "n": {
+   "steps": 4
+  },
+  "tur1": "Öğrenci ilk adımda kendi gelişim alanını seçsin (okuma, yüzme, resim) ve bu seçim ekranda sürekli görünsün; basamaklar o hedefe giden gerçek adımlar olsun.",
+  "tur2": "Kısa vadeli (bu hafta) ve uzun vadeli (bu yıl) adımlar karıştırılsın; öğrenci hangisinin önce geleceğine karar versin.",
+  "tur3": "Öğrenci kendi hedefi için bir kısa ve bir uzun vadeli planı kendi cümlesiyle söylesin veya yazsın."
+ },
+ {
+  "id": "h38",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Plan Masası",
+  "sub": "Kısa mı uzun vadeli mi?",
+  "kaz": "HB.3.1.1.c — Kısa ve uzun vadeli planlarını belirler.",
+  "type": "serveOrder",
+  "instruction": "Plan masasındasın! Danışmanın istediği hedef kartlarını tepsiye koy",
+  "n": {
+   "customers": 3
+  },
+  "tur1": "Gerçek bir plan masası ve takvim çizilsin; hedef kartları takvimin üzerine (bu hafta / bu ay / bu yıl) yerleşsin ve süre görünür olsun.",
+  "tur2": "Aynı hedefin kısa ve uzun vadeli parçaları ayrılsın: “her gün 10 sayfa” ile “yılda 20 kitap” ilişkilendirilsin.",
+  "tur3": "Öğrenci kendi hedefini takvime yerleştirip ilk adımı belirlesin."
+ },
+ {
+  "id": "h39",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Okul Hakları Bandı",
+  "sub": "Hak mı, sorumluluk mu?",
+  "kaz": "HB.3.1.2 — Okuldaki hak ve sorumluluklarına uygun davranır.",
+  "type": "beltSort",
+  "instruction": "Okul bandı çalışıyor! Gelen ifade okuldaki bir HAK mı, bir SORUMLULUK mu?",
+  "n": {
+   "items": 8,
+   "bins": "HAKKIM / SORUMLULUĞUM"
+  },
+  "tur1": "Gerçek bir okul ortamı çizilsin (sınıf, koridor, bahçe); ifade o ortamda kısa bir sahne olarak görünsün ve bant durdurulsun.",
+  "tur2": "Aynı konunun hem hak hem sorumluluk yüzü verilsin: “temiz sınıfta ders görmek” hakkı ile “çöpü kutuya atmak” sorumluluğu eşleştirilsin.",
+  "tur3": "Öğrenci bir hakkını ve ona bağlı sorumluluğunu kendi cümlesiyle ifade etsin."
+ },
+ {
+  "id": "h40",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Hak-Sorumluluk Terazisi",
+  "sub": "Dengeyi kur",
+  "kaz": "HB.3.1.2 — Okuldaki hak ve sorumlulukları arasındaki dengeyi kavrar.",
+  "type": "tiltBalance",
+  "instruction": "Terazinin bir kefesinde haklarım, diğerinde sorumluluklarım var! Blok ekleyerek dengeyi kur",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "KRİTİK: bire bir sayısal denklik modeli kaldırılsın. Terazi yerine gerçek bir okul sahnesi kurulsun; her hak kartına dokununca “bu hakkı herkesin kullanabilmesi için ne yapmalıyım?” sorusu açılsın. Hakkın koşulsuz olduğu korunsun.",
+  "tur2": "Bir hakkın birden çok sorumlulukla, bir sorumluluğun birden çok hakla ilişkili olabildiği gösterilsin.",
+  "tur3": "Öğrenci sınıfında herkesin bir hakkını kullanabilmesi için üstleneceği bir sorumluluğu söylesin."
+ },
+ {
+  "id": "h41",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Çocuk Hakları Köprüsü",
+  "sub": "Hakkı karşılığıyla eşle",
+  "kaz": "HB.3.1.3.a / b — Çocuk haklarını tanıtmak için farkındalık projeleri geliştirir ve paylaşır.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her çocuk hakkını onun karşılığıyla birleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Gerçek çocuk hakları görselleri (okul, sağlık ocağı, oyun parkı, aile) kullanılsın; parça-hedef emoji eşleşmesi kaldırılsın ve doğru eşleşmede hakkın karşılığı kısa sahneyle gösterilsin.",
+  "tur2": "Hakkın karşılanmadığı durumlar da gösterilsin; öğrenci farkı belirtsin.",
+  "tur3": "Öğrenci bir çocuk hakkını tanıtan kısa bir slogan veya afiş metni üretsin."
+ },
+ {
+  "id": "h42",
+  "group": "Alan 1 · Ben ve Okulum",
+  "title": "Proje Oylaması",
+  "sub": "Farkındalık projesini seç",
+  "kaz": "HB.3.1.3.b — Geliştirdiği farkındalık projelerini paylaşır.",
+  "type": "surveyChart",
+  "instruction": "Çocuk hakları farkındalık projesi için oylama! Sıradaki düğmesine basarak oyları topla",
+  "n": {
+   "responses": 10,
+   "options": 3
+  },
+  "tur1": "Gerçek bir sınıf oylaması sahnesi kurulsun: proje panosu, kürsü ve el kaldıran öğrenciler görünsün. Oy ifadesi seçenek adını birebir tekrar etmesin ve sayım çetele çizgisiyle görünsün.",
+  "tur2": "Berabere biten ve tek oyla kazanılan senaryolar eklensin; çoğunluk kavramı somutlaştırılsın.",
+  "tur3": "Öğrenci kazanan projeyi nasıl hayata geçireceğini bir adımla anlatsın."
+ },
+ {
+  "id": "h43",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Sağlık Denetim Bandı",
+  "sub": "Koruyan mı, zarar veren mi?",
+  "kaz": "HB.3.2.1.a / b — Sağlığını korumaya yönelik davranışları fark eder, uygun olmayanlarda değişiklik yapar.",
+  "type": "beltSort",
+  "instruction": "Sağlık bandı çalışıyor! Gelen davranış sağlığını korur mu, zarar mı verir?",
+  "n": {
+   "items": 8,
+   "bins": "SAĞLIĞI KORUR / ZARAR VERİR"
+  },
+  "tur1": "Gerçek bir gün akışı çizilsin (uyku, kahvaltı, ekran, spor); davranış bu akışın içinde bir an olarak görünsün ve bant durdurulsun.",
+  "tur2": "Miktara göre değişen davranışlar eklensin (biraz tatlı / çok tatlı); ölçüt tartışılsın.",
+  "tur3": "Öğrenci kendi bir alışkanlığını gözden geçirip değiştireceği bir şeyi söylesin."
+ },
+ {
+  "id": "h44",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Güvenlik Radarı",
+  "sub": "Tehlikede ne yaparsın?",
+  "kaz": "HB.3.2.2.a / b / ç — Güvenliğini tehdit eden durumları belirler, ne yapması gerektiğini sorgular ve çıkarım yapar.",
+  "type": "catchDrop",
+  "instruction": "Radarı sürükleyerek güvenli davranışı yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Kapsül-radar düzeni kaldırılsın; tehlike durumu gerçek bir sahne olarak (yabancı biri, kaybolma, akran zorbalığı) gösterilsin ve seçenekler sabit kartlarda dursun.",
+  "tur2": "Benzer görünen ama farklı tepki gerektiren durumlar karşılaştırılsın; “önce kime haber verirsin?” sorulsun.",
+  "tur3": "Öğrenci güvendiği yetişkinleri ve ne söyleyeceğini kendisi belirtsin."
+ },
+ {
+  "id": "h45",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Güvenlik Adımları",
+  "sub": "Tehlikede sırayla ne yapılır?",
+  "kaz": "HB.3.2.2.b / c — Güvenliğini tehdit eden durumla karşılaştığında yapması gerekenler hakkında bilgi toplar.",
+  "type": "orderSequence",
+  "instruction": "Güvenlik adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek bir tehlike senaryosu sahnesi kurulsun; adımlar o sahnede yapılan işler olarak sıralansın ve roket kaldırılsın.",
+  "tur2": "Farklı tehlikeler için adım sırası değişsin; öğrenci hangi adımın önce geleceğini gerekçelendirsin.",
+  "tur3": "Öğrenci kurgusal bir durumda adımları baştan sona uygulasın."
+ },
+ {
+  "id": "h46",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Trafik Kuralı Köprüsü",
+  "sub": "Kural neden önemli?",
+  "kaz": "HB.3.2.3.a / b — Trafik kurallarına uymanın önemini belirler, güvenlikle ilişki kurar.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her trafik kuralını onun nedenine bağla",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Gerçek bir trafik sahnesi çizilsin; kural seçilince sonucu animasyonla gösterilsin (kemer takılınca fren anında ne olur). Emoji eşleşmesi kaldırılsın.",
+  "tur2": "Kuralın uygulanmadığı durumun sonucu da gösterilsin; neden-sonuç bağı kurulsun.",
+  "tur3": "Öğrenci bir trafik kuralının nedenini kendi cümlesiyle açıklasın."
+ },
+ {
+  "id": "h47",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Acil Çağrı Cümlesi",
+  "sub": "112'ye ne söyleyeceksin?",
+  "kaz": "HB.3.2.2.ç — Güvenliğini tehdit eden durumda yapması gerekenler hakkında çıkarım yapar.",
+  "type": "sentenceBuild",
+  "instruction": "112'yi aradın! Kelime kartlarına sırayla dokunarak söyleyeceğin cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Gerçek bir telefon ekranı ve görevli sesi olsun; kurulan cümle görevliye söylensin ve görevli eksik bilgi varsa sorsun. Kartlar küçük harfle gelsin.",
+  "tur2": "Eksik bilgi içeren cümleler çeldirici olsun (adres yok, olay belirsiz); öğrenci eksiği bulsun.",
+  "tur3": "Öğrenci kurgusal bir olayı kendi cümleleriyle bildirsin; adres ve olay bilgisi kaydedilsin."
+ },
+ {
+  "id": "h48",
+  "group": "Alan 2 · Sağlığım ve Güvenliğim",
+  "title": "Trafik Afişi Atölyesi",
+  "sub": "Özgün ürün oluştur",
+  "kaz": "HB.3.2.3.c — Trafik kurallarına uymanın önemine ilişkin özgün bir ürün oluşturur.",
+  "type": "serveOrder",
+  "instruction": "Trafik güvenliği afişi hazırlıyoruz! Tasarımcının istediği ögeleri tepsiye koy",
+  "n": {
+   "customers": 3
+  },
+  "tur1": "Gerçek bir afiş tuvali açılsın; seçilen öge afişin üzerine yerleşsin ve afiş adım adım oluşsun. Kazanım özgün ÜRÜN oluşturmayı istiyor, kart seçmeyi değil.",
+  "tur2": "İyi ve zayıf afiş örnekleri karşılaştırılsın: hangi mesaj daha net?",
+  "tur3": "Öğrenci kendi sloganını yazsın ve afişi tamamlasın."
+ },
+ {
+  "id": "h49",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Aile-Toplum Bandı",
+  "sub": "Aile mi, toplum mu?",
+  "kaz": "HB.3.3.1.a / b / c — Ailenin ve toplumun özelliklerini belirler, aralarındaki ilişkiyi kurar.",
+  "type": "beltSort",
+  "instruction": "Bant çalışıyor! Gelen özellik AİLEye mi, TOPLUMa mı ait? Aile toplumun en küçük parçasıdır.",
+  "n": {
+   "items": 8,
+   "bins": "AİLE / TOPLUM"
+  },
+  "tur1": "Gerçek bir mahalle sahnesi çizilsin: bir evin içi ve sokağı yan yana görünsün; özellik kartı hangi ölçekte geçtiğine göre yerleşsin ve bant durdurulsun.",
+  "tur2": "Hem ailede hem toplumda görülen özellikler çeldirici olsun; öğrenci ölçütü savunsun.",
+  "tur3": "Öğrenci ailesinin toplumun bir parçası olduğunu bir örnekle anlatsın."
+ },
+ {
+  "id": "h50",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Meslek Köprüsü",
+  "sub": "Mesleği katkısıyla eşle",
+  "kaz": "HB.3.3.3.a / b — Mesleklerin toplumsal yaşamdaki önemine ilişkin örnekleri inceler ve çıkarımlarını ifade eder.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her mesleği topluma yaptığı katkıyla birleştir",
+  "n": {
+   "sources": 6,
+   "targets": 6
+  },
+  "tur1": "KRİTİK: altı parçanın altısındaki emoji eşleşmesi kaldırılsın - şu an itfaiyeci ateş emojisiyle, çiftçi başak emojisiyle hedefine bağlanıyor. Gerçek çalışma sahneleri kullanılsın ve yazılar çipe sığsın.",
+  "tur2": "Görünmeyen katkılar eklensin (temizlik işçisi, veri girişi); her mesleğin değerli olduğu gösterilsin.",
+  "tur3": "Öğrenci bir mesleğin katkısını kendi cümlesiyle anlatsın."
+ },
+ {
+  "id": "h51",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Meslek Atölyesi",
+  "sub": "Mesleğe uygun araçları ver",
+  "kaz": "HB.3.3.3 — Mesleklerin toplumsal yaşamdaki önemini yorumlar.",
+  "type": "serveOrder",
+  "instruction": "Meslek atölyesindesin! Her meslek için doğru araçları tepsiye koy",
+  "n": {
+   "customers": 4
+  },
+  "tur1": "Gerçek bir atölye sahnesi çizilsin; araç seçilince meslek sahibi onu kullanarak iş yapsın ve etiket kopyası kaldırılsın.",
+  "tur2": "Birden çok meslekte kullanılan araçlar çeldirici olsun.",
+  "tur3": "Öğrenci bir mesleği seçip gerekli araçları kendisi sıralasın."
+ },
+ {
+  "id": "h52",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Yardımlaşma Kartları",
+  "sub": "İhtiyacı çözümle eşle",
+  "kaz": "HB.3.3.2.a / b — Yardıma ihtiyacı olan bireylerin yaşamını kolaylaştırmak için farkındalık projeleri geliştirir.",
+  "type": "memoryPairs",
+  "instruction": "Kartlar kapalı! Kartları çevir ve her ihtiyacı onu kolaylaştıran çözümle eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Gerçek erişilebilirlik sahneleri kullanılsın (rampa, işaret dili, sesli tabela); eşleşen çözüm o sahnede uygulansın ve engel ortadan kalksın.",
+  "tur2": "Aynı ihtiyaç için birden çok çözüm karşılaştırılsın.",
+  "tur3": "Öğrenci okulunda kolaylaştırılabilecek bir durumu ve çözümünü söylesin."
+ },
+ {
+  "id": "h53",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Proje Adımları",
+  "sub": "Farkındalık projesi nasıl yapılır?",
+  "kaz": "HB.3.3.2.a / b — Farkındalık projesi geliştirir ve paylaşır.",
+  "type": "orderSequence",
+  "instruction": "Farkındalık projesi adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek bir proje süreci görselleşsin (ihtiyacı fark et, araştır, planla, uygula, paylaş); roket kaldırılsın.",
+  "tur2": "Atlanan adımın sonucu gösterilsin: araştırmadan uygulamak neden sorunlu?",
+  "tur3": "Öğrenci kendi farkındalık projesi için adımları sırayla yazsın."
+ },
+ {
+  "id": "h54",
+  "group": "Alan 3 · Ailem ve Toplum",
+  "title": "Yardımlaşma Cümlesi",
+  "sub": "Nazik bir teklif kur",
+  "kaz": "HB.3.3.2 — Yardıma ihtiyacı olan bireylerin yaşamını kolaylaştırmak için fikirlerini eyleme dönüştürür.",
+  "type": "sentenceBuild",
+  "instruction": "Yardım teklifi cümlesi kuruyoruz! Kelime kartlarına sırayla dokunarak nazik cümleyi kur",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Gerçek bir yardım durumu sahnesi kurulsun; kurulan cümle karşıdaki kişiye söylensin ve tepkisi görünsün. Kartlar küçük harfle gelsin.",
+  "tur2": "Yardımı dayatan ve izin isteyen ifadeler karşılaştırılsın: “Sana yardım edeyim” ile “Yardım etmemi ister misin?”",
+  "tur3": "Öğrenci kendi nazik teklifini hazır kart olmadan kursun."
+ },
+ {
+  "id": "h55",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Koruma Bandı",
+  "sub": "Mirası koruyan mı, zarar veren mi?",
+  "kaz": "HB.3.4.1 — Yakın çevresindeki tarihî mekân ve doğal güzelliklerin korunmasının önemini fark eder.",
+  "type": "beltSort",
+  "instruction": "Koruma bandı çalışıyor! Gelen davranış tarihî mekânı ve doğayı korur mu, zarar mı verir?",
+  "n": {
+   "items": 8,
+   "bins": "KORUR / ZARAR VERİR"
+  },
+  "tur1": "Gerçek tarihî mekân ve doğa fotoğrafları kullanılsın; davranış o mekânda kısa sahne olarak görünsün ve zararın izi kalsın.",
+  "tur2": "Niyet ile etki ayrılsın: iyi niyetli ama zarar veren davranışlar eklensin.",
+  "tur3": "Öğrenci çevresindeki bir mekânı korumak için yapacağı şeyi söylesin."
+ },
+ {
+  "id": "h56",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Yönetim Köprüsü",
+  "sub": "Birimi göreviyle eşle",
+  "kaz": "HB.3.4.2.a / b — Ülkemizin yönetim şekli ile ilgili kaynaklardan bilgi bulur ve kaydeder.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Ülke yönetimindeki her birimi doğru göreviyle birleştir. Ülkemizin yönetim şekli Cumhuriyettir.",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Gerçek yönetim binaları ve görev sahneleri çizilsin; emoji eşleşmesi kaldırılsın ve eşleşme binanın işleviyle kurulsun.",
+  "tur2": "Hangi işin hangi birime ait olduğu günlük örneklerle çalışılsın; benzer görevli birimler ayrılsın.",
+  "tur3": "Öğrenci bir sorunu hangi birime ileteceğini gerekçesiyle söylesin."
+ },
+ {
+  "id": "h57",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Atatürk Kartları",
+  "sub": "Özelliği başarısıyla eşle",
+  "kaz": "HB.3.4.3.a / b / c — Atatürk'ün kişilik özelliklerini ve başarılarını belirler, aralarında ilişki kurar.",
+  "type": "memoryPairs",
+  "instruction": "Kartlar kapalı! Kartları çevir ve Atatürk'ün her kişilik özelliğini ilgili başarısıyla eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Gerçek dönem görselleri kullanılsın; kart çevrilince kişilik özelliği ile başarının nasıl bağlandığı kısa bir anlatımla gösterilsin.",
+  "tur2": "Aynı başarıya birden çok özelliğin katkısı olduğu gösterilsin.",
+  "tur3": "Öğrenci bir kişilik özelliğinin kendi yaşamındaki karşılığını söylesin."
+ },
+ {
+  "id": "h58",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Kişilik Radarı",
+  "sub": "Doğru özelliği yakala",
+  "kaz": "HB.3.4.3.a — Mustafa Kemal Atatürk'ün kişilik özelliklerini belirler.",
+  "type": "catchDrop",
+  "instruction": "Radarı sürükleyerek anlatılan davranışa uyan kişilik özelliğini yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Kapsül-radar düzeni kaldırılsın; anlatılan davranış kısa bir anı olarak okunsun ve özellik seçenekleri sabit kartlarda dursun.",
+  "tur2": "Yakın anlamlı özellikler çeldirici olsun (kararlılık / inatçılık); fark tartışılsın.",
+  "tur3": "Öğrenci anıdaki davranıştan hangi özelliği çıkardığını gerekçesiyle söylesin."
+ },
+ {
+  "id": "h59",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Birlik Panosu",
+  "sub": "Beraberliği güçlendireni seç",
+  "kaz": "HB.3.4.4 — Millî birlik ve beraberliğin toplum hayatına katkılarını açıklar.",
+  "type": "serveOrder",
+  "instruction": "Millî birlik panosu hazırlıyoruz! Öğretmenin istediği kartları tepsiye koy",
+  "n": {
+   "customers": 3
+  },
+  "tur1": "Gerçek bir okul panosu ve tören sahnesi çizilsin; seçilen kart panoya asılsın ve etiket kopyası kaldırılsın.",
+  "tur2": "Birliği güçlendiren ve zayıflatan davranışlar karşılaştırılsın.",
+  "tur3": "Öğrenci sınıfında beraberliği güçlendirecek bir davranış önersin."
+ },
+ {
+  "id": "h60",
+  "group": "Alan 4 · Yaşadığım Yer ve Ülkem",
+  "title": "Cumhuriyet Yolu",
+  "sub": "Olayları sırayla diz",
+  "kaz": "HB.3.4.3.b — Mustafa Kemal Atatürk'ün başarılarını belirler.",
+  "type": "orderSequence",
+  "instruction": "Cumhuriyet'e giden yol karıştı! Olaylara en eskiden en yeniye doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek yatay zaman şeridi ve dönem görselleri kullanılsın; roket kaldırılsın. İlk turda tarihler gizlensin, sıralama olay içeriğinden yapılsın.",
+  "tur2": "Olaylar arasındaki neden-sonuç bağı sorulsun: hangisi diğerini mümkün kıldı?",
+  "tur3": "Öğrenci Cumhuriyet'e giden yolu üç cümleyle anlatsın."
+ },
+ {
+  "id": "h61",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Doğa Köprüsü",
+  "sub": "Varlığı faydasıyla eşle",
+  "kaz": "HB.3.5.1.a / b — Doğadaki varlıkların insan yaşamındaki gerekliliğine dair örnekleri inceler ve etkisini ifade eder.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her doğal varlığı insana sağladığı faydayla birleştir",
+  "n": {
+   "sources": 6,
+   "targets": 6
+  },
+  "tur1": "Gerçek doğa görselleri kullanılsın; eşleşen fayda kısa bir sahneyle gösterilsin (ağaç gölge yapar, arı çiçeği tozlaştırır). Emoji eşleşmesi kaldırılsın.",
+  "tur2": "Bir varlığın birden çok faydası ve zincirleme etkisi gösterilsin.",
+  "tur3": "Öğrenci bir doğal varlığın insana faydasını kendi cümlesiyle anlatsın."
+ },
+ {
+  "id": "h62",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Kroki Rehberi",
+  "sub": "Krokiye göre yolu bul",
+  "kaz": "HB.3.5.2.a / b — Krokiyi kullanarak bulunduğu yerin konumunu belirler ve konumsal görselleştirme yapar.",
+  "type": "codeGrid",
+  "instruction": "Elinde mahallenin krokisi var! Yön bloklarını dizerek okula ulaş. Kroki, bir yerin kuş bakışı basit çizimidir.",
+  "n": {
+   "rounds": 2
+  },
+  "tur1": "KRİTİK: ekrandaki labirent ızgarası gerçek bir krokiye dönüşsün - sokaklar, yön oku, ölçek ve en az iki işaret noktası (market, park) bulunsun. Rota konum ifadeleriyle tarif edilsin; görev metni rotayı söylemesin.",
+  "tur2": "Aynı krokide farklı başlangıç noktaları verilsin; öğrenci konumunu “parkın karşısında” gibi ifadelerle belirtsin.",
+  "tur3": "Öğrenci kendi okuluna giden yolu krokide çizip konum ifadeleriyle anlatsın."
+ },
+ {
+  "id": "h63",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Afet Zaman Bandı",
+  "sub": "Öncesi, sırası, sonrası",
+  "kaz": "HB.3.5.3 — Afetlere yönelik yapılması gerekenleri afet öncesi, sırası ve sonrası olarak ayırt eder.",
+  "type": "beltSort",
+  "instruction": "Afet bandı çalışıyor! Gelen davranış afet ÖNCESİ, SIRASI mı yoksa SONRASI mı?",
+  "n": {
+   "items": 9,
+   "bins": "AFET ÖNCESİ / AFET SIRASI / AFET SONRASI"
+  },
+  "tur1": "Gerçek bir ev ve mahalle sahnesi çizilsin; davranış afetin hangi anında yapıldığı sahneyle görünsün. KRİTİK: kart hiçbir kenarda kırpılmasın - denemede “Görevlilere haber vermek” ifadesinden yalnız son hecesi görünüyordu. Kutu emojileri cevabı vermesin.",
+  "tur2": "Aynı davranışın farklı zamanlarda anlamı değişsin (çantayı hazırlamak öncesi, çantayı almak sonrası).",
+  "tur3": "Öğrenci ailesiyle yapacağı bir afet hazırlığını söylesin."
+ },
+ {
+  "id": "h64",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Deprem Anı Adımları",
+  "sub": "Sırayla ne yapılır?",
+  "kaz": "HB.3.5.3 — Afet anında yapılması gerekenleri sıralar.",
+  "type": "orderSequence",
+  "instruction": "Deprem anı adımları karıştı! Baştan sona doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek bir sınıf/ev sahnesi çizilsin; deprem anında adımlar o mekânda uygulanan hareketler olarak görünsün ve roket kaldırılsın. Bu hayati bir konudur, sahne ciddiyeti korumalı.",
+  "tur2": "Farklı mekânlar için (sınıf, sokak, asansör) adım sırası değişsin.",
+  "tur3": "Öğrenci bulunduğu odada çök-kapan-tutun uygulamasını yapsın."
+ },
+ {
+  "id": "h65",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Sürdürülebilirlik Musluğu",
+  "sub": "İhtiyacın kadar kullan",
+  "kaz": "HB.3.5.4.a / b — Çevresel sürdürülebilirliğe yönelik bilgi bulur ve kaydeder.",
+  "type": "holdFill",
+  "instruction": "Musluğu basılı tutarak tam gereken kadar su doldur! Sürdürülebilirlik israfı önlemektir",
+  "n": {
+   "rounds": 3
+  },
+  "tur1": "KRONOMETRE kaldırılsın; ekranda gerçek musluk, kap ve akan su olsun. Görev metni gereken miktarı SÖYLEMESİN; öğrenci işe bakarak kendisi karar versin.",
+  "tur2": "Farklı işler için gereken su karşılaştırılsın; ihtiyaç ile israf ayrımı kurulsun.",
+  "tur3": "Öğrenci taşan suyu görsün ve sürdürülebilirlik için bir davranış önersin."
+ },
+ {
+  "id": "h66",
+  "group": "Alan 5 · Doğa ve Çevre",
+  "title": "Geri Dönüşüm Grafiği",
+  "sub": "Verileri grafiğe dök",
+  "kaz": "HB.3.5.4.a / b — Çevresel sürdürülebilirliğe yönelik bilgileri bulur ve kaydeder.",
+  "type": "graphBuild",
+  "instruction": "Sınıfın bir haftalık geri dönüşüm verisini grafiğe döküyoruz! Her 1 kutu için bir blok ekle",
+  "n": {
+   "categories": 3,
+   "blocks": 13
+  },
+  "tur1": "Veriler hazır sayı olarak verilmesin; öğrenci önce geri dönüşüm kutusundaki nesneleri sayarak veriyi kendisi çıkarsın. Toplam blok sayacı gizlensin ve grafiğe sayı ölçeği eklensin.",
+  "tur2": "Grafik tamamlanınca “en çok hangisi, kaç fark var?” soruları sorulsun.",
+  "tur3": "Öğrenci grafiği yorumlayıp sınıfı için bir öneri getirsin."
+ },
+ {
+  "id": "h67",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Bilimsel Gelişme Köprüsü",
+  "sub": "Gelişmeyi etkisiyle eşle",
+  "kaz": "HB.3.6.1.a / b — Bilimsel gelişmelerin günlük yaşama etkisini inceler ve ifade eder.",
+  "type": "dragMatch",
+  "instruction": "Köprüyü kur! Her bilimsel gelişmeyi günlük yaşama etkisiyle birleştir",
+  "n": {
+   "sources": 5,
+   "targets": 5
+  },
+  "tur1": "Gerçek bir öncesi-sonrası sahnesi kurulsun (aşıdan önce/sonra, elektrikten önce/sonra); eşleşme bu karşılaştırmaya dayansın ve emoji eşleşmesi kaldırılsın.",
+  "tur2": "Bir gelişmenin birden çok etkisi ve olası bir olumsuz yanı karşılaştırılsın.",
+  "tur3": "Öğrenci bir bilimsel gelişmenin günlük yaşamına etkisini anlatsın."
+ },
+ {
+  "id": "h68",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Teknoloji Denge Bandı",
+  "sub": "Olumlu mu, olumsuz mu?",
+  "kaz": "HB.3.6.2.a / b — Teknolojik gelişmelerin günlük yaşama etkisini belirler ve ilişki kurar.",
+  "type": "beltSort",
+  "instruction": "Teknoloji bandı çalışıyor! Gelen durum teknolojinin OLUMLU mu, OLUMSUZ mu etkisi?",
+  "n": {
+   "items": 8,
+   "bins": "OLUMLU ETKİ / OLUMSUZ ETKİ"
+  },
+  "tur1": "Gerçek bir günlük yaşam sahnesi çizilsin; durum ekranda canlansın (geç saatte telefon, uzaktaki akrabayla görüşme) ve bant durdurulsun.",
+  "tur2": "Aynı teknolojinin hem olumlu hem olumsuz kullanımı karşılaştırılsın; ölçüt kullanım biçimi olsun.",
+  "tur3": "Öğrenci kendi teknoloji kullanımını gözden geçirip bir kural belirlesin."
+ },
+ {
+  "id": "h69",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "İletişim Zaman Şeridi",
+  "sub": "Eskiden yeniye sırala",
+  "kaz": "HB.3.6.2.a — Teknolojik gelişmelerin günlük yaşama etkisini belirler.",
+  "type": "orderSequence",
+  "instruction": "İletişimin tarihi karıştı! En eskiden en yeniye doğru sırayla dokun",
+  "n": {
+   "items": 5
+  },
+  "tur1": "Gerçek iletişim araçları müzesi vitrini çizilsin; ürünler raf üzerinde sıralansın ve roket kaldırılsın. İlk turda tarihler gizlensin.",
+  "tur2": "Her aracın hangi ihtiyacı çözdüğü sorulsun; hız ve erişim karşılaştırılsın.",
+  "tur3": "Öğrenci iletişimin nasıl değiştiğini üç aşamada anlatsın."
+ },
+ {
+  "id": "h70",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Sanatçı Kartları",
+  "sub": "Sanatçıyı dalıyla eşle",
+  "kaz": "HB.3.6.3.a / b — Sanatçıların sanata katkılarına yönelik bilgi bulur ve kaydeder.",
+  "type": "memoryPairs",
+  "instruction": "Kartlar kapalı! Kartları çevir ve her sanatçıyı sanat dalıyla eşleştir",
+  "n": {
+   "pairs": 6
+  },
+  "tur1": "Gerçek eser görselleri kullanılsın; kart çevrilince sanatçının eserinden kısa bir örnek görünsün veya duyulsun.",
+  "tur2": "Aynı sanatçının birden çok dalda üretebildiği durumlar gösterilsin.",
+  "tur3": "Öğrenci bir sanatçıyı ve katkısını kendi cümlesiyle tanıtsın."
+ },
+ {
+  "id": "h71",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Sanat Sergisi",
+  "sub": "Sergiyi hazırla",
+  "kaz": "HB.3.6.3.a / b — Sanatçıların sanata katkılarına yönelik bilgileri bulur ve kaydeder.",
+  "type": "serveOrder",
+  "instruction": "Okul sanat sergisi hazırlıyoruz! Küratörün istediği ögeleri tepsiye koy",
+  "n": {
+   "customers": 3
+  },
+  "tur1": "Gerçek bir sergi salonu çizilsin; seçilen öge duvara asılsın ve sergi adım adım kurulsun. Etiket kopyası kaldırılsın.",
+  "tur2": "Serginin bütünlüğü sorulsun: hangi öge eksik kalırsa ziyaretçi anlamaz?",
+  "tur3": "Öğrenci kendi eserini sergiye ekleyip tanıtım yazısını yazsın."
+ },
+ {
+  "id": "h72",
+  "group": "Alan 6 · Bilim, Teknoloji ve Sanat",
+  "title": "Etki Radarı",
+  "sub": "Gelişmenin etkisini yakala",
+  "kaz": "HB.3.6.1 / HB.3.6.2 — Bilimsel ve teknolojik gelişmelerin günlük yaşama etkisini ifade eder.",
+  "type": "catchDrop",
+  "instruction": "Radarı sürükleyerek gelişmenin günlük yaşamdaki etkisini yakala",
+  "n": {
+   "rounds": 4
+  },
+  "tur1": "Genel radar yönergesi kaldırılsın; gelişme ve etkisi gerçek bir öncesi-sonrası sahnesiyle gösterilsin ve seçenekler sabit kartlarda dursun.",
+  "tur2": "Aynı gelişmenin farklı alanlardaki etkileri karşılaştırılsın.",
+  "tur3": "Öğrenci bir gelişmenin hayatını nasıl değiştirdiğini örnekle anlatsın."
+ }
+]
