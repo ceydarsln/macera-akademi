@@ -485,7 +485,29 @@ const HARF={
  'E':['M78 16L24 16','M24 16L24 128','M24 128L78 128','M24 72L64 72'],
  'e':['M18 84L74 84','M74 84C74 62 60 50 46 50C28 50 16 66 16 84C16 102 28 116 46 116C58 116 68 110 74 100'],
  'T':['M14 18L86 18','M50 18L50 128'],
- 't':['M46 20L46 128','M24 54L70 54']
+ 't':['M46 20L46 128','M24 54L70 54'],
+ 'L':['M26 16L26 128','M26 128L80 128'],
+ 'l':['M50 18L50 128'],
+ 'İ':['M50 40L50 128','M50 14L50 22'],
+ 'I':['M50 20L50 128'],
+ 'i':['M50 58L50 128','M50 32L50 40'],
+ 'ı':['M50 58L50 128'],
+ 'O':['M50 16C26 16 14 40 14 72C14 104 26 128 50 128C74 128 86 104 86 72C86 40 74 16 50 16'],
+ 'o':['M50 50C32 50 20 64 20 84C20 104 32 118 50 118C68 118 80 104 80 84C80 64 68 50 50 50'],
+ 'R':['M24 128L24 16','M24 16L60 16C76 16 82 28 82 42C82 56 76 68 60 68L24 68','M52 68L84 128'],
+ 'r':['M28 56L28 128','M28 76C28 62 42 52 62 54'],
+ 'M':['M18 128L18 16','M18 16L50 78','M50 78L82 16','M82 16L82 128'],
+ 'm':['M16 56L16 128','M16 74C16 60 27 52 38 56C47 60 50 70 50 82L50 128','M50 74C50 60 61 52 72 56C81 60 84 70 84 82L84 128'],
+ 'U':['M20 16L20 88C20 112 34 128 50 128C66 128 80 112 80 88L80 16'],
+ 'u':['M22 52L22 96C22 112 32 120 44 120C58 120 70 110 70 94L70 52','M70 52L70 128'],
+ 'K':['M24 16L24 128','M78 16L30 70','M36 66L80 128'],
+ 'k':['M26 16L26 128','M72 62L34 96','M42 88L74 128'],
+ 'Y':['M18 16L50 72','M82 16L50 72','M50 72L50 128'],
+ 'y':['M22 52L46 106','M74 52L46 106','M46 106L36 136'],
+ 'S':['M78 34C70 20 60 14 48 14C32 14 20 26 20 42C20 70 78 62 78 96C78 114 64 128 46 128C32 128 22 122 16 110'],
+ 's':['M72 62C66 52 58 48 48 48C36 48 26 56 26 66C26 88 72 80 72 102C72 114 60 120 46 120C36 120 28 116 22 108'],
+ 'D':['M24 16L24 128','M24 16L50 16C74 16 86 40 86 72C86 104 74 128 50 128L24 128'],
+ 'd':['M74 16L74 128','M74 84C74 62 60 50 46 50C28 50 16 66 16 84C16 102 28 116 46 116C60 116 74 106 74 84']
 };
 const HARF_YON={
  'A':'Büyük A: sol alttan tepeye çık, tepeden sağ alta in, en son ortadaki çizgiyi çek.',
@@ -495,7 +517,29 @@ const HARF_YON={
  'E':'Büyük E: üst çizgiyi çek, aşağı in, alt çizgiyi çek, ortayı ekle.',
  'e':'Küçük e: önce ortadaki düz çizgiyi çek, sonra kemeri çiz.',
  'T':'Büyük T: üstte düz git, sonra ortadan aşağı in.',
- 't':'Küçük t: aşağı in, sonra ortadaki kısa çizgiyi çek.'
+ 't':'Küçük t: aşağı in, sonra ortadaki kısa çizgiyi çek.',
+ 'L':'Büyük L: yukarıdan aşağı in, sonra sağa doğru düz çizgiyi çek.',
+ 'l':'Küçük l: yukarıdan aşağı tek düz çizgi çek.',
+ 'İ':'Büyük İ: yukarıdan aşağı in, sonra en üste noktayı koy. Türkçede büyük İ noktalıdır.',
+ 'I':'Büyük I: yukarıdan aşağı tek çizgi. Bu harfin noktası yoktur.',
+ 'i':'Küçük i: kısa çizgiyi aşağı in, sonra üstüne noktayı koy.',
+ 'ı':'Küçük ı: kısa çizgiyi aşağı in. Bu harfin noktası yoktur.',
+ 'O':'Büyük O: tepeden başla, sola dönerek tam bir halka çiz.',
+ 'o':'Küçük o: tepeden başla, sola dönerek küçük bir halka çiz.',
+ 'R':'Büyük R: aşağı in, üstte kemeri çiz, sonra bacağı sağ alta uzat.',
+ 'r':'Küçük r: aşağı in, sonra üstte küçük kancayı çiz.',
+ 'M':'Büyük M: aşağı in, tepeye çık, ortaya in, tepeye çık, sonra aşağı in.',
+ 'm':'Küçük m: aşağı in, sonra iki kemeri arka arkaya çiz.',
+ 'U':'Büyük U: soldan aşağı in, altta yuvarlan, sağdan yukarı çık.',
+ 'u':'Küçük u: aşağı in, altta yuvarlan, sonra sağdaki çizgiyi indir.',
+ 'K':'Büyük K: aşağı in, üstten ortaya çapraz in, sonra ortadan sağ alta çapraz in.',
+ 'k':'Küçük k: uzun çizgiyi aşağı in, sonra iki kısa çaprazı çiz.',
+ 'Y':'Büyük Y: iki çaprazı ortada birleştir, sonra aşağı in.',
+ 'y':'Küçük y: iki çaprazı birleştir, sonra kuyruğu satırın altına indir.',
+ 'S':'Büyük S: yukarıdan sola dönerek başla, ortada kıvrıl, aşağıda sağa dönerek bitir.',
+ 's':'Küçük s: aynı kıvrımı küçük yaz; kalem kalkmaz.',
+ 'D':'Büyük D: aşağı in, sonra üstten alta büyük kemeri çiz.',
+ 'd':'Küçük d: önce yuvarlağı çiz, sonra sağdaki uzun çizgiyi indir.'
 };
 
 /* ortak yardımcı: ses gösterimi ("/a/" gibi) konuşmada bozulmasın */
@@ -1213,6 +1257,470 @@ GAMES.t09={title:'Sihirli Daktilo',theme:'typewriter',
     {im:'🌿',ad:'nane al',hint:'Sen “ELMA AL” yazdın.'},
     {im:'🪑',ad:'masa'}]},
   result:'Boşluğu ayrı bir tuşla yazdın ve öbeğin anlamını resimle doğruladın.'}
+]};
+
+/* ===== TEMA 1 · SES GRUBU 1 (e, l, a, t) — t10–t15 =====
+   İlk okuma yazma ses gruplarına göre genişletme. Kabul ölçütleri t01–t09 ile
+   aynı: harf adı ile ses ayrı, dinleme görevi yazılı cevabı önceden göstermez,
+   süre baskısı yok, üçüncü turda öğrenci kendi üretimini yapar. */
+
+GAMES.t10={title:'Yaprak Yolu',theme:'garden',
+ finish:'Büyük E ve küçük e harflerini üç kılavuz düzeyinde doğru yönde yazdın, sonra yazıyı /e/ sesiyle eşleştirdin.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük E harfini yaz.',sahne:'clouds',harfler:['E'],kilavuz:0,
+  gorev:'Sarı BAŞLA topundan başla: üst çizgi, aşağı iniş, alt çizgi, en son orta çizgi.',
+  result:'Büyük E dört hamleyle yazılır; orta çizgi en sona bırakılır.'},
+ {kind:'ciz',prompt:'Seyrek kılavuzla büyük E ve küçük e yaz.',sahne:'opensky',harfler:['E','e'],kilavuz:1,
+  gorev:'Kılavuz soluk: yalnız başlangıç ve bitiş belli. Küçük e önce orta çizgiyle başlar.',
+  result:'Aynı sesin iki biçimi farklı hamle sırasıyla yazılır.'},
+ {kind:'ciz',prompt:'Kılavuzsuz satırda yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['E','e'],kilavuz:2,
+  gorev:'Kılavuz yok. Yanlış hamleyi “son hamleyi sil” ile geri alabilirsin.',
+  sesEsle:{ses:'/e/',gorev:'Sesi dinle: hangi görselin adı bu sesle başlıyor?',
+   secenekler:[{im:'🏠',ad:'ev',correct:true},
+    {im:'🍎',ad:'elma',correct:true},
+    {im:'🐟',ad:'balık',hint:'“balık” /b/ sesiyle başlıyor.'},
+    {im:'🌙',ad:'ay',hint:'“ay” /a/ sesiyle başlıyor.'}]},
+  result:'Harfi bağımsız yazdın ve /e/ sesiyle başlayan sözcükleri buldun.'}
+]};
+
+GAMES.t11={title:'Lale Tarlası',theme:'garden',
+ finish:'Büyük L ve küçük l harflerini yazdın; l ile benzer görünen harfleri çizgi yapısından ayırdın.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük L harfini yaz.',sahne:'clouds',harfler:['L'],kilavuz:0,
+  gorev:'Önce yukarıdan aşağı in, sonra sağa doğru düz çizgiyi çek.',
+  result:'Büyük L iki hamleyle yazılır: dik çizgi, sonra taban çizgisi.'},
+ {kind:'ciz',prompt:'Küçük l tek çizgidir; ikisini birlikte yaz.',sahne:'opensky',harfler:['L','l'],kilavuz:1,
+  gorev:'Küçük l tek düz çizgidir; tabanı yoktur.',
+  result:'Büyük L’nin tabanı var, küçük l’nin yok.'},
+ {kind:'ciz',prompt:'Kılavuzsuz yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['L','l'],kilavuz:2,
+  gorev:'Satır boş. Harfleri kendin yaz.',
+  sesEsle:{ses:'/l/',gorev:'Sesi dinle: hangi görselin adında bu ses var?',
+   secenekler:[{im:'🌷',ad:'lale',correct:true},
+    {im:'🍋',ad:'limon',correct:true},
+    {im:'🐝',ad:'arı',hint:'“arı” sözcüğünde /l/ sesi yok.'},
+    {im:'🐴',ad:'at',hint:'“at” sözcüğünde /l/ sesi yok.'}]},
+  result:'/l/ sesi sözcüğün başında da içinde de bulunabilir.'}
+]};
+
+GAMES.t12={title:'Sesli Bahçe',theme:'market',
+ finish:'Sesi yazıya bakmadan ayırt ettin; /t/ ve /l/ seslerini birbirinden ayırdın.',
+ rounds:[
+ {kind:'sepet',prompt:'Adını dinle: içinde /t/ sesi var mı?',sahne:'market',
+  gorev:'Nesneye dokun ve adını dinle. Yazılar cevaptan sonra açılır.',
+  sepetler:[{ad:'/t/ sesi VAR',im:'🧺'},{ad:'/t/ sesi YOK',im:'📦'}],
+  nesneler:[{im:'🐴',ad:'at',sepet:0},{im:'🪮',ad:'tarak',sepet:0},{im:'🍅',ad:'domates',sepet:0},
+   {im:'🌷',ad:'lale',sepet:1,hint:'“lale” sözcüğünü dinle: l, a, l, e. /t/ sesi yok.'},
+   {im:'🏠',ad:'ev',sepet:1}],
+  result:'At, tarak ve domates sözcüklerinde /t/ sesi var; lale ve ev sözcüklerinde yok.'},
+ {kind:'sepet',prompt:'İki sesi ayır: /t/ mi, /l/ mi ile başlıyor?',sahne:'market',
+  gorev:'Adını dinle ve sözcüğün HANGİ sesle başladığına göre sepetini seç.',
+  sepetler:[{ad:'/t/ ile başlar',im:'🧺'},{ad:'/l/ ile başlar',im:'🗑️'}],
+  nesneler:[{im:'🪮',ad:'tarak',sepet:0},{im:'🍅',ad:'domates',sepet:1,hint:'“domates” /d/ ile başlar; içinde /t/ var ama başta değil. Bu turda başa bakıyoruz — bu sözcük iki sepete de girmez, dinlemeye devam et.'},
+   {im:'🌷',ad:'lale',sepet:1},{im:'🍋',ad:'limon',sepet:1},{im:'🚂',ad:'tren',sepet:0}],
+  result:'Bir sesin sözcükte bulunması ile başta olması aynı şey değildir.'},
+ {kind:'konum',prompt:'/l/ sesi sözcüğün neresinde?',sahne:'market',ses:'/l/',
+  gorev:'Adını dinle ve /l/ sesini duyduğun yeri şeritte işaretle.',
+  nesneler:[{im:'🌷',ad:'lale',konum:0},{im:'🍋',ad:'limon',konum:0},
+   {im:'🍎',ad:'elma',konum:1,hint:'“el-ma”: /l/ sesi ilk hecenin sonunda, sözcüğün ortasında.'},
+   {im:'🥬',ad:'salata',konum:1},
+   {im:'🌰',ad:'fal',konum:2},{im:'🐕',ad:'kel',konum:2,hint:'“kel” sözcüğü /l/ sesiyle bitiyor.'}],
+  result:'Aynı ses sözcüğün başında, ortasında ve sonunda bulunabilir.'}
+]};
+
+GAMES.t13={title:'Bahçe Baloncukları',theme:'sea',
+ finish:'Benzer biçimli harfleri çizgi yapılarına bakarak ayırdın; boyut ve yazı biçimi değişse de harfi tanıdın.',
+ rounds:[
+ {kind:'balon',prompt:'Bütün E baloncuklarını patlat.',ses:'/e/',hedefler:['E'],
+  gorev:'Baloncuklar sabit duruyor; acele etme.',
+  baloncuklar:[{h:'E',dogru:true},{h:'F',hint:'F’nin alt çizgisi yoktur; E’de üç yatay çizgi vardır.'},
+   {h:'L',hint:'L’nin yalnız alt çizgisi vardır; E’nin üç çizgisi var.'},
+   {h:'T'},{h:'E',dogru:true,buyuk:true},{h:'F'}],
+  result:'E harfinin üç yatay çizgisi vardır; F’nin iki, L’nin bir.'},
+ {kind:'balon',prompt:'Küçük l ile karışanları ayır.',ses:'/l/',hedefler:['l','L'],
+  gorev:'Aynı ses iki biçimde yazılabilir. Yazı tipi ve boyut değişse de tanı.',
+  baloncuklar:[{h:'l',dogru:true},{h:'İ',hint:'İ’nin üstünde nokta vardır; l’de yoktur.'},
+   {h:'L',dogru:true,yazim:1},{h:'i',hint:'i’nin üstünde nokta vardır.'},
+   {h:'l',dogru:true,buyuk:true},{h:'t',hint:'t’nin ortasında kısa bir çizgi vardır.'}],
+  result:'Noktası olmayan tek düz çizgi küçük l’dir.'},
+ {kind:'sepet',prompt:'Aynı sesi gösteren harfleri bir araya getir.',sahne:'sea',yaziAcik:true,
+  gorev:'Her harf kartına dokunup dinle, sonra ait olduğu harf ailesini seç.',
+  sepetler:[{ad:'T t ailesi',im:'🆃'},{ad:'L l ailesi',im:'🆔'}],
+  nesneler:[{im:'T',ad:'T',sepet:0},{im:'t',ad:'t',sepet:0},
+   {im:'L',ad:'L',sepet:1,hint:'L ile T farklı seslerdir; T’nin çizgisi üstte, L’nin altta.'},
+   {im:'l',ad:'l',sepet:1},{im:'t',ad:'t',sepet:0}],
+  result:'Büyük ve küçük biçim farklı görünür ama aynı sesi gösterir.'}
+]};
+
+GAMES.t14={title:'İlk Hece Treni',theme:'rail',
+ finish:'Ses grubunun harfleriyle açık ve kapalı heceler kurdun; ters sıralı çiftlerin farklı hece olduğunu gördün.',
+ rounds:[
+ {kind:'tren',prompt:'Duyduğun heceyi iki vagonla kur.',
+  gorev:'Heceyi dinle. Ses kartlarını soldan sağa vagonlara yerleştir; yazı sonda açılır.',
+  sesler:['E','L','T'],dogru:[0,1],hedefSes:'el',
+  result:'/e/ ve /l/ sesleri birleşince EL hecesi oluştu.'},
+ {kind:'tren',prompt:'Aynı iki ses, iki farklı hece.',
+  gorev:'Önce LE, sonra EL kur. Her seferinde hecenin türünü de seç.',
+  asamalar:[
+   {sesler:['L','E','T'],dogru:[0,1],hedefSes:'le',tip:'acik',
+    gorev:'Bu heceyi kur: sesi dinle ve vagonları sırala.',sonuc:'LE ünlüyle bitiyor: açık hece.'},
+   {sesler:['E','L','T'],dogru:[0,1],hedefSes:'el',tip:'kapali',
+    gorev:'Şimdi aynı iki sesi ters sırada kur.',sonuc:'EL ünsüzle bitiyor: kapalı hece.'}],
+  result:'Aynı iki sesin sırası değişince hece de değişir.'},
+ {kind:'tren',prompt:'Dört heceyi karışık vagonlardan kur.',
+  gorev:'Her seferinde heceyi dinle, doğru iki vagonu doğru sırayla seç ve türünü söyle.',
+  asamalar:[
+   {sesler:['T','A','L','E'],dogru:[0,1],hedefSes:'ta',tip:'acik',sonuc:'TA açık hece.'},
+   {sesler:['A','T','L','E'],dogru:[0,1],hedefSes:'at',tip:'kapali',sonuc:'AT kapalı hece.'},
+   {sesler:['L','A','T','E'],dogru:[0,1],hedefSes:'la',tip:'acik',sonuc:'LA açık hece.'},
+   {sesler:['A','L','T','E'],dogru:[0,1],hedefSes:'al',tip:'kapali',sonuc:'AL kapalı hece.'}],
+  result:'İki açık ve iki kapalı hece kurdun; ters sıralı çiftleri de gördün.'}
+]};
+
+GAMES.t15={title:'Gölette Hece Avı',theme:'pond',
+ finish:'Heceyi yazıdan değil sesten tanıdın; beş hecelik diziyi süre baskısı olmadan doğru okudun.',
+ rounds:[
+ {kind:'kurbaga',prompt:'Duyduğun hecenin yaprağına zıpla.',
+  gorev:'Hedef yalnız sesli veriliyor; yapraklar sabit duruyor, süre tutulmuyor.',
+  yapraklar:['EL','LE','AL','LA'],hedefler:['LA'],
+  result:'Hedefi yazıya bakmadan, yalnız dinleyerek buldun.'},
+ {kind:'kurbaga',prompt:'Ters sıralı hece çiftlerini ayır.',
+  gorev:'EL-LE ve AL-LA çiftleri art arda geliyor. Her hedefi dinle ve doğru yaprağa zıpla.',
+  yapraklar:['EL','LE','AL','LA'],hedefler:['EL','LE','AL','LA'],
+  result:'Aynı harflerin sırası heceyi değiştirir: EL ile LE aynı hece değildir.'},
+ {kind:'kurbaga',prompt:'Beş hecelik diziyi doğru oku.',sureOlc:true,
+  gorev:'Beş hedef art arda gelecek. Önce doğruluk; süre yalnız dizi bitince gösterilir.',
+  yapraklar:['ET','TE','AT','TA','EL','LE'],hedefler:['ET','TE','AT','TA','EL'],
+  result:'Diziyi doğru tamamladın; süre yalnız doğruluktan sonra kaydedildi.'}
+]};
+
+/* ===== TEMA 2 · SES GRUBU 2 (i, n, o, r, m) — t16–t22 ===== */
+
+GAMES.t16={title:'Işıklı Yol',theme:'garden',
+ finish:'Türkçedeki noktalı İ ile noktasız I’yı ayırdın; büyük ve küçük biçimlerini doğru yönde yazdın.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük İ harfini yaz.',sahne:'clouds',harfler:['İ'],kilavuz:0,
+  gorev:'Önce yukarıdan aşağı çizgiyi in, sonra en üste noktayı koy.',
+  result:'Türkçede büyük İ noktalıdır; noktası unutulursa başka bir harf olur.'},
+ {kind:'ciz',prompt:'Noktalı ve noktasız biçimleri birlikte yaz.',sahne:'opensky',harfler:['İ','I'],kilavuz:1,
+  gorev:'Önce noktalı büyük İ, sonra noktasız büyük I. Aradaki tek fark noktadır.',
+  result:'İ ile I ayrı harflerdir ve ayrı sesleri gösterir.'},
+ {kind:'ciz',prompt:'Küçük harfleri yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['i','ı'],kilavuz:2,
+  gorev:'Küçük i noktalı, küçük ı noktasızdır. Satır boş; kendin yaz.',
+  sesEsle:{ses:'/i/',gorev:'Sesi dinle: hangi görselin adı bu sesle başlıyor?',
+   secenekler:[{im:'🪡',ad:'iğne',correct:true},
+    {im:'🌶️',ad:'ısırgan',hint:'“ısırgan” noktasız /ı/ sesiyle başlıyor.'},
+    {im:'🍎',ad:'elma',hint:'“elma” /e/ sesiyle başlıyor.'}]},
+  result:'Noktalı i ile noktasız ı farklı seslerdir; yazıda nokta anlamı değiştirir.'}
+]};
+
+GAMES.t17={title:'Orman Halkası',theme:'garden',
+ finish:'O ve o harflerini tek hamlelik halka olarak yazdın ve /o/ sesini sözcüklerde tanıdın.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük O harfini yaz.',sahne:'clouds',harfler:['O'],kilavuz:0,
+  gorev:'Tepeden başla ve sola dönerek halkayı tamamla; kalemi kaldırma.',
+  result:'Büyük O tek hamlede, kalem kaldırmadan yazılır.'},
+ {kind:'ciz',prompt:'Büyük ve küçük halkayı birlikte yaz.',sahne:'opensky',harfler:['O','o'],kilavuz:1,
+  gorev:'İkisi de aynı yönde döner; yalnız boyutları farklıdır.',
+  result:'Aynı ses büyük ve küçük halkayla yazılabilir.'},
+ {kind:'ciz',prompt:'Kılavuzsuz yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['O','o'],kilavuz:2,
+  gorev:'Satır boş. Halkayı kapatmayı unutma.',
+  sesEsle:{ses:'/o/',gorev:'Sesi dinle: hangi görselin adı bu sesle başlıyor?',
+   secenekler:[{im:'🚌',ad:'otobüs',correct:true},
+    {im:'🪑',ad:'oda',correct:true},
+    {im:'🐴',ad:'at',hint:'“at” /a/ sesiyle başlıyor.'},
+    {im:'🪡',ad:'iğne',hint:'“iğne” /i/ sesiyle başlıyor.'}]},
+  result:'/o/ sesiyle başlayan sözcükleri buldun.'}
+]};
+
+GAMES.t18={title:'Rüzgâr Gülü',theme:'garden',
+ finish:'R ve r harflerini hamle sırasına uyarak yazdın; r ile karışan harfleri ayırdın.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük R harfini yaz.',sahne:'clouds',harfler:['R'],kilavuz:0,
+  gorev:'Aşağı in, üstteki kemeri çiz, sonra bacağı sağ alta uzat.',
+  result:'Büyük R üç hamleyle yazılır: dik çizgi, kemer, bacak.'},
+ {kind:'ciz',prompt:'Küçük r yalnız iki hamledir.',sahne:'opensky',harfler:['R','r'],kilavuz:1,
+  gorev:'Küçük r’nin kemeri kapanmaz; küçük bir kanca gibidir.',
+  result:'Büyük R’nin kemeri kapanır, küçük r’nin kancası açık kalır.'},
+ {kind:'ciz',prompt:'Kılavuzsuz yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['R','r'],kilavuz:2,
+  gorev:'Satır boş. Kancayı çok büyük çizme.',
+  sesEsle:{ses:'/r/',gorev:'Sesi dinle: hangi görselin adında bu ses var?',
+   secenekler:[{im:'🌈',ad:'renk',correct:true},
+    {im:'🚂',ad:'tren',correct:true},
+    {im:'🍎',ad:'elma',hint:'“elma” sözcüğünde /r/ sesi yok.'},
+    {im:'🏠',ad:'ev',hint:'“ev” sözcüğünde /r/ sesi yok.'}]},
+  result:'/r/ sesi sözcüğün başında da içinde de bulunabilir.'}
+]};
+
+GAMES.t19={title:'Mandalina Sepeti',theme:'market',
+ finish:'Birbirine çok yakın /m/ ve /n/ seslerini yalnız dinleyerek ayırdın ve sesin sözcükteki yerini buldun.',
+ rounds:[
+ {kind:'sepet',prompt:'Adını dinle: içinde /m/ sesi var mı?',sahne:'market',
+  gorev:'Nesneye dokun ve adını dinle. Yazılar cevaptan sonra açılır.',
+  sepetler:[{ad:'/m/ sesi VAR',im:'🧺'},{ad:'/m/ sesi YOK',im:'📦'}],
+  nesneler:[{im:'🍊',ad:'mandalina',sepet:0},{im:'🌽',ad:'mısır',sepet:0},{im:'🍎',ad:'elma',sepet:0},
+   {im:'🌰',ad:'nar',sepet:1,hint:'“nar” sözcüğünü dinle: n, a, r. Bu /n/ sesidir, /m/ değil.'},
+   {im:'🍐',ad:'armut',sepet:1}],
+  result:'Mandalina, mısır ve elma sözcüklerinde /m/ sesi var; nar ve armutta yok.'},
+ {kind:'sepet',prompt:'İki yakın sesi ayır: /m/ mi, /n/ mi ile başlıyor?',sahne:'market',
+  gorev:'Adını dinle ve sözcüğün HANGİ sesle başladığına göre sepetini seç.',
+  sepetler:[{ad:'/m/ ile başlar',im:'🧺'},{ad:'/n/ ile başlar',im:'🗑️'}],
+  nesneler:[{im:'🌽',ad:'mısır',sepet:0},{im:'🪑',ad:'masa',sepet:0},
+   {im:'🌰',ad:'nar',sepet:1,hint:'“nar” sözcüğünü dinle: ilk ses burnundan gelir ama dudakların kapanmaz. Bu /n/.'},
+   {im:'🌿',ad:'nane',sepet:1},{im:'🍊',ad:'mandalina',sepet:0}],
+  result:'/m/ derken dudaklar kapanır, /n/ derken kapanmaz.'},
+ {kind:'konum',prompt:'/n/ sesi sözcüğün neresinde?',sahne:'market',ses:'/n/',
+  gorev:'Adını dinle ve /n/ sesini duyduğun yeri şeritte işaretle.',
+  nesneler:[{im:'🌰',ad:'nar',konum:0},{im:'🌿',ad:'nane',konum:0},
+   {im:'👩',ad:'anne',konum:1,hint:'“an-ne”: /n/ sesi sözcüğün ortasında.'},
+   {im:'🍌',ad:'muz',konum:1,sepet:1},
+   {im:'🌞',ad:'gün',konum:2},{im:'🚂',ad:'tren',konum:2,hint:'“tren” sözcüğü /n/ sesiyle bitiyor.'}],
+  result:'Aynı ses sözcüğün başında, ortasında ve sonunda bulunabilir.'}
+]};
+
+GAMES.t20={title:'Noktalı mı, Noktasız mı?',theme:'sea',
+ finish:'Türkçenin en çok karışan harf çiftlerini noktalarına ve çizgilerine bakarak ayırdın.',
+ rounds:[
+ {kind:'balon',prompt:'Yalnız noktalı küçük i baloncuklarını patlat.',ses:'/i/',hedefler:['i'],
+  gorev:'Baloncuklar sabit duruyor. Noktasız olanlara dokunma.',
+  baloncuklar:[{h:'i',dogru:true},{h:'ı',hint:'Bunun noktası yok: bu küçük ı, ayrı bir harftir.'},
+   {h:'i',dogru:true,buyuk:true},{h:'ı',hint:'Noktasız olan ı’dır.'},
+   {h:'l',hint:'l daha uzundur ve noktası yoktur.'},{h:'i',dogru:true,yazim:1}],
+  result:'Küçük i noktalıdır; noktasız olan ı ayrı bir harf ve ayrı bir sestir.'},
+ {kind:'balon',prompt:'M ile N’yi çizgilerinden ayır.',ses:'/m/',hedefler:['M','m'],
+  gorev:'M’nin iki kemeri, N’nin bir çaprazı vardır.',
+  baloncuklar:[{h:'M',dogru:true},{h:'N',hint:'N’de tek çapraz çizgi vardır; M’de ortada aşağı inen köşe.'},
+   {h:'m',dogru:true},{h:'n',hint:'n’nin bir kemeri vardır; m’nin iki.'},
+   {h:'M',dogru:true,yazim:1},{h:'r',hint:'r’nin kancası kapanmaz.'}],
+  result:'M iki kemerli, N tek çaprazlıdır; küçükleri de aynı kuralla ayrılır.'},
+ {kind:'sepet',prompt:'Aynı sesi gösteren harfleri bir araya getir.',sahne:'sea',yaziAcik:true,
+  gorev:'Her harf kartına dokunup dinle, sonra ait olduğu harf ailesini seç.',
+  sepetler:[{ad:'İ i ailesi (noktalı)',im:'🅸'},{ad:'I ı ailesi (noktasız)',im:'🆘'}],
+  nesneler:[{im:'İ',ad:'İ',sepet:0},{im:'i',ad:'i',sepet:0},
+   {im:'I',ad:'I',sepet:1,hint:'Noktasız olanlar ayrı bir ailedir.'},
+   {im:'ı',ad:'ı',sepet:1},{im:'i',ad:'i',sepet:0}],
+  result:'Türkçede noktalı ve noktasız harfler iki ayrı ailedir.'}
+]};
+
+GAMES.t21={title:'İkinci Hece Treni',theme:'rail',
+ finish:'Ses grubu 2’nin harfleriyle açık ve kapalı heceler kurdun; ters sıralı çiftleri ayırdın.',
+ rounds:[
+ {kind:'tren',prompt:'Duyduğun heceyi iki vagonla kur.',
+  gorev:'Heceyi dinle. Ses kartlarını soldan sağa vagonlara yerleştir; yazı sonda açılır.',
+  sesler:['O','N','M'],dogru:[0,1],hedefSes:'on',
+  result:'/o/ ve /n/ sesleri birleşince ON hecesi oluştu.'},
+ {kind:'tren',prompt:'Aynı iki ses, iki farklı hece.',
+  gorev:'Önce NO, sonra ON kur. Her seferinde hecenin türünü de seç.',
+  asamalar:[
+   {sesler:['N','O','M'],dogru:[0,1],hedefSes:'no',tip:'acik',
+    gorev:'Bu heceyi kur: sesi dinle ve vagonları sırala.',sonuc:'NO ünlüyle bitiyor: açık hece.'},
+   {sesler:['O','N','M'],dogru:[0,1],hedefSes:'on',tip:'kapali',
+    gorev:'Şimdi aynı iki sesi ters sırada kur.',sonuc:'ON ünsüzle bitiyor: kapalı hece.'}],
+  result:'Aynı iki sesin sırası değişince hece de değişir.'},
+ {kind:'tren',prompt:'Dört heceyi karışık vagonlardan kur.',
+  gorev:'Her seferinde heceyi dinle, doğru iki vagonu doğru sırayla seç ve türünü söyle.',
+  asamalar:[
+   {sesler:['M','İ','R','O'],dogru:[0,1],hedefSes:'mi',tip:'acik',sonuc:'Mİ açık hece.'},
+   {sesler:['İ','M','R','O'],dogru:[0,1],hedefSes:'im',tip:'kapali',sonuc:'İM kapalı hece.'},
+   {sesler:['R','O','M','İ'],dogru:[0,1],hedefSes:'ro',tip:'acik',sonuc:'RO açık hece.'},
+   {sesler:['O','R','M','İ'],dogru:[0,1],hedefSes:'or',tip:'kapali',sonuc:'OR kapalı hece.'}],
+  result:'İki açık ve iki kapalı hece kurdun; ters sıralı çiftleri de gördün.'}
+]};
+
+GAMES.t22={title:'Uzayda Hece Kapsülü',theme:'space',
+ finish:'Ses sırasını sen seçtin, ters sıralı heceleri ayırdın ve son heceyi anlamlı bir kelimeyle bağladın.',
+ rounds:[
+ {kind:'uzay',prompt:'Duyduğun heceyi iki yuvaya kur.',
+  gorev:'Meteorlar sabit. Heceyi dinle, sesleri soldan sağa yuvalara çek.',
+  meteorlar:['İ','N','M','O'],dogru:[0,1],hedefSes:'in',
+  result:'/i/ ve /n/ sesleri birleşince İN hecesi oluştu.'},
+ {kind:'uzay',prompt:'Aynı meteorlar, ters sıra.',
+  gorev:'Önce İN, sonra Nİ kur.',
+  asamalar:[{meteorlar:['İ','N','M','O'],dogru:[0,1],hedefSes:'in',sonuc:'İN kuruldu.'},
+   {meteorlar:['İ','N','M','O'],dogru:[1,0],hedefSes:'ni',sonuc:'Nİ kuruldu; sıra değişti, hece değişti.'}],
+  result:'İN ve Nİ aynı harflerden oluşur ama farklı hecelerdir.'},
+ {kind:'uzay',prompt:'Dört heceyi kur, sonuncuyu kelimeyle bağla.',
+  gorev:'Her hedefi dinle, kapsülü kur.',
+  asamalar:[{meteorlar:['M','O','R','İ'],dogru:[0,1],hedefSes:'mo',sonuc:'MO kuruldu.'},
+   {meteorlar:['O','M','R','İ'],dogru:[0,1],hedefSes:'om',sonuc:'OM kuruldu.'},
+   {meteorlar:['R','İ','M','O'],dogru:[0,1],hedefSes:'ri',sonuc:'Rİ kuruldu.'},
+   {meteorlar:['N','A','R','İ'],dogru:[0,1],hedefSes:'na',
+    kelimeSec:{gorev:'Kurduğun NA hecesiyle BAŞLAYAN görsel hangisi?',
+     secenekler:[{im:'🌿',ad:'nane',correct:true},
+      {im:'🍊',ad:'mandalina',hint:'“mandalina” MAN hecesiyle başlıyor.'},
+      {im:'🌰',ad:'nar',hint:'“nar” tek hecelidir ve NAR biçimindedir.'}]},
+    sonuc:'NA hecesi “nane” sözcüğünün ilk hecesidir.'}],
+  result:'Dört hece kurdun ve son heceyi anlamlı bir kelimeyle ilişkilendirdin.'}
+]};
+
+/* ===== TEMA 3 · SES GRUBU 3 (u, k, ı, y, s, d) — t23–t30 ===== */
+
+GAMES.t23={title:'Uçurtma Yolu',theme:'garden',
+ finish:'U ve u harflerini kâse biçiminde doğru yönde yazdın ve /u/ sesini sözcüklerde tanıdın.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük U harfini yaz.',sahne:'clouds',harfler:['U'],kilavuz:0,
+  gorev:'Soldan aşağı in, altta yuvarlan, sağdan yukarı çık. Kalem kalkmaz.',
+  result:'Büyük U tek hamlede, altı yuvarlanarak yazılır.'},
+ {kind:'ciz',prompt:'Büyük ve küçük u’yu birlikte yaz.',sahne:'opensky',harfler:['U','u'],kilavuz:1,
+  gorev:'Küçük u’nun sağ tarafında kısa bir çizgi daha vardır.',
+  result:'Küçük u iki hamlelidir: kâse ve sağdaki çizgi.'},
+ {kind:'ciz',prompt:'Kılavuzsuz yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['U','u'],kilavuz:2,
+  gorev:'Satır boş. Kâsenin altını sivri değil yuvarlak yap.',
+  sesEsle:{ses:'/u/',gorev:'Sesi dinle: hangi görselin adı bu sesle başlıyor?',
+   secenekler:[{im:'🪁',ad:'uçurtma',correct:true},
+    {im:'✈️',ad:'uçak',correct:true},
+    {im:'🍎',ad:'elma',hint:'“elma” /e/ sesiyle başlıyor.'},
+    {im:'🌰',ad:'nar',hint:'“nar” /n/ sesiyle başlıyor.'}]},
+  result:'/u/ sesiyle başlayan sözcükleri buldun.'}
+]};
+
+GAMES.t24={title:'Kelebek Kanadı',theme:'garden',
+ finish:'K ve k harflerinin çapraz hamlelerini doğru sırayla yazdın.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük K harfini yaz.',sahne:'clouds',harfler:['K'],kilavuz:0,
+  gorev:'Önce dik çizgiyi in, sonra üstten ortaya, en son ortadan sağ alta çapraz in.',
+  result:'Büyük K üç hamleyle yazılır; iki çapraz ortada buluşur.'},
+ {kind:'ciz',prompt:'Küçük k’nın çaprazları daha kısadır.',sahne:'opensky',harfler:['K','k'],kilavuz:1,
+  gorev:'Küçük k’nın dik çizgisi uzun, çaprazları kısadır.',
+  result:'Aynı ses, aynı yapı: yalnız çaprazların boyu değişir.'},
+ {kind:'ciz',prompt:'Kılavuzsuz yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['K','k'],kilavuz:2,
+  gorev:'Satır boş. Çaprazların ortada buluştuğuna dikkat et.',
+  sesEsle:{ses:'/k/',gorev:'Sesi dinle: hangi görselin adı bu sesle başlıyor?',
+   secenekler:[{im:'🐱',ad:'kedi',correct:true},
+    {im:'🦋',ad:'kelebek',correct:true},
+    {im:'🍊',ad:'mandalina',hint:'“mandalina” /m/ sesiyle başlıyor.'},
+    {im:'🪁',ad:'uçurtma',hint:'“uçurtma” /u/ sesiyle başlıyor.'}]},
+  result:'/k/ sesiyle başlayan sözcükleri buldun.'}
+]};
+
+GAMES.t25={title:'Yıldız İzi',theme:'garden',
+ finish:'Y ve y harflerini yazdın; küçük y’nin kuyruğunun satırın altına indiğini gördün.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük Y harfini yaz.',sahne:'clouds',harfler:['Y'],kilavuz:0,
+  gorev:'İki çaprazı ortada birleştir, sonra ortadan aşağı in.',
+  result:'Büyük Y üç hamleyle yazılır ve satırın içinde kalır.'},
+ {kind:'ciz',prompt:'Küçük y’nin kuyruğu aşağı iner.',sahne:'opensky',harfler:['Y','y'],kilavuz:1,
+  gorev:'Küçük y’nin son hamlesi satır çizgisinin altına taşar.',
+  result:'Küçük y, kuyruğu satırın altına inen harflerdendir.'},
+ {kind:'ciz',prompt:'Kılavuzsuz yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['Y','y'],kilavuz:2,
+  gorev:'Satır boş. Kuyruğu aşağı indirmeyi unutma.',
+  sesEsle:{ses:'/y/',gorev:'Sesi dinle: hangi görselin adı bu sesle başlıyor?',
+   secenekler:[{im:'🥚',ad:'yumurta',correct:true},
+    {im:'⭐',ad:'yıldız',correct:true},
+    {im:'🐱',ad:'kedi',hint:'“kedi” /k/ sesiyle başlıyor.'},
+    {im:'🌰',ad:'nar',hint:'“nar” /n/ sesiyle başlıyor.'}]},
+  result:'/y/ sesiyle başlayan sözcükleri buldun.'}
+]};
+
+GAMES.t26={title:'Salıncak Çizgisi',theme:'garden',
+ finish:'S ve s harflerini kalem kaldırmadan tek kıvrımda yazdın.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük S harfini yaz.',sahne:'clouds',harfler:['S'],kilavuz:0,
+  gorev:'Yukarıdan sola dönerek başla, ortada kıvrıl, aşağıda sağa dönerek bitir.',
+  result:'Büyük S tek hamlede, kalem kaldırmadan yazılır.'},
+ {kind:'ciz',prompt:'Aynı kıvrımı küçük yaz.',sahne:'opensky',harfler:['S','s'],kilavuz:1,
+  gorev:'Küçük s aynı yolu izler, yalnız daha küçüktür.',
+  result:'Büyük ve küçük s aynı kıvrımı paylaşır.'},
+ {kind:'ciz',prompt:'Kılavuzsuz yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['S','s'],kilavuz:2,
+  gorev:'Satır boş. Kıvrımı ortada kesme.',
+  sesEsle:{ses:'/s/',gorev:'Sesi dinle: hangi görselin adı bu sesle başlıyor?',
+   secenekler:[{im:'🥛',ad:'süt',correct:true},
+    {im:'🧺',ad:'sepet',correct:true},
+    {im:'⭐',ad:'yıldız',hint:'“yıldız” /y/ sesiyle başlıyor.'},
+    {im:'🦋',ad:'kelebek',hint:'“kelebek” /k/ sesiyle başlıyor.'}]},
+  result:'/s/ sesiyle başlayan sözcükleri buldun.'}
+]};
+
+GAMES.t27={title:'Damla Yolu',theme:'garden',
+ finish:'D ve d harflerini yazdın; küçük d’de önce yuvarlağın çizildiğini öğrendin.',
+ rounds:[
+ {kind:'ciz',prompt:'Yoğun noktalı büyük D harfini yaz.',sahne:'clouds',harfler:['D'],kilavuz:0,
+  gorev:'Önce dik çizgiyi in, sonra üstten alta büyük kemeri çiz.',
+  result:'Büyük D iki hamleyle yazılır: dik çizgi ve kemer.'},
+ {kind:'ciz',prompt:'Küçük d’de önce yuvarlak çizilir.',sahne:'opensky',harfler:['D','d'],kilavuz:1,
+  gorev:'Küçük d’nin yuvarlağı SOLDA, uzun çizgisi SAĞDADIR.',
+  result:'Küçük d’de yuvarlak solda kalır; bu onu b’den ayırır.'},
+ {kind:'ciz',prompt:'Kılavuzsuz yaz, sonra sesi eşleştir.',sahne:'valley',harfler:['D','d'],kilavuz:2,
+  gorev:'Satır boş. Yuvarlağı solda tutmayı unutma.',
+  sesEsle:{ses:'/d/',gorev:'Sesi dinle: hangi görselin adı bu sesle başlıyor?',
+   secenekler:[{im:'🌳',ad:'dal',correct:true},
+    {im:'💧',ad:'damla',correct:true},
+    {im:'🥛',ad:'süt',hint:'“süt” /s/ sesiyle başlıyor.'},
+    {im:'🥚',ad:'yumurta',hint:'“yumurta” /y/ sesiyle başlıyor.'}]},
+  result:'/d/ sesiyle başlayan sözcükleri buldun.'}
+]};
+
+GAMES.t28={title:'Kumsalda Sesler',theme:'market',
+ finish:'/k/ ve /d/ seslerini dinleyerek ayırdın ve sesin sözcükteki yerini buldun.',
+ rounds:[
+ {kind:'sepet',prompt:'Adını dinle: içinde /k/ sesi var mı?',sahne:'market',
+  gorev:'Nesneye dokun ve adını dinle. Yazılar cevaptan sonra açılır.',
+  sepetler:[{ad:'/k/ sesi VAR',im:'🧺'},{ad:'/k/ sesi YOK',im:'📦'}],
+  nesneler:[{im:'🐱',ad:'kedi',sepet:0},{im:'🦋',ad:'kelebek',sepet:0},{im:'🥕',ad:'havuç',sepet:1,hint:'“havuç” sözcüğünde h, a, v, u, ç sesleri var; /k/ yok.'},
+   {im:'💧',ad:'damla',sepet:1},{im:'🧺',ad:'sepet',sepet:1}],
+  result:'Kedi ve kelebek sözcüklerinde /k/ sesi var; havuç, damla ve sepette yok.'},
+ {kind:'sepet',prompt:'İki sesi ayır: /k/ mı, /d/ mi ile başlıyor?',sahne:'market',
+  gorev:'Adını dinle ve sözcüğün HANGİ sesle başladığına göre sepetini seç.',
+  sepetler:[{ad:'/k/ ile başlar',im:'🧺'},{ad:'/d/ ile başlar',im:'🗑️'}],
+  nesneler:[{im:'🐱',ad:'kedi',sepet:0},{im:'🦋',ad:'kelebek',sepet:0},
+   {im:'💧',ad:'damla',sepet:1},{im:'🌳',ad:'dal',sepet:1},
+   {im:'🥛',ad:'süt',sepet:1,hint:'“süt” /s/ ile başlar. Bu turda yalnız /k/ ve /d/ arıyoruz; dikkatli dinle.'}],
+  result:'/k/ derken dilin arkası damağa değer, /d/ derken dilin ucu ön damağa değer.'},
+ {kind:'konum',prompt:'/s/ sesi sözcüğün neresinde?',sahne:'market',ses:'/s/',
+  gorev:'Adını dinle ve /s/ sesini duyduğun yeri şeritte işaretle.',
+  nesneler:[{im:'🥛',ad:'süt',konum:0},{im:'🧺',ad:'sepet',konum:0},
+   {im:'🪑',ad:'masa',konum:1,hint:'“ma-sa”: /s/ sesi sözcüğün ortasında.'},
+   {im:'🥬',ad:'salatalık',konum:0},
+   {im:'🚌',ad:'otobüs',konum:2},{im:'🌡️',ad:'kadeh',konum:1,sepet:1}],
+  result:'Aynı ses sözcüğün başında, ortasında ve sonunda bulunabilir.'}
+]};
+
+GAMES.t29={title:'Dönen Harfler',theme:'sea',
+ finish:'Döndürülünce birbirine benzeyen harfleri yönlerine bakarak ayırdın.',
+ rounds:[
+ {kind:'balon',prompt:'Yalnız u baloncuklarını patlat.',ses:'/u/',hedefler:['u','U'],
+  gorev:'u ile n birbirinin ters çevrilmiş hâline benzer. Kâsenin ağzı nereye bakıyor?',
+  baloncuklar:[{h:'u',dogru:true},{h:'n',hint:'n’nin kemeri yukarıda; u’nun kâsesi aşağıda.'},
+   {h:'U',dogru:true},{h:'n',hint:'Kemer yukarıdaysa o harf n’dir.'},
+   {h:'u',dogru:true,yazim:1},{h:'m',hint:'m’nin iki kemeri vardır.'}],
+  result:'u’nun ağzı yukarı, n’nin kemeri aşağı bakar.'},
+ {kind:'balon',prompt:'Yalnız d baloncuklarını patlat.',ses:'/d/',hedefler:['d','D'],
+  gorev:'Küçük d’nin yuvarlağı SOLDA kalır.',
+  baloncuklar:[{h:'d',dogru:true},{h:'o',hint:'o yalnız yuvarlaktır; d’nin uzun çizgisi de vardır.'},
+   {h:'D',dogru:true},{h:'a',hint:'a’nın çizgisi kısadır; d’nin çizgisi yukarı uzanır.'},
+   {h:'d',dogru:true,buyuk:true},{h:'o'}],
+  result:'d, bir yuvarlak ve sağındaki uzun çizgiden oluşur.'},
+ {kind:'sepet',prompt:'Aynı sesi gösteren harfleri bir araya getir.',sahne:'sea',yaziAcik:true,
+  gorev:'Her harf kartına dokunup dinle, sonra ait olduğu harf ailesini seç.',
+  sepetler:[{ad:'K k ailesi',im:'🅺'},{ad:'S s ailesi',im:'🆂'}],
+  nesneler:[{im:'K',ad:'K',sepet:0},{im:'k',ad:'k',sepet:0},
+   {im:'S',ad:'S',sepet:1,hint:'S kıvrımlıdır; K çaprazlıdır.'},
+   {im:'s',ad:'s',sepet:1},{im:'k',ad:'k',sepet:0}],
+  result:'Büyük ve küçük biçim farklı görünür ama aynı sesi gösterir.'}
+]};
+
+GAMES.t30={title:'Üçüncü Hece Treni',theme:'rail',
+ finish:'Üçüncü ses grubunun harfleriyle açık ve kapalı heceler kurdun.',
+ rounds:[
+ {kind:'tren',prompt:'Duyduğun heceyi iki vagonla kur.',
+  gorev:'Heceyi dinle. Ses kartlarını soldan sağa vagonlara yerleştir; yazı sonda açılır.',
+  sesler:['K','U','S'],dogru:[0,1],hedefSes:'ku',
+  result:'/k/ ve /u/ sesleri birleşince KU hecesi oluştu.'},
+ {kind:'tren',prompt:'Aynı iki ses, iki farklı hece.',
+  gorev:'Önce KU, sonra UK kur. Her seferinde hecenin türünü de seç.',
+  asamalar:[
+   {sesler:['K','U','S'],dogru:[0,1],hedefSes:'ku',tip:'acik',
+    gorev:'Bu heceyi kur: sesi dinle ve vagonları sırala.',sonuc:'KU ünlüyle bitiyor: açık hece.'},
+   {sesler:['U','K','S'],dogru:[0,1],hedefSes:'uk',tip:'kapali',
+    gorev:'Şimdi aynı iki sesi ters sırada kur.',sonuc:'UK ünsüzle bitiyor: kapalı hece.'}],
+  result:'Aynı iki sesin sırası değişince hece de değişir.'},
+ {kind:'tren',prompt:'Dört heceyi karışık vagonlardan kur.',
+  gorev:'Her seferinde heceyi dinle, doğru iki vagonu doğru sırayla seç ve türünü söyle.',
+  asamalar:[
+   {sesler:['S','I','Y','D'],dogru:[0,1],hedefSes:'sı',tip:'acik',sonuc:'SI açık hece.'},
+   {sesler:['I','S','Y','D'],dogru:[0,1],hedefSes:'ıs',tip:'kapali',sonuc:'IS kapalı hece.'},
+   {sesler:['Y','A','S','D'],dogru:[0,1],hedefSes:'ya',tip:'acik',sonuc:'YA açık hece.'},
+   {sesler:['A','Y','S','D'],dogru:[0,1],hedefSes:'ay',tip:'kapali',sonuc:'AY kapalı hece.'}],
+  result:'İki açık ve iki kapalı hece kurdun; ters sıralı çiftleri de gördün.'}
 ]};
 
 game=GAMES[GAME_ID];
