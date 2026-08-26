@@ -437,8 +437,11 @@ function saksi(oran,durum){
   `<rect width="320" height="160" fill="#eaf6ff"/><rect y="132" width="320" height="28" fill="#c19a6b"/>`+
   `<path d="M112 84 h96 l-12 48 h-72z" fill="#c9724a" stroke="#8f4c2c" stroke-width="3"/>`+
   `<rect x="106" y="74" width="108" height="14" rx="4" fill="#d98a5c" stroke="#8f4c2c" stroke-width="3"/>`+
+  `<defs><clipPath id="saksiIc"><path d="M116 88 h88 l-11 42 h-66z"/></clipPath></defs>`+
+  `<g clip-path="url(#saksiIc)">`+
   `<rect x="116" y="88" width="88" height="${16+nem*12}" fill="#6b4a2f" opacity="${.45+nem*.5}"/>`+
   (gol>0?`<ellipse cx="160" cy="92" rx="${34+gol*10}" ry="6" fill="#5aa7bf" opacity=".8"/>`:'')+
+  `</g>`+
   `<rect x="157" y="${44+yaprakY}" width="6" height="${44-yaprakY}" fill="${renk}"/>`+
   `<path d="M160 ${52+yaprakY} q-20 -${12-yaprakY} -24 -${24-yaprakY*2} q22 2 24 ${24-yaprakY*2}z" fill="${renk}"/>`+
   `<path d="M160 ${52+yaprakY} q20 -${12-yaprakY} 24 -${24-yaprakY*2} q-22 2 -24 ${24-yaprakY*2}z" fill="${renk}"/>`+
@@ -713,14 +716,16 @@ function renderOlcum(r){state.deger=r.min;state.not='';olcumCiz(r)}
    deneniyor (tur "cezasiz"). ===== */
 function sulaCiz(r){
  const v=state.verilen||0, oran=v/r.uygunUst;
- const durum=state.sonuc||'';
+ /* Karar bir sayıya değil gözleme dayansın: uygun aralık aşıldığı anda
+    toprakta göllenme görünür. Öğrenci hedefi okumaz, saksıya bakar. */
+ const durum=state.sonuc||(oran>1?'cok':'');
  $('#stage').innerHTML=saksi(oran,durum)+
   `<div class="konus-balon">${esc(r.gorev)}</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=
   `<div class="sure-cubuk"><i style="--w:${Math.min(100,oran*62)}%"></i></div>`+
-  `<button class="tut ${state.basili?'basili':''}" id="tut">Sulama kabını eğik tut</button>`+
   `<div class="hint">${esc(r.ipucu||'Bitkiye bak: yaprakları ne söylüyor?')}</div>`+
+  `<button class="tut ${state.basili?'basili':''}" id="tut">Sulama kabını eğik tut</button>`+
   `<button class="choice" id="sulaOk">Sulamayı bitirdim</button>`;
  const t=$('#tut');
  const bas=e=>{e.preventDefault();if(locked||state.basili)return;state.basili=true;t.classList.add('basili');
@@ -738,7 +743,7 @@ function sulaCiz(r){
   state.sonuc='iyi';state.not=r.iyiMetin||'Toprak nemli, su göllenmedi.';sulaCiz(r);good()}}
 function sulaGuncelle(r){
  const v=state.verilen||0,oran=v/r.uygunUst;
- const st=$('#stage');if(st)st.firstElementChild.outerHTML=saksi(oran,'');
+ const st=$('#stage');if(st)st.firstElementChild.outerHTML=saksi(oran,oran>1?'cok':'');
  const c=$('.sure-cubuk i');if(c)c.style.setProperty('--w',Math.min(100,oran*62)+'%')}
 function renderSula(r){state.verilen=0;state.sonuc='';state.not='';state.basili=false;sulaCiz(r)}
 
@@ -2614,6 +2619,360 @@ GAMES.g32={title:'Elektrikli Araç Köprüsü',theme:'ev',
   yasak:['Çamaşır makinesi olmasaydı zor olurdu.'],
   ornekCevap:'Çamaşır makinesi olmasaydı evdeki bütün çamaşırları büyük bir leğende elimizle tek tek ovup sıkmak zorunda kalırdık.',
   result:'Bir aracın işini, olmadığı durumla karşılaştırarak anlattın.'}
+]};
+
+/* ---- g33 Elektrik Güvenliği (radar kaldırıldı: davranışlar ev sahnesinde) ---- */
+GAMES.g33={title:'Elektrik Güvenliği',theme:'ev',
+ finish:'Tehlikeli davranışları tanıdın, zararsız görünen riskleri ayırdın ve bir güvenlik kuralını gerekçesiyle yazdın.',rounds:[
+ {kind:'karar',prompt:'Bu davranış güvenli mi?',sahne:SAHNE.ev,
+  durum:'Banyodan yeni çıkan biri, elleri hâlâ ıslakken saç kurutma makinesinin fişini prize takmak üzere.',
+  soru:'Bu davranış hakkında ne söylenir?',
+  secenekler:[
+   {label:'Tehlikelidir; eller kurulanmadan fişe dokunulmamalı',correct:true},
+   {label:'Güvenlidir, fiş plastiktir',hint:'Islak el, fişin metal uçlarına da temas edebilir.'},
+   {label:'Güvenlidir, makine daha çalışmıyor',hint:'Prize takıldığı anda elektrik fişin uçlarına gelir.'},
+   {label:'Sorun değil, kısa sürer',hint:'Elektrik çarpması bir anda olur; süre kısa olsa da risk aynıdır.'}],
+  neden:{soru:'Islak el neden riski artırır?',
+   secenekler:[
+    {label:'Su elektriği ilettiği için akım vücuda daha kolay geçer',correct:true},
+    {label:'Islak el fişi tutamaz, düşürür',hint:'Asıl tehlike düşürmek değil, akımın geçmesi.'},
+    {label:'Islaklık makineyi paslandırır',hint:'Paslanma sonraki bir sorun; şu andaki tehlike başka.'}]},
+  araSoz:'Doğru. Peki ıslaklık neden riski artırıyor?',
+  ipucu:'Suyun elektrikle ilişkisini düşün.',
+  result:'Su elektriği iletir; bu yüzden ıslak elle prize dokunulmaz.'},
+ {kind:'sinifla',prompt:'Bu davranış zararsız görünüyor ama...',sahne:SAHNE.ev,
+  soru:'Bu davranış güvenli mi, riskli mi?',
+  kutular:[{ad:'GÜVENLİ',alt:'yapılabilir'},{ad:'RİSKLİ',alt:'yapılmamalı'}],
+  ipucu:'Sor: burada elektrik nereden geçiyor ve suya ya da ısıya değiyor mu?',
+  kartlar:[
+   {t:'Fişi çekmek için kablodan asılarak çekmek',dogru:1,
+    neden:'Kablodan çekmek içindeki telleri kopararak açıkta bırakır.',
+    hint:'Kablo içinde ne var ve çekince ona ne olur?'},
+   {t:'Fişi gövdesinden tutup düzgünce çekmek',dogru:0,
+    neden:'Fişin gövdesi yalıtkandır, doğru tutma yeri orasıdır.',
+    hint:'Bu davranışta elin nereye değiyor?'},
+   {t:'Tek prize üç çoklu priz takıp altı cihazı birlikte çalıştırmak',dogru:1,
+    neden:'Aşırı yüklenen priz ısınır ve yangına yol açabilir.',
+    hint:'Aynı prizden çok akım geçerse ne ısınır?'},
+   {t:'Kullanmadığın şarj aletini prizden çıkarmak',dogru:0,
+    neden:'Boşta duran cihaz hem enerji harcar hem risk taşır.',
+    hint:'Bu davranış riski artırıyor mu, azaltıyor mu?'},
+   {t:'Kablosunun dış kaplaması yırtılmış cihazı kullanmak',dogru:1,
+    neden:'Yırtık yerden açıkta kalan tel dokunanı çarpabilir.',
+    hint:'Kaplama ne işe yarıyordu?'},
+   {t:'Ütüyü kullandıktan sonra fişini çekip soğumaya bırakmak',dogru:0,
+    neden:'Fişi çekilmiş cihaz ne ısınır ne akım taşır.',hint:'Fişi çekilmiş cihazdan akım geçer mi?'},
+   {t:'Prize saç tokası ya da kalem sokup içine bakmak',dogru:1,
+    neden:'Prizin içindeki uçlar akım taşır; metal cisim akımı ele geçirir.',
+    hint:'Prizin deliklerinde ne var?'},
+   {t:'Islanan prizi kurulamak için önce sigortayı kapatmak',dogru:0,
+    neden:'Sigorta kapatılınca o hattan akım geçmez.',hint:'Sigorta kapalıyken hatta akım var mı?'}]},
+ {kind:'yaz',prompt:'Bir güvenlik kuralını gerekçesiyle yaz.',sahne:SAHNE.ev,
+  gorev:'Evde uyulması gereken bir elektrik güvenliği kuralı yaz ve nedenini belirt.',
+  ornek:'Kalıp: "… yapmam çünkü …"',
+  enAzKelime:12,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… yapmam çünkü …',
+  yasak:['Islak elle prize dokunmam çünkü tehlikelidir.'],
+  ornekCevap:'Prizden fişi çekerken kablodan asılarak çekmem çünkü kablonun içindeki teller kopup açıkta kalabilir.',
+  result:'Kuralı gerekçesiyle yazdın: gerekçesi bilinen kurala uyulur.'}
+]};
+
+/* ---- g34 Tasarruf Hesabı (ekranda gerçek tüketim tablosu; soru veriden okunuyor) ---- */
+GAMES.g34={title:'Tasarruf Hesabı',theme:'ev',
+ finish:'Tüketim tablosundan hesap yaptın, iki ayı karşılaştırdın ve sonucu bir cümleyle yorumladın.',rounds:[
+ {kind:'tus',prompt:'Tablodan hesapla: haftada kaç saat boşa gidiyor?',sahne:SAHNE.ev,
+  tablo:{bas:['Cihaz (boşta açık kaldığı süre)','Günde saat'],
+   satirlar:[['Salondaki ampul',4],['Koridor ampulü',2],['Televizyon (kimse izlemezken)',5],['Şarj aleti (boşta takılı)',3]]},
+  gorev:'Salondaki ampulün boşta yandığı süreyi tablodan oku. Bu ampul bir haftada (7 gün) kaç saat boşa yanar?',
+  soru:'Cevabı tuşlarla yaz.',
+  dogru:28,vurgu:[0],
+  ipucu:'Tablodan günlük süreyi al, gün sayısıyla çarp.',
+  yanlisIpucu:'Vurgulanan satıra yeniden bak: günde kaç saat yazıyor?',
+  result:'Tablodaki veriyi kullanarak haftalık süreyi buldun.'},
+ {kind:'tus',prompt:'İki ayı karşılaştır.',sahne:SAHNE.ev,
+  tablo:{bas:['Ay','Sayaçta okunan (kilovatsaat)'],
+   satirlar:[['Ocak',180],['Şubat',150],['Mart',162],['Nisan',144]]},
+  gorev:'Ocak ile Şubat ayında okunan değerleri tablodan oku. Şubat ayında Ocak\'a göre kaç kilovatsaat daha az harcanmış?',
+  soru:'Farkı tuşlarla yaz.',
+  dogru:30,vurgu:[0,1],
+  ipucu:'İki satırı bul, büyüğünden küçüğünü çıkar.',
+  yanlisIpucu:'Vurgulanan iki satıra bak: aradaki fark ne kadar?',
+  result:'İki ayı karşılaştırıp farkı buldun.'},
+ {kind:'yaz',prompt:'Sonucu bir cümleyle yorumla.',sahne:SAHNE.defter,
+  gorev:'Yukarıdaki tabloya göre tüketim hangi yönde değişiyor? Bunu bir cümleyle yaz ve bir neden öner.',
+  veri:{bas:'Sayaçta okunan (kilovatsaat)',
+   satirlar:[{ad:'Ocak',deger:180},{ad:'Şubat',deger:150},{ad:'Mart',deger:162},{ad:'Nisan',deger:144}]},
+  ornek:'Kalıp: "Tüketim … çünkü …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Tüketim … çünkü …',
+  yasak:['Tüketim azalıyor çünkü az harcıyoruz.'],
+  ornekCevap:'Aylar geçtikçe tüketim genel olarak azalıyor çünkü havalar ısındıkça ışıkları ve ısıtıcıyı daha az kullanıyoruz.',
+  result:'Sayıyı sözle yorumladın: veri ancak yorumlanınca anlam kazanır.'}
+]};
+
+/* ---- g35 Tasarruf Planı (tepsi kaldırıldı: plan kâğıdı ekranda yazılıyor) ---- */
+GAMES.g35={title:'Tasarruf Planı',theme:'ev',
+ finish:'Tasarruf planını kurdun, etkisi az ve çok olan önerileri ayırdın ve kendi evin için üç maddelik plan yazdın.',rounds:[
+ {kind:'topla',prompt:'Plan kâğıdına maddeleri yaz.',sahne:SAHNE.ev,
+  gorev:'Sınıf panosuna asılacak tasarruf planını hazırlıyoruz. Yalnız gerçekten elektrik tasarrufu sağlayan maddeleri plana ekle.',
+  soru:'Bu madde plana girer mi?',
+  cantaAd:'TASARRUF PLANI',bosMetin:'Plan boş — ilk maddeyi ekle.',
+  ipucu:'Sor: bu davranış elektrik tüketimini gerçekten azaltır mı?',
+  ogeler:[
+   {t:'Odadan çıkarken ışığı kapatmak',neden:'Boşa yanan ampul doğrudan tüketimdir.'},
+   {t:'Buzdolabının kapağını uzun süre açık tutmamak',neden:'Açık kapak dolabı sürekli çalıştırır.'},
+   {t:'Kullanılmayan şarj aletini prizden çıkarmak',neden:'Boşta takılı cihaz da enerji harcar.'},
+   {t:'Gündüz perdeyi açıp lambayı yakmamak',neden:'Gün ışığı bedava aydınlatma sağlar.'},
+   {t:'Televizyonun sesini kısmak',hint:'Bu davranış cihazın çalışma süresini değiştirir mi?'},
+   {t:'Duvarları açık renge boyamak',hint:'Bu, elektrik tüketimini doğrudan azaltır mı?'},
+   {t:'Daha büyük bir televizyon almak',hint:'Bu değişiklik tüketimi azaltır mı, artırır mı?'}],
+  gerekli:[0,1,2,3]},
+ {kind:'sinifla',prompt:'Bu önerinin etkisi ne kadar?',sahne:SAHNE.ev,
+  soru:'Bu öneri tüketimi ne kadar azaltır?',
+  kutular:[{ad:'ÇOK ETKİLİ',alt:'her gün çok enerji kazandırır'},{ad:'AZ ETKİLİ',alt:'katkısı küçüktür'}],
+  ipucu:'İki şeye bak: cihaz ne kadar enerji harcıyor ve ne sıklıkta kullanılıyor?',
+  kartlar:[
+   {t:'Günde altı saat boşa yanan salon avizesini kapatmak',dogru:0,
+    neden:'Uzun süre çalışan güçlü bir cihaz büyük fark yaratır.',
+    hint:'Bu cihaz günde kaç saat boşa çalışıyor?'},
+   {t:'Ayda bir kez kullanılan el fenerinin pilini çıkarmak',dogru:1,
+    neden:'Az kullanılan küçük cihazın katkısı sınırlıdır.',hint:'Bu cihaz ne sıklıkta kullanılıyor?'},
+   {t:'Kışın ısıtıcıyı bir saat erken kapatmak',dogru:0,
+    neden:'Isıtma en çok enerji harcayan işlerden biridir.',hint:'Isıtıcı çok mu az mı enerji harcar?'},
+   {t:'Duvar saatinin pilini yılda bir yerine iki yılda bir değiştirmek',dogru:1,
+    neden:'Saatin harcadığı enerji çok küçüktür.',hint:'Bu cihaz ne kadar güç çekiyor?'},
+   {t:'Çamaşırı yarım yerine tam dolu makinede yıkamak',dogru:0,
+    neden:'Aynı enerjiyle iki kat iş yapılmış olur.',hint:'Makine yarım da doluyken aynı enerjiyi mi harcıyor?'},
+   {t:'Bilgisayarın ekran parlaklığını bir kademe kısmak',dogru:1,
+    neden:'Katkısı vardır ama küçüktür.',hint:'Bu değişiklik cihazın çalışma süresini değiştiriyor mu?'}]},
+ {kind:'yaz',prompt:'Kendi evin için üç maddelik plan yaz.',sahne:SAHNE.defter,
+  gorev:'Kendi evinde uygulayacağın üç tasarruf maddesi yaz.',
+  ornek:'Her maddeyi ayrı cümle olarak yaz.',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,
+  denetim:[{ad:'"kapat" ya da "çıkar" sözcüklerinden birini kullan',desen:'kapat|çıkar',bayrak:'i'}],
+  ipucuMetin:'1. … 2. … 3. …',
+  yasak:['Işığı kapatırım. Fişi çıkarırım. Tasarruf ederim.'],
+  ornekCevap:'Odamdan çıkarken masa lambamı kapatacağım. Telefonumun şarjı bitince kabloyu prizden çıkaracağım. Gündüz perdeyi tamamen açıp hiç lamba yakmayacağım.',
+  result:'Planını kendi evine göre üç somut maddeyle kurdun.'}
+]};
+
+/* ---- g36 Elektrik Kuralı Panosu (kartlar küçük harfle; baş harf ve
+        noktalama öğrencinin kararı — diziliş cevabı ele vermiyor) ---- */
+GAMES.g36={title:'Elektrik Kuralı Panosu',theme:'ev',
+ finish:'Kural cümlesini kurdun, kuralı gerekçesiyle birleştirdin ve kendi kuralını yazdın.',rounds:[
+ {kind:'cumle',prompt:'Pano için güvenlik kuralını kur.',sahne:SAHNE.ev,
+  gorev:'Sınıf panosuna asılacak kuralı sözcüklerden kur. Sözcükler küçük harfle geliyor; cümlenin başını ve sonunu sen karara bağlayacaksın.',
+  soru:'Sözcükleri anlamlı bir kural olacak biçimde sırala.',
+  ipucu:'Kural "ne yapmam" diye bitiyor.',
+  kelimeler:['ıslak','elle','fişe','ve','prize','dokunmam'],
+  kabul:[[0,1,2,3,4,5],[0,1,4,3,2,5]],
+  yanlisIpucu:'Bu sözcük burada anlamlı olmuyor; cümleyi baştan oku.',
+  bitirme:[
+   {label:'Baş harfi büyük yaz, sonuna nokta koy',correct:true},
+   {label:'Baş harfi küçük bırak, sonuna nokta koy',
+    hint:'Cümleler hangi harfle başlar?'},
+   {label:'Baş harfi büyük yaz, sonuna soru işareti koy',
+    hint:'Bu cümle bir soru mu, bir kural mı?'},
+   {label:'Baş harfi büyük yaz, sonuna hiçbir işaret koyma',
+    hint:'Bitmiş bir cümlenin sonunda ne bulunur?'}],
+  result:'Kuralı kurdun; cümlenin başını ve sonunu sen kararlaştırdın.'},
+ {kind:'cumle',prompt:'Bu kez kuralı gerekçesiyle birlikte kur.',sahne:SAHNE.ev,
+  gorev:'Panoya ikinci kuralı asacağız: bu kez cümlede hem ne yapılacağı hem nedeni bulunacak.',
+  soru:'Sözcükleri kural ve gerekçe olacak biçimde sırala.',
+  ipucu:'Önce ne yapacağını, sonra "çünkü" ile nedenini söyle.',
+  kelimeler:['odadan','çıkarken','ışığı','kapatırım','çünkü','elektrik','boşa','gider'],
+  kabul:[[0,1,2,3,4,5,6,7]],
+  yanlisIpucu:'Gerekçe "çünkü" ile başlar ve kuraldan sonra gelir.',
+  bitirme:[
+   {label:'Baş harfi büyük yaz, sonuna nokta koy',correct:true},
+   {label:'"Çünkü" sözcüğünü de büyük harfle yaz',
+    hint:'Büyük harf cümlenin başında kullanılır; "çünkü" cümlenin ortasında.'},
+   {label:'Sonuna ünlem koy',hint:'Bu bir kural cümlesi; bağırmıyoruz.'}],
+  result:'Kuralı gerekçesiyle birlikte kurdun.'},
+ {kind:'yaz',prompt:'Kendi elektrik kuralını gerekçesiyle yaz.',sahne:SAHNE.ev,
+  gorev:'Panoya asılacak kendi kuralını yaz: ne yapacağını ve nedenini belirt.',
+  ornek:'Kalıp: "… çünkü …"',
+  enAzKelime:12,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… çünkü …',
+  yasak:['Işığı kapatırım çünkü elektrik boşa gider.'],
+  ornekCevap:'Bilgisayarımı kapatmadan yatağa gitmem çünkü açık kalan ekran bütün gece boşuna elektrik harcar.',
+  result:'Kendi kuralını gerekçesiyle yazdın.'}
+]};
+
+/* ---- g37 Bitki İhtiyaçları (bant kaldırıldı: sera ve tarla sahnesi) ---- */
+GAMES.g37={title:'Bitki İhtiyaçları',theme:'tarla',
+ finish:'Bitkinin ihtiyaçlarını ayırdın, miktarın önemini gördün ve bir bitkinin ihtiyaçlarını sıraladın.',rounds:[
+ {kind:'sinifla',prompt:'Bitkinin yetişmesi için gerekli mi?',sahne:SAHNE.tarla,
+  soru:'Bu, bitkinin yetişmesi için gerekli mi?',
+  kutular:[{ad:'GEREKLİ',alt:'olmazsa yetişemez'},{ad:'GEREKLİ DEĞİL',alt:'olmasa da yetişir'}],
+  ipucu:'Sor: bu olmadan bitki yaşamını sürdürebilir mi?',
+  kartlar:[
+   {t:'Su — kökleriyle topraktan çeker',dogru:0,
+    neden:'Susuz bitki kısa sürede solar.',hint:'Saksıyı bir hafta hiç sulamazsan ne olur?'},
+   {t:'Işık — yapraklarında besin üretmesini sağlar',dogru:0,
+    neden:'Işık olmadan bitki besin üretemez.',hint:'Karanlık dolapta tutulan bitkiye ne olur?'},
+   {t:'Hava — yapraklarıyla gaz alışverişi yapar',dogru:0,
+    neden:'Bitki de solunum yapar.',hint:'Cam fanusa hava girmezse ne olur?'},
+   {t:'Uygun sıcaklık — çok soğukta kökleri donar',dogru:0,
+    neden:'Her bitkinin yaşayabildiği bir sıcaklık aralığı vardır.',
+    hint:'Dondurucuya konan bir fide yetişir mi?'},
+   {t:'Saksının rengi',dogru:1,
+    neden:'Rengin bitkinin gelişimiyle ilgisi yoktur.',hint:'Bu, bitkinin beslenmesini etkiler mi?'},
+   {t:'Yanında müzik çalması',dogru:1,
+    neden:'Bitki için ses bir ihtiyaç değildir.',hint:'Bitki bunu köküyle mi yaprağıyla mı alır?'},
+   {t:'Besin — topraktan aldığı mineraller',dogru:0,
+    neden:'Toprak bitkiye gerekli mineralleri verir.',hint:'Kumda hiç mineral olmasa bitki gelişir mi?'},
+   {t:'Saksının yuvarlak olması',dogru:1,
+    neden:'Biçim değil, içindeki toprak ve su önemlidir.',hint:'Köşeli saksıda bitki yetişmez mi?'}]},
+ {kind:'karar',prompt:'Gerekli olması yeterli mi?',sahne:SAHNE.tarla,
+  durum:'İki özdeş fideden birine her gün bir çay bardağı, ötekine her gün iki litre su verildi. İki hafta sonra ikinci fidenin yaprakları sarardı ve toprağı sürekli ıslak kaldı.',
+  soru:'Bu sonuç ne gösteriyor?',
+  secenekler:[
+   {label:'Su gereklidir ama fazlası da zarar verir',correct:true},
+   {label:'Su bitkiye gerekli değildir',hint:'Birinci fide suyla iyi gelişti; su gerekli.'},
+   {label:'Ne kadar su verilirse o kadar iyidir',hint:'İkinci fide daha çok su aldı ama sarardı.'},
+   {label:'İkinci fide hastalanmıştır, suyla ilgisi yoktur',
+    hint:'İki fide özdeşti; değişen tek şey su miktarıydı.'}],
+  neden:{soru:'Fazla su köke neden zarar verir?',
+   secenekler:[
+    {label:'Sürekli ıslak toprakta köke hava gitmez',correct:true},
+    {label:'Fazla su kökü ağırlaştırır',hint:'Sorun ağırlık değil, kökün havasız kalması.'},
+    {label:'Fazla su yaprakları yırtar',hint:'Su topraktan verildi, yapraklara değil.'}]},
+  araSoz:'Doğru. Peki fazla su köke neden zarar verir?',
+  ipucu:'Deneyde değişen tek şeyin ne olduğuna bak.',
+  result:'Bir ihtiyaç gerekli olabilir ama miktarı da önemlidir.'},
+ {kind:'yaz',prompt:'Bir bitkinin ihtiyaçlarını sırala.',sahne:SAHNE.tarla,
+  gorev:'Yetiştirmek istediğin bir bitkiyi yaz ve ona neler sağlaman gerektiğini sırala.',
+  ornek:'Kalıp: "… yetiştirmek için ona … vermem gerekir."',
+  enAzKelime:16,enAzCumle:2,buyukHarf:true,
+  denetim:[{ad:'"su" sözcüğünü kullan',desen:'\\bsu',bayrak:'i'},
+   {ad:'"ışık" ya da "güneş" sözcüğünü kullan',desen:'ışık|güneş',bayrak:'i'}],
+  ipucuMetin:'… yetiştirmek için ona … vermem gerekir.',
+  yasak:['Bitki için su ve ışık gerekir.'],
+  ornekCevap:'Balkonda fesleğen yetiştirmek için ona düzenli su ve bol güneş ışığı vermem gerekir. Ayrıca saksısını mineralli toprakla doldurmalıyım.',
+  result:'Bitkinin ihtiyaçlarını kendi planında sıraladın.'}
+]};
+
+/* ---- g38 Tohumdan Hasada (roket kaldırıldı: adımlar tarlada) ---- */
+GAMES.g38={title:'Tohumdan Hasada',theme:'tarla',
+ finish:'Tarım adımlarını sıraladın, ürünler arasındaki farkları gördün ve bir ürünün yetişme sürecini anlattın.',rounds:[
+ {kind:'sira',prompt:'Tarladaki işleri sırayla yap.',sahne:SAHNE.tarla,
+  gorev:'Buğday ekeceğiz. Tarlada hangi iş önce yapılır?',
+  ipucu:'Tohum atılmadan önce toprağa ne yapılır?',
+  kartlar:[
+   {t:'Toprak sürülüp yumuşatılır',neden:'Sert toprakta kök ilerleyemez.'},
+   {t:'Tohumlar toprağa ekilir',neden:'Toprak hazırlandıktan sonra ekim yapılır.'},
+   {t:'Tarla sulanır',neden:'Tohum çimlenmek için suya ihtiyaç duyar.'},
+   {t:'Filizler büyürken yabancı otlar temizlenir',neden:'Yabancı otlar suyu ve besini paylaşır.'},
+   {t:'Olgunlaşan ürün hasat edilir',neden:'Hasat, olgunlaşmadan sonra yapılır.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Tohumu sert toprağa atsan ne olur?',
+   'Toprak hazır; sıradaki iş ne?',
+   'Ekilen tohumun çimlenmesi için ne gerekir?',
+   'Filizler çıktı; onlarla besin yarışan şeyler ne yapılır?',
+   'Ürün olgunlaştı; son iş ne?']},
+ {kind:'esle',prompt:'Her ürünün kendine göre bir farkı var.',sahne:SAHNE.tarla,
+  soru:'Her ürünü, yetiştirilmesindeki farkla eşle.',
+  ipucu:'Ürünün yetiştiği yere ve süresine bak.',
+  yuvalar:[
+   {hedef:'Sürekli su içinde tutulan tarlada yetişir',dogru:0,
+    neden:'Çeltik su altında kalan tarlalarda yetiştirilir.',
+    hint:'Hangi ürün su içinde büyür?'},
+   {hedef:'Bir kez dikilir, yıllarca ürün verir',dogru:1,
+    neden:'Meyve ağaçları her yıl yeniden dikilmez.',hint:'Hangi ürün için her yıl yeniden ekim yapılmaz?'},
+   {hedef:'Toprağın altında geliştiği için hasatta toprak kazılır',dogru:2,
+    neden:'Patates yumru olarak toprak altında büyür.',hint:'Hangi ürünü toplamak için toprağı kazmak gerekir?'},
+   {hedef:'Sonbaharda ekilir, yazın biçilir',dogru:3,
+    neden:'Buğday kışı toprakta geçirir.',hint:'Hangi ürün kışı tarlada geçirir?'}],
+  etiketler:[{t:'Çeltik (pirinç)'},{t:'Elma ağacı'},{t:'Patates'},{t:'Buğday'}]},
+ {kind:'yaz',prompt:'Bir ürünün yetişme sürecini anlat.',sahne:SAHNE.tarla,
+  gorev:'Sevdiğin bir tarım ürününü seç ve tohumdan sofraya gelene kadar neler yapıldığını yaz.',
+  ornek:'Kalıp: "Önce … Sonra … En sonunda …"',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,
+  denetim:[{ad:'"ek" ya da "dik" sözcüğünü kullan',desen:'ekil|ekiy|eker|dikil|diker',bayrak:'i'},
+   {ad:'"hasat" ya da "topla" sözcüğünü kullan',desen:'hasat|topla',bayrak:'i'}],
+  ipucuMetin:'Önce … Sonra … En sonunda …',
+  yasak:['Önce ekilir sonra sulanır en sonunda hasat edilir.'],
+  ornekCevap:'Domates için önce fideler yumuşatılmış toprağa dikilir. Sonra düzenli sulanır ve yabancı otları temizlenir. En sonunda kızaran domatesler tek tek toplanıp sandıklara konur.',
+  result:'Bir ürünün yolculuğunu adım adım anlattın.'}
+]};
+
+/* ---- g39 Toprak Köprüsü (öge ile görev arasında simge kopyası yok) ---- */
+GAMES.g39={title:'Toprak Köprüsü',theme:'tarla',
+ finish:'Toprağın ögelerini görevleriyle eşledin, toprağın nasıl oluştuğunu sıraladın ve süreci kendi sözcüklerinle anlattın.',rounds:[
+ {kind:'esle',prompt:'Toprağın her ögesini görevine eşle.',sahne:SAHNE.toprak,
+  soru:'Önce alttan bir öge seç, sonra görevine dokun.',
+  ipucu:'Kesite bak: hangi öge nerede duruyor ve ne işe yarıyor?',
+  yuvalar:[
+   {hedef:'En üstte durur, çürümüş bitki ve canlı artıklarından oluşur, bitkiye besin verir',dogru:0,
+    neden:'Humus toprağın en verimli üst katmanıdır.',
+    hint:'Bu öge çürümeyle mi oluşur, kırılmayla mı?'},
+   {hedef:'Suyu tutar ve köklerin tutunmasını sağlar',dogru:1,
+    neden:'Kil taneleri çok ince olduğu için suyu tutar.',hint:'Hangi öge suyu tutar?'},
+   {hedef:'İri taneli olduğu için suyun süzülüp geçmesini sağlar',dogru:2,
+    neden:'Kum taneleri arasında boşluk çoktur.',hint:'Hangi öge suyu tutmaz, geçirir?'},
+   {hedef:'En altta bulunur, zamanla ufalanarak toprağa dönüşür',dogru:3,
+    neden:'Ana kaya, toprağın kaynağıdır.',hint:'Kesitin en altında ne var?'},
+   {hedef:'Toprağı kazarak havalandırır, artıkları parçalar',dogru:4,
+    neden:'Solucanlar toprağı karıştırıp havalandırır.',hint:'Bu öge canlı mı, cansız mı?'}],
+  etiketler:[{t:'Humus'},{t:'Kil'},{t:'Kum'},{t:'Ana kaya'},{t:'Solucan'}]},
+ {kind:'sira',prompt:'Toprak nasıl oluşur? Sırayla diz.',sahne:SAHNE.toprak,
+  gorev:'Bir kaya parçasının toprağa dönüşmesi binlerce yıl sürer. Hangi aşama önce gelir?',
+  ipucu:'Her şey büyük kayayla başlar.',
+  kartlar:[
+   {t:'Yüzeyde büyük bir ana kaya bulunur',neden:'Toprağın kaynağı kayadır.'},
+   {t:'Sıcak, soğuk, rüzgâr ve su kayayı çatlatır',neden:'Isı değişimi ve su kayayı yorar.'},
+   {t:'Kaya küçük parçalara, sonra kum ve kil tanelerine ayrılır',neden:'Parçalanma tane boyutunu küçültür.'},
+   {t:'Ölen bitki ve canlı artıkları bu tanelerin arasına karışır',neden:'Organik artıklar toprağa katılır.'},
+   {t:'Artıklar çürüyerek humusa dönüşür ve verimli toprak oluşur',neden:'Humus, toprağı verimli kılan katmandır.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Toprak neyden oluşmaya başlar?',
+   'Sağlam kayaya ilk olarak ne olur?',
+   'Çatlayan kaya zamanla neye dönüşür?',
+   'Kum ve kil tanelerinin arasına ne karışır?',
+   'Karışan artıklar zamanla ne olur?']},
+ {kind:'yaz',prompt:'Toprağın nasıl oluştuğunu anlat.',sahne:SAHNE.toprak,
+  gorev:'Bir kayanın nasıl toprağa dönüştüğünü kendi cümlelerinle yaz.',
+  ornek:'Kalıp: "Önce … Sonra … Böylece …"',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,
+  denetim:[{ad:'"kaya" sözcüğünü kullan',desen:'kaya',bayrak:'i'},
+   {ad:'"humus" ya da "çürü" sözcüğünü kullan',desen:'humus|çürü',bayrak:'i'}],
+  ipucuMetin:'Önce … Sonra … Böylece …',
+  yasak:['Önce kaya kırılır sonra humus olur böylece toprak oluşur.'],
+  ornekCevap:'Önce sıcak ve soğuk büyük kayayı çatlatır. Sonra çatlayan parçalar rüzgâr ve suyla ufalanıp kum tanesi olur. Böylece aralarına karışan çürümüş yapraklarla verimli toprak oluşur.',
+  result:'Toprağın oluşumunu kendi sözcüklerinle anlattın.'}
+]};
+
+/* ---- g40 Fideyi Sula (KRONOMETRE kaldırıldı: gerçek saksı, fide ve sulama
+        kabı var. Hedef miktar üç yerde yazılıydı; hiçbirinde yazmıyor —
+        öğrenci bitkinin türüne ve toprağa bakarak karar veriyor) ---- */
+GAMES.g40={title:'Fideyi Sula',theme:'tarla',
+ finish:'Fideyi toprağa bakarak suladın, az ve fazla suyun sonucunu gördün ve sulamayı ne zaman durduracağını anlattın.',rounds:[
+ {kind:'sula',prompt:'Fideyi sula; toprağa bakarak karar ver.',
+  gorev:'Saksıdaki küçük fideyi sulayacaksın. Sulama kabını eğik tut, toprağı izle ve bitkinin ihtiyacı karşılanınca bırak.',
+  uygunAlt:26,uygunUst:40,cezasiz:true,
+  ipucu:'Toprak nemlenmeli ama su yüzeyde birikmemeli.',
+  azMetin:'Toprak hâlâ kuru ve yapraklar sarkıyor. Biraz daha su ver.',
+  cokMetin:'Su toprağın üstünde göllendi; kök havasız kalır. Suyu boşalttık, yeniden dene.',
+  iyiMetin:'Toprak nemli, su göllenmedi: fide için tam ölçü.',
+  result:'Fideye toprağa bakarak doğru miktarda su verdin.'},
+ {kind:'sula',prompt:'Bu kez saksıda bir kaktüs var.',
+  gorev:'Aynı işi kaktüs için yapacaksın. Çölde yaşayan bir bitkinin toprağı çok az suyla nemlenir; kabı ona göre tut.',
+  uygunAlt:8,uygunUst:16,cezasiz:true,
+  ipucu:'Çöl bitkisinin toprağı ıslak kalmayı sevmez.',
+  azMetin:'Toprak henüz hiç nemlenmedi. Çok az bir su daha ver.',
+  cokMetin:'Kaktüsün toprağı göllendi; çöl bitkisinin kökü buna dayanmaz. Suyu boşalttık, yeniden dene.',
+  iyiMetin:'Toprak hafifçe nemli: kaktüs için bu kadarı yeter.',
+  result:'Her bitkinin su ihtiyacının farklı olduğunu gözledin.'},
+ {kind:'yaz',prompt:'Sulamayı ne zaman durduracağını yaz.',sahne:SAHNE.tarla,
+  gorev:'Bir bitkiyi sularken ne zaman duracağını nasıl anlarsın? Toprağa ve bitkiye bakarak yaz.',
+  ornek:'Kalıp: "Toprak … olunca duruyorum çünkü …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"toprak" sözcüğünü kullan',desen:'toprak|toprağ',bayrak:'i'}],
+  ipucuMetin:'Toprak … olunca duruyorum çünkü …',
+  yasak:['Toprak ıslanınca duruyorum çünkü yeter.'],
+  ornekCevap:'Toprağın üstü koyulaşıp parmağımı batırdığımda nemli gelince sulamayı durduruyorum çünkü suyun yüzeyde göllenmesi kökü çürütür.',
+  result:'Sulama kararını gözlenebilir bir ölçüte bağladın.'}
 ]};
 
 /* ===== OYUN VERİSİ BURADA BİTER (yeni parti bu satırın üstüne eklenir) ===== */
