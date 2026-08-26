@@ -4,7 +4,7 @@ Kaynak: `output/pdf/1_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf` (t01–t09,
 Şartnamenin yapılandırılmış hâli: `tmp/spec_t.json` (`tmp/pdfs/build_turkish1_detailed_corrections.py`).
 Motor: `web/phaser/turkce1-pdf-phaser.html` (turkce2 çerçevesi + sayma motorunun SVG sahne/iz katmanı).
 
-**Durum: 9/9 oyun uygulandı — 1. sınıf Türkçe tamamlandı.**
+**Durum: 64/64 oyun — düzeltmeler uygulandı ve ders 8 temaya genişletildi.**
 
 ## Başlangıç durumu
 
@@ -63,3 +63,70 @@ sepete dokunma (cezasız uyarı), yanlış sepet (ipucu cevabı söylemeden), ar
 dokunuş (tek can), dikte ipuçlarının kademeli açılması, GÖSTER kilidi ve iki denemeden sonra
 açılması, yanlış harfte yazılanların korunması, tur geçişleri ve bitiş ekranı.
 Konsolda hata yok, ağ isteklerinin tamamı 200. Koşum: `tools/dom_kosum.html#ids=t01…t09` → 9/9.
+
+
+## Genişletme (26 Ağustos 2026) — 9 oyundan 64 oyuna
+
+Düzeltmeler bittikten sonra dersin kendisinde bir boşluk kaldığı görüldü:
+katalogda 1. sınıf Türkçe yalnız **9 oyundu**; 2. sınıf 90, 3. ve 4. sınıf 64.
+Kaçmış ya da yanlış etiketlenmiş oyun yoktu — 658 oyunun tamamının `subj` ve
+`grade` alanı doluydu ve başka sınıfa yazılmış Türkçe oyunu yoktu. Yani eksiklik
+düzeltmelerin öncesindeydi: 2-4. sınıflar Maarif Modeli'nin 8 temalı yapısına
+göre yazılmış, 1. sınıf ise hiç tema yapısıyla kurulmamıştı. Düzeltme şartnamesi
+de (112 KB; diğer Türkçe şartnameleri 359-459 KB) yalnız o 9 oyunu kapsıyordu.
+
+Ders **8 tema × 8 oyun = 64** oyuna çıkarıldı. Mevcut t01-t09 korundu, yalnız
+`grp` alanları tema adlarıyla hizalandı; 55 yeni oyun (t10-t64) eklendi.
+
+| Tema | Kapsam | Oyunlar |
+|---|---|---|
+| 1 | Ses grubu e, l, a, t | t01, t02, t10-t15 |
+| 2 | Ses grubu i, n, o, r, m | t03, t16-t22 |
+| 3 | Ses grubu u, k, ı, y, s, d | t23-t30 |
+| 4 | Ses grubu ö, b, ü, ş, z, ç | t31-t38 |
+| 5 | Ses grubu g, c, p, h, ğ, v, f, j | t39-t46 |
+| 6 | Heceden kelimeye | t04-t06, t47-t51 |
+| 7 | Kelime, cümle ve anlama | t07, t08, t52-t57 |
+| 8 | Dinleme, konuşma, görsel okuma, dikte | t09, t58-t64 |
+
+Yeni mekanik yazılmadı; t01-t09 için kurulan on mekanik (ciz, sepet, konum,
+balon, tren, kurbaga, uzay, fabrika, sandik, dikte) yeniden kullanıldı. Motora
+yalnız **53 harf yolu** ve her biri için yazım yönü açıklaması eklendi; alfabenin
+tamamı artık kılavuzlu yazdırılabiliyor.
+
+### Türkçeye özgü olarak ayrı kazanım hâline getirilenler
+
+- **t16, t20** — noktalı İ/i ile noktasız I/ı ayrımı, ayrı harf ve ayrı ses olarak
+- **t36** — o-ö ve u-ü ayrımı, dudak biçimine bağlanarak
+- **t34, t40** — çengelli harfler (ş, ç) ile çengelsizleri (s, c)
+- **t43** — yumuşak ğ: sözcük başında bulunmaz, kendinden önceki ünlüyü uzatır
+- **t37** — b/d ayrımı yuvarlağın hangi yanda kaldığına bağlanarak
+- **t29** — döndürülünce benzeyen çiftler (u-n, d-o)
+- **t41, t45** — p/b ve v/f ayrımı, boğazın titreyip titrememesi ölçütüyle
+- **t50** — hece sayısı, çenenin kaç kez indiğiyle
+
+### Doğrulama
+
+- `tools/dom_kosum.html#ids=t01,...,t64` — **64/64 geçiyor**
+- `tools/tr1_denetim.html` — 64 oyun × 3 tur = **192 turda temiz**
+- `python3 tools/katalog_sizinti.py t web/phaser/turkce1-pdf-phaser.html` — temiz
+- Gerçek uygulamada: ders listesi 8 tema × 8 oyun, t58 diktesi ve t11 oynandı
+
+### Denetim araçlarında kapatılan iki boşluk
+
+**Katalog başlığı sızıntısı (yeni araç `tools/katalog_sizinti.py`).** Motor
+denetim araçları şablonu doğrudan iframe'e yüklüyor; katalogdaki `title` ve `sub`
+o kabuğun dışında kaldığı için hiç çizilmiyor. Oysa gerçek uygulamada ikisi de
+oyunun üstünde yazılı duruyor. Betik ilk koşumda 14 oyunda gerçek sızıntı buldu:
+oyun **adı doğru cevabı söylüyordu** ("Lale Tarlası"nın ses eşleme turunda doğru
+yanıt "lale", "Kelebek Kanadı"nda "kelebek"). On dördünde de doğru seçenek
+başlıkta geçmeyen bir sözcükle değiştirildi. Bu kusur sınıfı hiçbir motor
+denetiminde görünmüyordu; uyarı 1. sınıf saymada aynı tuzağa düşen oturumdan
+geldi (orada `sub:'14 sayısını yaz'` hem hedefi yazıyor hem çoğu turda yanlış
+sayıyı gösteriyordu).
+
+**`kurbaga` kontrolü.** Eski hâli bütün `#app` metnini tarıyordu; yapraklardaki
+heceler seçenek olduğu için yazılı olmaları mekaniğin kendisi, sızıntı değil.
+Ayrıca yalnız 3+ harfli hecelerde ateşlendiğinden mevcut iki harfli içerikte hiç
+görünmemişti. Artık yalnız gerçek kusuru arıyor: hedeflerin sırasını ele veren
+bir sözcüğün yönergede geçmesi (t49'da "KELEBEK" böyle yakalandı).
