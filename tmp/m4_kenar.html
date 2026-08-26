@@ -1,0 +1,218 @@
+<!doctype html><meta charset="utf-8"><title>4. sınıf matematik — kenar durum taraması</title>
+<style>body{margin:0;font:13px ui-monospace,monospace;background:#10141c;color:#cfe3d8;display:grid;grid-template-columns:460px 1fr;height:100vh}
+#p{padding:10px;overflow:auto;white-space:pre-wrap}iframe{width:100%;height:100%;border:0;background:#fff}.g{color:#7ce0a3}.b{color:#ff8a8a}.w{color:#ffd479}</style>
+<div id="p">hazır</div><iframe id="c"></iframe>
+<script>
+'use strict';
+const P=document.getElementById('p'),C=document.getElementById('c');
+const yaz=(m,s)=>{P.insertAdjacentHTML('beforeend','<div class="'+(s||'')+'">'+m+'</div>');P.scrollTop=P.scrollHeight};
+const bek=ms=>new Promise(r=>{if(!document.hidden)return void setTimeout(r,ms);const son=Date.now()+ms,k=new MessageChannel();k.port1.onmessage=()=>(Date.now()>=son?r():k.port2.postMessage(0));k.port2.postMessage(0)});
+const S=(W,s)=>W.document.querySelector(s), SS=(W,s)=>[...W.document.querySelectorAll(s)];
+/* SVG öğelerinde .click() yok; gerçek dokunuşun ürettiği olayı gönder. */
+const bas=(W,e)=>{if(typeof e.click==='function')e.click();else e.dispatchEvent(new W.MouseEvent('click',{bubbles:true,cancelable:true}))};
+const tik=async(W,s)=>{const e=S(W,s);if(!e)return false;bas(W,e);await bek(60);return true};
+
+function durum(W){try{return JSON.parse(W.eval('JSON.stringify({tur:roundIndex,can:lives,kilit:locked,kind:round()&&round().kind})'))}catch(e){return{hata:String(e)}}}
+
+/* Her mekaniğe özgü kenar durum denemeleri. Hepsi "çökmemeli, kilitlenmemeli,
+   yanlışta can gitmeli (tahmin turları hariç), doğru yol hâlâ açık olmalı" ilkesini sınar. */
+const PROBE={
+ numpad:async W=>{
+   const r=[];
+   await tik(W,'[data-ok]'); r.push(['boş onay',durum(W)]);            /* boş giriş */
+   for(let i=0;i<9;i++)await tik(W,'[data-k="9"]');
+   const buf=W.eval('state.buf'); r.push(['9 hane yazıldı → tampon',buf]);
+   await tik(W,'[data-back]');
+   await tik(W,'[data-ok]'); r.push(['yanlış onay',durum(W)]);
+   return r},
+ kod:async W=>{
+   const r=[];
+   await tik(W,'[data-run]'); r.push(['boş program çalıştır',durum(W)]);
+   for(let i=0;i<3;i++)await tik(W,'[data-dir="L"]');   /* sola giderek duvara/kenara çarp */
+   await tik(W,'[data-run]'); await bek(600); r.push(['duvara çarp',durum(W)]);
+   await tik(W,'[data-clr]'); r.push(['temizle',W.eval('state.prog.length')]);
+   return r},
+ tepsi:async W=>{
+   const r=[];
+   await tik(W,'[data-serve]'); r.push(['boş tepsi ver',durum(W)]);
+   const ilk=SS(W,'[data-add]')[0]; bas(W,ilk); await bek(60);
+   await tik(W,'[data-rm="0"]'); r.push(['ekle+çıkar → tepsi',W.eval('state.tray.length')]);
+   bas(W,ilk); await bek(60); await tik(W,'[data-serve]'); r.push(['eksik siparişle ver',durum(W)]);
+   return r},
+ ayna:async W=>{
+   const r=[];
+   const hepsi=SS(W,'[data-cell]');
+   const gerek=W.eval('(function(){const r=round();const es=(x,y)=>{const o=[];if(r.axis!=="h")o.push([2*r.axisX-1-x,y]);if(r.axis!=="v")o.push([x,2*r.axisY-1-y]);if(r.axis==="both")o.push([2*r.axisX-1-x,2*r.axisY-1-y]);return o};const g=new Set();r.src.forEach(([x,y])=>es(x,y).forEach(([a,b])=>{if(!r.src.some(p=>p[0]===a&&p[1]===b))g.add(a+","+b)}));return JSON.stringify([...g])})()');
+   const hedef=new Set(JSON.parse(gerek));
+   const yanlis=hepsi.find(c=>!hedef.has(c.dataset.cell)&&!W.eval('round().src').some(p=>p[0]+','+p[1]===c.dataset.cell));
+   if(W.eval('state.silgi'))await tik(W,'[data-er]');            /* silgi kapalı olsun */
+   if(yanlis){bas(W,yanlis);await bek(60);r.push(['eksene uymayan hücre',durum(W)])}
+   const dogru=hepsi.find(c=>hedef.has(c.dataset.cell));
+   if(dogru){bas(W,dogru);await bek(60);
+     await tik(W,'[data-undo]'); r.push(['geri al sonrası konan',W.eval('state.put.size')]);
+     bas(W,dogru); await bek(60);
+     await tik(W,'[data-clearall]'); r.push(['tümünü temizle',W.eval('state.put.size')])}
+   return r},
+ tara:async W=>{
+   const r=[];
+   const it=SS(W,'[data-tara]')[0]; bas(W,it); await bek(60); bas(W,it); await bek(60);
+   r.push(['aynı ögeye iki kez',W.eval('state.tapped.length')]);
+   await tik(W,'[data-undo]'); r.push(['geri al',W.eval('state.tapped.length')]);
+   return r},
+ ciz:async W=>{
+   const r=[];
+   const need=W.eval('JSON.stringify(round().need)');
+   const N=JSON.parse(need); const noktalar=W.eval('JSON.stringify(round().dots.map(d=>d.id))');
+   const D=JSON.parse(noktalar);
+   const anahtar=(a,b)=>[a,b].sort().join('|');
+   const gecersiz=[];
+   for(const a of D)for(const b of D)if(a!==b&&!N.some(n=>anahtar(n[0],n[1])===anahtar(a,b)))gecersiz.push([a,b]);
+   if(gecersiz.length){await tik(W,'[data-dot="'+gecersiz[0][0]+'"]');await tik(W,'[data-dot="'+gecersiz[0][1]+'"]');
+     r.push(['geçersiz çizgi',durum(W)])}
+   await tik(W,'[data-dot="'+N[0][0]+'"]');await tik(W,'[data-dot="'+N[0][1]+'"]');
+   await tik(W,'[data-dot="'+N[0][0]+'"]');await tik(W,'[data-dot="'+N[0][1]+'"]');
+   r.push(['aynı çizgi iki kez',W.eval('state.segs.length')]);
+   await tik(W,'[data-undo]'); r.push(['geri al',W.eval('state.segs.length')]);
+   return r},
+ kule:async W=>{
+   const r=[];
+   const bos=SS(W,'[data-slot]').find(s=>!s.classList.contains('filled'));
+   bas(W,bos); await bek(60); r.push(['kart seçmeden yuvaya bas',durum(W)]);
+   const kart=SS(W,'[data-card]')[0]; bas(W,kart); await bek(60);
+   const yanlisYuva=SS(W,'[data-slot]').filter(s=>!s.classList.contains('filled')).slice(-1)[0];
+   const order=JSON.parse(W.eval('JSON.stringify(round().order)'));
+   if(yanlisYuva&&order[+yanlisYuva.dataset.slot]!==kart.dataset.card){bas(W,yanlisYuva);await bek(60);r.push(['yanlış yuva',durum(W)])}
+   return r},
+ sayidogru:async W=>{
+   const r=[];
+   const inp=S(W,'[data-range]');const hedef=W.eval('round().target'),tol=W.eval('round().tolerance||0');
+   const kotu=(+inp.max===hedef+tol)?(+inp.min):(+inp.max);
+   const setter=W.Object.getOwnPropertyDescriptor(W.HTMLInputElement.prototype,'value').set;
+   setter.call(inp,String(kotu));inp.dispatchEvent(new W.Event('input',{bubbles:true}));await bek(60);
+   await tik(W,'[data-ok]'); r.push(['aralık dışı onay',durum(W)]);
+   if(S(W,'[data-spans]'))await tik(W,'[data-spans]');
+   return r},
+ serit:async W=>{
+   const r=[];
+   const dogruKutu=W.eval('round().cards[0].bin');
+   const yanlis=SS(W,'[data-bin]').find(b=>b.dataset.bin!==dogruKutu);
+   if(yanlis){bas(W,yanlis);await bek(120);r.push(['yanlış kutu',durum(W)])}
+   return r},
+ drag:async W=>{
+   const r=[];
+   const p=SS(W,'[data-piece]')[0];
+   const hedefId=W.eval('round().pieces[0].target');
+   const yanlisT=SS(W,'[data-target]').find(t=>t.dataset.target!==hedefId);
+   if(yanlisT){bas(W,p);await bek(40);bas(W,yanlisT);await bek(80);r.push(['yanlış hedefe bırak',durum(W)])}
+   return r},
+ asansor:async W=>{
+   const r=[];
+   const kat=SS(W,'[data-fl]');
+   const simdi=W.eval('state.pos'),adim=W.eval('round().legs[0].stepBy');
+   const yanlis=kat.find(k=>+k.dataset.fl!==simdi+adim&&+k.dataset.fl!==simdi);
+   if(yanlis){bas(W,yanlis);await bek(80);r.push(['yanlış kat',durum(W)])}
+   return r},
+ terazi:async W=>{
+   const r=[];
+   await tik(W,'[data-ok]'); r.push(['dengesizken onay',durum(W)]);
+   for(let i=0;i<4;i++)await tik(W,'[data-minus]');
+   r.push(['eksiye düşürme denemesi',W.eval('state.add')]);
+   return r},
+ memory:async W=>{
+   const r=[];
+   const k=SS(W,'[data-card]');
+   bas(W,k[0]); await bek(40); bas(W,k[0]); await bek(40);
+   r.push(['aynı kart iki kez → açık',W.eval('state.open.length')]);
+   bas(W,k[1]); await bek(40); bas(W,k[2]); await bek(40);
+   r.push(['üç kart üst üste → açık',W.eval('state.open.length')]);
+   return r},
+ choice:async W=>{
+   const r=[];
+   const y=SS(W,'[data-choice]').find((b,i)=>!W.eval('round().choices['+i+'].correct'));
+   if(y){bas(W,y);bas(W,y);bas(W,y);await bek(150);r.push(['yanlış seçenek 3 hızlı tık',durum(W)])}
+   return r},
+ multi:async W=>{
+   const r=[];
+   const y=SS(W,'[data-item]').find((b,i)=>!W.eval('round().items['+i+'].correct'));
+   if(y){bas(W,y);await bek(80);r.push(['yanlış öge',durum(W)])}
+   const d=SS(W,'[data-item]').find((b,i)=>W.eval('round().items['+i+'].correct'));
+   if(d){bas(W,d);await bek(60);bas(W,d);await bek(60);r.push(['aynı doğru öge iki kez',W.eval('state.selected.length')])}
+   return r},
+ process:async W=>{
+   const r=[];
+   const sira=JSON.parse(W.eval('JSON.stringify(round().sequence)'));
+   const eylem=JSON.parse(W.eval('JSON.stringify(round().actions.map(a=>a.id))'));
+   const y=eylem.findIndex(id=>id!==sira[0]);
+   if(y>=0){bas(W,SS(W,'[data-action]')[y]);await bek(80);r.push(['sıra dışı eylem',durum(W)])}
+   return r},
+ basamak:async W=>{
+   const r=[];
+   const hedef=String(W.eval('round().target')).padStart(6,'0');
+   const btn=SS(W,'[data-dig]').find(b=>b.textContent.trim()!==hedef[0]);
+   if(btn){bas(W,btn);await bek(80);r.push(['yanlış rakam',durum(W)])}
+   await tik(W,'[data-clear]'); r.push(['pencereyi boşalt',durum(W)]);
+   return r},
+ aci:async W=>{
+   const r=[];
+   const inp=S(W,'[data-range]');const hedef=W.eval('round().target');
+   const setter=W.Object.getOwnPropertyDescriptor(W.HTMLInputElement.prototype,'value').set;
+   setter.call(inp,String(hedef===0?180:0));inp.dispatchEvent(new W.Event('input',{bubbles:true}));await bek(60);
+   await tik(W,'[data-ok]'); r.push(['yanlış açıda onay',durum(W)]);
+   return r},
+ ip:async W=>{
+   const r=[];
+   const segs=SS(W,'[data-seg]');
+   if(segs.length>2){bas(W,segs[2]);await bek(80);r.push(['sırasız yay',durum(W)])}
+   return r},
+ tally:async W=>{
+   const r=[];
+   const dogru=W.eval('round().responses[0].id');
+   const y=SS(W,'[data-tally]').find(b=>b.dataset.tally!==dogru);
+   if(y){bas(W,y);await bek(80);r.push(['yanlış sütun',durum(W)])}
+   return r},
+ graph:async W=>{
+   const r=[];
+   const dogru=W.eval('round().sources[0].id');
+   const y=SS(W,'[data-graph]').find(b=>b.dataset.graph!==dogru);
+   if(y){bas(W,y);await bek(80);r.push(['yanlış sütun',durum(W)])}
+   return r}
+};
+
+async function oyunuDene(id){
+  const hatalar=[];
+  await new Promise(res=>{C.onload=res;C.src='../app/src/main/assets/phaser/matematik4-pdf.html?test=1&k='+id+'#oyun='+id});
+  const W=C.contentWindow;
+  W.addEventListener('error',e=>hatalar.push(String(e.message)));
+  const bas=Date.now();
+  while(Date.now()-bas<10000&&!S(W,'.hud .round'))await bek(80);
+  if(!S(W,'.hud .round'))throw new Error('açılmadı');
+  const kind=W.eval('round().kind');
+  const canBas=W.eval('lives');
+  const pr=PROBE[kind];
+  let sonuc=[];
+  if(pr)sonuc=await pr(W);
+  const canSon=W.eval('lives'), kilit=W.eval('locked'), tur=W.eval('roundIndex');
+  return {kind,canBas,canSon,kilit,tur,sonuc,hatalar};
+}
+
+(async()=>{
+  const p=new URLSearchParams(location.hash.slice(1));
+  const ids=(p.get('ids')||Array.from({length:56},(_,i)=>'p'+String(i+1).padStart(2,'0')).join(',')).split(',');
+  P.textContent='';window.RAPOR={bitti:false,satir:[],sorun:[]};
+  for(const id of ids){
+    try{
+      const s=await oyunuDene(id);
+      const kapsam=PROBE[s.kind]?'':' (bu mekanik için deneme yok)';
+      let uyari=[];
+      if(s.hatalar.length)uyari.push('JS hatası: '+s.hatalar[0]);
+      if(s.kilit)uyari.push('tur kilitli kaldı');
+      RAPOR.satir.push({id,...s});
+      if(uyari.length){RAPOR.sorun.push(id+': '+uyari.join(' · '));yaz('✗ '+id+' ['+s.kind+'] '+uyari.join(' · '),'b')}
+      else yaz('✓ '+id+' ['+s.kind+'] can '+s.canBas+'→'+s.canSon+kapsam+' :: '+JSON.stringify(s.sonuc),'g');
+    }catch(e){RAPOR.sorun.push(id+': '+e.message);yaz('✗ '+id+' — '+e.message,'b')}
+    await bek(50);
+  }
+  RAPOR.bitti=true;
+  yaz('\nBİTTİ · sorun sayısı '+RAPOR.sorun.length,RAPOR.sorun.length?'b':'g');
+})();
+</script>

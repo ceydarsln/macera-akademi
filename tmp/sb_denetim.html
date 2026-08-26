@@ -1,0 +1,65 @@
+<!doctype html><meta charset="utf-8"><title>4. sınıf sosyal bilgiler — denetim</title>
+<style>body{margin:0;font:13px ui-monospace,monospace;background:#10141c;color:#cfe3d8;padding:10px;white-space:pre-wrap}
+.g{color:#7ce0a3}.b{color:#ff8a8a}.w{color:#ffd479}</style>
+<div id="p">hazır</div>
+<script>
+'use strict';
+const P=document.getElementById('p');
+const yaz=(m,s)=>{P.insertAdjacentHTML('beforeend','<div class="'+(s||'')+'">'+m+'</div>')};
+const bek=ms=>new Promise(r=>{if(!document.hidden)return void setTimeout(r,ms);const son=Date.now()+ms,k=new MessageChannel();k.port1.onmessage=()=>(Date.now()>=son?r():k.port2.postMessage(0));k.port2.postMessage(0)});
+const f=document.createElement('iframe');
+f.style.cssText='position:fixed;right:0;top:0;width:390px;height:844px;border:0;background:#fff';
+document.body.appendChild(f);
+const sadeles=s=>String(s||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().toLocaleLowerCase('tr');
+
+async function denetle(id){
+ const sorun=[];
+ await new Promise(r=>{f.onload=r;f.src='../app/src/main/assets/phaser/sosyal4-pdf.html?test=1&k='+id+'#oyun='+id});
+ await bek(320);
+ const W=f.contentWindow,D=f.contentDocument;
+ if(!D.querySelector('.hud .round'))return ['açılmadı'];
+ const oyun=W.eval('JSON.stringify(game.rounds.map(r=>({kind:r.kind,prompt:r.prompt})))');
+ const turlar=JSON.parse(oyun);
+ for(let t=0;t<3;t++){
+  if(t){W.eval('roundIndex='+t+';render()');await bek(320)}
+  const kok=D.documentElement;
+  /* 1) yatay taşma */
+  if(kok.scrollWidth>kok.clientWidth+1)sorun.push('tur'+(t+1)+': yatay taşma');
+  /* 2) ekran dışına çıkan öge */
+  const tasan=[...D.querySelectorAll('.stage *, .task *')].filter(e=>{const r=e.getBoundingClientRect();
+    return r.width>0&&r.height>0&&(r.left<-1||r.right>391)});
+  if(tasan.length)sorun.push('tur'+(t+1)+': '+tasan.length+' öge ekran dışında');
+  /* 3) küçük dokunma hedefi — gerçek isabet testiyle doğrula */
+  const kucuk=[...D.querySelectorAll('button,[data-cell],[data-w],[data-piece],[data-target]')].filter(e=>{
+    const r=e.getBoundingClientRect();if(!(r.width>0&&r.height>0))return false;
+    if(r.width>=24&&r.height>=24)return false;
+    const mx=r.left+r.width/2,my=r.top+r.height/2;
+    const isabet=(dx,dy)=>{const x=D.elementFromPoint(mx+dx,my+dy);return !!(x&&(x===e||e.contains(x)))};
+    return !(isabet(0,10)||isabet(10,0));});
+  if(kucuk.length)sorun.push('tur'+(t+1)+': '+kucuk.length+' dokunma hedefi 24 px altında');
+  /* 4) CEVAP SIZINTISI: yönerge/sahne metni doğru seçeneği birebir söylüyor mu? */
+  const r=turlar[t];
+  const ekran=sadeles(D.querySelector('.hud .prompt').textContent+' '+D.querySelector('#stage').innerText);
+  const dogru=W.eval('(function(){const r=round();\
+    if(r.kind==="choice"&&r.choices){const c=r.choices.find(x=>x.correct);return c?(c.label||""):""}\
+    if(r.kind==="metin"&&r.secenekler){const c=r.secenekler.find(x=>x.correct);return c?c.label:""}\
+    return ""})()');
+  if(dogru&&dogru.length>3&&ekran.indexOf(sadeles(dogru))>=0)
+   sorun.push('tur'+(t+1)+': yönerge/sahne doğru seçeneği birebir söylüyor → "'+dogru+'"');
+ }
+ return sorun;
+}
+
+(async()=>{
+ const ids=Array.from({length:36},(_,i)=>'sb'+String(i+1).padStart(2,'0'));
+ P.textContent='';window.RAPOR={bitti:false,sorun:[]};
+ for(const id of ids){
+  try{const s=await denetle(id);
+   if(s.length){RAPOR.sorun.push(id+': '+s.join(' · '));yaz('✗ '+id+' — '+s.join(' · '),'b')}
+   else yaz('✓ '+id,'g')}
+  catch(e){RAPOR.sorun.push(id+': '+e.message);yaz('✗ '+id+' — '+e.message,'b')}
+ }
+ RAPOR.bitti=true;
+ yaz('\nBİTTİ · sorunlu oyun '+RAPOR.sorun.length,RAPOR.sorun.length?'b':'g');
+})();
+</script>

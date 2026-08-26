@@ -1,0 +1,737 @@
+[
+ {
+  "id": "sb01",
+  "tema": "Alan 1 · Birlikte Yaşamak",
+  "ad": "Birlik Bandı",
+  "alt": "Toplumsal birliği güçlendiren mi?",
+  "kaz": "SB.4.1.3.a / b / c — Toplumsal birliğin sürdürülmesine yönelik fikir üretir.",
+  "eskiTip": "beltSort",
+  "eskiYonerge": "Toplum bandı çalışıyor! Gelen davranış birliği güçlendirir mi, zedeler mi?",
+  "sayilar": {
+   "items": 8,
+   "bins": "BİRLİĞİ GÜÇLENDİRİR / BİRLİĞİ ZEDELER"
+  },
+  "motorAd": "bant (yürüyen bant) motoru",
+  "motorSorun": "Başlıktaki toplum, harita, market veya tarih sahnesi yerine karanlık fabrika bandı açılıyor. Denemede (Harita Rengi Bandı) karar verilecek kart bandın sol kenarında kırpıldı - “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu, yani tam da kararın dayandığı renk adı kayboldu. Üç kutulu turda kutu etiketleri kutu dışına taşıyor.",
+  "tipRisk": "Bant hızı okuma ve karar süresine karışıyor; kenarda kırpılan kart hiç okunamadan can etkiliyor. Harita rengi turunda kırpılan bölüm tam da renk adı olduğu için karar imkânsız hâle geliyor; ayrıca kart rengin kendisini değil adını yazıyor.",
+  "tipGeri": "Yanlış kutuda bant dursun; kart sabitlenip yeniden okunsun ve ölçüt doğru söylenmeden hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
+  "tipKabul": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve harita rengi turunda kart rengin kendisini gösterecek.",
+  "sahne": "Gerçek bir mahalle/okul sahnesi çizilsin; davranış iki kişi arasında kısa bir sahne olarak canlansın, kart bantta akmasın ve hiçbir kenarda kırpılmasın.",
+  "ikinciTur": "Niyet ile etki ayrılsın: iyi niyetli ama bölücü sonuç doğuran davranışlar eklensin.",
+  "ucuncuTur": "Öğrenci toplumsal birliği güçlendirecek kendi fikrini söylesin veya yazsın."
+ },
+ {
+  "id": "sb02",
+  "tema": "Alan 1 · Birlikte Yaşamak",
+  "ad": "Kendini Tanıma Panosu",
+  "alt": "İlgi alanı ve güçlü yönler",
+  "kaz": "SB.4.1.2.a — Kişisel ilgi alanlarını, güçlü ve gelişime açık yönlerini listeler.",
+  "eskiTip": "serveOrder",
+  "eskiYonerge": "Kendini tanıma panosu! Danışmanın istediği kartları tepsiye koy",
+  "sayilar": {
+   "customers": 3
+  },
+  "motorAd": "tepsi-servis motoru",
+  "motorSorun": "Başlıktaki pano, atölye, plan masası veya market yerine ahşap servis tezgâhı açılıyor. Denemede (Bilinçli Alışveriş) müşteri “Bütçem 30 TL” diyordu ama ürün kartlarında fiyat yazmıyordu; üstelik “tepsi boş - 0 / 30” göstergesi ürün kartlarının arkasında kalıp okunamıyordu.",
+  "tipRisk": "Karar için gereken sayısal veri (ürün fiyatları) ekranda olmadığında bütçe kazanımı deneme-yanılmaya iner; öğrenci bilinçli tüketici kararı veremez.",
+  "tipGeri": "Yanlış seçimde tepsi kilitlenmesin; sepetin toplamı ve kalan bütçe görünür kalsın, öğrenci ürün çıkarıp yeniden denesin.",
+  "tipKabul": "Karar için gereken bütün sayısal veri (fiyat, bütçe, kalan tutar) ekranda okunur biçimde bulunacak; sepet toplamı hiçbir ögenin arkasında kalmayacak.",
+  "sahne": "Gerçek bir sınıf panosu çizilsin; kartlarda kategori etiketi yazmasın, öğrenci hangi kartın ilgi alanı, hangisinin güçlü yön olduğuna kendisi karar versin.",
+  "ikinciTur": "Aynı özellik hem güçlü yön hem gelişime açık alan olabilecek biçimde sunulsun.",
+  "ucuncuTur": "Öğrenci kendi ilgi alanını ve geliştirmek istediği yönü kendi cümlesiyle yazsın."
+ },
+ {
+  "id": "sb03",
+  "tema": "Alan 1 · Birlikte Yaşamak",
+  "ad": "Saygı Köprüsü",
+  "alt": "Farklılığı saygıyla eşle",
+  "kaz": "SB.4.1.2.c — Bireysel özelliklere saygı duymaya ilişkin fikirleri değerlendirir.",
+  "eskiTip": "dragMatch",
+  "eskiYonerge": "Köprüyü kur! Her farklılığı ona gösterilen saygı davranışıyla birleştir",
+  "sayilar": {
+   "sources": 5,
+   "targets": 5
+  },
+  "motorAd": "eşleştirme köprüsü motoru",
+  "motorSorun": "Köprü görseli yok; hedef satırların solunda boş kareler, altta PARÇALAR havuzu var. Denemede (Ekonomi Köprüsü) altı parçanın beşinde son sözcük çipe sığmayıp kesildi: “Çiftçinin domates yetiştirmesi”, “Fabrikada ayakkabı dikilmesi”, “Tırın sebzeyi hâle götürmesi” gibi ifadeler yarım okunuyordu. Parça ve hedeflerdeki emojiler de sık sık aynı kategoriyi işaret ediyor.",
+  "tipRisk": "Kırpılan parça yazıları okunamadığı için eşleştirme tahmine dayanıyor; emoji ipuçları da kategoriyi ele verdiğinden üretim-dağıtım-tüketim ayrımı ya da harita sembolü bilgisi hiç kullanılmadan oyun bitirilebilir.",
+  "tipGeri": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı bilgi kısa bir soruyla vurgulansın.",
+  "tipKabul": "Parça yazıları çipe tam sığacak; hiçbir sözcük kesilmeyecek. Emojiler cevabı eşleştirmeyecek, hedef alanlar en az 44 px olacak ve her eşleşme gerekçeyle doğrulanacak.",
+  "sahne": "Gerçek okul yaşamı sahneleri kullanılsın (tekerlekli sandalye, farklı dil, farklı inanç); saygı davranışı o sahnede uygulansın ve emoji eşleşmesi kaldırılsın.",
+  "ikinciTur": "Saygı gibi görünüp dışlayan davranışlar çeldirici olsun (acıma, aşırı yardım).",
+  "ucuncuTur": "Öğrenci bir farklılığa nasıl saygı göstereceğini kendi cümlesiyle anlatsın."
+ },
+ {
+  "id": "sb04",
+  "tema": "Alan 1 · Birlikte Yaşamak",
+  "ad": "Sosyal Bilgiler Radarı",
+  "alt": "Dersin katkısını yakala",
+  "kaz": "SB.4.1.1.a / b / c — Sosyal bilgiler dersinin hayatımıza katkılarını yorumlar.",
+  "eskiTip": "catchDrop",
+  "eskiYonerge": "Radarı sürükleyerek doğru cevabı yakala",
+  "sayilar": {
+   "rounds": 4
+  },
+  "motorAd": "radar/kapsül yakalama motoru",
+  "motorSorun": "Seçenekler kapsül içinde tek tek yukarıdan düşüyor; ipucu “Kapsülün altındaki sarı noktayı çanağın ortasına getir” diliyle veriliyor ve karar süresi düşme hızına bağlanıyor. Üç radar oyununun yönergesi birbirinin aynı: “Radarı sürükleyerek doğru cevabı yakala”.",
+  "tipRisk": "Doğru cevabı bilmek yetmiyor; düşen kapsüle yetişmek gerekiyor. Dijital mahremiyet gibi gerekçelendirme isteyen bir konu refleks oyununa bağlanıyor.",
+  "tipGeri": "Yanlış yakalamada düşme dursun; seçenek sabitlenip yeniden karar verilsin. Kaçan kapsül can yakmasın.",
+  "tipKabul": "İlk turda düşme kapalı, seçenekler sabit olacak; başarı doğru karar ve gerekçeyle ölçülecek. Her oyunun yönergesi kendi konusunu anlatacak.",
+  "sahne": "Genel “doğru cevabı yakala” yönergesi kaldırılsın; sorular sosyal bilgiler dersinin somut bir katkısına bağlansın ve seçenekler sabit kartlarda dursun.",
+  "ikinciTur": "Dersin farklı katkıları (harita okuma, tarih bilinci, ekonomi kararı) ayrı örneklerle karşılaştırılsın.",
+  "ucuncuTur": "Öğrenci dersten öğrendiği bir şeyi günlük yaşamında nerede kullandığını anlatsın."
+ },
+ {
+  "id": "sb05",
+  "tema": "Alan 1 · Birlikte Yaşamak",
+  "ad": "Saygı Cümlesi Makinesi",
+  "alt": "Saygılı ifade kur",
+  "kaz": "SB.4.1.2.c / SB.4.1.3.c — Saygı ve birlik için fikirlerini ifade eder.",
+  "eskiTip": "sentenceBuild",
+  "eskiYonerge": "Sınıf panosu için cümle basıyoruz! Kelime kartlarına sırayla dokunarak cümleyi kur",
+  "sayilar": {
+   "rounds": 4
+  },
+  "motorAd": "matbaa/baskı kızağı motoru",
+  "motorSorun": "Kelime kartlarından büyük harfle başlayan kart ilk sözcüğü, nokta kartı son konumu ele veriyor; makine yalnız tek sabit dizilişi kabul ediyor.",
+  "tipRisk": "Büyük harfli kart ve nokta kartı dizilişi ele veriyor; saygı, demokratik katılım ve güvenlik kuralı gibi gerekçe isteyen kazanımlar hazır kartları sıralamaya indirgeniyor.",
+  "tipGeri": "Yanlışta bütün dizi bozulmasın; yalnız son kart geri alınsın. Anlamlı alternatif diziliş kurulduysa doğru kabul edilsin.",
+  "tipKabul": "Kartlar küçük harfle gelecek; baş harf ve son işaret öğrencinin kararı olacak. Son turda serbest yazı ya da sözlü ifade alanı bulunacak.",
+  "sahne": "Gerçek bir sınıf durumu canlansın; kurulan cümle panoya asılsın ve karşıdaki karaktere söylensin. Kartlar küçük harfle gelsin.",
+  "ikinciTur": "Saygılı ve kırıcı iki ifade karşılaştırılsın; fark tartışılsın.",
+  "ucuncuTur": "Öğrenci kendi saygı cümlesini hazır kart olmadan kursun."
+ },
+ {
+  "id": "sb06",
+  "tema": "Alan 1 · Birlikte Yaşamak",
+  "ad": "Sınıf İlgi Anketi",
+  "alt": "Akranlarınla karşılaştır",
+  "kaz": "SB.4.1.2.b — Kişisel özelliklerini akranlarının özellikleriyle karşılaştırır.",
+  "eskiTip": "surveyChart",
+  "eskiYonerge": "Sınıf ilgi alanı anketi! Sıradaki düğmesine basarak cevapları topla, sonra sonucu yorumla",
+  "sayilar": {
+   "responses": 10,
+   "options": 3
+  },
+  "motorAd": "çetele motoru (anket sürümü)",
+  "motorSorun": "Sahne “ÇETELE TABLOSU” başlığıyla açılıyor ama oyun bir anket/seçim; gelen cevap balonu sütun başlığıyla birebir aynı olduğu için hiçbir çıkarım gerekmiyor ve sütunlarda çetele çizgisi yerine rakam artıyor.",
+  "tipRisk": "Cevap ile sütun adı aynı olduğu için veri toplama mekanik tıklamaya iner; öğrenci sonucu yorumlamadan, çoğunluk ve azınlık ilişkisini kurmadan oyunu bitirebilir.",
+  "tipGeri": "Yanlış işaretlemede cevap yeniden dinletilsin; sayım bitince sonuç doğrudan açıklanmasın, öğrenciye “en çok/en az hangisi, kaç fark var?” soruları sorulsun.",
+  "tipKabul": "Cevap ifadeleri sütun adını birebir tekrar etmeyecek; sayım çetele çizgisiyle görünecek ve oyun ancak sonuç yorumu yapıldıktan sonra tamamlanacak.",
+  "sahne": "Gerçek bir sınıf anketi sahnesi kurulsun; cevap ifadesi sütun adını birebir tekrar etmesin ve sayım çetele çizgisiyle görünsün.",
+  "ikinciTur": "Öğrencinin kendi cevabı da ankete katılsın; kendini sınıfla karşılaştırsın.",
+  "ucuncuTur": "Öğrenci sonucu yorumlayıp kendisini çoğunlukla/azınlıkla nerede bulduğunu söylesin."
+ },
+ {
+  "id": "sb07",
+  "tema": "Alan 2 · Evimiz Dünya",
+  "ad": "Harita Anahtarı Köprüsü",
+  "alt": "Sembolü anlamıyla eşle",
+  "kaz": "SB.4.2.1.b — Harita renkleri, kenar bilgileri ve sembollerini tespit eder.",
+  "eskiTip": "dragMatch",
+  "eskiYonerge": "Köprüyü kur! Her harita sembolünü anlamıyla birleştir. Sembollerin anlatıldığı bölüme harita anahtarı denir.",
+  "sayilar": {
+   "sources": 6,
+   "targets": 6
+  },
+  "motorAd": "eşleştirme köprüsü motoru",
+  "motorSorun": "Köprü görseli yok; hedef satırların solunda boş kareler, altta PARÇALAR havuzu var. Denemede (Ekonomi Köprüsü) altı parçanın beşinde son sözcük çipe sığmayıp kesildi: “Çiftçinin domates yetiştirmesi”, “Fabrikada ayakkabı dikilmesi”, “Tırın sebzeyi hâle götürmesi” gibi ifadeler yarım okunuyordu. Parça ve hedeflerdeki emojiler de sık sık aynı kategoriyi işaret ediyor.",
+  "tipRisk": "Kırpılan parça yazıları okunamadığı için eşleştirme tahmine dayanıyor; emoji ipuçları da kategoriyi ele verdiğinden üretim-dağıtım-tüketim ayrımı ya da harita sembolü bilgisi hiç kullanılmadan oyun bitirilebilir.",
+  "tipGeri": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı bilgi kısa bir soruyla vurgulansın.",
+  "tipKabul": "Parça yazıları çipe tam sığacak; hiçbir sözcük kesilmeyecek. Emojiler cevabı eşleştirmeyecek, hedef alanlar en az 44 px olacak ve her eşleşme gerekçeyle doğrulanacak.",
+  "sahne": "Gerçek bir harita parçası ve harita anahtarı kutusu çizilsin; sembol haritanın üzerinde gösterilsin ve emoji eşleşmesi kaldırılsın.",
+  "ikinciTur": "Benzer semboller çeldirici olsun (havaalanı/liman, il/ilçe merkezi).",
+  "ucuncuTur": "Öğrenci verilen bir haritada üç sembolü bulup ne anlattığını söylesin."
+ },
+ {
+  "id": "sb08",
+  "tema": "Alan 2 · Evimiz Dünya",
+  "ad": "Harita Rengi Bandı",
+  "alt": "Renk neyi gösterir?",
+  "kaz": "SB.4.2.1.b — Harita renklerini tespit eder ve anlamlandırır.",
+  "eskiTip": "beltSort",
+  "eskiYonerge": "Harita bandı çalışıyor! Gelen renk haritada neyi gösterir?",
+  "sayilar": {
+   "items": 6,
+   "bins": "OVA (düz, alçak yer) / DAĞ (yüksek yer) / SU (deniz, göl)"
+  },
+  "motorAd": "bant (yürüyen bant) motoru",
+  "motorSorun": "Başlıktaki toplum, harita, market veya tarih sahnesi yerine karanlık fabrika bandı açılıyor. Denemede (Harita Rengi Bandı) karar verilecek kart bandın sol kenarında kırpıldı - “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu, yani tam da kararın dayandığı renk adı kayboldu. Üç kutulu turda kutu etiketleri kutu dışına taşıyor.",
+  "tipRisk": "Bant hızı okuma ve karar süresine karışıyor; kenarda kırpılan kart hiç okunamadan can etkiliyor. Harita rengi turunda kırpılan bölüm tam da renk adı olduğu için karar imkânsız hâle geliyor; ayrıca kart rengin kendisini değil adını yazıyor.",
+  "tipGeri": "Yanlış kutuda bant dursun; kart sabitlenip yeniden okunsun ve ölçüt doğru söylenmeden hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
+  "tipKabul": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve harita rengi turunda kart rengin kendisini gösterecek.",
+  "sahne": "KRİTİK: kart rengin ADINI yazmak yerine RENGİN KENDİSİNİ göstersin - kazanım harita renklerini tanımaktır. Kart hiçbir kenarda kırpılmasın; denemede “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu. Arkada gerçek bir fiziki harita dursun.",
+  "ikinciTur": "Aynı rengin tonları ayrılsın (açık yeşil ova, koyu yeşil ova); yükselti basamağı kavramı verilsin.",
+  "ucuncuTur": "Öğrenci gerçek bir fiziki haritada renklere bakarak bir bölgeyi tarif etsin."
+ },
+ {
+  "id": "sb09",
+  "tema": "Alan 2 · Evimiz Dünya",
+  "ad": "Harita Navigasyonu",
+  "alt": "Yön bilgisiyle konum bul",
+  "kaz": "SB.4.2.1.c — Konum bilgisi ve yönleri kullanarak çevresini tarif eder.",
+  "eskiTip": "codeGrid",
+  "eskiYonerge": "Elinde şehir haritası var! Yön bloklarını dizerek hedefe ulaş. Haritada yukarı kuzey, aşağı güney, sağ doğu, sol batıdır.",
+  "sayilar": {
+   "rounds": 2
+  },
+  "motorAd": "kargo/robot ızgara motoru",
+  "motorSorun": "Bu dersteki sürüm diğer sınıflardan bir adım önde: görev metni “kuzeye ve doğuya ilerle” diyerek gerçek yön adlarını kullanıyor ve yönerge ekran yönü ile coğrafi yön arasındaki çeviriyi açıklıyor. Ancak yön düğmeleri hâlâ yalnız yukarı/aşağı/sol/sağ oklarından oluşuyor; haritada kuzey oku, ölçek, sokak veya harita anahtarı yok ve görev metni rotayı doğrudan söylüyor.",
+  "tipRisk": "Kazanım konum bilgisi ve yönleri kullanarak çevreyi TARİF ETMEYİ istiyor; oyun ise hazır tarif edilmiş bir rotayı ok tuşlarıyla uygulatıyor. Harita ögeleri bulunmadığı için harita okuma becerisi de çalışmıyor.",
+  "tipGeri": "Engele çarpınca robot dursun ve programdaki hatalı adım işaretlensin; tüm program silinmesin. Hatalı adım yön adıyla (“burada batıya gittin”) tarif edilsin.",
+  "tipKabul": "Yön düğmeleri KUZEY/GÜNEY/DOĞU/BATI olarak adlandırılacak; haritada kuzey oku, ölçek ve en az iki işaret noktası bulunacak; görev metni rotayı söylemeyecek ve öğrenci son turda yolu kendisi tarif edecek.",
+  "sahne": "Bu dersteki sürüm yön adlarını kullandığı için diğer sınıflardan bir adım önde; bunu koruyarak yön düğmeleri de KUZEY/GÜNEY/DOĞU/BATI olarak adlandırılsın. Haritaya kuzey oku, ölçek ve sokak adları eklensin; görev metni rotayı söylemesin.",
+  "ikinciTur": "Başlangıç noktası değişsin; öğrenci aynı hedefe farklı yönlerden gitsin.",
+  "ucuncuTur": "Öğrenci gittiği yolu “önce kuzeye iki adım, sonra doğuya...” diye kendisi tarif etsin."
+ },
+ {
+  "id": "sb10",
+  "tema": "Alan 2 · Evimiz Dünya",
+  "ad": "Doğa-İnsan Kartları",
+  "alt": "Unsuru etkisiyle eşle",
+  "kaz": "SB.4.2.2.a / b — Doğal çevre unsurları ile insanlar arasındaki ilişkileri belirler.",
+  "eskiTip": "memoryPairs",
+  "eskiYonerge": "Kartlar kapalı! Kartları çevir ve her doğal çevre unsurunu insan yaşamına etkisiyle eşleştir",
+  "sayilar": {
+   "pairs": 6
+  },
+  "motorAd": "hafıza kartı motoru",
+  "motorSorun": "Sahne başlıktan bağımsız yıldızlı uzay; kartlar tavandan iniyor ve “Başla! Kartları çevir” yazısı üst kart sırasının üzerine biniyor. Can göstergesi 6 kalp ile genel 3 can standardından ayrılıyor.",
+  "tipRisk": "Eşleştirme, kavramı açıklamadan kart konumunu ezberleyerek de çözülür; görsel hafıza başarısı sosyal bilgiler başarısı gibi kayda geçer.",
+  "tipGeri": "Yanlış çiftte kartlar hemen kapanmasın; iki içerik yan yana okunup farkı soran kısa bir ipucu verilsin. Can standardı diğer oyunlarla eşitlensin.",
+  "tipKabul": "Kart konumları ve içerik her açılışta karışacak; can sayısı genel standartla (3) eşitlenecek ve her eşleşme bir gerekçe adımıyla doğrulanacak.",
+  "sahne": "Gerçek coğrafya görselleri kullanılsın (dağ, nehir, ova); kart çevrilince o unsurun insan yaşamına etkisi kısa sahneyle gösterilsin.",
+  "ikinciTur": "Aynı unsurun hem olumlu hem sınırlayıcı etkisi karşılaştırılsın (nehir: sulama ama taşkın).",
+  "ucuncuTur": "Öğrenci yaşadığı yerin bir doğal unsurunun etkisini anlatsın."
+ },
+ {
+  "id": "sb11",
+  "tema": "Alan 2 · Evimiz Dünya",
+  "ad": "Afet Önlem Adımları",
+  "alt": "Etkiyi azaltmak için sırala",
+  "kaz": "SB.4.2.3.a / b — Afetlerin etkilerini azaltmaya yönelik çıkarım yapar ve ürün oluşturur.",
+  "eskiTip": "orderSequence",
+  "eskiYonerge": "Afet önlem adımları karıştı! Baştan sona doğru sırayla dokun",
+  "sayilar": {
+   "items": 5
+  },
+  "motorAd": "roket-yakıt motoru",
+  "motorSorun": "Cumhuriyet tarihi, ekmeğin yolculuğu, afet önlemleri ve siber zorbalık gibi tamamen dünyevi konularda bile kartlar uzayda süzülüyor ve seçilenler YAKIT hunisine gidiyor; kenardaki kartlar ekrandan taşabiliyor.",
+  "tipRisk": "Roket-yakıt sahnesi konuyla çelişip kavramı bulanıklaştırıyor; kartlardaki tarih veya numara ipuçları içerik bilgisi olmadan sıralamayı mümkün kılıyor.",
+  "tipGeri": "Yanlış adımda dizi silinmesin; yalnız son seçim geri alınsın ve “önce ne olmalı?” sorusunu düşündüren ipucu verilsin.",
+  "tipKabul": "Roket-yakıt sahnesi kaldırılacak; sırayı ele veren tarih/numara ilk turda gizlenecek ve kartlar 390x844 ekranda tam içeride kalacak.",
+  "sahne": "Gerçek bir ev ve bina sahnesi çizilsin; her önlem o mekânda uygulanan somut bir işe dönüşsün ve roket kaldırılsın.",
+  "ikinciTur": "Farklı afetler için (deprem, sel, yangın) önlem sırası karşılaştırılsın.",
+  "ucuncuTur": "Öğrenci evinde alınabilecek üç önlemi sırayla söylesin."
+ },
+ {
+  "id": "sb12",
+  "tema": "Alan 2 · Evimiz Dünya",
+  "ad": "Aile Afet Planı",
+  "alt": "Ürünü oluştur ve paylaş",
+  "kaz": "SB.4.2.3.b / c — Afetlerin etkilerini azaltmak için ürün oluşturur ve paylaşır.",
+  "eskiTip": "serveOrder",
+  "eskiYonerge": "Aile afet planı hazırlıyoruz! Uzmanın istediği plan ögelerini tepsiye koy",
+  "sayilar": {
+   "customers": 3
+  },
+  "motorAd": "tepsi-servis motoru",
+  "motorSorun": "Başlıktaki pano, atölye, plan masası veya market yerine ahşap servis tezgâhı açılıyor. Denemede (Bilinçli Alışveriş) müşteri “Bütçem 30 TL” diyordu ama ürün kartlarında fiyat yazmıyordu; üstelik “tepsi boş - 0 / 30” göstergesi ürün kartlarının arkasında kalıp okunamıyordu.",
+  "tipRisk": "Karar için gereken sayısal veri (ürün fiyatları) ekranda olmadığında bütçe kazanımı deneme-yanılmaya iner; öğrenci bilinçli tüketici kararı veremez.",
+  "tipGeri": "Yanlış seçimde tepsi kilitlenmesin; sepetin toplamı ve kalan bütçe görünür kalsın, öğrenci ürün çıkarıp yeniden denesin.",
+  "tipKabul": "Karar için gereken bütün sayısal veri (fiyat, bütçe, kalan tutar) ekranda okunur biçimde bulunacak; sepet toplamı hiçbir ögenin arkasında kalmayacak.",
+  "sahne": "Gerçek bir plan kâğıdı açılsın; seçilen öge planın ilgili bölümüne yazılsın ve plan adım adım oluşsun. Kazanım ÜRÜN oluşturmayı istiyor.",
+  "ikinciTur": "Eksik plan örnekleri karşılaştırılsın: buluşma yeri olmayan plan neden işe yaramaz?",
+  "ucuncuTur": "Öğrenci kendi ailesi için buluşma yerini ve iletişim kişisini yazarak planı tamamlasın."
+ },
+ {
+  "id": "sb13",
+  "tema": "Alan 3 · Ortak Mirasımız",
+  "ad": "Oyuncak Zaman Şeridi",
+  "alt": "Eskiden yeniye sırala",
+  "kaz": "SB.4.3.1.a — Geçmişten günümüze oyun ve oyuncak özelliklerini kanıta dayalı sıralar.",
+  "eskiTip": "orderSequence",
+  "eskiYonerge": "Oyuncakların tarihi karıştı! En eskiden en yeniye doğru sırayla dokun",
+  "sayilar": {
+   "items": 5
+  },
+  "motorAd": "roket-yakıt motoru",
+  "motorSorun": "Cumhuriyet tarihi, ekmeğin yolculuğu, afet önlemleri ve siber zorbalık gibi tamamen dünyevi konularda bile kartlar uzayda süzülüyor ve seçilenler YAKIT hunisine gidiyor; kenardaki kartlar ekrandan taşabiliyor.",
+  "tipRisk": "Roket-yakıt sahnesi konuyla çelişip kavramı bulanıklaştırıyor; kartlardaki tarih veya numara ipuçları içerik bilgisi olmadan sıralamayı mümkün kılıyor.",
+  "tipGeri": "Yanlış adımda dizi silinmesin; yalnız son seçim geri alınsın ve “önce ne olmalı?” sorusunu düşündüren ipucu verilsin.",
+  "tipKabul": "Roket-yakıt sahnesi kaldırılacak; sırayı ele veren tarih/numara ilk turda gizlenecek ve kartlar 390x844 ekranda tam içeride kalacak.",
+  "sahne": "Gerçek oyuncak fotoğrafları ve dönem görselleri kullanılsın; roket kaldırılsın. İlk turda tarihler gizlensin, sıralama oyuncağın malzemesi ve yapımından çıkarılsın.",
+  "ikinciTur": "Kanıt kavramı işlensin: hangi ipucu bize eski olduğunu söylüyor?",
+  "ucuncuTur": "Öğrenci ailesinden bir oyuncak öyküsü toplayıp anlatsın."
+ },
+ {
+  "id": "sb14",
+  "tema": "Alan 3 · Ortak Mirasımız",
+  "ad": "Değişen-Değişmeyen Bandı",
+  "alt": "Zamanla değişti mi?",
+  "kaz": "SB.4.3.1.b / c — Zaman içinde değişen ve değişmeyen özellikleri sıralar.",
+  "eskiTip": "beltSort",
+  "eskiYonerge": "Zaman bandı çalışıyor! Oyunlarla ilgili bu özellik zamanla DEĞİŞTİ mi, DEĞİŞMEDİ mi?",
+  "sayilar": {
+   "items": 8,
+   "bins": "DEĞİŞTİ / DEĞİŞMEDİ"
+  },
+  "motorAd": "bant (yürüyen bant) motoru",
+  "motorSorun": "Başlıktaki toplum, harita, market veya tarih sahnesi yerine karanlık fabrika bandı açılıyor. Denemede (Harita Rengi Bandı) karar verilecek kart bandın sol kenarında kırpıldı - “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu, yani tam da kararın dayandığı renk adı kayboldu. Üç kutulu turda kutu etiketleri kutu dışına taşıyor.",
+  "tipRisk": "Bant hızı okuma ve karar süresine karışıyor; kenarda kırpılan kart hiç okunamadan can etkiliyor. Harita rengi turunda kırpılan bölüm tam da renk adı olduğu için karar imkânsız hâle geliyor; ayrıca kart rengin kendisini değil adını yazıyor.",
+  "tipGeri": "Yanlış kutuda bant dursun; kart sabitlenip yeniden okunsun ve ölçüt doğru söylenmeden hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
+  "tipKabul": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve harita rengi turunda kart rengin kendisini gösterecek.",
+  "sahne": "Gerçek oyun sahneleri yan yana çizilsin (sokakta saklambaç / ekranda oyun); özellik iki sahnede karşılaştırılsın ve bant durdurulsun.",
+  "ikinciTur": "Kısmen değişen özellikler eklensin (oyun kuralları aynı, araçlar farklı).",
+  "ucuncuTur": "Öğrenci bir oyunun değişen ve değişmeyen yanını söylesin."
+ },
+ {
+  "id": "sb15",
+  "tema": "Alan 3 · Ortak Mirasımız",
+  "ad": "Aile Tarihi Atölyesi",
+  "alt": "Soy ağacı ürünü oluştur",
+  "kaz": "SB.4.3.2.a / b — Aile tarihine ilişkin kaynaklardan çıkarım yapar ve ürün oluşturur.",
+  "eskiTip": "serveOrder",
+  "eskiYonerge": "Aile tarihi ürünü hazırlıyoruz! Öğretmenin istediği ögeleri tepsiye koy",
+  "sayilar": {
+   "customers": 2
+  },
+  "motorAd": "tepsi-servis motoru",
+  "motorSorun": "Başlıktaki pano, atölye, plan masası veya market yerine ahşap servis tezgâhı açılıyor. Denemede (Bilinçli Alışveriş) müşteri “Bütçem 30 TL” diyordu ama ürün kartlarında fiyat yazmıyordu; üstelik “tepsi boş - 0 / 30” göstergesi ürün kartlarının arkasında kalıp okunamıyordu.",
+  "tipRisk": "Karar için gereken sayısal veri (ürün fiyatları) ekranda olmadığında bütçe kazanımı deneme-yanılmaya iner; öğrenci bilinçli tüketici kararı veremez.",
+  "tipGeri": "Yanlış seçimde tepsi kilitlenmesin; sepetin toplamı ve kalan bütçe görünür kalsın, öğrenci ürün çıkarıp yeniden denesin.",
+  "tipKabul": "Karar için gereken bütün sayısal veri (fiyat, bütçe, kalan tutar) ekranda okunur biçimde bulunacak; sepet toplamı hiçbir ögenin arkasında kalmayacak.",
+  "sahne": "Gerçek bir soy ağacı şablonu açılsın; seçilen öge ağacın ilgili dalına yerleşsin ve ürün gözle görülür biçimde oluşsun.",
+  "ikinciTur": "Farklı kaynak türleri (fotoğraf, sözlü anlatım, belge) karşılaştırılsın.",
+  "ucuncuTur": "Öğrenci kendi aile ağacına iki kuşak ekleyip bir kaynak belirtsin."
+ },
+ {
+  "id": "sb16",
+  "tema": "Alan 3 · Ortak Mirasımız",
+  "ad": "Ortak Miras Kartları",
+  "alt": "Ögeyi türüyle eşle",
+  "kaz": "SB.4.3.3.a / b — Yakın çevresindeki ortak miras ögelerini inceler ve ifade eder.",
+  "eskiTip": "memoryPairs",
+  "eskiYonerge": "Kartlar kapalı! Kartları çevir ve her ortak miras ögesini türüyle eşleştir",
+  "sayilar": {
+   "pairs": 6
+  },
+  "motorAd": "hafıza kartı motoru",
+  "motorSorun": "Sahne başlıktan bağımsız yıldızlı uzay; kartlar tavandan iniyor ve “Başla! Kartları çevir” yazısı üst kart sırasının üzerine biniyor. Can göstergesi 6 kalp ile genel 3 can standardından ayrılıyor.",
+  "tipRisk": "Eşleştirme, kavramı açıklamadan kart konumunu ezberleyerek de çözülür; görsel hafıza başarısı sosyal bilgiler başarısı gibi kayda geçer.",
+  "tipGeri": "Yanlış çiftte kartlar hemen kapanmasın; iki içerik yan yana okunup farkı soran kısa bir ipucu verilsin. Can standardı diğer oyunlarla eşitlensin.",
+  "tipKabul": "Kart konumları ve içerik her açılışta karışacak; can sayısı genel standartla (3) eşitlenecek ve her eşleşme bir gerekçe adımıyla doğrulanacak.",
+  "sahne": "Gerçek miras görselleri kullanılsın (cami, köprü, halk oyunu, yemek); kart çevrilince öge kısa bir sahneyle tanıtılsın.",
+  "ikinciTur": "Somut ve somut olmayan miras ayrımı yapılsın; ölçüt tartışılsın.",
+  "ucuncuTur": "Öğrenci kendi çevresinden bir miras ögesi söyleyip türünü belirtsin."
+ },
+ {
+  "id": "sb17",
+  "tema": "Alan 3 · Ortak Mirasımız",
+  "ad": "Miras Radarı",
+  "alt": "Tanımanın önemini yakala",
+  "kaz": "SB.4.3.3.b — Ortak miras ögelerini tanımanın önemini kendi cümleleriyle ifade eder.",
+  "eskiTip": "catchDrop",
+  "eskiYonerge": "Radarı sürükleyerek doğru cevabı yakala",
+  "sayilar": {
+   "rounds": 4
+  },
+  "motorAd": "radar/kapsül yakalama motoru",
+  "motorSorun": "Seçenekler kapsül içinde tek tek yukarıdan düşüyor; ipucu “Kapsülün altındaki sarı noktayı çanağın ortasına getir” diliyle veriliyor ve karar süresi düşme hızına bağlanıyor. Üç radar oyununun yönergesi birbirinin aynı: “Radarı sürükleyerek doğru cevabı yakala”.",
+  "tipRisk": "Doğru cevabı bilmek yetmiyor; düşen kapsüle yetişmek gerekiyor. Dijital mahremiyet gibi gerekçelendirme isteyen bir konu refleks oyununa bağlanıyor.",
+  "tipGeri": "Yanlış yakalamada düşme dursun; seçenek sabitlenip yeniden karar verilsin. Kaçan kapsül can yakmasın.",
+  "tipKabul": "İlk turda düşme kapalı, seçenekler sabit olacak; başarı doğru karar ve gerekçeyle ölçülecek. Her oyunun yönergesi kendi konusunu anlatacak.",
+  "sahne": "Genel radar yönergesi kaldırılsın; soru somut bir miras ögesine bağlansın ve seçenekler sabit kartlarda dursun.",
+  "ikinciTur": "Mirasın korunmadığı durumların sonucu gösterilsin.",
+  "ucuncuTur": "Öğrenci bir mirası tanımanın neden önemli olduğunu kendi cümleleriyle ifade etsin."
+ },
+ {
+  "id": "sb18",
+  "tema": "Alan 3 · Ortak Mirasımız",
+  "ad": "Kaynak Köprüsü",
+  "alt": "Kaynak ne anlatır?",
+  "kaz": "SB.4.3.2.a — Aile tarihine ilişkin kaynaklar üzerinden çıkarım yapar.",
+  "eskiTip": "dragMatch",
+  "eskiYonerge": "Köprüyü kur! Her kaynağı bize ne anlattığıyla birleştir",
+  "sayilar": {
+   "sources": 5,
+   "targets": 5
+  },
+  "motorAd": "eşleştirme köprüsü motoru",
+  "motorSorun": "Köprü görseli yok; hedef satırların solunda boş kareler, altta PARÇALAR havuzu var. Denemede (Ekonomi Köprüsü) altı parçanın beşinde son sözcük çipe sığmayıp kesildi: “Çiftçinin domates yetiştirmesi”, “Fabrikada ayakkabı dikilmesi”, “Tırın sebzeyi hâle götürmesi” gibi ifadeler yarım okunuyordu. Parça ve hedeflerdeki emojiler de sık sık aynı kategoriyi işaret ediyor.",
+  "tipRisk": "Kırpılan parça yazıları okunamadığı için eşleştirme tahmine dayanıyor; emoji ipuçları da kategoriyi ele verdiğinden üretim-dağıtım-tüketim ayrımı ya da harita sembolü bilgisi hiç kullanılmadan oyun bitirilebilir.",
+  "tipGeri": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı bilgi kısa bir soruyla vurgulansın.",
+  "tipKabul": "Parça yazıları çipe tam sığacak; hiçbir sözcük kesilmeyecek. Emojiler cevabı eşleştirmeyecek, hedef alanlar en az 44 px olacak ve her eşleşme gerekçeyle doğrulanacak.",
+  "sahne": "Gerçek kaynak görselleri kullanılsın (eski fotoğraf, mektup, nüfus cüzdanı, ses kaydı); eşleşince kaynağın anlattığı bilgi ortaya çıksın.",
+  "ikinciTur": "Aynı olayı farklı anlatan iki kaynak karşılaştırılsın; kanıt kavramı işlensin.",
+  "ucuncuTur": "Öğrenci bir aile kaynağından çıkardığı bilgiyi anlatsın."
+ },
+ {
+  "id": "sb19",
+  "tema": "Alan 4 · Yaşayan Demokrasimiz",
+  "ad": "Cumhuriyet Zaman Şeridi",
+  "alt": "Millî Mücadele yolunu sırala",
+  "kaz": "SB.4.4.1.a / b — Cumhuriyete giden yolda yapılan fedakârlıkları kanıta dayalı açıklar.",
+  "eskiTip": "orderSequence",
+  "eskiYonerge": "Cumhuriyete giden yol karıştı! Olayları en eskiden en yeniye sırayla seç",
+  "sayilar": {
+   "items": 5
+  },
+  "motorAd": "roket-yakıt motoru",
+  "motorSorun": "Cumhuriyet tarihi, ekmeğin yolculuğu, afet önlemleri ve siber zorbalık gibi tamamen dünyevi konularda bile kartlar uzayda süzülüyor ve seçilenler YAKIT hunisine gidiyor; kenardaki kartlar ekrandan taşabiliyor.",
+  "tipRisk": "Roket-yakıt sahnesi konuyla çelişip kavramı bulanıklaştırıyor; kartlardaki tarih veya numara ipuçları içerik bilgisi olmadan sıralamayı mümkün kılıyor.",
+  "tipGeri": "Yanlış adımda dizi silinmesin; yalnız son seçim geri alınsın ve “önce ne olmalı?” sorusunu düşündüren ipucu verilsin.",
+  "tipKabul": "Roket-yakıt sahnesi kaldırılacak; sırayı ele veren tarih/numara ilk turda gizlenecek ve kartlar 390x844 ekranda tam içeride kalacak.",
+  "sahne": "Gerçek yatay zaman şeridi ve dönem görselleri kullanılsın; roket kaldırılsın. İlk turda tarihler gizlensin.",
+  "ikinciTur": "Olaylar arasındaki neden-sonuç bağı sorulsun: hangisi diğerini mümkün kıldı?",
+  "ucuncuTur": "Öğrenci Cumhuriyete giden yoldaki bir fedakârlığı kanıtıyla anlatsın."
+ },
+ {
+  "id": "sb20",
+  "tema": "Alan 4 · Yaşayan Demokrasimiz",
+  "ad": "Cumhuriyet Köprüsü",
+  "alt": "Yeniliği getirisiyle eşle",
+  "kaz": "SB.4.4.2.a / b / c — Cumhuriyetin ilanıyla toplumsal yaşamda oluşan değişimleri açıklar.",
+  "eskiTip": "dragMatch",
+  "eskiYonerge": "Köprüyü kur! Her Cumhuriyet yeniliğini topluma getirisiyle birleştir",
+  "sayilar": {
+   "sources": 5,
+   "targets": 5
+  },
+  "motorAd": "eşleştirme köprüsü motoru",
+  "motorSorun": "Köprü görseli yok; hedef satırların solunda boş kareler, altta PARÇALAR havuzu var. Denemede (Ekonomi Köprüsü) altı parçanın beşinde son sözcük çipe sığmayıp kesildi: “Çiftçinin domates yetiştirmesi”, “Fabrikada ayakkabı dikilmesi”, “Tırın sebzeyi hâle götürmesi” gibi ifadeler yarım okunuyordu. Parça ve hedeflerdeki emojiler de sık sık aynı kategoriyi işaret ediyor.",
+  "tipRisk": "Kırpılan parça yazıları okunamadığı için eşleştirme tahmine dayanıyor; emoji ipuçları da kategoriyi ele verdiğinden üretim-dağıtım-tüketim ayrımı ya da harita sembolü bilgisi hiç kullanılmadan oyun bitirilebilir.",
+  "tipGeri": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı bilgi kısa bir soruyla vurgulansın.",
+  "tipKabul": "Parça yazıları çipe tam sığacak; hiçbir sözcük kesilmeyecek. Emojiler cevabı eşleştirmeyecek, hedef alanlar en az 44 px olacak ve her eşleşme gerekçeyle doğrulanacak.",
+  "sahne": "Gerçek öncesi-sonrası sahneleri kurulsun (harf devrimi öncesi/sonrası bir tabela, kadınların seçim sandığı); emoji eşleşmesi kaldırılsın.",
+  "ikinciTur": "Bir yeniliğin birden çok getirisi gösterilsin.",
+  "ucuncuTur": "Öğrenci bir Cumhuriyet yeniliğinin bugünkü karşılığını anlatsın."
+ },
+ {
+  "id": "sb21",
+  "tema": "Alan 4 · Yaşayan Demokrasimiz",
+  "ad": "Öncesi-Sonrası Bandı",
+  "alt": "Cumhuriyet öncesi mi sonrası mı?",
+  "kaz": "SB.4.4.2.b — Cumhuriyet öncesi ve sonrası toplumsal yaşamı karşılaştırır.",
+  "eskiTip": "beltSort",
+  "eskiYonerge": "Tarih bandı çalışıyor! Bu durum Cumhuriyet ÖNCESİ mi, SONRASI mı?",
+  "sayilar": {
+   "items": 8,
+   "bins": "CUMHURİYET ÖNCESİ / CUMHURİYET SONRASI"
+  },
+  "motorAd": "bant (yürüyen bant) motoru",
+  "motorSorun": "Başlıktaki toplum, harita, market veya tarih sahnesi yerine karanlık fabrika bandı açılıyor. Denemede (Harita Rengi Bandı) karar verilecek kart bandın sol kenarında kırpıldı - “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu, yani tam da kararın dayandığı renk adı kayboldu. Üç kutulu turda kutu etiketleri kutu dışına taşıyor.",
+  "tipRisk": "Bant hızı okuma ve karar süresine karışıyor; kenarda kırpılan kart hiç okunamadan can etkiliyor. Harita rengi turunda kırpılan bölüm tam da renk adı olduğu için karar imkânsız hâle geliyor; ayrıca kart rengin kendisini değil adını yazıyor.",
+  "tipGeri": "Yanlış kutuda bant dursun; kart sabitlenip yeniden okunsun ve ölçüt doğru söylenmeden hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
+  "tipKabul": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve harita rengi turunda kart rengin kendisini gösterecek.",
+  "sahne": "Gerçek dönem fotoğrafları kullanılsın; durum kartı iki dönemin görselleri arasında karşılaştırılsın ve bant durdurulsun.",
+  "ikinciTur": "Geçiş dönemine ait, iki tarafa da yakın örnekler çeldirici olsun.",
+  "ucuncuTur": "Öğrenci bir değişimi öncesi-sonrası olarak karşılaştırıp anlatsın."
+ },
+ {
+  "id": "sb22",
+  "tema": "Alan 4 · Yaşayan Demokrasimiz",
+  "ad": "Sınıf Başkanı Seçimi",
+  "alt": "Demokratik katılımı yaşa",
+  "kaz": "SB.4.4.3.a / b / c — Okuldaki demokratik katılım süreçlerine ilişkin fikirlerini ifade eder.",
+  "eskiTip": "surveyChart",
+  "eskiYonerge": "Sınıf başkanı seçimi! Sıradaki düğmesine basarak oyları say, sonra sonucu yorumla",
+  "sayilar": {
+   "responses": 12,
+   "options": 3
+  },
+  "motorAd": "çetele motoru (anket sürümü)",
+  "motorSorun": "Sahne “ÇETELE TABLOSU” başlığıyla açılıyor ama oyun bir anket/seçim; gelen cevap balonu sütun başlığıyla birebir aynı olduğu için hiçbir çıkarım gerekmiyor ve sütunlarda çetele çizgisi yerine rakam artıyor.",
+  "tipRisk": "Cevap ile sütun adı aynı olduğu için veri toplama mekanik tıklamaya iner; öğrenci sonucu yorumlamadan, çoğunluk ve azınlık ilişkisini kurmadan oyunu bitirebilir.",
+  "tipGeri": "Yanlış işaretlemede cevap yeniden dinletilsin; sayım bitince sonuç doğrudan açıklanmasın, öğrenciye “en çok/en az hangisi, kaç fark var?” soruları sorulsun.",
+  "tipKabul": "Cevap ifadeleri sütun adını birebir tekrar etmeyecek; sayım çetele çizgisiyle görünecek ve oyun ancak sonuç yorumu yapıldıktan sonra tamamlanacak.",
+  "sahne": "Gerçek bir seçim sahnesi kurulsun: sandık, oy pusulası, aday panosu. Oy ifadesi aday adını birebir tekrar etmesin ve sayım çetele çizgisiyle görünsün.",
+  "ikinciTur": "Berabere biten ve tek oyla kazanılan senaryolar eklensin; gizli oy ilkesi gösterilsin.",
+  "ucuncuTur": "Öğrenci sonucu yorumlasın ve seçilmeyen adayların fikirlerine ne olacağını söylesin."
+ },
+ {
+  "id": "sb23",
+  "tema": "Alan 4 · Yaşayan Demokrasimiz",
+  "ad": "Demokrasi Cümlesi",
+  "alt": "Katılım cümlesi kur",
+  "kaz": "SB.4.4.3.c — Okuldaki demokratik katılıma ilişkin fikirlerini ifade eder.",
+  "eskiTip": "sentenceBuild",
+  "eskiYonerge": "Okul demokrasi panosu için cümle basıyoruz! Kelime kartlarına sırayla dokun",
+  "sayilar": {
+   "rounds": 4
+  },
+  "motorAd": "matbaa/baskı kızağı motoru",
+  "motorSorun": "Kelime kartlarından büyük harfle başlayan kart ilk sözcüğü, nokta kartı son konumu ele veriyor; makine yalnız tek sabit dizilişi kabul ediyor.",
+  "tipRisk": "Büyük harfli kart ve nokta kartı dizilişi ele veriyor; saygı, demokratik katılım ve güvenlik kuralı gibi gerekçe isteyen kazanımlar hazır kartları sıralamaya indirgeniyor.",
+  "tipGeri": "Yanlışta bütün dizi bozulmasın; yalnız son kart geri alınsın. Anlamlı alternatif diziliş kurulduysa doğru kabul edilsin.",
+  "tipKabul": "Kartlar küçük harfle gelecek; baş harf ve son işaret öğrencinin kararı olacak. Son turda serbest yazı ya da sözlü ifade alanı bulunacak.",
+  "sahne": "Gerçek bir okul meclisi sahnesi kurulsun; kurulan cümle kürsüde okunsun ve panoya asılsın. Kartlar küçük harfle gelsin.",
+  "ikinciTur": "Katılım öneren ve şikâyet eden ifadeler karşılaştırılsın.",
+  "ucuncuTur": "Öğrenci okulunda katılabileceği bir süreci ve fikrini kendisi yazsın."
+ },
+ {
+  "id": "sb24",
+  "tema": "Alan 4 · Yaşayan Demokrasimiz",
+  "ad": "Millî Mücadele Kartları",
+  "alt": "Fedakârlığı eşle",
+  "kaz": "SB.4.4.1.a / b — Cumhuriyete giden yolda yapılan fedakârlıkları kanıta dayalı açıklar.",
+  "eskiTip": "memoryPairs",
+  "eskiYonerge": "Kartlar kapalı! Kartları çevir ve her fedakârlığı anlamıyla eşleştir",
+  "sayilar": {
+   "pairs": 6
+  },
+  "motorAd": "hafıza kartı motoru",
+  "motorSorun": "Sahne başlıktan bağımsız yıldızlı uzay; kartlar tavandan iniyor ve “Başla! Kartları çevir” yazısı üst kart sırasının üzerine biniyor. Can göstergesi 6 kalp ile genel 3 can standardından ayrılıyor.",
+  "tipRisk": "Eşleştirme, kavramı açıklamadan kart konumunu ezberleyerek de çözülür; görsel hafıza başarısı sosyal bilgiler başarısı gibi kayda geçer.",
+  "tipGeri": "Yanlış çiftte kartlar hemen kapanmasın; iki içerik yan yana okunup farkı soran kısa bir ipucu verilsin. Can standardı diğer oyunlarla eşitlensin.",
+  "tipKabul": "Kart konumları ve içerik her açılışta karışacak; can sayısı genel standartla (3) eşitlenecek ve her eşleşme bir gerekçe adımıyla doğrulanacak.",
+  "sahne": "Gerçek Millî Mücadele görselleri kullanılsın; kart çevrilince fedakârlığın anlamı kısa bir anlatımla açılsın.",
+  "ikinciTur": "Cephede ve cephe gerisinde yapılan fedakârlıklar karşılaştırılsın.",
+  "ucuncuTur": "Öğrenci bir fedakârlığı kanıtıyla birlikte anlatsın."
+ },
+ {
+  "id": "sb25",
+  "tema": "Alan 5 · Hayatımızdaki Ekonomi",
+  "ad": "Su Tüketim Grafiği",
+  "alt": "Grafiği kur ve oku",
+  "kaz": "SB.4.5.1.a / b — Doğal kaynak tüketimini gösteren grafikteki simgeleri belirler ve grafiği çözümler.",
+  "eskiTip": "graphBuild",
+  "eskiYonerge": "Belediyenin su tüketim verisi geldi! Her alanın su damlası sayısını kur. 1 damla = 10 litre",
+  "sayilar": {
+   "categories": 4,
+   "blocks": 17
+  },
+  "motorAd": "grafik kurma motoru",
+  "motorSorun": "Dört sütunlu boş bir grafik, kategori etiketleri ve altta blok deposu var. Denemede kaynak satırında yalnız “Bir evin günlük su tüketimi (1 damla = 10 litre)” yazıyordu; hangi alanın kaç damla olduğu hiçbir yerde belirtilmemişti. Ayrıca blok deposu grafiğin üzerine binip “Banyo” etiketini örtüyordu.",
+  "tipRisk": "Hedef değerler ekranda gösterilmediği için oyun deneme-yanılmayla çözülmek zorunda; grafik kurma becerisi değil sabır ölçülüyor. Kazanımın “simgeleri belirler ve grafiği çözümler” kısmı hiç yoklanmıyor.",
+  "tipGeri": "Yanlış sütuna blok konursa blok geri dönsün; veri satırı yeniden okunsun ve hangi kategoriye ait olduğu sorulsun. Grafik silinmesin.",
+  "tipKabul": "Kategori hedefleri ya kaynak satırında okunur biçimde verilecek ya da öğrenci nesneleri sayarak kendisi çıkaracak; blok deposu grafiğin üzerine binmeyecek ve grafiğe sayı ölçeği eklenecek.",
+  "sahne": "KRİTİK: hedef değerler ekranda görünmüyor - kaynak satırında yalnız birim açıklaması var, hangi alanın kaç damla olduğu yazmıyor ve oyun deneme-yanılmayla çözülüyor. Veriler ya kaynak satırında okunur biçimde verilsin ya da öğrenci sayarak kendisi çıkarsın. Blok deposu grafiğin üzerine binmesin.",
+  "ikinciTur": "Grafik tamamlanınca “en çok nerede su harcanıyor, kaç litre fark var?” soruları sorulsun.",
+  "ucuncuTur": "Öğrenci grafiği yorumlayıp evinde su tasarrufu için bir öneri getirsin."
+ },
+ {
+  "id": "sb26",
+  "tema": "Alan 5 · Hayatımızdaki Ekonomi",
+  "ad": "Grafik Dedektifi",
+  "alt": "Grafikten çıkarım yap",
+  "kaz": "SB.4.5.1.c / ç — Zaman içinde değişen tüketim oranlarını karşılaştırır ve çıkarım yapar.",
+  "eskiTip": "numPad",
+  "eskiYonerge": "Grafik dedektifi! Verilere bakıp sayı tuşlarıyla cevabı yaz",
+  "sayilar": {
+   "rounds": 4
+  },
+  "motorAd": "radar-kod (tuş takımı) motoru",
+  "motorSorun": "Sayısal tuş takımı ve boş bir ekran çerçevesi var. Denemede başlık “Grafik Dedektifi” ve alt başlık “Grafikten çıkarım yap” olduğu hâlde ekranda hiçbir grafik yoktu; soru düz metin olarak veriliyordu ve altında “60 + 40 = ?” işlemi hazır yazılıydı.",
+  "tipRisk": "Grafik olmadan “grafikten çıkarım yapma” kazanımı ölçülemez; üstelik işlem hazır yazıldığı için kalan tek beceri toplama yapmak oluyor. Sosyal bilgiler kazanımı matematik alıştırmasına dönüşüyor.",
+  "tipGeri": "Yanlış sayıda doğru cevap ekrana yazılmasın; grafikteki ilgili sütunlar vurgulanıp “bu ikisini karşılaştır” denilerek yeniden denensin.",
+  "tipKabul": "Ekranda gerçek bir grafik bulunacak ve soru o grafikten okunacak; işlem hazır yazılmayacak, öğrenci hangi verileri karşılaştıracağına kendisi karar verecek.",
+  "sahne": "KRİTİK: başlık “Grafik Dedektifi” olduğu hâlde ekranda grafik yok ve “60 + 40 = ?” işlemi hazır yazılı. Ekrana gerçek bir grafik konsun, soru o grafikten okunsun ve işlem yazılmasın.",
+  "ikinciTur": "İki yılın grafiği yan yana verilsin; öğrenci değişimi karşılaştırsın.",
+  "ucuncuTur": "Öğrenci grafikten çıkardığı sonucu bir cümleyle ifade etsin - yalnız sayı değil yorum istensin."
+ },
+ {
+  "id": "sb27",
+  "tema": "Alan 5 · Hayatımızdaki Ekonomi",
+  "ad": "İstek-İhtiyaç Bandı",
+  "alt": "Hangisi zorunlu?",
+  "kaz": "SB.4.5.2.a / b — İstek ve ihtiyaçlarını ayırt ederek bilinçli seçim yapar.",
+  "eskiTip": "beltSort",
+  "eskiYonerge": "Market bandı çalışıyor! Gelen ürün İHTİYAÇ mı, İSTEK mi?",
+  "sayilar": {
+   "items": 8,
+   "bins": "İHTİYAÇ (olmazsa olmaz) / İSTEK (olmasa da olur)"
+  },
+  "motorAd": "bant (yürüyen bant) motoru",
+  "motorSorun": "Başlıktaki toplum, harita, market veya tarih sahnesi yerine karanlık fabrika bandı açılıyor. Denemede (Harita Rengi Bandı) karar verilecek kart bandın sol kenarında kırpıldı - “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu, yani tam da kararın dayandığı renk adı kayboldu. Üç kutulu turda kutu etiketleri kutu dışına taşıyor.",
+  "tipRisk": "Bant hızı okuma ve karar süresine karışıyor; kenarda kırpılan kart hiç okunamadan can etkiliyor. Harita rengi turunda kırpılan bölüm tam da renk adı olduğu için karar imkânsız hâle geliyor; ayrıca kart rengin kendisini değil adını yazıyor.",
+  "tipGeri": "Yanlış kutuda bant dursun; kart sabitlenip yeniden okunsun ve ölçüt doğru söylenmeden hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
+  "tipKabul": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve harita rengi turunda kart rengin kendisini gösterecek.",
+  "sahne": "Gerçek bir market rafı ve alışveriş sahnesi çizilsin; ürün kartı rafta bir ürün olarak görünsün ve bant durdurulsun.",
+  "ikinciTur": "Bağlama göre değişen ürünler eklensin (yağmurluk yağmurlu günde ihtiyaç); ölçüt tartışılsın.",
+  "ucuncuTur": "Öğrenci kendi bir isteğini ve bir ihtiyacını ayırt edip nedenini söylesin."
+ },
+ {
+  "id": "sb28",
+  "tema": "Alan 5 · Hayatımızdaki Ekonomi",
+  "ad": "Bilinçli Alışveriş",
+  "alt": "Bütçeyle ihtiyacı al",
+  "kaz": "SB.4.5.2.b / c — Bütçesine uygun bilinçli tüketici davranışı sergiler.",
+  "eskiTip": "serveOrder",
+  "eskiYonerge": "Elinde bütçe var! Müşterinin istediği toplam tutarı ürünlerle tam tutturur musun?",
+  "sayilar": {
+   "customers": 3
+  },
+  "motorAd": "tepsi-servis motoru",
+  "motorSorun": "Başlıktaki pano, atölye, plan masası veya market yerine ahşap servis tezgâhı açılıyor. Denemede (Bilinçli Alışveriş) müşteri “Bütçem 30 TL” diyordu ama ürün kartlarında fiyat yazmıyordu; üstelik “tepsi boş - 0 / 30” göstergesi ürün kartlarının arkasında kalıp okunamıyordu.",
+  "tipRisk": "Karar için gereken sayısal veri (ürün fiyatları) ekranda olmadığında bütçe kazanımı deneme-yanılmaya iner; öğrenci bilinçli tüketici kararı veremez.",
+  "tipGeri": "Yanlış seçimde tepsi kilitlenmesin; sepetin toplamı ve kalan bütçe görünür kalsın, öğrenci ürün çıkarıp yeniden denesin.",
+  "tipKabul": "Karar için gereken bütün sayısal veri (fiyat, bütçe, kalan tutar) ekranda okunur biçimde bulunacak; sepet toplamı hiçbir ögenin arkasında kalmayacak.",
+  "sahne": "KRİTİK: ürün kartlarında FİYAT yazmıyor - öğrenci 30 TL'yi tutturmayı bilemez. Her ürüne okunur bir fiyat etiketi konsun, sepet toplamı ve kalan bütçe hiçbir ögenin arkasında kalmadan görünsün.",
+  "ikinciTur": "Bütçenin yetmediği durumlar eklensin; öğrenci ihtiyacı isteğe tercih etsin.",
+  "ucuncuTur": "Öğrenci kendi seçimini “şunu aldım çünkü...” diye gerekçelendirsin."
+ },
+ {
+  "id": "sb29",
+  "tema": "Alan 5 · Hayatımızdaki Ekonomi",
+  "ad": "Ürünün Yolculuğu",
+  "alt": "Üretim → dağıtım → tüketim",
+  "kaz": "SB.4.5.3.a / b — Üretim, dağıtım ve tüketim süreçlerini ilişkilendirir.",
+  "eskiTip": "orderSequence",
+  "eskiYonerge": "Ekmeğin yolculuğu karıştı! Tarladan sofraya doğru sırayla seç",
+  "sayilar": {
+   "items": 5
+  },
+  "motorAd": "roket-yakıt motoru",
+  "motorSorun": "Cumhuriyet tarihi, ekmeğin yolculuğu, afet önlemleri ve siber zorbalık gibi tamamen dünyevi konularda bile kartlar uzayda süzülüyor ve seçilenler YAKIT hunisine gidiyor; kenardaki kartlar ekrandan taşabiliyor.",
+  "tipRisk": "Roket-yakıt sahnesi konuyla çelişip kavramı bulanıklaştırıyor; kartlardaki tarih veya numara ipuçları içerik bilgisi olmadan sıralamayı mümkün kılıyor.",
+  "tipGeri": "Yanlış adımda dizi silinmesin; yalnız son seçim geri alınsın ve “önce ne olmalı?” sorusunu düşündüren ipucu verilsin.",
+  "tipKabul": "Roket-yakıt sahnesi kaldırılacak; sırayı ele veren tarih/numara ilk turda gizlenecek ve kartlar 390x844 ekranda tam içeride kalacak.",
+  "sahne": "Gerçek üretim zinciri sahnesi çizilsin (tarla, değirmen, fırın, market, sofra); roket kaldırılsın ve adımlar bu mekânlarda görünsün.",
+  "ikinciTur": "Farklı ürünler için zincir karşılaştırılsın (süt, ayakkabı).",
+  "ucuncuTur": "Öğrenci bir ürünün yolculuğunu üç aşamada anlatsın."
+ },
+ {
+  "id": "sb30",
+  "tema": "Alan 5 · Hayatımızdaki Ekonomi",
+  "ad": "Ekonomi Köprüsü",
+  "alt": "Süreci örneğiyle eşle",
+  "kaz": "SB.4.5.3.b — Üretim, dağıtım ve tüketim süreçlerine örnek verir.",
+  "eskiTip": "dragMatch",
+  "eskiYonerge": "Köprüyü kur! Her örneği ait olduğu ekonomik süreçle birleştir",
+  "sayilar": {
+   "sources": 6,
+   "targets": 3
+  },
+  "motorAd": "eşleştirme köprüsü motoru",
+  "motorSorun": "Köprü görseli yok; hedef satırların solunda boş kareler, altta PARÇALAR havuzu var. Denemede (Ekonomi Köprüsü) altı parçanın beşinde son sözcük çipe sığmayıp kesildi: “Çiftçinin domates yetiştirmesi”, “Fabrikada ayakkabı dikilmesi”, “Tırın sebzeyi hâle götürmesi” gibi ifadeler yarım okunuyordu. Parça ve hedeflerdeki emojiler de sık sık aynı kategoriyi işaret ediyor.",
+  "tipRisk": "Kırpılan parça yazıları okunamadığı için eşleştirme tahmine dayanıyor; emoji ipuçları da kategoriyi ele verdiğinden üretim-dağıtım-tüketim ayrımı ya da harita sembolü bilgisi hiç kullanılmadan oyun bitirilebilir.",
+  "tipGeri": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı bilgi kısa bir soruyla vurgulansın.",
+  "tipKabul": "Parça yazıları çipe tam sığacak; hiçbir sözcük kesilmeyecek. Emojiler cevabı eşleştirmeyecek, hedef alanlar en az 44 px olacak ve her eşleşme gerekçeyle doğrulanacak.",
+  "sahne": "KRİTİK: altı parçanın beşinde son sözcük çipe sığmayıp kesiliyor (“...yetiştirmesi”, “...dikilmesi”, “...götürmesi” okunmuyor). Yazılar tam sığacak biçimde yerleşsin; emoji ipuçları kategoriyi ele vermesin.",
+  "ikinciTur": "Aynı ürünün üç aşaması birlikte verilsin; öğrenci zinciri kursun.",
+  "ucuncuTur": "Öğrenci kendi yaşamından üretim, dağıtım ve tüketim örneği versin."
+ },
+ {
+  "id": "sb31",
+  "tema": "Alan 6 · Teknoloji ve Sosyal Bilimler",
+  "ad": "Dijital Güvenlik Bandı",
+  "alt": "Güvenli mi, riskli mi?",
+  "kaz": "SB.4.6.1.a / b — Çevrim içi ortamlarda güvenlik kurallarını belirler.",
+  "eskiTip": "beltSort",
+  "eskiYonerge": "Güvenlik bandı çalışıyor! Bu çevrim içi davranış GÜVENLİ mi, RİSKLİ mi?",
+  "sayilar": {
+   "items": 8,
+   "bins": "GÜVENLİ / RİSKLİ"
+  },
+  "motorAd": "bant (yürüyen bant) motoru",
+  "motorSorun": "Başlıktaki toplum, harita, market veya tarih sahnesi yerine karanlık fabrika bandı açılıyor. Denemede (Harita Rengi Bandı) karar verilecek kart bandın sol kenarında kırpıldı - “Koyu yeşil ovalar” ifadesinden yalnız “ovalar” görünüyordu, yani tam da kararın dayandığı renk adı kayboldu. Üç kutulu turda kutu etiketleri kutu dışına taşıyor.",
+  "tipRisk": "Bant hızı okuma ve karar süresine karışıyor; kenarda kırpılan kart hiç okunamadan can etkiliyor. Harita rengi turunda kırpılan bölüm tam da renk adı olduğu için karar imkânsız hâle geliyor; ayrıca kart rengin kendisini değil adını yazıyor.",
+  "tipGeri": "Yanlış kutuda bant dursun; kart sabitlenip yeniden okunsun ve ölçüt doğru söylenmeden hatırlatılsın. Kenarda kırpılan kart hiç puanlanmasın.",
+  "tipKabul": "İlk iki turda kartlar sabit gelecek; hız ancak üçüncü turda isteğe bağlı açılacak. Kart hiçbir konumda kırpılmayacak, kutu etiketi kutu içinde kalacak ve harita rengi turunda kart rengin kendisini gösterecek.",
+  "sahne": "Gerçek bir ekran/uygulama arayüzü çizilsin; davranış o arayüzde bir eylem olarak görünsün ve bant durdurulsun.",
+  "ikinciTur": "Görünüşte zararsız ama riskli davranışlar çeldirici olsun (tanıdık görünen hesap).",
+  "ucuncuTur": "Öğrenci kendi belirlediği bir güvenlik kuralını söylesin."
+ },
+ {
+  "id": "sb32",
+  "tema": "Alan 6 · Teknoloji ve Sosyal Bilimler",
+  "ad": "Paylaşım Radarı",
+  "alt": "Bu bilgi paylaşılır mı?",
+  "kaz": "SB.4.6.1.b / c — Dijital mahremiyete ilişkin kuralları gerekçelendirir.",
+  "eskiTip": "catchDrop",
+  "eskiYonerge": "Radarı sürükleyerek doğru cevabı yakala",
+  "sayilar": {
+   "rounds": 4
+  },
+  "motorAd": "radar/kapsül yakalama motoru",
+  "motorSorun": "Seçenekler kapsül içinde tek tek yukarıdan düşüyor; ipucu “Kapsülün altındaki sarı noktayı çanağın ortasına getir” diliyle veriliyor ve karar süresi düşme hızına bağlanıyor. Üç radar oyununun yönergesi birbirinin aynı: “Radarı sürükleyerek doğru cevabı yakala”.",
+  "tipRisk": "Doğru cevabı bilmek yetmiyor; düşen kapsüle yetişmek gerekiyor. Dijital mahremiyet gibi gerekçelendirme isteyen bir konu refleks oyununa bağlanıyor.",
+  "tipGeri": "Yanlış yakalamada düşme dursun; seçenek sabitlenip yeniden karar verilsin. Kaçan kapsül can yakmasın.",
+  "tipKabul": "İlk turda düşme kapalı, seçenekler sabit olacak; başarı doğru karar ve gerekçeyle ölçülecek. Her oyunun yönergesi kendi konusunu anlatacak.",
+  "sahne": "Genel radar yönergesi kaldırılsın; bilgi kartı sabit gelsin ve öğrenci “paylaşırım / paylaşmam” kararını gerekçe seçerek versin.",
+  "ikinciTur": "Bağlama göre değişen örnekler eklensin: okul panosunda ad, internette adres; izin kavramı işlensin.",
+  "ucuncuTur": "Öğrenci dijital mahremiyet kuralını “... paylaşmam çünkü ...” kalıbıyla gerekçelendirsin."
+ },
+ {
+  "id": "sb33",
+  "tema": "Alan 6 · Teknoloji ve Sosyal Bilimler",
+  "ad": "Bilim İnsanı Köprüsü",
+  "alt": "Çocukluğu ile keşfini eşle",
+  "kaz": "SB.4.6.2.a / b / c — Bilim insanlarının çocukluğu ile kendi yaşamı arasında bağlantı kurar.",
+  "eskiTip": "dragMatch",
+  "eskiYonerge": "Köprüyü kur! Her bilim insanını çocukluk merakıyla birleştir",
+  "sayilar": {
+   "sources": 5,
+   "targets": 5
+  },
+  "motorAd": "eşleştirme köprüsü motoru",
+  "motorSorun": "Köprü görseli yok; hedef satırların solunda boş kareler, altta PARÇALAR havuzu var. Denemede (Ekonomi Köprüsü) altı parçanın beşinde son sözcük çipe sığmayıp kesildi: “Çiftçinin domates yetiştirmesi”, “Fabrikada ayakkabı dikilmesi”, “Tırın sebzeyi hâle götürmesi” gibi ifadeler yarım okunuyordu. Parça ve hedeflerdeki emojiler de sık sık aynı kategoriyi işaret ediyor.",
+  "tipRisk": "Kırpılan parça yazıları okunamadığı için eşleştirme tahmine dayanıyor; emoji ipuçları da kategoriyi ele verdiğinden üretim-dağıtım-tüketim ayrımı ya da harita sembolü bilgisi hiç kullanılmadan oyun bitirilebilir.",
+  "tipGeri": "Yanlış parça başlangıca dönsün; hedef parlatılmasın. Eşleşmenin dayandığı bilgi kısa bir soruyla vurgulansın.",
+  "tipKabul": "Parça yazıları çipe tam sığacak; hiçbir sözcük kesilmeyecek. Emojiler cevabı eşleştirmeyecek, hedef alanlar en az 44 px olacak ve her eşleşme gerekçeyle doğrulanacak.",
+  "sahne": "Gerçek bilim insanı çocukluk anıları kullanılsın; eşleşince merakın hangi keşfe dönüştüğü kısa sahneyle gösterilsin ve emoji eşleşmesi kaldırılsın.",
+  "ikinciTur": "Merakın hemen sonuç vermediği, uzun sürdüğü örnekler eklensin.",
+  "ucuncuTur": "Öğrenci kendi merak ettiği bir konuyu ve nasıl araştıracağını söylesin."
+ },
+ {
+  "id": "sb34",
+  "tema": "Alan 6 · Teknoloji ve Sosyal Bilimler",
+  "ad": "Siber Zorbalık Adımları",
+  "alt": "Ne yapmalı, sırala",
+  "kaz": "SB.4.6.1.b / c — Siber zorbalık durumunda yapılacakları belirler.",
+  "eskiTip": "orderSequence",
+  "eskiYonerge": "Siber zorbalıkla karşılaştın! Yapılacakları doğru sırayla seç",
+  "sayilar": {
+   "items": 5
+  },
+  "motorAd": "roket-yakıt motoru",
+  "motorSorun": "Cumhuriyet tarihi, ekmeğin yolculuğu, afet önlemleri ve siber zorbalık gibi tamamen dünyevi konularda bile kartlar uzayda süzülüyor ve seçilenler YAKIT hunisine gidiyor; kenardaki kartlar ekrandan taşabiliyor.",
+  "tipRisk": "Roket-yakıt sahnesi konuyla çelişip kavramı bulanıklaştırıyor; kartlardaki tarih veya numara ipuçları içerik bilgisi olmadan sıralamayı mümkün kılıyor.",
+  "tipGeri": "Yanlış adımda dizi silinmesin; yalnız son seçim geri alınsın ve “önce ne olmalı?” sorusunu düşündüren ipucu verilsin.",
+  "tipKabul": "Roket-yakıt sahnesi kaldırılacak; sırayı ele veren tarih/numara ilk turda gizlenecek ve kartlar 390x844 ekranda tam içeride kalacak.",
+  "sahne": "Gerçek bir mesajlaşma ekranı sahnesi kurulsun; adımlar o ekranda yapılan işler olarak sıralansın (ekran görüntüsü al, engelle, güvendiğin yetişkine göster). Roket kaldırılsın.",
+  "ikinciTur": "Yanlış tepkiler çeldirici olsun (karşılık vermek, sessiz kalmak); sonucu gösterilsin.",
+  "ucuncuTur": "Öğrenci güvendiği yetişkinleri ve ne söyleyeceğini kendisi belirtsin."
+ },
+ {
+  "id": "sb35",
+  "tema": "Alan 6 · Teknoloji ve Sosyal Bilimler",
+  "ad": "Ekran Süresi Ölçeri",
+  "alt": "Sağlıklı süreyi ayarla",
+  "kaz": "SB.4.6.1.c — Çevrim içi ortamlarda sağlıklı ve güvenli kullanım kurallarını gerekçelendirir.",
+  "eskiTip": "dragSlider",
+  "eskiYonerge": "Ekran süresi ölçerini sürükleyerek doğru değeri ayarla",
+  "sayilar": {
+   "rounds": 3
+  },
+  "motorAd": "tren-tünel motoru",
+  "motorSorun": "Ekran süresi sorulurken sahnede kırmızı bir tren tünellerden birine giriyor ve sayaç “tren” birimiyle ilerliyor. Tünel etiketleri soyut sözcükler; ölçülen kavramın kendisi (geçen süre, yapılan etkinlik) ekranda hiç görünmüyor.",
+  "tipRisk": "Ölçülen kavram ekranda görünmediği için öğrenci soyut bir sözcüğü tren tüneliyle eşleştiriyor; ekran süresi kararının gerekçesi hiç kurulmuyor.",
+  "tipGeri": "Yanlış seçimde doğru değer tek başına verilmesin; seçilen sürenin bir günde neye denk geldiği görsel olarak canlandırılıp yeniden karar verilsin.",
+  "tipKabul": "Tren-tünel sahnesi kaldırılacak; ölçülen kavram (bir günün saat çizelgesi, ekran karşısında geçen süre) ekranda görsel olarak canlandırılacak ve karar gerekçelendirilecek.",
+  "sahne": "Tren-tünel sahnesi kaldırılsın; ekranda bir günün saat çizelgesi olsun ve seçilen ekran süresi bu çizelgede yerini alsın; kalan zamanla neler yapılabileceği görünsün.",
+  "ikinciTur": "Hafta içi ve hafta sonu karşılaştırılsın; yaşa uygun öneri aralığı gösterilsin.",
+  "ucuncuTur": "Öğrenci kendi ekran süresi kuralını nedeniyle birlikte söylesin."
+ },
+ {
+  "id": "sb36",
+  "tema": "Alan 6 · Teknoloji ve Sosyal Bilimler",
+  "ad": "Güvenlik Cümlesi",
+  "alt": "Kuralı cümleye dök",
+  "kaz": "SB.4.6.1.c / SB.4.6.2.ç — Dijital güvenlik kurallarını gerekçelendirerek ifade eder.",
+  "eskiTip": "sentenceBuild",
+  "eskiYonerge": "Okul dijital güvenlik panosu için cümle basıyoruz! Kelimelere sırayla dokun",
+  "sayilar": {
+   "rounds": 4
+  },
+  "motorAd": "matbaa/baskı kızağı motoru",
+  "motorSorun": "Kelime kartlarından büyük harfle başlayan kart ilk sözcüğü, nokta kartı son konumu ele veriyor; makine yalnız tek sabit dizilişi kabul ediyor.",
+  "tipRisk": "Büyük harfli kart ve nokta kartı dizilişi ele veriyor; saygı, demokratik katılım ve güvenlik kuralı gibi gerekçe isteyen kazanımlar hazır kartları sıralamaya indirgeniyor.",
+  "tipGeri": "Yanlışta bütün dizi bozulmasın; yalnız son kart geri alınsın. Anlamlı alternatif diziliş kurulduysa doğru kabul edilsin.",
+  "tipKabul": "Kartlar küçük harfle gelecek; baş harf ve son işaret öğrencinin kararı olacak. Son turda serbest yazı ya da sözlü ifade alanı bulunacak.",
+  "sahne": "Gerçek bir okul panosu çizilsin; kurulan kural cümlesi panoya asılsın ve gerekçe bölümü ayrı bir alan olsun. Kartlar küçük harfle gelsin.",
+  "ikinciTur": "Kural ile gerekçe ayrı ayrı kurulsun: “ne yapmalı” ve “çünkü”.",
+  "ucuncuTur": "Öğrenci kendi dijital güvenlik kuralını gerekçesiyle yazsın."
+ }
+]
