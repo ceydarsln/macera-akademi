@@ -410,18 +410,23 @@ const SAHNE={
 /* Dinamometre: yay ve üzerindeki yük ekranda; sayı değil olgu gösterilir. */
 function dinamometre(uzama,yukAd){
  const u=Math.max(0,Math.min(1,uzama)),boy=26+u*44;
- const halka=`<circle cx="160" cy="${44+boy+26}" r="9" fill="none" stroke="#5b7185" stroke-width="4"/>`;
+ /* viewBox yüksekliği en uzun yay + yük kutusuna göre sabit: yük hiçbir
+    değerde alt kenardan taşmıyor (390x844'te kırpılma denetimi). */
+ const H=210, yukY=44+boy+34;
  let yay='';
- for(let i=0;i<7;i++){const y=44+ (boy/7)*i;yay+=`<path d="M150 ${y} L170 ${y+boy/14} L150 ${y+boy/7}" stroke="#8fa3b5" stroke-width="4" fill="none"/>`}
- return SVG(320,168,
-  `<rect width="320" height="168" fill="#eef4f9"/>`+
-  `<rect x="118" y="12" width="84" height="30" rx="6" fill="#5b7185"/><text x="160" y="32" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">DİNAMOMETRE</text>`+
-  yay+halka+
-  `<rect x="${160-26}" y="${44+boy+34}" width="52" height="40" rx="6" fill="#c9a86a" stroke="#8a6a2c" stroke-width="3"/>`+
-  `<text x="160" y="${44+boy+59}" font-size="11" font-weight="900" fill="#5a3f1c" text-anchor="middle">${esc(yukAd||'YÜK')}</text>`+
-  `<line x1="214" y1="44" x2="214" y2="${44+boy}" stroke="#cd463d" stroke-width="3"/>`+
-  `<path d="M208 ${44+boy} h12" stroke="#cd463d" stroke-width="4"/>`+
-  `<text x="238" y="${48+boy}" font-size="11" font-weight="900" fill="#cd463d">yay bu kadar uzadı</text>`)}
+ for(let i=0;i<7;i++){const y=44+(boy/7)*i;yay+=`<path d="M150 ${y} L170 ${y+boy/14} L150 ${y+boy/7}" stroke="#8fa3b5" stroke-width="4" fill="none"/>`}
+ return SVG(320,H,
+  `<rect width="320" height="${H}" fill="#eef4f9"/>`+
+  `<rect x="106" y="10" width="108" height="30" rx="6" fill="#5b7185"/>`+
+  `<text x="160" y="30" font-size="12" font-weight="800" fill="#fff" text-anchor="middle">DİNAMOMETRE</text>`+
+  yay+
+  `<circle cx="160" cy="${44+boy+12}" r="9" fill="none" stroke="#5b7185" stroke-width="4"/>`+
+  `<rect x="134" y="${yukY}" width="52" height="40" rx="6" fill="#c9a86a" stroke="#8a6a2c" stroke-width="3"/>`+
+  `<text x="160" y="${yukY+25}" font-size="11" font-weight="900" fill="#5a3f1c" text-anchor="middle">${esc(yukAd||'YÜK')}</text>`+
+  `<line x1="228" y1="44" x2="228" y2="${44+boy}" stroke="#cd463d" stroke-width="3"/>`+
+  `<path d="M222 44 h12 M222 ${44+boy} h12" stroke="#cd463d" stroke-width="4"/>`+
+  `<text x="314" y="${40+boy/2}" font-size="10" font-weight="900" fill="#cd463d" text-anchor="end">yay bu kadar</text>`+
+  `<text x="314" y="${52+boy/2}" font-size="10" font-weight="900" fill="#cd463d" text-anchor="end">uzadı</text>`)}
 /* Saksı: gerçek fide, toprak ve su seviyesi. Hedef miktar hiçbir yerde yazmaz. */
 function saksi(oran,durum){
  const o=Math.max(0,Math.min(1.6,oran));
@@ -2204,6 +2209,411 @@ GAMES.g24={title:'Okul Atık Grafiği',theme:'bahce',
   yasak:['En çok kâğıt toplanıyor. Önerim azaltmak çünkü çok.'],
   ornekCevap:'Okulumuzda en çok kâğıt toplanıyor. Önerim kâğıtların iki yüzünü de kullanmamız çünkü böylece aynı işi yarı kâğıtla bitiririz.',
   result:'Veriden yola çıkıp somut bir öneri geliştirdin.'}
+]};
+
+/* ---- g25 Hareket Türleri (bant kaldırıldı: hareket park sahnesinde) ---- */
+GAMES.g25={title:'Hareket Türleri',theme:'park',
+ finish:'Hareket türlerini ayırt ettin, birden çok hareketi birlikte yapan varlıkları çözdün ve çevrenden bir hareketi adlandırdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu varlık nasıl hareket ediyor?',sahne:SAHNE.park,
+  soru:'Buradaki hareket hangi türdendir?',
+  kutular:[{ad:'DÖNME',alt:'kendi ekseni çevresinde'},{ad:'SALLANMA',alt:'ileri geri gidip gelme'},
+   {ad:'YÖN DEĞİŞTİRME',alt:'gittiği yol kırılır'}],
+  ipucu:'Varlığın izlediği yolu düşün: daire mi, gidiş-dönüş mü, kırılma mı?',
+  kartlar:[
+   {t:'Bisiklet tekerleği — jant, göbeğinin çevresinde tur atıyor',dogru:0,
+    neden:'Kendi ekseni çevresinde tur atan hareket bu türdendir.',
+    hint:'Tekerlek bir yere gidip geri mi geliyor, tur mu atıyor?'},
+   {t:'Parktaki salıncak — ileri gidiyor, geri geliyor, yine ileri',dogru:1,
+    neden:'Aynı yol üzerinde gidip gelen hareket bu türdendir.',
+    hint:'Salıncak tur atıyor mu, aynı yolda gidip geliyor mu?'},
+   {t:'Duvara atılan top — duvara çarpıyor ve geldiği yöne dönüyor',dogru:2,
+    neden:'Çarpma sonucu yolun kırılması bu türdendir.',
+    hint:'Topun yolu çarpmadan önce ve sonra aynı yönde mi?'},
+   {t:'Çamaşır makinesinin tamburu — içindekilerle birlikte tur atıyor',dogru:0,
+    neden:'Eksen çevresindeki tur bu türdendir.',hint:'Tambur yerinde mi duruyor, yer mi değiştiriyor?'},
+   {t:'Duvar saatinin sarkacı — sağa gidiyor, sola dönüyor, yine sağa',dogru:1,
+    neden:'Aynı yay üzerinde gidip gelmek bu türdendir.',hint:'Sarkaç tam tur atıyor mu?'},
+   {t:'Virajı alan araba — düz gidiyordu, şimdi sağa doğru gidiyor',dogru:2,
+    neden:'Gidiş doğrultusunun değişmesi bu türdendir.',hint:'Arabanın gittiği doğrultu değişti mi?'},
+   {t:'Topaç — bir noktada durup kendi çevresinde fırıl fırıl',dogru:0,
+    neden:'Yerinde tur atan hareket bu türdendir.',hint:'Topaç ilerliyor mu, yerinde mi?'},
+   {t:'Direğe asılı bayrak — rüzgârda öne arkaya dalgalanıyor',dogru:1,
+    neden:'Gidip gelen dalgalanma bu türdendir.',hint:'Bayrak direkten ayrılıp gidiyor mu?'}]},
+ {kind:'sinifla',prompt:'Bu varlık iki hareketi birlikte yapıyor olabilir.',sahne:SAHNE.park,
+  soru:'Burada hangi hareketler var?',
+  kutular:[{ad:'YALNIZ DÖNME',alt:'yerinde tur atıyor'},{ad:'DÖNME VE İLERLEME',alt:'tur atarken yol alıyor'},
+   {ad:'YALNIZ İLERLEME',alt:'tur atmadan yol alıyor'}],
+  ipucu:'İki soru sor: tur atıyor mu? Yer değiştiriyor mu?',
+  kartlar:[
+   {t:'Yamaçtan aşağı yuvarlanan top',dogru:1,
+    neden:'Top hem kendi çevresinde tur atıyor hem yol alıyor.',
+    hint:'Top hem tur atıyor hem yer değiştiriyor mu?'},
+   {t:'Masada duran ve yerinde fırıldayan topaç',dogru:0,
+    neden:'Topaç tur atıyor ama yerinden ayrılmıyor.',hint:'Topaç masada yol alıyor mu?'},
+   {t:'Rayda düz giden tren',dogru:2,
+    neden:'Tren yol alıyor ama gövdesi tur atmıyor.',hint:'Trenin gövdesi kendi çevresinde tur atıyor mu?'},
+   {t:'Yolda giden bisikletin tekerleği',dogru:1,
+    neden:'Tekerlek hem döner hem bisikletle birlikte ilerler.',
+    hint:'Tekerlek yerinde mi kalıyor, bisikletle mi gidiyor?'},
+   {t:'Tavandaki vantilatörün pervanesi',dogru:0,
+    neden:'Pervane tur atıyor ama odada dolaşmıyor.',hint:'Pervane bir yere gidiyor mu?'},
+   {t:'Kaydıraktan aşağı kayan çocuk',dogru:2,
+    neden:'Çocuk yol alıyor ama tur atmıyor.',hint:'Kayarken tur atıyor mu?'}]},
+ {kind:'yaz',prompt:'Çevrenden bir hareketi adlandır ve anlat.',sahne:SAHNE.park,
+  gorev:'Şu anda çevrende gördüğün ya da hatırladığın bir hareketi yaz ve türünü adlandır.',
+  ornek:'Kalıp: "… hareket ediyor. Bu bir … hareketidir çünkü …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… hareket ediyor. Bu bir … hareketidir çünkü …',
+  yasak:['Top dönüyor. Bu bir dönme hareketidir çünkü dönüyor.'],
+  ornekCevap:'Sınıf kapısı açılıp kapanıyor. Bu bir sallanma hareketidir çünkü menteşesine bağlı olarak aynı yolda gidip geliyor.',
+  result:'Hareketi türüyle adlandırıp gerekçelendirdin.'}
+]};
+
+/* ---- g26 Kuvvet Köprüsü (olay ile etki arasında simge kopyası yok) ---- */
+GAMES.g26={title:'Kuvvet Köprüsü',theme:'park',
+ finish:'Kuvvetin etkilerini olaylarla eşledin, tek olayda birden çok etkiyi ayırdın ve bir olayda kuvvetin ne yaptığını anlattın.',rounds:[
+ {kind:'esle',prompt:'Her olayı kuvvetin oradaki etkisiyle eşle.',sahne:SAHNE.park,
+  soru:'Önce alttan bir olay seç, sonra kuvvetin oradaki etkisine dokun.',
+  ipucu:'Sor: cisim yakınlaştı mı, uzaklaştı mı, durdu mu, biçimi mi bozuldu?',
+  yuvalar:[
+   {hedef:'İTME — cismi kendinden uzaklaştırma',dogru:0,
+    neden:'Elin cismi kendinden uzağa gönderiyor.',hint:'Bu olayda cisim sana yaklaşıyor mu, uzaklaşıyor mu?'},
+   {hedef:'ÇEKME — cismi kendine yaklaştırma',dogru:1,
+    neden:'Cisim sana doğru geliyor.',hint:'Bu olayda cisim hangi yöne geliyor?'},
+   {hedef:'DURDURMA — hareketi sona erdirme',dogru:2,
+    neden:'Hareket eden cisim durduruluyor.',hint:'Bu olaydan sonra cisim hâlâ hareket ediyor mu?'},
+   {hedef:'HAREKET ETTİRME — durgun cismi hareketlendirme',dogru:3,
+    neden:'Duran cisim harekete geçiyor.',hint:'Olaydan önce cisim duruyor muydu?'},
+   {hedef:'ŞEKİL DEĞİŞTİRME — biçimini bozma',dogru:4,
+    neden:'Cismin biçimi kalıcı ya da geçici olarak değişiyor.',
+    hint:'Bu olayda cisim yer mi değiştirdi, biçim mi?'}],
+  etiketler:[
+   {t:'Market arabasını öne doğru sürmek'},
+   {t:'Halatı kendine doğru çekmek'},
+   {t:'Bisiklette fren yapmak'},
+   {t:'Duran topa vurup göndermek'},
+   {t:'Hamuru elinle yayıp yassılaştırmak'}]},
+ {kind:'sinifla',prompt:'Bu olayda kuvvet ne yaptı?',sahne:SAHNE.park,
+  soru:'Bu olayda kuvvetin etkisi hangisidir?',
+  kutular:[{ad:'YALNIZ HAREKETİ DEĞİŞTİRDİ'},{ad:'YALNIZ ŞEKLİ DEĞİŞTİRDİ'},
+   {ad:'İKİSİNİ BİRDEN',alt:'hem hareket hem biçim'}],
+  ipucu:'İki soru sor: cisim yer değiştirdi mi? Biçimi bozuldu mu?',
+  kartlar:[
+   {t:'Kaleye giden top kaleciye çarpıp geri gitti; top hafifçe basıldı ve düzeldi',dogru:2,
+    neden:'Top hem yön değiştirdi hem çarpma anında biçimi bozuldu.',
+    hint:'Topun yolu değişti mi? Bir de biçimine bak.'},
+   {t:'Hamuru avucunda bastırıp yassılttın; hamur masada kaldı',dogru:1,
+    neden:'Hamur yer değiştirmedi, yalnız biçimi değişti.',hint:'Hamur bir yere gitti mi?'},
+   {t:'Kızağı düz karda çekip ileri götürdün; kızak eğilmedi',dogru:0,
+    neden:'Kızak yol aldı ama biçimi bozulmadı.',hint:'Kızağın biçimi değişti mi?'},
+   {t:'Lastik topu yere çarptın; top yayılıp yeniden yukarı zıpladı',dogru:2,
+    neden:'Çarpma anında top hem biçim değiştirdi hem yön değiştirdi.',
+    hint:'Yere çarpınca topa iki şey birden oldu mu?'},
+   {t:'Kâğıdı buruşturup küçük bir top yaptın; masadan kaldırmadın',dogru:1,
+    neden:'Yalnız biçim değişti.',hint:'Kâğıt masadan ayrıldı mı?'},
+   {t:'Kaykayı elinle ittin, kaykay ileri kaydı',dogru:0,
+    neden:'Yalnız hareket değişti.',hint:'Kaykayın biçiminde bir değişme var mı?'}]},
+ {kind:'yaz',prompt:'Bir olayda kuvvetin ne yaptığını yaz.',sahne:SAHNE.ev,
+  gorev:'Bugün yaptığın bir işi yaz ve orada kuvvetin ne yaptığını belirt: itti mi, çekti mi, durdurdu mu, şekil mi değiştirdi?',
+  ornek:'Kalıp: "… yaptım. Burada kuvvet … çünkü …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… yaptım. Burada kuvvet … çünkü …',
+  yasak:['Kapıyı ittim. Burada kuvvet itti çünkü ittim.'],
+  ornekCevap:'Diş macununun tüpünü sıktım. Burada kuvvet tüpün şeklini değiştirdi çünkü parmağımın bastığı yer içe çöktü.',
+  result:'Kuvvetin etkisini somut bir olayda adlandırdın.'}
+]};
+
+/* ---- g27 Dinamometre (tren-tünel sahnesi kaldırıldı: yay ve yük ekranda,
+        ölçek çekildikçe yay gerçekten uzuyor — şartname bulgusu 4) ---- */
+GAMES.g27={title:'Dinamometre',theme:'atolye',
+ finish:'Dinamometrenin yayını yükle birlikte gözledin, ölçümlerdeki örüntüyü buldun ve bir tahmini ölçerek sınadın.',rounds:[
+ {kind:'olcum',prompt:'Çantaya bir kitap daha koyduk; ölçer ne gösterir?',
+  yukAd:'ÇANTA',min:0,max:30,adim:5,birim:'birim',dogru:20,
+  gorev:'Dinamometreye çanta asıldı. Her kitap eklendiğinde yayın ne kadar uzadığını tabloda topladık.',
+  veri:{bas:'Gözlem tablosu — dinamometre ölçümleri',
+   satirlar:[{ad:'Boş çanta',deger:5},{ad:'1 kitap eklendi',deger:10},{ad:'2 kitap eklendi',deger:15}]},
+  soru:'3 kitap eklenince ölçer kaç birim gösterir?',
+  ipucu:'Ölçeği çek ve yayın uzamasını izle; tabloda her kitap kaç birim ekliyor?',
+  yanlisIpucu:'Yay bu kadar uzadı. Tabloda her kitabın kaç birim eklediğine yeniden bak.',
+  result:'Her kitap yayı aynı miktarda daha çok geriyor: örüntü budur.'},
+ {kind:'olcum',prompt:'Bu kez yayın uzamasını tahmin et.',
+  yukAd:'YÜK',min:0,max:20,adim:2,birim:'santimetre',dogru:10,
+  gorev:'Aynı yaya farklı kuvvetler uygulandı ve yayın uzaması cetvelle ölçüldü.',
+  veri:{bas:'Gözlem tablosu — uygulanan kuvvet ve yayın uzaması',
+   satirlar:[{ad:'2 birim kuvvet',deger:4},{ad:'3 birim kuvvet',deger:6},{ad:'4 birim kuvvet',deger:8}]},
+  soru:'5 birim kuvvet uygulanınca yay kaç santimetre uzar?',
+  ipucu:'Tabloda 1 birim kuvvet yayı kaç santimetre uzatıyor?',
+  yanlisIpucu:'Tabloya yeniden bak: kuvvet 1 birim artınca uzama ne kadar artıyor?',
+  result:'Kuvvet arttıkça yayın uzaması da düzenli olarak artar.'},
+ {kind:'yaz',prompt:'Bir tahmin yap, sonra ölçerek sına.',sahne:SAHNE.defter,
+  gorev:'Bir cismi kaldırmak için gereken kuvveti tahmin et, sonra nasıl ölçeceğini yaz.',
+  ornek:'Kalıp: "… için tahminim … Bunu … ile ölçerim."',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,gerekli:['tahmin'],
+  denetim:[{ad:'"ölç" sözcüğünü kullan',desen:'ölç',bayrak:'i'}],
+  ipucuMetin:'… için tahminim … Bunu … ile ölçerim.',
+  yasak:['Tahminim beş birim. Bunu ölçerim.'],
+  ornekCevap:'Dolu su bidonunu kaldırmak için tahminim boş bidonun iki katı kuvvet. Bunu bidonu dinamometreye asıp yayın uzamasını ölçerek sınarım.',
+  result:'Tahminini ölçmeyi planladın: tahmin ancak ölçülünce sınanır.'}
+]};
+
+/* ---- g28 Kuvvet Tahmini (radar kaldırıldı: gözlenmeyen durum için tahmin) ---- */
+GAMES.g28={title:'Kuvvet Tahmini',theme:'park',
+ finish:'Gözlenmeyen bir durum için tahmin yaptın, tahmin tutmayınca ne yapılacağını öğrendin ve tahminini gerekçelendirdin.',rounds:[
+ {kind:'karar',prompt:'Henüz denenmemiş bir durumu tahmin et.',sahne:SAHNE.park,
+  durum:'Aynı topu iki kez yuvarladık: düz asfaltta 10 adım, kısa çimende 6 adım gitti. Şimdi aynı kuvvetle kalın halıda yuvarlayacağız.',
+  soru:'Top halıda ne kadar gider?',
+  secenekler:[
+   {label:'6 adımdan da az gider',correct:true},
+   {label:'10 adımdan çok gider',hint:'Yüzey pürüzlendikçe top daha az gitmişti; halı çimenden de pürüzlü.'},
+   {label:'Yine tam 10 adım gider',hint:'Asfalt en düz yüzeydi; halı ona benziyor mu?'},
+   {label:'Hiç hareket etmez',hint:'Çimende de gitti; halıda da bir miktar gitmesi beklenir.'}],
+  neden:{soru:'Bu tahmini neye dayandırdın?',
+   secenekler:[
+    {label:'Yüzey pürüzlendikçe topun gittiği yolun kısaldığını gözledim',correct:true},
+    {label:'Halılar her zaman topları durdurur',hint:'Elimizdeki kanıt iki ölçüm; genel bir kural değil.'},
+    {label:'Top yorulduğu için daha az gider',hint:'Ölçümlerde değişen tek şey yüzeydi.'}]},
+  araSoz:'Doğru. Peki bu tahmini neye dayandırdın?',
+  ipucu:'İki ölçümü karşılaştır: değişen tek şey neydi?',
+  result:'Tahmin, gözlenmiş verideki örüntüye dayanır.'},
+ {kind:'karar',prompt:'Tahmin tutmadı; ne yapmalı?',sahne:SAHNE.park,
+  durum:'Halıda topun 4 adım gitmesini bekliyordun; top 7 adım gitti. Ölçümü iki kez yaptın, ikisinde de 7 çıktı.',
+  soru:'Şimdi ne yapılır?',
+  secenekler:[
+   {label:'Ölçüm olduğu gibi kaydedilir ve tahminin neden şaştığı araştırılır',correct:true},
+   {label:'Ölçüm 4 olarak yazılır, tahmin kurtarılır',
+    hint:'Ölçümü tahmine uydurmak deneyi geçersiz kılar.'},
+   {label:'Halı deneyden çıkarılır',hint:'Beklenmedik sonuç veren deney atılmaz; incelenir.'},
+   {label:'Sonuç yok sayılır, tahmin doğru kabul edilir',hint:'İki kez aynı çıkan ölçüm yok sayılamaz.'}],
+  neden:{soru:'Topun beklenenden çok gitmesinin olası nedeni ne olabilir?',
+   secenekler:[
+    {label:'Halının tüyleri kısa olduğu için beklediğimiz kadar pürüzlü olmayabilir',correct:true},
+    {label:'Top ölçüm sırasında ağırlaşmıştır',hint:'Aynı top kullanıldı; ağırlığı değişmedi.'},
+    {label:'Adım saymak yanlış bir yöntemdir',hint:'Aynı yöntem üç yüzeyde de kullanıldı.'}]},
+  araSoz:'Doğru. Peki neden şaşmış olabilir?',
+  ipucu:'Tutmayan tahmin, düzenekteki bir varsayımı açığa çıkarır.',
+  result:'Ölçüm değiştirilmez; tahminin neden şaştığı araştırılır.'},
+ {kind:'yaz',prompt:'Tahminini gerekçesiyle yaz.',sahne:SAHNE.defter,
+  gorev:'Henüz denemediğin bir durum için tahmin yaz ve tahminini neye dayandırdığını belirt.',
+  ornek:'Kalıp: "Bence … olur çünkü daha önce …"',
+  enAzKelime:14,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'Bence … olur çünkü daha önce …',
+  yasak:['Bence az gider çünkü öyle olur.'],
+  ornekCevap:'Bence top kumda çok az gider çünkü daha önce çimende asfalttan daha kısa yol aldığını ölçmüştüm.',
+  result:'Tahminini eski bir gözleme dayandırdın.'}
+]};
+
+/* ---- g29 Topun Yolculuğu (roket kaldırıldı: top ve zemin sahnesi) ---- */
+GAMES.g29={title:'Topun Yolculuğu',theme:'park',
+ finish:'Bir hareketin aşamalarını sıraladın, zeminin hareketi nasıl değiştirdiğini gördün ve hareketi aşamalarıyla anlattın.',rounds:[
+ {kind:'sira',prompt:'Topun hareketini aşamalarıyla diz.',sahne:SAHNE.park,
+  gorev:'Duran topa ayağınla vurdun. Bundan sonra sırayla ne oldu?',
+  ipucu:'Top vurulmadan önce ne durumdaydı?',
+  kartlar:[
+   {t:'Top çimende hareketsiz duruyor',neden:'Kuvvet uygulanmadan önce cisim durgundur.'},
+   {t:'Ayak topa vuruyor, top harekete geçiyor',neden:'Kuvvet, durgun cismi hareketlendirir.'},
+   {t:'Top çimende ilerlerken yavaşlıyor',neden:'Yüzeyin sürtünmesi hareketi yavaşlatır.'},
+   {t:'Top duvara çarpıp yön değiştiriyor',neden:'Çarpma, hareketin yönünü değiştirir.'},
+   {t:'Top biraz daha gidip tamamen duruyor',neden:'Sürtünme sonunda hareketi bitirir.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Vurmadan önce top ne durumdaydı?',
+   'Duran topa kuvvet uygulanınca ne olur?',
+   'Hareket eden top çimende hep aynı hızda mı gider?',
+   'Yavaşlayan top duvara gelince ne olur?',
+   'Çarpıp geri dönen top sonunda ne olur?']},
+ {kind:'esle',prompt:'Zemin değişince hareket nasıl değişir?',sahne:SAHNE.park,
+  soru:'Her zemini, topun orada aldığı yolla eşle.',
+  ipucu:'Yüzey pürüzlendikçe hareket daha çabuk biter.',
+  yuvalar:[
+   {hedef:'Top en uzun yolu alır, geç durur',dogru:0,
+    neden:'Düz ve kaygan yüzeyde sürtünme azdır.',hint:'Hangi zemin en pürüzsüz?'},
+   {hedef:'Top orta uzunlukta bir yol alır',dogru:1,
+    neden:'Kısa çim biraz sürtünme yaratır.',hint:'Bu zemin asfalttan pürüzlü, kumdan düz.'},
+   {hedef:'Top kısa bir yol alıp hemen durur',dogru:2,
+    neden:'Kum taneleri hareketi hızla söndürür.',hint:'Hangi zemin en çok pürüzlü?'},
+   {hedef:'Top yavaşlamak yerine hızlanarak gider',dogru:3,
+    neden:'Eğimli yüzeyde top aşağı doğru hızlanır.',hint:'Bu zeminde yolun eğimi var mı?'}],
+  etiketler:[{t:'Düz asfalt'},{t:'Kısa çim'},{t:'Kalın kum'},{t:'Aşağı eğimli rampa'}]},
+ {kind:'yaz',prompt:'Bir hareketi aşamalarıyla anlat.',sahne:SAHNE.defter,
+  gorev:'Gözlediğin bir hareketi aşama aşama yaz: başlangıç durumu, kuvvet, sonra ne oldu?',
+  ornek:'Kalıp: "Önce … duruyordu. Sonra … En sonunda …"',
+  enAzKelime:18,enAzCumle:3,buyukHarf:true,
+  denetim:[{ad:'"önce" sözcüğünü kullan',desen:'önce',bayrak:'i'},
+   {ad:'"yavaş" ya da "dur" sözcüğünü kullan',desen:'yavaş|dur',bayrak:'i'}],
+  ipucuMetin:'Önce … duruyordu. Sonra … En sonunda …',
+  yasak:['Önce top duruyordu. Sonra gitti. En sonunda durdu.'],
+  ornekCevap:'Önce misket yerde hareketsiz duruyordu. Sonra parmağımla fiskeleyince halının üstünde ilerlemeye başladı. En sonunda yavaşlayıp masanın ayağının önünde durdu.',
+  result:'Hareketi başlangıcından bitişine kadar izledin.'}
+]};
+
+/* ---- g30 Günlük Kuvvet Kartları (uzay zemini yok, can 3, gerekçe adımı var) ---- */
+GAMES.g30={title:'Günlük Kuvvet Kartları',theme:'ev',
+ finish:'Günlük olayları kuvvetin etkileriyle eşledin, tek olaydaki farklı etkileri ayırdın ve kendi hayatından bir örnek verdin.',rounds:[
+ {kind:'hafiza',prompt:'Olayı kuvvetin etkisiyle eşle.',sahne:SAHNE.ev,
+  soru:'İki kartı aç ve eşleşen çifti bul.',
+  ipucu:'Her olayda kuvvetin ne yaptığına bak.',
+  ciftler:[
+   {a:'Kapıyı iterek açmak',b:'Cismi kendinden uzaklaştırma',
+    soru:'Bu etkiye ne denir?',
+    secenekler:[
+     {label:'İtme',correct:true},
+     {label:'Çekme',hint:'Çekmede cisim sana yaklaşır; burada uzaklaşıyor.'},
+     {label:'Şekil değiştirme',hint:'Kapının biçimi bozulmuyor, yer değiştiriyor.'}],
+    neden:'Cismi kendinden uzağa gönderen kuvvet itmedir.',
+    fark:'Biri olay, öteki kuvvetin etkisi; ikisini yan yana oku.'},
+   {a:'Çekmeceyi kendine doğru açmak',b:'Cismi kendine yaklaştırma',
+    soru:'Bu etkiye ne denir?',
+    secenekler:[
+     {label:'Çekme',correct:true},
+     {label:'İtme',hint:'İtmede cisim uzaklaşır; burada yaklaşıyor.'},
+     {label:'Durdurma',hint:'Çekmece hareket ediyor, duruyor değil.'}],
+    neden:'Cismi kendine yaklaştıran kuvvet çekmedir.',
+    fark:'Bu iki kart farklı şeyleri anlatıyor; birini olay, ötekini etki olarak oku.'},
+   {a:'Bisiklette fren yapmak',b:'Hareketi sona erdirme',
+    soru:'Fren hangi kuvvetten yararlanır?',
+    secenekler:[
+     {label:'Tekerlekle balata arasındaki sürtünmeden',correct:true},
+     {label:'Rüzgârın itmesinden',hint:'Fren kolunu bıraktığında rüzgâr aynıdır ama bisiklet durmaz.'},
+     {label:'Zilin sesinden',hint:'Ses bir kuvvet değildir.'}],
+    neden:'Sürtünme kuvveti hareketi yavaşlatıp durdurur.',
+    fark:'Biri olay, öteki kuvvetin sonucu.'},
+   {a:'Hamuru merdaneyle açmak',b:'Cismin biçimini değiştirme',
+    soru:'Hamurun yeri mi değişti, biçimi mi?',
+    secenekler:[
+     {label:'Biçimi değişti, tezgâhta kaldı',correct:true},
+     {label:'Yalnız yeri değişti',hint:'Hamur yayıldı, yani biçimi bozuldu.'},
+     {label:'Ne yeri ne biçimi değişti',hint:'Merdane geçtikten sonra hamur eskisi gibi mi?'}],
+    neden:'Kuvvet cismin biçimini de değiştirebilir.',
+    fark:'Biri olay, öteki kuvvetin etkisi.'},
+   {a:'Duran salıncağı arkadan itmek',b:'Durgun cismi hareketlendirme',
+    soru:'İtmeden önce salıncak ne durumdaydı?',
+    secenekler:[
+     {label:'Hareketsiz duruyordu',correct:true},
+     {label:'Zaten sallanıyordu',hint:'Kart "duran salıncak" diyor.'},
+     {label:'Kırılmıştı',hint:'Kartta bir arıza söylenmiyor.'}],
+    neden:'Kuvvet, durgun cismi harekete geçirir.',
+    fark:'Biri olay, öteki kuvvetin etkisi.'}]},
+ {kind:'sinifla',prompt:'Bu olayda kuvvet hangi etkiyi yaptı?',sahne:SAHNE.ev,
+  soru:'Bu olayda kuvvetin etkisi hangisidir?',
+  kutular:[{ad:'HAREKETE GEÇİRDİ'},{ad:'YAVAŞLATTI YA DA DURDURDU'},{ad:'BİÇİMİNİ DEĞİŞTİRDİ'}],
+  ipucu:'Olaydan önce ve sonra cisme ne olduğunu karşılaştır.',
+  kartlar:[
+   {t:'Duran kızağı çekip yola koydun',dogru:0,neden:'Durgun cisim harekete geçti.',
+    hint:'Kızak olaydan önce hareketli miydi?'},
+   {t:'Kayan kızağın önüne kar yığdın, kızak durdu',dogru:1,
+    neden:'Hareket eden cisim durduruldu.',hint:'Olaydan sonra kızak gidiyor mu?'},
+   {t:'Kar topunu avucunda sıkıştırdın',dogru:2,neden:'Yalnız biçim değişti.',
+    hint:'Kar topu elinden ayrıldı mı?'},
+   {t:'Duran salıncağı ittin, sallanmaya başladı',dogru:0,
+    neden:'Durgun cisim hareketlendi.',hint:'Salıncak önceden sallanıyor muydu?'},
+   {t:'Sallanan salıncağı tutup durdurdun',dogru:1,neden:'Hareket sona erdi.',
+    hint:'Olaydan sonra salıncak sallanıyor mu?'},
+   {t:'Plastik cetveli iki elinle hafifçe büktün',dogru:2,
+    neden:'Cetvel yer değiştirmedi, biçimi değişti.',hint:'Cetvel bir yere gitti mi?'}]},
+ {kind:'yaz',prompt:'Günlük hayatından bir kuvvet örneği ver.',sahne:SAHNE.ev,
+  gorev:'Bugün kuvvet uyguladığın bir iş yaz ve kuvvetin orada ne yaptığını belirt.',
+  ornek:'Kalıp: "Bugün … Burada uyguladığım kuvvet …"',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,gerekli:['kuvvet'],
+  ipucuMetin:'Bugün … Burada uyguladığım kuvvet …',
+  yasak:['Bugün kuvvet uyguladım. Burada uyguladığım kuvvet itti.'],
+  ornekCevap:'Bugün sırt çantamı yerden alıp omzuma astım. Burada uyguladığım kuvvet çantayı yukarı doğru hareket ettirdi.',
+  result:'Kuvveti kendi hayatından bir işte gösterdin.'}
+]};
+
+/* ---- g31 Elektrikli mi? (bant kaldırıldı: araç kendi yerinde, ev sahnesi) ---- */
+GAMES.g31={title:'Elektrikle mi Çalışıyor?',theme:'ev',
+ finish:'Elektrikli araçları ayırt ettin, pilli ile fişli araçların ikisinin de elektrikli olduğunu gördün ve evindeki bir aracı sınıflandırdın.',rounds:[
+ {kind:'sinifla',prompt:'Bu araç elektrikle mi çalışıyor?',sahne:SAHNE.ev,
+  soru:'Bu araç çalışırken elektrik kullanır mı?',
+  kutular:[{ad:'ELEKTRİKLİ',alt:'çalışması elektriğe bağlı'},{ad:'ELEKTRİKSİZ',alt:'elektrik olmadan çalışır'}],
+  ipucu:'Sor: elektrik kesilse bu araç işini yapabilir mi?',
+  kartlar:[
+   {t:'Buzdolabı — fişi çekilince içindekiler ısınmaya başlar',dogru:0,
+    neden:'Soğutma işini elektrikle yapar.',hint:'Fişi çekilince işini sürdürebiliyor mu?'},
+   {t:'Süpürge — sapı ve kılları var, elle sürterek toplar',dogru:1,
+    neden:'Elektrik olmadan da işini yapar.',hint:'Bunu kullanmak için prize ihtiyaç var mı?'},
+   {t:'Çamaşır makinesi — düğmeye basılınca tamburu döndürür',dogru:0,
+    neden:'Tamburu döndüren güç elektriktir.',hint:'Elektrik kesildiğinde tambur döner mi?'},
+   {t:'Makas — iki kolu birbirine bastırılınca keser',dogru:1,
+    neden:'Kesme işini elin gücü yapar.',hint:'Bu araç için priz gerekiyor mu?'},
+   {t:'El feneri — düğmesine basınca ampulü yanar',dogru:0,
+    neden:'Işığı pildeki elektrik verir.',hint:'Pili çıkarılınca yanar mı?'},
+   {t:'Bisiklet — pedal çevrildikçe ilerler',dogru:1,
+    neden:'Hareketi bacak gücü sağlar.',hint:'Şarj etmen gerekiyor mu?'},
+   {t:'Saç kurutma makinesi — sıcak havayı üfleyerek kurutur',dogru:0,
+    neden:'Isıyı ve üflemeyi elektrik sağlar.',hint:'Fişi çekilince üfler mi?'},
+   {t:'Konserve açacağı — kolu çevrilerek kapağı kesip açar',dogru:1,
+    neden:'Gücü elden alır.',hint:'Bu araç prize takılıyor mu?'}]},
+ {kind:'sinifla',prompt:'Elektriğini nereden alıyor?',sahne:SAHNE.ev,
+  soru:'Bu araç elektriğini nereden alır?',
+  kutular:[{ad:'PRİZDEN',alt:'fişi vardır'},{ad:'PİLDEN',alt:'içine pil konur'},
+   {ad:'HİÇ ELEKTRİK YOK',alt:'el gücüyle çalışır'}],
+  ipucu:'Pilli araçlar da elektriklidir; yalnız elektriği taşınabilir bir kaynaktan alırlar.',
+  kartlar:[
+   {t:'Duvar saati — arkasında yuvarlak bir pil yuvası var',dogru:1,
+    neden:'Pil de bir elektrik kaynağıdır.',hint:'Bu araç prize takılıyor mu, içine bir şey konuyor mu?'},
+   {t:'Tost makinesi — kablosu uzun, ucunda fiş var',dogru:0,
+    neden:'Fişli araçlar elektriği şebekeden alır.',hint:'Bu araç kabloyla nereye bağlanıyor?'},
+   {t:'Kalemtıraş — kolu çevrilerek kalem açılır',dogru:2,
+    neden:'Bazı araçlar hiç elektrik kullanmaz.',hint:'Bunda pil yuvası ya da fiş var mı?'},
+   {t:'Oyuncak araba — kumandasına iki kalem pil konuyor',dogru:1,
+    neden:'Pilli oyuncaklar da elektrikli araçtır.',hint:'Bu oyuncak duvara mı bağlanıyor?'},
+   {t:'Ütü — çalışması için fişinin prize takılması gerekir',dogru:0,
+    neden:'Isıtma çok elektrik istediği için priz gerekir.',hint:'Bunu pille çalıştırmak mümkün mü?'},
+   {t:'Tahta kaşık — yemeği karıştırmak için elle çevrilir',dogru:2,
+    neden:'Bu araçta hiçbir elektrik kaynağı yoktur.',hint:'Bunda düğme, kablo ya da pil var mı?'}]},
+ {kind:'yaz',prompt:'Evindeki bir aracı sınıflandır.',sahne:SAHNE.ev,
+  gorev:'Evinde kullandığın bir aracı yaz; elektrikli mi değil mi, elektriğini nereden alıyor?',
+  ornek:'Kalıp: "… elektriklidir çünkü … Elektriğini …"',
+  enAzKelime:14,enAzCumle:2,buyukHarf:true,gerekli:['çünkü'],
+  ipucuMetin:'… elektriklidir çünkü … Elektriğini …',
+  yasak:['Televizyon elektriklidir çünkü elektrikle çalışır.'],
+  ornekCevap:'Mutfaktaki mikser elektriklidir çünkü fişini çekince karıştırma uçları hiç dönmüyor. Elektriğini duvardaki prizden alıyor.',
+  result:'Sınıflamanı gözlenebilir bir ölçüte dayandırdın.'}
+]};
+
+/* ---- g32 Elektrikli Araç Köprüsü (araç ile iş arasında simge kopyası yok) ---- */
+GAMES.g32={title:'Elektrikli Araç Köprüsü',theme:'ev',
+ finish:'Elektrikli araçları yaptıkları işle eşledin, benzer işleri yapan araçları ayırdın ve bir aracın hayatı nasıl kolaylaştırdığını anlattın.',rounds:[
+ {kind:'esle',prompt:'Her aracı yaptığı işle eşle.',sahne:SAHNE.ev,
+  soru:'Önce alttan bir araç seç, sonra yaptığı işe dokun.',
+  ipucu:'Aracın hangi işi kolaylaştırdığını düşün.',
+  yuvalar:[
+   {hedef:'Yiyecekleri soğuk tutarak bozulmalarını geciktirir',dogru:0,
+    neden:'Soğutma, bozulmayı yavaşlatır.',hint:'Bu iş için ısıtmak mı gerekir, soğutmak mı?'},
+   {hedef:'Kirli çamaşırları döndürerek yıkar',dogru:1,
+    neden:'Dönen tambur kiri söker.',hint:'Bu iş suyla mı yapılır, havayla mı?'},
+   {hedef:'Odayı aydınlatır',dogru:2,
+    neden:'Elektrik enerjisini ışığa çevirir.',hint:'Bu araç karanlıkta ne sağlar?'},
+   {hedef:'Yiyecekleri kısa sürede ısıtır',dogru:3,
+    neden:'Yiyeceği içten ısıtarak süreyi kısaltır.',hint:'Bu araç soğutuyor mu, ısıtıyor mu?'},
+   {hedef:'Havayı üfleyerek saçı kurutur',dogru:4,
+    neden:'Sıcak hava suyu buharlaştırır.',hint:'Bu araç saçı keser mi, kurutur mu?'},
+   {hedef:'Yerdeki tozu emerek toplar',dogru:5,
+    neden:'Hava emişi tozu içine çeker.',hint:'Bu araç üflüyor mu, emiyor mu?'}],
+  etiketler:[{t:'Buzdolabı'},{t:'Çamaşır makinesi'},{t:'Ampul'},
+   {t:'Mikrodalga fırın'},{t:'Saç kurutma makinesi'},{t:'Elektrikli süpürge'}]},
+ {kind:'esle',prompt:'Bu araçlar benzer işler yapıyor.',sahne:SAHNE.ev,
+  soru:'Her işi tam olarak yapan aracı eşle.',
+  ipucu:'İki araç benzer iş yapıyorsa aradaki küçük farka bak.',
+  yuvalar:[
+   {hedef:'Ekmek dilimini kızartıp gevrekleştirir',dogru:0,
+    neden:'Tost makinesi diliminin yüzeyini kızartır.',hint:'Bu iş dilimin yüzeyini mi değiştirir, içini mi ısıtır?'},
+   {hedef:'Dünkü yemeği tabakta hızla ısıtır',dogru:1,
+    neden:'Mikrodalga yiyeceği içten ısıtır.',hint:'Bu iş kızartmak mı, ısıtmak mı?'},
+   {hedef:'Suyu kaynatıp çay demlemeye hazırlar',dogru:2,
+    neden:'Su ısıtıcısı yalnız suyu kaynatır.',hint:'Bu araç kaç çeşit iş yapıyor?'},
+   {hedef:'Hamuru ve yumurtayı çırparak karıştırır',dogru:3,
+    neden:'Mikser karıştırma işini yapar.',hint:'Bu iş ısıtmak mı, karıştırmak mı?'}],
+  etiketler:[{t:'Tost makinesi'},{t:'Mikrodalga fırın'},{t:'Su ısıtıcısı'},{t:'Mikser'}]},
+ {kind:'yaz',prompt:'Bir araç hayatı nasıl kolaylaştırıyor?',sahne:SAHNE.ev,
+  gorev:'Bir elektrikli aracı seç ve o araç olmasaydı aynı işin nasıl yapılacağını yaz.',
+  ornek:'Kalıp: "… olmasaydı … zorunda kalırdık."',
+  enAzKelime:14,buyukHarf:true,bitis:'.',
+  denetim:[{ad:'"olmasaydı" ya da "olmasa" sözcüğünü kullan',desen:'olmasa',bayrak:'i'}],
+  ipucuMetin:'… olmasaydı … zorunda kalırdık.',
+  yasak:['Çamaşır makinesi olmasaydı zor olurdu.'],
+  ornekCevap:'Çamaşır makinesi olmasaydı evdeki bütün çamaşırları büyük bir leğende elimizle tek tek ovup sıkmak zorunda kalırdık.',
+  result:'Bir aracın işini, olmadığı durumla karşılaştırarak anlattın.'}
 ]};
 
 /* ===== OYUN VERİSİ BURADA BİTER (yeni parti bu satırın üstüne eklenir) ===== */
