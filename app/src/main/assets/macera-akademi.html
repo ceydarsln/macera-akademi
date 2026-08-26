@@ -14354,7 +14354,7 @@ SB4_ALAN6.forEach(g=>{ g.subj = 'social'; g.grade = 4; });
    ===================================================================== */
 const FB4_T1 = [
 
-{id:'f01', grp:'Tema 1 · Bilime Yolculuk', title:'Bilimsel mi Bandı', sub:'Bilimsel bilgi mi?', emo:'🔬',
+{id:'f01', grp:'Tema 1 · Bilime Yolculuk', title:'Bilimsel mi?', sub:'Kanıta dayanıyor mu?', emo:'🔬',
  kaz:'FB.4.1.1.a / b / c — Bilimin özelliklerini yansıtır.',
  type:'beltSort',
  cfg:{instruction:'Laboratuvar bandı çalışıyor! Gelen ifade <b>BİLİMSEL</b> mi, <b>BİLİMSEL DEĞİL</b> mi? 🔬',
@@ -14382,7 +14382,7 @@ const FB4_T1 = [
       tip:'🔬 Bilimsel bilgi: <b>kanıta dayalı · ölçülebilir · tekrarlanabilir · değişebilir</b>',
       successMsg:'Laboratuvar şefi oldun! Bilimin özelliklerini öğrendin 🔬'}},
 
-{id:'f02', grp:'Tema 1 · Bilime Yolculuk', title:'Kaynak Radarı', sub:'Güvenilir kaynağı yakala', emo:'📡',
+{id:'f02', grp:'Tema 1 · Bilime Yolculuk', title:'Kaynak Masası', sub:'Künyeye bakarak seç', emo:'📚',
  kaz:'FB.4.1.2.ç / d — Bilgi kaynağının doğruluğunu değerlendirir, güvenilirlik çıkarımı yapar.',
  type:'catchDrop',
  cfg:{instruction:'Radarı <b>sürükleyerek</b> doğru cevabı yakala 📡',
@@ -14422,7 +14422,7 @@ const FB4_T1 = [
       order:['r1','r2','r3','r4','r5'],
       speak:'Bilimsel araştırma adımlarını sırala.'}},
 
-{id:'f04', grp:'Tema 1 · Bilime Yolculuk', title:'Bilim İnsanı Köprüsü', sub:'Özelliği davranışla eşle', emo:'🌉',
+{id:'f04', grp:'Tema 1 · Bilime Yolculuk', title:'Bilim İnsanı Atölyesi', sub:'Özelliği davranışla eşle', emo:'🧑‍🔬',
  kaz:'FB.4.1.1.b / c — Bilimin ve bilim insanının özelliklerini ilişkilendirir.',
  type:'dragMatch',
  cfg:{instruction:'Köprüyü kur! Her <b>bilim insanı özelliğini</b> davranışıyla birleştir 🌉',
@@ -14472,7 +14472,7 @@ const FB4_T1 = [
       tip:'🎒 Güvenilir kaynak: <b>yazarı belli · kaynağı belli · kanıta dayalı · uzman onaylı</b>',
       successMsg:'Çanta hazır! Güvenilir kaynak seçmeyi öğrendin 🎒'}},
 
-{id:'f06', grp:'Tema 1 · Bilime Yolculuk', title:'Araştırma Sorusu Makinesi', sub:'Sorunu cümleye dök', emo:'❓',
+{id:'f06', grp:'Tema 1 · Bilime Yolculuk', title:'Araştırma Sorusu Defteri', sub:'Sorunu kendin kur', emo:'❓',
  kaz:'FB.4.1.2.a / b — Konuyu tanımlar ve araştırma sorusu sorar.',
  type:'sentenceBuild',
  cfg:{instruction:'Araştırma defterine soru yazıyoruz! Kelimelere <b>sırayla dokun</b> ❓',
@@ -14510,7 +14510,7 @@ FB4_T1.forEach(g=>{ g.subj = 'science'; g.grade = 4; });
    ===================================================================== */
 const FB4_T2 = [
 
-{id:'f07', grp:'Tema 2 · Sağlıklı Besleniyorum', title:'Besin İçeriği Bandı', sub:'Hangi içerik baskın?', emo:'🍽️',
+{id:'f07', grp:'Tema 2 · Sağlıklı Besleniyorum', title:'Besin İçeriği Masası', sub:'Hangi içerik baskın?', emo:'🍽️',
  kaz:'FB.4.2.1.a / b — Besin içeriklerini ayırt eden deney tasarlar ve verileri analiz eder.',
  type:'beltSort',
  cfg:{instruction:'Laboratuvar bandı çalışıyor! Gelen besinde <b>en çok hangi içerik</b> var? 🍽️',
@@ -14541,7 +14541,7 @@ const FB4_T2 = [
       tip:'🍽️ Besin içerikleri: <b>protein · karbonhidrat · yağ · vitamin · mineral · su</b>',
       successMsg:'Laboratuvar şefi oldun! Besin içeriklerini ayırt etmeyi öğrendin 🍽️'}},
 
-{id:'f08', grp:'Tema 2 · Sağlıklı Besleniyorum', title:'Vitamin Köprüsü', sub:'Vitamini kaynağıyla eşle', emo:'🌉',
+{id:'f08', grp:'Tema 2 · Sağlıklı Besleniyorum', title:'Vitamin Pazarı', sub:'Vitamini kaynağıyla eşle', emo:'🍊',
  kaz:'FB.4.2.2.a / b / c — Vitamin ve minerallerin besinlerdeki dağılımına ilişkin genelleme yapar.',
  type:'dragMatch',
  cfg:{instruction:'Köprüyü kur! Her <b>vitamin veya minerali</b> zengin olduğu besinle birleştir 🌉',
@@ -20748,10 +20748,12 @@ function autoSpeak(game){
            PHASER_OYUNLAR[game.id] === 'matematik2-pdf' ||
            PHASER_OYUNLAR[game.id] === 'matematik3-pdf' ||
            PHASER_OYUNLAR[game.id] === 'matematik4-pdf' ||
+           PHASER_OYUNLAR[game.id] === 'turkce3-pdf' ||
              PHASER_OYUNLAR[game.id] === 'sayma-pdf' ||
              PHASER_OYUNLAR[game.id] === 'turkce2-pdf' ||
              PHASER_OYUNLAR[game.id] === 'turkce1-pdf' ||
-             PHASER_OYUNLAR[game.id] === 'hayatbilgisi2-pdf') text = '';
+             PHASER_OYUNLAR[game.id] === 'hayatbilgisi2-pdf' ||
+             PHASER_OYUNLAR[game.id] === 'fen4-pdf') text = '';
   else if (phaserOyunuMu(game)) text = game.cfg.speak || game.cfg.instruction;
   else text = getCurrentPrompt(game);
   if(text && text !== gs.spokenKey){
@@ -21310,6 +21312,14 @@ const PHASER_OYUNLAR = {
   p45:'matematik4-pdf', p46:'matematik4-pdf', p47:'matematik4-pdf', p48:'matematik4-pdf',
   p49:'matematik4-pdf', p50:'matematik4-pdf', p51:'matematik4-pdf', p52:'matematik4-pdf',
   p53:'matematik4-pdf', p54:'matematik4-pdf', p55:'matematik4-pdf', p56:'matematik4-pdf',
+
+  /* 4. sınıf fen bilimleri PDF motoru — f01-f48 (parti parti bağlanıyor).
+     Şartname: output/pdf/4_sinif_fen_bilimleri_oyunlari_detayli_duzeltmeler.pdf
+     Bant, radar-kapsül, roket-yakıt, tren-tünel, kronometre ve köprü ortak
+     motorlarına düşmez; wrongHint metinleri doğru kutunun adını söylemez ve
+     karar için gereken veri (içerik etiketi, künye, ölçüm) ekranda okunur. */
+  f01:'fen4-pdf', f02:'fen4-pdf', f03:'fen4-pdf', f04:'fen4-pdf',
+  f05:'fen4-pdf', f06:'fen4-pdf', f07:'fen4-pdf', f08:'fen4-pdf',
   /* 2. sınıf hayat bilgisi PDF motoru — h01-h36.
      Şartname: output/pdf/2_sinif_hayat_bilgisi_oyunlari_detayli_duzeltmeler.pdf
      Bant, radar-kapsül, roket-yakıt, tren-tünel ve kronometre ortak

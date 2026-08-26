@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>4. sınıf fen — otomatik oynanış koşumu</title>
+<style>
+body{font:13px/1.45 system-ui;margin:0;display:grid;grid-template-columns:420px 1fr;height:100vh}
+#panel{overflow:auto;padding:10px;border-right:2px solid #ccc}
+.g{color:#0a6b45}.b{color:#b3261e;font-weight:700}.n{color:#666}
+iframe{width:390px;height:844px;border:0;justify-self:center;align-self:center;box-shadow:0 0 0 2px #ccc}
+</style>
+</head>
+<body>
+<div id="panel"></div>
+<iframe id="cerceve"></iframe>
+<script>
+'use strict';
+/* Her oyunu baştan sona GERÇEKTEN oynar: doğru cevaba dokunur, üç turu
+   bitirir ve completeGame çağrısını bekler. dom_kosum.html "oyun çözülebilir
+   mi" sorusunu bu motor için cevaplar; fen4_denetim.html ise "oynanabilir mi"
+   sorusunu. Can kaybı olursa bunu da bulgu olarak yazar: doğru oynayan bir
+   oyuncu hiç can kaybetmemeli. */
+const IDS=(new URLSearchParams(location.search).get('ids')||'').split(',').filter(Boolean);
+const MOTOR='../web/phaser/fen4-pdf-phaser.html';
+const panel=document.getElementById('panel'), cerceve=document.getElementById('cerceve');
+const yaz=(m,c)=>{panel.insertAdjacentHTML('beforeend','<div class="'+(c||'')+'">'+m+'</div>');panel.scrollTop=panel.scrollHeight};
+const bekle=ms=>new Promise(r=>{
+  if(!document.hidden) return void setTimeout(r,ms);
+  const son=Date.now()+ms,k=new MessageChannel();
+  k.port1.onmessage=()=>(Date.now()>=son?r():k.port2.postMessage(0));
+  k.port2.postMessage(0);
+});
+const veri=W=>JSON.parse(W.eval('JSON.stringify(round(),(k,v)=>typeof v==="function"?undefined:v)'));
+const tikla=(W,sec)=>{const el=W.document.querySelector(sec);if(!el)throw new Error('bulunamadı: '+sec);el.click()};
+
+async function turuCoz(W,adim){
+  const r=veri(W);
+  if(r.kind==='sinifla'){
+    for(let n=0;n<(r.kartlar||[]).length;n++){
+      const i=Number(W.eval('String(state.ix||0)'))||0;
+      tikla(W,'[data-kutu="'+r.kartlar[i].dogru+'"]'); await bekle(adim);
+    }
+  } else if(r.kind==='karar'){
+    for(let n=0;n<(r.sorular||[]).length;n++){
+      const i=Number(W.eval('String(state.ix||0)'))||0;
+      const s=r.sorular[i];
+      let j=s.secenekler.findIndex(o=>o.dogru);
+      tikla(W,'[data-sec="'+j+'"]'); await bekle(adim);
+      if(s.gerekce){
+        let k=s.gerekce.secenekler.findIndex(o=>o.dogru);
+        tikla(W,'[data-sec="'+k+'"]'); await bekle(adim);
+      }
+    }
+  } else if(r.kind==='sira'){
+    for(const i of r.dogru){ tikla(W,'[data-kart="'+i+'"]'); await bekle(adim) }
+  } else if(r.kind==='esle'){
+    for(let p=0;p<r.parcalar.length;p++){
+      tikla(W,'[data-parca="'+p+'"]'); await bekle(60);
+      tikla(W,'[data-yuva="'+r.parcalar[p].yuva+'"]'); await bekle(adim);
+      const g=r.yuvalar[r.parcalar[p].yuva].gerekce;
+      if(g){ const k=g.secenekler.findIndex(o=>o.dogru);
+        tikla(W,'[data-ger="'+k+'"]'); await bekle(adim) }
+    }
+  } else if(r.kind==='kur'){
+    for(let n=0;n<r.istekler.length;n++){
+      const i=Number(W.eval('String(state.ix||0)'))||0;
+      for(const id of r.istekler[i].gerekli){
+        const j=r.havuz.findIndex(h=>h.id===id);
+        const btn=W.document.querySelector('[data-h="'+j+'"]');
+        if(btn && !btn.classList.contains('bitti')){ btn.click(); await bekle(60) }
+      }
+      await bekle(adim);
+    }
+  } else if(r.kind==='sozdiz'){
+    for(const i of r.dogruDiziler[0]){ tikla(W,'[data-soz="'+i+'"]'); await bekle(60) }
+    await bekle(adim);
+    tikla(W,'#buyukBtn'); await bekle(60);
+    tikla(W,'[data-nk="'+r.dogruNokta+'"]'); await bekle(60);
+    tikla(W,'#onayBtn'); await bekle(adim);
+  } else if(r.kind==='yaz'){
+    const ta=W.document.querySelector('#yaziAlan');
+    ta.value=r.ornekCevap; ta.dispatchEvent(new W.Event('input'));
+    await bekle(60); tikla(W,'#onayBtn'); await bekle(adim);
+  } else throw new Error('bilinmeyen kip: '+r.kind);
+}
+
+window.SONUC={bitti:false,kusurlu:[],rapor:[]};
+(async()=>{
+  yaz('koşum: '+IDS.length+' oyun');
+  for(const id of IDS){
+    const bulgular=[];
+    let tamamlandi=null;
+    await new Promise(coz=>{ cerceve.onload=()=>coz();
+      cerceve.src=MOTOR+'?test=1&kosum='+id+'#oyun='+id });
+    const W=cerceve.contentWindow;
+    W.completeGame=(mesaj,puan)=>{tamamlandi={mesaj,puan}};
+    for(let k=0;k<80 && !W.document.querySelector('.hud .round');k++) await bekle(60);
+    try{
+      for(let t=0;t<3 && !tamamlandi;t++){
+        const once=Number(W.eval('String(roundIndex)'));
+        await turuCoz(W,140);
+        for(let k=0;k<40 && Number(W.eval('String(roundIndex)'))===once && !tamamlandi;k++) await bekle(60);
+      }
+      const can=Number(W.eval('String(lives)'));
+      if(can<3) bulgular.push('doğru oynandığı hâlde can düştü ('+can+'/3)');
+      if(!tamamlandi && Number(W.eval('String(roundIndex)'))<3)
+        bulgular.push('oyun bitmedi (tur '+(Number(W.eval('String(roundIndex)'))+1)+' takıldı)');
+    }catch(e){ bulgular.push('çöktü: '+e.message) }
+    if(bulgular.length){ SONUC.kusurlu.push(id); SONUC.rapor.push({id,bulgular});
+      yaz('✗ '+id,'b'); bulgular.forEach(b=>yaz('&nbsp;&nbsp;'+b,'n'));
+    } else yaz('✓ '+id+' — üç tur, can 3/3','g');
+  }
+  SONUC.bitti=true;
+  yaz('<br>BİTTİ · temiz '+(IDS.length-SONUC.kusurlu.length)+'/'+IDS.length);
+})();
+</script>
+</body>
+</html>

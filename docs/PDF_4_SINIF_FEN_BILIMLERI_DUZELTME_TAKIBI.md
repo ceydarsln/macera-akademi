@@ -74,3 +74,38 @@ Oyun bazında ayrıntı PDF'in ilgili sayfalarındadır (her oyun bir sayfa).
 5. Altı radar yönergesinin oyuna özel yeniden yazılması
 6. Roket sahnesinin 8 sıralama oyunundan kaldırılması
 7. Ürün/model kazanımlarında (f24, f30, f34, f44) ekranda gerçek inşa
+
+## Uygulama durumu
+
+Düzeltmeler `web/phaser/fen4-pdf-phaser.html` altında sıfırdan yazılan derse özel
+motorla uygulanıyor; katalogdaki oyunlar parti parti `PHASER_OYUNLAR` üzerinden
+bu motora bağlanıyor. Motorda bant, radar-kapsül, roket-yakıt, tren-tünel,
+kronometre ve köprü ortak sahneleri hiç yok.
+
+Her parti iki araçla sınanıyor:
+- `tools/fen4_denetim.html?ids=f01,f02,…` — her turu 390×844'te açıp kırpılma,
+  44 px dokunma alanı, simge sızıntısı ve cevap sızıntısı tarar (kabul ölçütü 2–4).
+- `tools/fen4_kosum.html?ids=…` — her oyunu baştan sona gerçekten oynar; üç tur
+  bitiyor mu, doğru oynayan can kaybediyor mu diye bakar (ölçüt 6).
+- Motorun içindeki `window.__TEST__.denetle()` metin düzeyinde tarar:
+  wrongHint doğru kutunun adını içeriyor mu, son tur öğrenci üretimi mi,
+  sıralama turunda ekran dizilişi cevabı veriyor mu, `ornekCevap` kendi
+  ölçütlerini geçiyor mu.
+
+| Oyun | Eski motor | Yeni sahne ve turlar | Durum |
+|---|---|---|---|
+| f01 Bilimsel mi? | bant | laboratuvar defteri · sınıfla → karar+gerekçe → yaz | ✅ uygulandı |
+| f02 Kaynak Masası | radar | araştırma masası, künyeli kartlar · karar → karşılaştırma → yaz | ✅ uygulandı |
+| f03 Araştırma Adımları | roket | araştırma defteri, adımlar deftere yazılır · sıra → karar → yaz | ✅ uygulandı |
+| f04 Bilim İnsanı Atölyesi | köprü | laboratuvar, eşleşme sahnede canlanır · eşle+gerekçe → karar → yaz | ✅ uygulandı |
+| f05 Araştırma Çantası | tepsi | çanta ekranda gerçekten dolar · kur → karar → yaz | ✅ uygulandı |
+| f06 Araştırma Sorusu Defteri | matbaa | kartlar küçük harfle gelir, baş harf ve "?" öğrencinin kararı | ✅ uygulandı |
+| f07 Besin İçeriği Masası | bant | besin masası + içerik etiketi (sayılar ekranda) | ✅ uygulandı |
+| f08 Vitamin Pazarı | köprü | pazar tezgâhı, etiketlerde simge yok (tek sızıntı noktası kapandı) | ✅ uygulandı |
+| f09–f48 | — | — | PDF'de |
+
+Parti 1'de (f01–f08) kapatılan doğrulanmış hatalar: **#1** wrongHint sızıntısı
+(bu partideki bant oyunları f01 ve f07'de ipuçları artık doğru kutunun adını
+içermiyor, motorun öz denetimi bunu sınıyor), **#5** bant kartının kırpılması
+(kart artık sabit ve tam genişlikte), **#6** ortak radar yönergesi (f02 kendi
+konusunu anlatıyor) ve köprüdeki tek simge sızıntısı (f08).
