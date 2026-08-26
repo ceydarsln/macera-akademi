@@ -3339,7 +3339,7 @@ const TRACE_GAMES_2 = [
    Bazı turlarda önce doğru hedefe dokunmak gerekir (pick).
    ===================================================================== */
 const NUMBER_GAMES = [
-{ id:'n1', title:'Uzay Şifresi', sub:'14 sayısını yaz', emo:'🚪',
+{ id:'n1', title:'Uzay Şifresi', sub:'Duyduğun sayıyı onlar-birler yaz', emo:'🚪',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'İki basamaklı sayıyı onlar-birler sırasıyla yazar.',
   type:'numberWrite',
   cfg:{ instruction:'Kapıyı açmak için <b>on dört</b> yaz! Solda onlar, sağda birler basamağı.',
@@ -3348,7 +3348,7 @@ const NUMBER_GAMES = [
                   slots:[{x:60,y:130,scale:0.95},{x:168,y:130,scale:0.95}] }],
         finale:{main:'🚪', bits:['⚙️','✨','🛸'], msg:'Şifre doğru! Kapı açıldı 🚪'} } },
 
-{ id:'n2', title:'Kayıp Hazine Haritası', sub:'17 sayısını yaz', emo:'🗺️',
+{ id:'n2', title:'Kayıp Hazine Haritası', sub:'Sayıyı dinle, basamaklarını yaz', emo:'🗺️',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'Duyduğu sayıyı rakamlarla yazar.',
   type:'numberWrite',
   cfg:{ instruction:'Pusulaya <b>on yedi</b> yaz, gemi 17 numaralı adaya gitsin!',
@@ -3357,7 +3357,7 @@ const NUMBER_GAMES = [
                   slots:[{x:60,y:130,scale:0.95},{x:168,y:130,scale:0.95}] }],
         finale:{main:'🏴‍☠️', bits:['💰','⚓','✨'], msg:'Gemi 17. adaya ulaştı, hazine bulundu! 💰'} } },
 
-{ id:'n3', title:'Dinozor Kuluçkası', sub:'12 sayısını yaz', emo:'🥚',
+{ id:'n3', title:'Dinozor Kuluçkası', sub:'Onlar ve birler basamağını yaz', emo:'🥚',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'Doğru sayıyı seçip üzerinden yazar.',
   type:'numberWrite',
   cfg:{ instruction:'<b>On iki</b> numaralı yumurtayı çatlat! Önce doğru yumurtayı seç.',
@@ -3368,7 +3368,7 @@ const NUMBER_GAMES = [
                   slots:[{x:60,y:130,scale:0.95},{x:168,y:130,scale:0.95}] }],
         finale:{main:'🦖', bits:['🥚','✨','🌿'], msg:'Yumurta çatladı, yavru T-Rex çıktı! 🦖'} } },
 
-{ id:'n4', title:'Sihirli Daktilo', sub:'16 sayısını yaz (süreli)', emo:'⌨️',
+{ id:'n4', title:'Sihirli Daktilo', sub:'Duyduğun sayıyı basamaklarıyla yaz', emo:'⌨️',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'Sayıyı zaman baskısı altında hızlı yazar.',
   type:'numberWrite',
   cfg:{ instruction:'Sayı daktiloya değmeden <b>on altı</b> yaz! ⏱️',
@@ -3377,7 +3377,7 @@ const NUMBER_GAMES = [
                   slots:[{x:60,y:120,scale:0.95},{x:168,y:120,scale:0.95}] }],
         finale:{main:'📄', bits:['⌨️','✨','🔔'], msg:'Çıt-çıt-ding! Kağıda 16 basıldı 📄'} } },
 
-{ id:'n5', title:'Gökyüzü Fırçası', sub:'19 sayısını yaz', emo:'✈️',
+{ id:'n5', title:'Gökyüzü Fırçası', sub:'Duyduğun sayıyı gökyüzüne yaz', emo:'✈️',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'Kılavuz neredeyse olmadan sayıyı yazar.',
   type:'numberWrite',
   cfg:{ instruction:'Boş gökyüzüne <b>on dokuz</b> yaz, uçak izini takip edecek!',
@@ -3386,7 +3386,7 @@ const NUMBER_GAMES = [
                   slots:[{x:60,y:120,scale:1.0},{x:170,y:120,scale:1.0}] }],
         finale:{main:'✈️', bits:['💨','☁️','✨'], msg:'Uçak gökyüzüne 19 yazdı! ✈️'} } },
 
-{ id:'n6', title:'Robotun Bataryası', sub:'11 · 15 · 20 yaz', emo:'🤖',
+{ id:'n6', title:'Robotun Bataryası', sub:'Üç ayrı sayıyı dinleyip yaz', emo:'🤖',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'Ardışık sayıları sırayla yazar.',
   type:'numberWrite',
   cfg:{ instruction:'Robotu şarj et! Yanan yuvadaki sayıyı panele yaz.',
@@ -3398,7 +3398,7 @@ const NUMBER_GAMES = [
         ],
         finale:{main:'🤖', bits:['⚡','💙','🎉'], msg:'Batarya doldu! Robot dans ediyor 🤖'} } },
 
-{ id:'n7', title:'Karışık Vagonlar', sub:'16 ve 12 yaz', emo:'🚃',
+{ id:'n7', title:'Karışık Vagonlar', sub:'Vagon numarasını dinleyip yaz', emo:'🚃',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'Belirtilen hedefe doğru sayıyı yazar.',
   type:'numberWrite',
   cfg:{ instruction:'Vagonları numaralandır! Önce doğru rengi seç, sonra sayıyı yaz.',
@@ -3415,7 +3415,7 @@ const NUMBER_GAMES = [
         ],
         finale:{main:'🚂', bits:['💨','🎫','✨'], msg:'Çuf çuf! Tren numaralarıyla yola çıktı 🚂'} } },
 
-{ id:'n8', title:'Elma Toplama Kampı', sub:'18 sayısını yaz', emo:'🧺',
+{ id:'n8', title:'Elma Toplama Kampı', sub:'Onluk kasa ve tekleri sayıp yaz', emo:'🧺',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'İstenen miktarı sayıyla ifade eder.',
   type:'numberWrite',
   cfg:{ instruction:'Çiftçi <b>on sekiz</b> elma istiyor. Sepetin etiketine yaz!',
@@ -3424,7 +3424,7 @@ const NUMBER_GAMES = [
                   slots:[{x:60,y:130,scale:0.95},{x:168,y:130,scale:0.95}] }],
         finale:{main:'🧺', bits:['🍎','🍎','🍃'], msg:'Ağaç silkelendi, sepete 18 elma doldu! 🧺'} } },
 
-{ id:'n9', title:'Buzul Penguenleri', sub:'13 ve 20 yaz', emo:'🐧',
+{ id:'n9', title:'Buzul Penguenleri', sub:'Buza yazılacak sayıyı dinle', emo:'🐧',
   grp:'İki Basamaklı Sayılar (10-20)', kaz:'Sayıları sırayla yazarak yol oluşturur.',
   type:'numberWrite',
   cfg:{ instruction:'Penguene yol yap! Buzun üzerindeki sayıyı yaz, buz kalınlaşsın.',

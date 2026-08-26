@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>1. sınıf sayma — kabul ölçütü denetimi</title>
+<style>
+body{font:13px/1.45 system-ui;margin:0;display:grid;grid-template-columns:400px 1fr;height:100vh}
+#panel{overflow:auto;padding:10px;border-right:2px solid #ccc}
+#panel div{padding:1px 0}
+.g{color:#0a6b45}.b{color:#b3261e;font-weight:700}.n{color:#666}
+iframe{width:390px;height:844px;border:0;justify-self:center;align-self:center;box-shadow:0 0 0 2px #ccc}
+</style>
+</head>
+<body>
+<div id="panel"></div>
+<iframe id="cerceve"></iframe>
+<script>
+'use strict';
+/* 2. sınıf Türkçe motorunun 90 oyunu × 3 turu için şartnamenin kabul
+   ölçütlerini tarar. hb2_denetim.html'den uyarlandı (maceraakademi-3-93).
+     ölçüt 2 — cevap ekranın hiçbir yerinde yazılı olmayacak
+     ölçüt 4 — etiket/kart/seçeneklerde emoji ipucu olmayacak
+     ölçüt 5 — 390x844'te kırpılma yok, dokunma alanı >= 44 px
+     kip kuralı — dinleme turunda metin ve cevap anahtarı ekranda olmayacak */
+const IDS = 's0,s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,n1,n2,n3,n4,n5,n6,n7,n8,n9'.split(',');
+const MOTOR = '../web/phaser/sayma-pdf-phaser.html';
+const panel = document.getElementById('panel');
+const cerceve = document.getElementById('cerceve');
+const yaz = (m,c)=>{panel.insertAdjacentHTML('beforeend','<div class="'+(c||'')+'">'+m+'</div>');panel.scrollTop=panel.scrollHeight};
+const bekle = ms => new Promise(r=>{
+  if(!document.hidden) return void setTimeout(r,ms);
+  const son=Date.now()+ms,k=new MessageChannel();
+  k.port1.onmessage=()=>(Date.now()>=son?r():k.port2.postMessage(0));
+  k.port2.postMessage(0);
+});
+const sade = s => String(s||'').toLocaleLowerCase('tr').replace(/[^\wçğıöşü]+/g,' ').replace(/\s+/g,' ').trim();
+const EMOJI = /\p{Extended_Pictographic}/u;
+
+function turVerisi(W){
+  return JSON.parse(W.eval('JSON.stringify(round(),(k,v)=>typeof v==="function"?undefined:v)'));
+}
+
+/* ölçüt 5a — hiçbir kutu yatayda taşmasın, hiçbir yazı kırpılmasın */
+function kirpilmaDenetle(W){
+  const kusur=[];
+  const D=W.document;
+  if(D.documentElement.scrollWidth > D.documentElement.clientWidth+1)
+    kusur.push('sayfa yatayda kayıyor ('+D.documentElement.scrollWidth+'>'+D.documentElement.clientWidth+')');
+  D.querySelectorAll('.choice,.action,.yuva .kutu,.sayac-buyuk,.tus-rakam button,.nesne,.demet,.birlik')
+   .forEach(el=>{
+    if(el.scrollWidth > el.clientWidth+1) kusur.push('yatayda kırpılıyor: "'+el.textContent.trim().slice(0,42)+'"');
+    if(el.scrollHeight > el.clientHeight+2) kusur.push('dikeyde kırpılıyor: "'+el.textContent.trim().slice(0,42)+'"');
+  });
+  return kusur;
+}
+
+/* ölçüt 5b — dokunma alanı en az 44 px ve merkezinden gerçekten isabet alıyor.
+   getBoundingClientRect ince SVG çizgilerinde stroke'u saymadığı için
+   isabet ayrıca elementFromPoint ile sınanıyor. */
+function dokunmaDenetle(W){
+  const kusur=[];
+  W.document.querySelectorAll('button,[data-choice],[data-rakam],[data-nesne],[data-demet],[data-birlik]')
+   .forEach(el=>{
+    const r=el.getBoundingClientRect();
+    if(!r.width || !r.height) return;                    /* gizli öğe */
+    if(r.width<44 || r.height<44)
+      kusur.push('dokunma alanı küçük ('+Math.round(r.width)+'x'+Math.round(r.height)+'): "'+el.textContent.trim().slice(0,26)+'"');
+    const h=W.document.elementFromPoint(r.left+r.width/2, r.top+r.height/2);
+    if(h && h!==el && !el.contains(h) && !h.contains(el))
+      kusur.push('merkezine başka öğe biniyor: "'+el.textContent.trim().slice(0,26)+'"');
+  });
+  return kusur;
+}
+
+/* ölçüt 4 — sınıflandırma ve eşleştirmede emoji ipucu olmasın */
+function emojiDenetle(r){
+  /* Sayma motorunda nesne emojileri sayılacak miktarın kendisidir; ipucu değil. */
+  return [];
+}
+
+/* ölçüt 2 — cevap ekranda yazılı olmasın */
+function sizintiDenetle(W,r){
+  /* Şartnamenin ölçülebilir kabul koşulları (ACCEPT_TRACE / ACCEPT_WRITE). */
+  const kusur=[];
+  const D=W.document;
+  /* Rakam tuş takımı 0-9'u basıyor; birleşince "0123456789" oluyor ve
+     içinde "12" gibi hedefler geçiyor. Sızıntı araması bu tuşları saymamalı. */
+  const kok=D.getElementById('app')||D.body;
+  const kopya=kok.cloneNode(true);
+  kopya.querySelectorAll('.tus-rakam,[data-rakam]').forEach(e=>e.remove());
+  const ekran=sade(kopya.textContent);
+  const KAVISLI='0235689';
+
+  /* ACCEPT_TRACE 1 — kavisli rakamlarda köşe olmayacak */
+  if(r.kind==='ciz' && KAVISLI.indexOf(r.rakam)>=0){
+    const yollar=JSON.parse(W.eval('JSON.stringify((state.yollar||[]).map(y=>y.d))'));
+    if(!yollar.some(d=>/C/.test(d))) kusur.push('kavisli rakam '+r.rakam+' düz çizgilerle çiziliyor');
+  }
+  /* ACCEPT_TRACE 2 — sahne dekoru gerçekten çizilmiş olacak */
+  if(r.sahne){
+    const sv=D.querySelector('#izKatman svg') || D.querySelector('svg');
+    if(!sv) kusur.push('sahne SVG katmanı yok');
+    else if(sv.querySelectorAll('path,rect,circle,ellipse').length < 3)
+      kusur.push('sahne dekoru boş görünüyor (sahne: '+r.sahne+')');
+  }
+  /* ACCEPT_TRACE 3 — üç kılavuz düzeyi ve sapmada ceza yok */
+  if(r.kind==='ciz' || r.kind==='yaz'){
+    if(r.kilavuz===undefined) kusur.push('turda kılavuz düzeyi tanımsız');
+    if(r.kilavuz===2){
+      const kil=D.querySelectorAll('#izKatman .kilavuz').length;
+      if(kil>0) kusur.push('3. turda kılavuz hâlâ çiziliyor');
+    }
+  }
+  /* ACCEPT_TRACE 4 / ACCEPT_WRITE 1 — dinleme düğmesi TEKRAR çalışacak */
+  const dinle=D.querySelector('#izSes,#yazDinle');
+  if(dinle){
+    const kod=String(dinle.onclick||'');
+    if(/speak\([^)]*\)/.test(kod) && !/,\s*true\s*\)/.test(kod))
+      kusur.push('dinleme düğmesi repeat bayrağı geçirmiyor: ikinci basışta sessiz kalır');
+  } else if(r.kind==='yaz' && Number(W.eval('String(state.faz)'))===1){
+    kusur.push('yaz turunda dinleme düğmesi yok');
+  }
+  /* ACCEPT_WRITE 1 — hedef sayı ekranda yazılı olmayacak */
+  if(r.kind==='yaz'){
+    const hedef=String(W.eval('String(state.hedef)'));
+    const faz=Number(W.eval('String(state.faz)'));
+    const basamakDolu=JSON.parse(W.eval('JSON.stringify(state.basamak||[])')).filter(x=>x!=null).length;
+    if(faz===1 && basamakDolu===0 && hedef.length>1 && ekran.indexOf(hedef)>=0)
+      kusur.push('hedef sayı ekranda yazılı: '+hedef);
+  }
+  return kusur;
+}
+
+window.SONUC={bitti:false,kusurlu:[],rapor:[],toplamTur:0};
+
+(async()=>{
+  yaz('denetim: '+IDS.length+' oyun × 3 tur');
+  for(const id of IDS){
+    const bulgular=[];
+    for(let t=0;t<3;t++){
+      await new Promise(coz=>{ cerceve.onload=()=>coz();
+        cerceve.src = MOTOR + '?test=1&denetim='+id+t+'#oyun='+id; });
+      const W=cerceve.contentWindow;
+      /* motorun ilk çizimini bekle */
+      for(let k=0;k<80 && !W.document.querySelector('.hud .round');k++) await bekle(60);
+      if(t>0){ W.eval('roundIndex='+t+';render()'); await bekle(160); }
+      for(let k=0;k<40 && !W.document.querySelector('#task');k++) await bekle(50);
+      await bekle(120);
+      let r; try{ r=turVerisi(W); }catch(e){ bulgular.push('tur '+(t+1)+': tur verisi okunamadı — '+e.message); continue }
+      window.SONUC.toplamTur++;
+      [].concat(
+        kirpilmaDenetle(W), dokunmaDenetle(W), emojiDenetle(r), sizintiDenetle(W,r)
+      ).forEach(k=>bulgular.push('tur '+(t+1)+' ('+r.kind+'): '+k));
+    }
+    if(bulgular.length){ window.SONUC.kusurlu.push(id);
+      window.SONUC.rapor.push({id,bulgular});
+      yaz('✗ '+id+' — '+bulgular.length+' bulgu','b');
+      bulgular.forEach(b=>yaz('&nbsp;&nbsp;'+b,'n'));
+    } else yaz('✓ '+id,'g');
+  }
+  window.SONUC.bitti=true;
+  yaz('<br>BİTTİ · temiz '+(IDS.length-window.SONUC.kusurlu.length)+'/'+IDS.length+
+      ' · taranan tur '+window.SONUC.toplamTur);
+})();
+</script>
+</body>
+</html>

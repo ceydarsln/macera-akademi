@@ -307,11 +307,17 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .yuva small{font-size:11px;font-weight:900;color:#5b7185}
 .tus-rakam{display:grid;grid-template-columns:repeat(5,52px);gap:5px;justify-content:center}
 .tus-rakam button{min-height:46px;border-radius:11px;border:3px solid #cbd5e1;background:#fff;font-weight:950;font-size:22px;color:#1f3b52}
-.demet{display:inline-grid;grid-template-columns:repeat(2,10px);gap:2px;padding:3px;border:3px solid #8a5725;border-radius:6px;background:#f2c45b;vertical-align:middle;cursor:pointer}
+.demet{display:inline-grid;grid-template-columns:repeat(2,10px);gap:2px;padding:3px;border:3px solid #8a5725;border-radius:6px;background:#f2c45b;vertical-align:middle;cursor:pointer;min-width:44px;justify-content:center}
 .demet i{width:10px;height:10px;background:#8a5725;border-radius:2px;display:block}
 .demet.sayildi{background:#9ad0a8;border-color:#1f7a45}
-.birlik{width:20px;height:20px;border:3px solid #8a5725;border-radius:4px;background:#f2c45b;display:inline-block;cursor:pointer;vertical-align:middle}
-.birlik.sayildi{background:#9ad0a8;border-color:#1f7a45}
+/* Sayma oyununun ana etkileşimi nesnelere tek tek dokunmak; 20x20 kutu
+   1. sınıf parmağı için çok küçüktü. Görsel 22 px kalıyor, dokunma alanı
+   ::before ile 44 px'e çıkarılıyor (komşularla çakışmaması için öğenin
+   kendisi 44 px yer kaplıyor). */
+.birlik{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+ background:none;border:0;padding:0;cursor:pointer;vertical-align:middle}
+.birlik::before{content:'';width:22px;height:22px;border:3px solid #8a5725;border-radius:4px;background:#f2c45b}
+.birlik.sayildi::before{background:#9ad0a8;border-color:#1f7a45}
 .nesne-alan{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;align-items:center;max-width:320px}
 .nesne{font-size:31px;line-height:1;cursor:pointer;transition:transform .15s}
 .nesne.sayildi{transform:scale(1.22);filter:drop-shadow(0 0 5px rgba(47,158,94,.8))}
@@ -344,6 +350,10 @@ let game,roundIndex=0,lives=3,score=0,state={},locked=false,drag=null,clockDrag=
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const speech=s=>String(s??'').replace(/\+/g,' artı ').replace(/[−–-]/g,' eksi ').replace(/[×x]/g,' çarpı ').replace(/[:÷]/g,' bölü ').replace(/=/g,' eşittir ').replace(/\s+/g,' ').trim();
+/* Kataloğun oku(metin,tekrar) köprüsü, tekrar=false iken aynı metni bir daha
+   okumaz (gs.spokenKey karşılaştırması). Dinleme düğmeleri bu bayrağı
+   geçirmediği için ikinci basıştan sonra sessiz kalıyordu; hedef sayı
+   ekranda hiç yazılı olmadığından çocuk ilk okumayı kaçırırsa kilitleniyordu. */
 function speak(text,repeat=false){try{if(parent&&parent!==window&&typeof parent.oku==='function')return parent.oku(speech(text),repeat)}catch(e){}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(speech(text));u.lang='tr-TR';speechSynthesis.speak(u);return true}catch(e){return false}}
 function parentComplete(){try{if(parent&&parent!==window&&typeof parent.completeGame==='function'){parent.completeGame(game.finish,score);return}}catch(e){}showOverlay()}
 function showOverlay(){document.getElementById('app').insertAdjacentHTML('beforeend',`<div class="overlay"><div class="overlay-card"><div class="big">🏆</div><h2>Harikasın!</h2><p>${esc(game.finish)}</p><button class="action" onclick="location.reload()">Yeniden oyna</button></div></div>`)}
@@ -468,7 +478,7 @@ function izCiz(r){
  sv.onpointercancel=()=>state.basli=false;
  $('#task').innerHTML=`<div class="caption">Sarı topa bas ve parmağını noktalardan geçirerek ilerlet.</div>
   <button class="action" id="izSes">🔊 Yönergeyi dinle</button>`;
- $('#izSes').onclick=()=>speak(r.rakamAdi+'. '+YON[r.rakam])}
+ $('#izSes').onclick=()=>speak(r.rakamAdi+'. '+YON[r.rakam],true)}
 function izGuncelle(){const y=state.yollar[state.hamle];if(!y)return;
  const oran=state.adim/(y.nokta.length-1),mur=$('#mur'+state.hamle);
  if(mur)mur.setAttribute('stroke-dashoffset',(y.uz*(1-oran)).toFixed(1));
@@ -524,7 +534,7 @@ function yazCiz(r){
   <div class="caption">${esc(state.not||'Sayıyı dinle, sonra rakamlarını seç. Sayı ekranda yazılı değil.')}</div></div>`;
  $('#task').innerHTML=`<div class="actions"><button class="action" id="yazDinle">🔊 Sayıyı dinle</button></div>
   <div class="tus-rakam">${[0,1,2,3,4,5,6,7,8,9].map(n=>`<button data-rakam="${n}">${n}</button>`).join('')}</div>`;
- $('#yazDinle').onclick=()=>speak(sayiAdiTR(state.hedef));
+ $('#yazDinle').onclick=()=>speak(sayiAdiTR(state.hedef),true);
  $$('[data-rakam]').forEach(b=>b.onclick=()=>yazRakam(r,+b.dataset.rakam))}
 function yazRakam(r,n){const d=String(state.hedef),i=state.slot;
  if(state.basamak[i]!=null)return;
@@ -555,7 +565,7 @@ function yazIz(r){
   if(Math.hypot(p[0]-h[0],p[1]-h[1])<IZ_TOL+8){state.basli=true;sv.setPointerCapture&&sv.setPointerCapture(e.pointerId);ilerle()}};
  sv.onpointermove=dokun;sv.onpointerup=()=>state.basli=false;sv.onpointercancel=()=>state.basli=false;
  $('#task').innerHTML=`<div class="caption">${esc(state.rakamYaz)} rakamını sarı toptan başlayarak yaz.</div><button class="action" id="izSes">🔊 Yönergeyi dinle</button>`;
- $('#izSes').onclick=()=>speak(YON[state.rakamYaz])}
+ $('#izSes').onclick=()=>speak(YON[state.rakamYaz],true)}
 function yazIzBitti(r){state.basli=false;
  if(state.slot===0){state.slot=1;state.faz=1;state.not='Onlar basamağı tamam. Şimdi birler basamağı.';
   feedback('Onlar yazıldı');gecisBasla(()=>yazCiz(r),FAST?40:700);return}
@@ -568,11 +578,16 @@ function yazNesne(r){const on=Math.floor(state.hedef/10),bir=state.hedef%10;
   <div class="caption">${esc(state.not||'Önce demetleri say (onar onar), sonra tek nesneleri (birer birer).')}</div></div>`;
  const say=()=>{state.sayilan++;const d=state.sayilan<=on?state.sayilan*10:on*10+(state.sayilan-on);
   speak(String(d));
-  if(state.sayilan>=on+bir){state.not='Bu miktar kaç eder? Şimdi sayıyı yaz.';state.faz=1;
+  if(state.sayilan>=on+bir){state.not='Bu miktar kaç eder? Şimdi sayıyı yaz.';
+   /* Son nesneye dokunulduğunda sayaç bir eksik kalıyordu: ekranda 16 yazarken
+      geri bildirim 'Toplam 17' diyordu. Önce son sayı çizilsin, sonra geçilsin. */
+   yazNesne(r);state.faz=1;
    feedback('Toplam '+state.hedef);gecisBasla(()=>yazCiz(r),FAST?40:800);return}
   yazNesne(r)};
- $$('[data-demet]').forEach(el=>el.onclick=()=>{if(+el.dataset.demet!==state.sayilan)return wrong('Demetleri sırayla say.');say()});
- $$('[data-birlik]').forEach(el=>el.onclick=()=>{if(state.sayilan<on)return wrong('Önce onluk demetleri say.');
+ $$('[data-demet]').forEach(el=>el.onclick=()=>{if(state.gecis)return;
+  if(+el.dataset.demet!==state.sayilan)return wrong('Demetleri sırayla say.');say()});
+ $$('[data-birlik]').forEach(el=>el.onclick=()=>{if(state.gecis)return;
+  if(state.sayilan<on)return wrong('Önce onluk demetleri say.');
   if(+el.dataset.birlik!==state.sayilan-on)return wrong('Tek nesneleri sırayla say.');say()});
  $('#task').innerHTML='<div class="caption">Nesnelere sırayla dokunarak say.</div>'}
 function yazDogrula(r){const on=Math.floor(state.hedef/10),bir=state.hedef%10;

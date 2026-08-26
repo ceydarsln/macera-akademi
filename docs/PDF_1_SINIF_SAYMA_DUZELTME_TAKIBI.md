@@ -97,3 +97,31 @@ Bulguların çoğu tek tek oyuna değil `rakam-phaser.html` motoruna ait. Sıras
 3. Sapma cezasının kaldırılması ve seslendirme (20 oyunu birden etkiler)
 4. Hedef sayının gizlenmesi ve kademeli hayalet şablon (9 oyun)
 5. Üç turlu yapı ve sayı-miktar eşleştirmesi (17 oyun)
+
+## Kabul ölçütü denetimi ve canlı test (26 Ağustos 2026)
+
+Şartnamenin ölçülebilir kabul koşulları (`ACCEPT_TRACE`, `ACCEPT_WRITE`,
+`FEEDBACK_TRACE`, `FEEDBACK_WRITE`) iki ayrı yolla sınandı:
+`tools/sayma1_denetim.html` 20 oyunun 60 turunu 390×844'te tek tek çizip tarıyor,
+ardından oyunlar gerçek uygulamada elle oynanıyor.
+
+### Bulunan ve düzeltilen kusurlar
+
+| # | Kusur | Nerede | Düzeltme |
+|---|---|---|---|
+| 1 | **Dinleme düğmesi ikinci basıştan sonra sessiz kalıyordu.** Kataloğun `oku(metin, tekrar)` köprüsü `tekrar=false` iken aynı metni yeniden okumuyor (`gs.spokenKey` karşılaştırması); motordaki üç düğme bu bayrağı geçirmiyordu. Hedef sayı ekranda hiç yazılı olmadığı için çocuk ilk okumayı kaçırınca tur çözülemez hâle geliyordu. | `izCiz`, `yazCiz`, `yazIz` | Üç çağrıya da `speak(..., true)`. Ölçüm: 4 basış → 4 seslendirme. |
+| 2 | **Hedef sayı katalog alt başlığında yazılıydı** — `ACCEPT_WRITE 1`'in doğrudan ihlali. Üstelik motor sayıyı havuzdan rastgele seçtiği için başlıktaki sayı çoğu turda yanlıştı ("14 sayısını yaz" yazarken hedef 17). | `macera-akademi.html`, n1–n9 (9 oyun) | Alt başlıklar beceriyi anlatacak biçimde yazıldı, sayı içermiyor. n4'ün "(süreli)" ibaresi de kaldırıldı: `FEEDBACK_WRITE 2` süreyi kaldırmayı istiyor ve motorda süre yok. |
+| 3 | **Sayılacak nesnelerin dokunma alanı çok küçüktü**: `.birlik` 20×20 px, `.demet` 34 px genişlik. Bu, sayma oyununun ana etkileşimi. | motor CSS | `.birlik` 44×44 dokunma alanı (görsel 22 px, `::before` ile), `.demet` `min-width:44px`. Ölçüm: 44×44 ve 44×70. |
+| 4 | **Son nesneye dokunulduğunda sayaç bir eksik kalıyordu**: ekranda 16 yazarken geri bildirim "Toplam 17" diyordu. Kardinallik öğrenen çocuk için çelişkili. | `yazNesne` | Geçişten önce son sayı çiziliyor; ayrıca geçiş sırasındaki fazla dokunuş `state.gecis` ile yok sayılıyor (can gitmiyor). |
+
+Aracın ürettiği tek yanlış pozitif: rakam tuş takımı 0–9'u bastığı için birleşik
+metinde "12" geçiyor ve "hedef sayı ekranda yazılı" sanılıyordu. Sızıntı araması
+artık tuş takımını dışarıda bırakıyor.
+
+Düzeltmelerden sonra: **60/60 tur temiz.** Koşum: `#ids=s0…s10,n1…n9` → 20/20.
+
+### Şartname zinciri
+
+`tools/sartname_zinciri.py`, betikteki 40 kabul/tasarım cümlesinin tamamının
+basılı `1_sinif_sayma_oyunlari_detayli_duzeltmeler.pdf` içinde birebir geçtiğini
+doğruluyor (40/40). Masaüstündeki belge projedeki kopyayla bayt bayt aynı.
