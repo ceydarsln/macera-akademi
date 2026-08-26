@@ -2751,23 +2751,80 @@ MATH_GAMES.forEach(g => g.subj = 'math');
 
 /* ===================== TÜRKÇE (OKUMA-YAZMA) OYUNLARI ===================== */
 const TURKISH_GAMES = [
-{id:'t01',grp:'Harf (Ses) Grubu Oyunları',title:'Gökyüzü Çizeri',sub:'Motor Becerileri ve Yazım',emo:'✈️',kaz:'Harfin yazılış yönünü kas hafızasına alır.',type:'numberTrace',cfg:{instruction:'Uçağı parmağınla bulutlu yol boyunca sürükle ve büyük A harfini çiz!',speak:'Büyük A harfini üç çizgiyle yaz. Noktaları sırayla takip et.',ink:'#8fe9ff',guide:'#ffffff',strokes:[{hint:'Sol alttan tepeye doğru uç',points:[[70,306],[86,252],[104,190],[124,122],[150,58]]},{hint:'Tepeden sağ alta doğru uç',points:[[150,58],[176,122],[196,190],[214,252],[230,306]]},{hint:'Soldan sağa orta çizgiyi tamamla',points:[[103,205],[126,205],[150,205],[174,205],[197,205]]}],finale:{main:'✈️',bits:['☁️','✨','☁️'],msg:'Harika! Uçağın gökyüzüne büyük A harfini çizdi!'}}},
+{id:'t01',grp:'Tema 1 · Ses Grubu 1 (e, l, a, t)',title:'Gökyüzü Çizeri',sub:'Motor Becerileri ve Yazım',emo:'✈️',kaz:'Harfin yazılış yönünü kas hafızasına alır.',type:'numberTrace',cfg:{instruction:'Uçağı parmağınla bulutlu yol boyunca sürükle ve büyük A harfini çiz!',speak:'Büyük A harfini üç çizgiyle yaz. Noktaları sırayla takip et.',ink:'#8fe9ff',guide:'#ffffff',strokes:[{hint:'Sol alttan tepeye doğru uç',points:[[70,306],[86,252],[104,190],[124,122],[150,58]]},{hint:'Tepeden sağ alta doğru uç',points:[[150,58],[176,122],[196,190],[214,252],[230,306]]},{hint:'Soldan sağa orta çizgiyi tamamla',points:[[103,205],[126,205],[150,205],[174,205],[197,205]]}],finale:{main:'✈️',bits:['☁️','✨','☁️'],msg:'Harika! Uçağın gökyüzüne büyük A harfini çizdi!'}}},
 
-{id:'t02',grp:'Harf (Ses) Grubu Oyunları',title:'Sesli Sepet',sub:'İşitsel Tanıma',emo:'🧺',kaz:'Harfi kelime içindeki bir ses olarak fark eder.',type:'tapSelect',cfg:{instruction:'"Aaaa" sesini duyuyorsun. Sadece isminde A sesi geçenleri sepete yakala!',mode:'multi',items:[{id:'elma',label:'🍎 Elma'},{id:'armut',label:'🍐 Armut'},{id:'ayi',label:'🐻 Ayı'},{id:'top',label:'⚽ Top'},{id:'kedi',label:'🐱 Kedi'},{id:'kus',label:'🐦 Kuş'}],correct:['elma','armut','ayi']}},
+{id:'t02',grp:'Tema 1 · Ses Grubu 1 (e, l, a, t)',title:'Sesli Sepet',sub:'İşitsel Tanıma',emo:'🧺',kaz:'Harfi kelime içindeki bir ses olarak fark eder.',type:'tapSelect',cfg:{instruction:'"Aaaa" sesini duyuyorsun. Sadece isminde A sesi geçenleri sepete yakala!',mode:'multi',items:[{id:'elma',label:'🍎 Elma'},{id:'armut',label:'🍐 Armut'},{id:'ayi',label:'🐻 Ayı'},{id:'top',label:'⚽ Top'},{id:'kedi',label:'🐱 Kedi'},{id:'kus',label:'🐦 Kuş'}],correct:['elma','armut','ayi']}},
 
-{id:'t03',grp:'Harf (Ses) Grubu Oyunları',title:'Su Altı Baloncukları',sub:'Görsel Ayırt Etme',emo:'🫧',kaz:'Hedef harfi görsel olarak hızlıca seçer.',type:'tapSelect',cfg:{instruction:'Hedef harf: "N" — sadece N (veya n) yazan baloncukları patlat!',mode:'multi',items:[{id:'b1',label:'N'},{id:'b2',label:'M'},{id:'b3',label:'n'},{id:'b4',label:'H'},{id:'b5',label:'N'},{id:'b6',label:'Z'},{id:'b7',label:'K'}],correct:['b1','b3','b5']}},
+{id:'t03',grp:'Tema 2 · Ses Grubu 2 (i, n, o, r, m)',title:'Su Altı Baloncukları',sub:'Görsel Ayırt Etme',emo:'🫧',kaz:'Hedef harfi görsel olarak hızlıca seçer.',type:'tapSelect',cfg:{instruction:'Hedef harf: "N" — sadece N (veya n) yazan baloncukları patlat!',mode:'multi',items:[{id:'b1',label:'N'},{id:'b2',label:'M'},{id:'b3',label:'n'},{id:'b4',label:'H'},{id:'b5',label:'N'},{id:'b6',label:'Z'},{id:'b7',label:'K'}],correct:['b1','b3','b5']}},
 
-{id:'t04',grp:'Hece Grubu Oyunları',title:'Hece Treni',sub:'Kapalı ve Açık Hece Birleştirme',emo:'🚂',kaz:'Sesleri birleştirme mantığını kavrar.',type:'dragMatch',cfg:{instruction:'İki vagonu birleştir, hece oluşsun!',speak:'AT',sources:[{id:'A',label:'A',match:'T'}],targets:[{id:'T',label:'T',need:1}]}},
+{id:'t04',grp:'Tema 6 · Heceden Kelimeye',title:'Hece Treni',sub:'Kapalı ve Açık Hece Birleştirme',emo:'🚂',kaz:'Sesleri birleştirme mantığını kavrar.',type:'dragMatch',cfg:{instruction:'İki vagonu birleştir, hece oluşsun!',speak:'AT',sources:[{id:'A',label:'A',match:'T'}],targets:[{id:'T',label:'T',need:1}]}},
 
-{id:'t05',grp:'Hece Grubu Oyunları',title:'Zıp Zıp Kurbağa',sub:'Hızlı Okuma / Görsel Hafıza',emo:'🐸',kaz:'Sık kullanılan heceleri refleks olarak tanır.',type:'tapSelect',cfg:{instruction:'Sesli komut: "NE!" Doğru nilüfer yaprağına dokun.',speak:'NE',mode:'single',items:[{id:'an',label:'AN'},{id:'en',label:'EN'},{id:'in',label:'İN'},{id:'na',label:'NA'},{id:'ne',label:'NE'}],correct:['ne']}},
+{id:'t05',grp:'Tema 6 · Heceden Kelimeye',title:'Zıp Zıp Kurbağa',sub:'Hızlı Okuma / Görsel Hafıza',emo:'🐸',kaz:'Sık kullanılan heceleri refleks olarak tanır.',type:'tapSelect',cfg:{instruction:'Sesli komut: "NE!" Doğru nilüfer yaprağına dokun.',speak:'NE',mode:'single',items:[{id:'an',label:'AN'},{id:'en',label:'EN'},{id:'in',label:'İN'},{id:'na',label:'NA'},{id:'ne',label:'NE'}],correct:['ne']}},
 
-{id:'t06',grp:'Hece Grubu Oyunları',title:'Mıknatıslı Uzay Gemisi',sub:'Hece İnşası',emo:'🛸',kaz:'Seslerin hangi sırayla birleştiğini kavrar.',type:'orderSequence',cfg:{instruction:'Hedef hece: "ET". Önce E, sonra T meteorunu çek!',mode:'tapInOrder',speak:'ET',items:[{id:'E',label:'E'},{id:'T',label:'T'},{id:'K',label:'K'},{id:'S',label:'S'}],order:['E','T']}},
+{id:'t06',grp:'Tema 6 · Heceden Kelimeye',title:'Mıknatıslı Uzay Gemisi',sub:'Hece İnşası',emo:'🛸',kaz:'Seslerin hangi sırayla birleştiğini kavrar.',type:'orderSequence',cfg:{instruction:'Hedef hece: "ET". Önce E, sonra T meteorunu çek!',mode:'tapInOrder',speak:'ET',items:[{id:'E',label:'E'},{id:'T',label:'T'},{id:'K',label:'K'},{id:'S',label:'S'}],order:['E','T']}},
 
-{id:'t07',grp:'Kelime Grubu Oyunları',title:'Kelime Fabrikası',sub:'Hecelerden Kelime Üretme',emo:'🏭',kaz:'Çok heceli kelimeleri sentezler.',type:'dragMatch',cfg:{instruction:'"ALET" kelimesini oluştur: doğru heceleri sırayla kutulara koy!',speak:'ALET',sources:[{id:'A',label:'A',match:'slot1'},{id:'LET',label:'LET',match:'slot2'},{id:'NE',label:'NE',match:null},{id:'AN',label:'AN',match:null}],targets:[{id:'slot1',label:'1. Hece',need:1},{id:'slot2',label:'2. Hece',need:1}]}},
+{id:'t07',grp:'Tema 7 · Kelime, Cümle ve Anlama',title:'Kelime Fabrikası',sub:'Hecelerden Kelime Üretme',emo:'🏭',kaz:'Çok heceli kelimeleri sentezler.',type:'dragMatch',cfg:{instruction:'"ALET" kelimesini oluştur: doğru heceleri sırayla kutulara koy!',speak:'ALET',sources:[{id:'A',label:'A',match:'slot1'},{id:'LET',label:'LET',match:'slot2'},{id:'NE',label:'NE',match:null},{id:'AN',label:'AN',match:null}],targets:[{id:'slot1',label:'1. Hece',need:1},{id:'slot2',label:'2. Hece',need:1}]}},
 
-{id:'t08',grp:'Kelime Grubu Oyunları',title:'Gizemli Sandık',sub:'Okuduğunu Anlama',emo:'🗝️',kaz:'Mekanik okumadan anlamaya geçer.',type:'tapSelect',cfg:{instruction:'Sandıkta "ANNE" yazıyor. Doğru resme sahip anahtarı seç!',mode:'single',items:[{id:'baba',label:'👨 Baba'},{id:'kedi',label:'🐱 Kedi'},{id:'elma',label:'🍎 Elma'},{id:'anne',label:'👩 Anne'}],correct:['anne']}},
+{id:'t08',grp:'Tema 7 · Kelime, Cümle ve Anlama',title:'Gizemli Sandık',sub:'Okuduğunu Anlama',emo:'🗝️',kaz:'Mekanik okumadan anlamaya geçer.',type:'tapSelect',cfg:{instruction:'Sandıkta "ANNE" yazıyor. Doğru resme sahip anahtarı seç!',mode:'single',items:[{id:'baba',label:'👨 Baba'},{id:'kedi',label:'🐱 Kedi'},{id:'elma',label:'🍎 Elma'},{id:'anne',label:'👩 Anne'}],correct:['anne']}},
 
-{id:'t09',grp:'Kelime Grubu Oyunları',title:'Sihirli Daktilo',sub:'Dikte - Bakmadan Yazma',emo:'⌨️',kaz:'İşitsel girdiyi doğru sembollerle yazar.',type:'typeWord',cfg:{instruction:'Duyduğun kelimeyi yaz! 🔊 butonuna bas ve dinle.',speak:'NANE',target:'NANE',letters:['N','A','N','E','K','T','İ','S']}}
+{id:'t09',grp:'Tema 8 · Dinleme, Konuşma ve Dikte',title:'Sihirli Daktilo',sub:'Dikte - Bakmadan Yazma',emo:'⌨️',kaz:'İşitsel girdiyi doğru sembollerle yazar.',type:'typeWord',cfg:{instruction:'Duyduğun kelimeyi yaz! 🔊 butonuna bas ve dinle.',speak:'NANE',target:'NANE',letters:['N','A','N','E','K','T','İ','S']}},
+/* 1. sınıf Türkçe genişletmesi — Maarif Modeli 8 tema, t10-t64.
+   Motor: web/phaser/turkce1-pdf-phaser.html (PHASER_OYUNLAR üzerinden). */
+{id:'t10',grp:'Tema 1 · Ses Grubu 1 (e, l, a, t)',title:'Yaprak Yolu',sub:'E sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Yaprak Yolu oyununu aç.',speak:'Yaprak Yolu oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t11',grp:'Tema 1 · Ses Grubu 1 (e, l, a, t)',title:'Lale Tarlası',sub:'L sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Lale Tarlası oyununu aç.',speak:'Lale Tarlası oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t12',grp:'Tema 1 · Ses Grubu 1 (e, l, a, t)',title:'Sesli Bahçe',sub:'/t/ ve /l/ seslerini ayır',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Sesli Bahçe oyununu aç.',speak:'Sesli Bahçe oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t13',grp:'Tema 1 · Ses Grubu 1 (e, l, a, t)',title:'Bahçe Baloncukları',sub:'Benzer biçimli harfler',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Bahçe Baloncukları oyununu aç.',speak:'Bahçe Baloncukları oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t14',grp:'Tema 1 · Ses Grubu 1 (e, l, a, t)',title:'İlk Hece Treni',sub:'Açık ve kapalı hece',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'İlk Hece Treni oyununu aç.',speak:'İlk Hece Treni oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t15',grp:'Tema 1 · Ses Grubu 1 (e, l, a, t)',title:'Gölette Hece Avı',sub:'Heceyi sesten tanı',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Gölette Hece Avı oyununu aç.',speak:'Gölette Hece Avı oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t16',grp:'Tema 2 · Ses Grubu 2 (i, n, o, r, m)',title:'Işıklı Yol',sub:'Noktalı İ, noktasız I',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; benzer biçimli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Işıklı Yol oyununu aç.',speak:'Işıklı Yol oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t17',grp:'Tema 2 · Ses Grubu 2 (i, n, o, r, m)',title:'Orman Halkası',sub:'O sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; benzer biçimli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Orman Halkası oyununu aç.',speak:'Orman Halkası oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t18',grp:'Tema 2 · Ses Grubu 2 (i, n, o, r, m)',title:'Rüzgâr Gülü',sub:'R sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; benzer biçimli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Rüzgâr Gülü oyununu aç.',speak:'Rüzgâr Gülü oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t19',grp:'Tema 2 · Ses Grubu 2 (i, n, o, r, m)',title:'Mandalina Sepeti',sub:'/m/ ve /n/ seslerini ayır',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; benzer biçimli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Mandalina Sepeti oyununu aç.',speak:'Mandalina Sepeti oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t20',grp:'Tema 2 · Ses Grubu 2 (i, n, o, r, m)',title:'Noktalı mı, Noktasız mı?',sub:'i-ı ve M-N ayrımı',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; benzer biçimli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Noktalı mı, Noktasız mı? oyununu aç.',speak:'Noktalı mı, Noktasız mı? oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t21',grp:'Tema 2 · Ses Grubu 2 (i, n, o, r, m)',title:'İkinci Hece Treni',sub:'Ses grubu 2 ile hece',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; benzer biçimli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'İkinci Hece Treni oyununu aç.',speak:'İkinci Hece Treni oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t22',grp:'Tema 2 · Ses Grubu 2 (i, n, o, r, m)',title:'Uzayda Hece Kapsülü',sub:'Ters sıralı heceler',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; benzer biçimli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Uzayda Hece Kapsülü oyununu aç.',speak:'Uzayda Hece Kapsülü oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t23',grp:'Tema 3 · Ses Grubu 3 (u, k, ı, y, s, d)',title:'Uçurtma Yolu',sub:'U sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Uçurtma Yolu oyununu aç.',speak:'Uçurtma Yolu oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t24',grp:'Tema 3 · Ses Grubu 3 (u, k, ı, y, s, d)',title:'Kelebek Kanadı',sub:'K sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Kelebek Kanadı oyununu aç.',speak:'Kelebek Kanadı oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t25',grp:'Tema 3 · Ses Grubu 3 (u, k, ı, y, s, d)',title:'Yıldız İzi',sub:'Y sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Yıldız İzi oyununu aç.',speak:'Yıldız İzi oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t26',grp:'Tema 3 · Ses Grubu 3 (u, k, ı, y, s, d)',title:'Salıncak Çizgisi',sub:'S sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Salıncak Çizgisi oyununu aç.',speak:'Salıncak Çizgisi oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t27',grp:'Tema 3 · Ses Grubu 3 (u, k, ı, y, s, d)',title:'Damla Yolu',sub:'D sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Damla Yolu oyununu aç.',speak:'Damla Yolu oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t28',grp:'Tema 3 · Ses Grubu 3 (u, k, ı, y, s, d)',title:'Kumsalda Sesler',sub:'/k/ ve /d/ seslerini ayır',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Kumsalda Sesler oyununu aç.',speak:'Kumsalda Sesler oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t29',grp:'Tema 3 · Ses Grubu 3 (u, k, ı, y, s, d)',title:'Dönen Harfler',sub:'Dönünce benzeyen harfler',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Dönen Harfler oyununu aç.',speak:'Dönen Harfler oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t30',grp:'Tema 3 · Ses Grubu 3 (u, k, ı, y, s, d)',title:'Üçüncü Hece Treni',sub:'Ses grubu 3 ile hece',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir, harfi yazım yönüne uyarak yazar.',type:'tapSelect',cfg:{instruction:'Üçüncü Hece Treni oyununu aç.',speak:'Üçüncü Hece Treni oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t31',grp:'Tema 4 · Ses Grubu 4 (ö, b, ü, ş, z, ç)',title:'Ördek Halkası',sub:'Ö sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; noktalı ve çengelli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Ördek Halkası oyununu aç.',speak:'Ördek Halkası oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t32',grp:'Tema 4 · Ses Grubu 4 (ö, b, ü, ş, z, ç)',title:'Bal Kovanı',sub:'B sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; noktalı ve çengelli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Bal Kovanı oyununu aç.',speak:'Bal Kovanı oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t33',grp:'Tema 4 · Ses Grubu 4 (ö, b, ü, ş, z, ç)',title:'Üzüm Salkımı',sub:'Ü sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; noktalı ve çengelli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Üzüm Salkımı oyununu aç.',speak:'Üzüm Salkımı oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t34',grp:'Tema 4 · Ses Grubu 4 (ö, b, ü, ş, z, ç)',title:'Şemsiye ve Çilek',sub:'Çengelli harfler: ş ve ç',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; noktalı ve çengelli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Şemsiye ve Çilek oyununu aç.',speak:'Şemsiye ve Çilek oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t35',grp:'Tema 4 · Ses Grubu 4 (ö, b, ü, ş, z, ç)',title:'Zil Çizgisi',sub:'Z sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; noktalı ve çengelli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Zil Çizgisi oyununu aç.',speak:'Zil Çizgisi oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t36',grp:'Tema 4 · Ses Grubu 4 (ö, b, ü, ş, z, ç)',title:'Noktalı Ünlüler',sub:'o-ö ve u-ü ayrımı',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; noktalı ve çengelli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Noktalı Ünlüler oyununu aç.',speak:'Noktalı Ünlüler oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t37',grp:'Tema 4 · Ses Grubu 4 (ö, b, ü, ş, z, ç)',title:'b mi, d mi?',sub:'b ile d nasıl ayrılır',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; noktalı ve çengelli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'b mi, d mi? oyununu aç.',speak:'b mi, d mi? oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t38',grp:'Tema 4 · Ses Grubu 4 (ö, b, ü, ş, z, ç)',title:'Dördüncü Hece Treni',sub:'Ses grubu 4 ile hece',emo:'✏️',kaz:'T.1.1 — Sesi harfle eşleştirir; noktalı ve çengelli harfleri ayırt eder.',type:'tapSelect',cfg:{instruction:'Dördüncü Hece Treni oyununu aç.',speak:'Dördüncü Hece Treni oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t39',grp:'Tema 5 · Ses Grubu 5 (g, c, p, h, ğ, v, f, j)',title:'Güneş Halkası',sub:'G sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Alfabedeki bütün sesleri tanır ve yazar.',type:'tapSelect',cfg:{instruction:'Güneş Halkası oyununu aç.',speak:'Güneş Halkası oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t40',grp:'Tema 5 · Ses Grubu 5 (g, c, p, h, ğ, v, f, j)',title:'Ceviz Kabuğu',sub:'C sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Alfabedeki bütün sesleri tanır ve yazar.',type:'tapSelect',cfg:{instruction:'Ceviz Kabuğu oyununu aç.',speak:'Ceviz Kabuğu oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t41',grp:'Tema 5 · Ses Grubu 5 (g, c, p, h, ğ, v, f, j)',title:'Papatya Sapı',sub:'P sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Alfabedeki bütün sesleri tanır ve yazar.',type:'tapSelect',cfg:{instruction:'Papatya Sapı oyununu aç.',speak:'Papatya Sapı oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t42',grp:'Tema 5 · Ses Grubu 5 (g, c, p, h, ğ, v, f, j)',title:'Merdiven Harfi',sub:'H sesi ve harfi',emo:'✏️',kaz:'T.1.1 — Alfabedeki bütün sesleri tanır ve yazar.',type:'tapSelect',cfg:{instruction:'Merdiven Harfi oyununu aç.',speak:'Merdiven Harfi oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t43',grp:'Tema 5 · Ses Grubu 5 (g, c, p, h, ğ, v, f, j)',title:'Yumuşak Ğ',sub:'Yumuşak g’nin kuralı',emo:'✏️',kaz:'T.1.1 — Alfabedeki bütün sesleri tanır ve yazar.',type:'tapSelect',cfg:{instruction:'Yumuşak Ğ oyununu aç.',speak:'Yumuşak Ğ oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t44',grp:'Tema 5 · Ses Grubu 5 (g, c, p, h, ğ, v, f, j)',title:'Vazo, Fil ve Jeton',sub:'V, F ve J harfleri',emo:'✏️',kaz:'T.1.1 — Alfabedeki bütün sesleri tanır ve yazar.',type:'tapSelect',cfg:{instruction:'Vazo, Fil ve Jeton oyununu aç.',speak:'Vazo, Fil ve Jeton oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t45',grp:'Tema 5 · Ses Grubu 5 (g, c, p, h, ğ, v, f, j)',title:'Son Sesler',sub:'/v/ ve /f/ seslerini ayır',emo:'✏️',kaz:'T.1.1 — Alfabedeki bütün sesleri tanır ve yazar.',type:'tapSelect',cfg:{instruction:'Son Sesler oyununu aç.',speak:'Son Sesler oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t46',grp:'Tema 5 · Ses Grubu 5 (g, c, p, h, ğ, v, f, j)',title:'Beşinci Hece Treni',sub:'Ses grubu 5 ile hece',emo:'✏️',kaz:'T.1.1 — Alfabedeki bütün sesleri tanır ve yazar.',type:'tapSelect',cfg:{instruction:'Beşinci Hece Treni oyununu aç.',speak:'Beşinci Hece Treni oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t47',grp:'Tema 6 · Heceden Kelimeye',title:'Meyve Fabrikası',sub:'Hecelerden kelime üret',emo:'✏️',kaz:'T.1.2 — Heceleri birleştirerek anlamlı kelime oluşturur.',type:'tapSelect',cfg:{instruction:'Meyve Fabrikası oyununu aç.',speak:'Meyve Fabrikası oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t48',grp:'Tema 6 · Heceden Kelimeye',title:'Hece Kapsülü',sub:'Uzun kelimenin heceleri',emo:'✏️',kaz:'T.1.2 — Heceleri birleştirerek anlamlı kelime oluşturur.',type:'tapSelect',cfg:{instruction:'Hece Kapsülü oyununu aç.',speak:'Hece Kapsülü oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t49',grp:'Tema 6 · Heceden Kelimeye',title:'Gölette Kelime Avı',sub:'Kelimeyi hecelerine ayır',emo:'✏️',kaz:'T.1.2 — Heceleri birleştirerek anlamlı kelime oluşturur.',type:'tapSelect',cfg:{instruction:'Gölette Kelime Avı oyununu aç.',speak:'Gölette Kelime Avı oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t50',grp:'Tema 6 · Heceden Kelimeye',title:'Kelime Sepeti',sub:'Kaç heceli?',emo:'✏️',kaz:'T.1.2 — Heceleri birleştirerek anlamlı kelime oluşturur.',type:'tapSelect',cfg:{instruction:'Kelime Sepeti oyununu aç.',speak:'Kelime Sepeti oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t51',grp:'Tema 6 · Heceden Kelimeye',title:'Uzun Kelime Fabrikası',sub:'Üç ve dört heceli kelimeler',emo:'✏️',kaz:'T.1.2 — Heceleri birleştirerek anlamlı kelime oluşturur.',type:'tapSelect',cfg:{instruction:'Uzun Kelime Fabrikası oyununu aç.',speak:'Uzun Kelime Fabrikası oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t52',grp:'Tema 7 · Kelime, Cümle ve Anlama',title:'Kütüphane Sandığı',sub:'Kelimeden mini metne',emo:'✏️',kaz:'T.1.3 — Okuduğu kelime, cümle ve kısa metni anlar.',type:'tapSelect',cfg:{instruction:'Kütüphane Sandığı oyununu aç.',speak:'Kütüphane Sandığı oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t53',grp:'Tema 7 · Kelime, Cümle ve Anlama',title:'Kim, Ne, Nerede?',sub:'Kim, ne, nerede',emo:'✏️',kaz:'T.1.3 — Okuduğu kelime, cümle ve kısa metni anlar.',type:'tapSelect',cfg:{instruction:'Kim, Ne, Nerede? oyununu aç.',speak:'Kim, Ne, Nerede? oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t54',grp:'Tema 7 · Kelime, Cümle ve Anlama',title:'Cümle Fabrikası',sub:'Anlamlı cümle kurma',emo:'✏️',kaz:'T.1.3 — Okuduğu kelime, cümle ve kısa metni anlar.',type:'tapSelect',cfg:{instruction:'Cümle Fabrikası oyununu aç.',speak:'Cümle Fabrikası oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t55',grp:'Tema 7 · Kelime, Cümle ve Anlama',title:'Noktalama Sandığı',sub:'Nokta mı, soru işareti mi',emo:'✏️',kaz:'T.1.3 — Okuduğu kelime, cümle ve kısa metni anlar.',type:'tapSelect',cfg:{instruction:'Noktalama Sandığı oyununu aç.',speak:'Noktalama Sandığı oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t56',grp:'Tema 7 · Kelime, Cümle ve Anlama',title:'Karşıt Anlamlılar',sub:'Karşıt anlamlı sözcükler',emo:'✏️',kaz:'T.1.3 — Okuduğu kelime, cümle ve kısa metni anlar.',type:'tapSelect',cfg:{instruction:'Karşıt Anlamlılar oyununu aç.',speak:'Karşıt Anlamlılar oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t57',grp:'Tema 7 · Kelime, Cümle ve Anlama',title:'Sıralı Olaylar',sub:'Olayların sırası',emo:'✏️',kaz:'T.1.3 — Okuduğu kelime, cümle ve kısa metni anlar.',type:'tapSelect',cfg:{instruction:'Sıralı Olaylar oyununu aç.',speak:'Sıralı Olaylar oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t58',grp:'Tema 8 · Dinleme, Konuşma ve Dikte',title:'Dikte Defteri',sub:'İki heceli kelime diktesi',emo:'✏️',kaz:'T.1.4 — Dinlediğini anlar; duyduğu kelimeyi doğru yazar.',type:'tapSelect',cfg:{instruction:'Dikte Defteri oyununu aç.',speak:'Dikte Defteri oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t59',grp:'Tema 8 · Dinleme, Konuşma ve Dikte',title:'Uzun Kelime Diktesi',sub:'Uzun kelime diktesi',emo:'✏️',kaz:'T.1.4 — Dinlediğini anlar; duyduğu kelimeyi doğru yazar.',type:'tapSelect',cfg:{instruction:'Uzun Kelime Diktesi oyununu aç.',speak:'Uzun Kelime Diktesi oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t60',grp:'Tema 8 · Dinleme, Konuşma ve Dikte',title:'Öbek Diktesi',sub:'Boşluklu öbek diktesi',emo:'✏️',kaz:'T.1.4 — Dinlediğini anlar; duyduğu kelimeyi doğru yazar.',type:'tapSelect',cfg:{instruction:'Öbek Diktesi oyununu aç.',speak:'Öbek Diktesi oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t61',grp:'Tema 8 · Dinleme, Konuşma ve Dikte',title:'Dinle ve Bul',sub:'Dinleyerek ayırt et',emo:'✏️',kaz:'T.1.4 — Dinlediğini anlar; duyduğu kelimeyi doğru yazar.',type:'tapSelect',cfg:{instruction:'Dinle ve Bul oyununu aç.',speak:'Dinle ve Bul oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t62',grp:'Tema 8 · Dinleme, Konuşma ve Dikte',title:'Resmi Oku',sub:'Görsel okuma',emo:'✏️',kaz:'T.1.4 — Dinlediğini anlar; duyduğu kelimeyi doğru yazar.',type:'tapSelect',cfg:{instruction:'Resmi Oku oyununu aç.',speak:'Resmi Oku oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t63',grp:'Tema 8 · Dinleme, Konuşma ve Dikte',title:'Yönergeyi Uygula',sub:'Yönergeyi izle',emo:'✏️',kaz:'T.1.4 — Dinlediğini anlar; duyduğu kelimeyi doğru yazar.',type:'tapSelect',cfg:{instruction:'Yönergeyi Uygula oyununu aç.',speak:'Yönergeyi Uygula oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}},
+{id:'t64',grp:'Tema 8 · Dinleme, Konuşma ve Dikte',title:'Kendi Cümlem',sub:'Harften cümleye',emo:'✏️',kaz:'T.1.4 — Dinlediğini anlar; duyduğu kelimeyi doğru yazar.',type:'tapSelect',cfg:{instruction:'Kendi Cümlem oyununu aç.',speak:'Kendi Cümlem oyununu aç.',items:[{id:'basla',label:'▶️ Başla'}],answer:'basla'}}
 ];
 TURKISH_GAMES.forEach(g => g.subj = 'turkish');
 
@@ -20749,6 +20806,7 @@ function autoSpeak(game){
            PHASER_OYUNLAR[game.id] === 'matematik3-pdf' ||
            PHASER_OYUNLAR[game.id] === 'matematik4-pdf' ||
            PHASER_OYUNLAR[game.id] === 'turkce3-pdf' ||
+           PHASER_OYUNLAR[game.id] === 'sosyal4-pdf' ||
              PHASER_OYUNLAR[game.id] === 'sayma-pdf' ||
              PHASER_OYUNLAR[game.id] === 'turkce2-pdf' ||
              PHASER_OYUNLAR[game.id] === 'turkce1-pdf' ||
@@ -21289,10 +21347,42 @@ const PHASER_OYUNLAR = {
   u77:'turkce2-pdf', u78:'turkce2-pdf', u79:'turkce2-pdf', u80:'turkce2-pdf', u81:'turkce2-pdf', u82:'turkce2-pdf', u83:'turkce2-pdf',
   u84:'turkce2-pdf', u85:'turkce2-pdf', u86:'turkce2-pdf', u87:'turkce2-pdf', u88:'turkce2-pdf', u89:'turkce2-pdf', u90:'turkce2-pdf',
   t01:'turkce1-pdf', t02:'turkce1-pdf', t03:'turkce1-pdf', t04:'turkce1-pdf', t05:'turkce1-pdf', t06:'turkce1-pdf', t07:'turkce1-pdf', t08:'turkce1-pdf', t09:'turkce1-pdf',
+  t10:'turkce1-pdf', t11:'turkce1-pdf', t12:'turkce1-pdf', t13:'turkce1-pdf', t14:'turkce1-pdf',
+  t15:'turkce1-pdf', t16:'turkce1-pdf', t17:'turkce1-pdf', t18:'turkce1-pdf', t19:'turkce1-pdf',
+  t20:'turkce1-pdf', t21:'turkce1-pdf', t22:'turkce1-pdf', t23:'turkce1-pdf', t24:'turkce1-pdf',
+  t25:'turkce1-pdf', t26:'turkce1-pdf', t27:'turkce1-pdf', t28:'turkce1-pdf', t29:'turkce1-pdf',
+  t30:'turkce1-pdf', t31:'turkce1-pdf', t32:'turkce1-pdf', t33:'turkce1-pdf', t34:'turkce1-pdf',
+  t35:'turkce1-pdf', t36:'turkce1-pdf', t37:'turkce1-pdf', t38:'turkce1-pdf', t39:'turkce1-pdf',
+  t40:'turkce1-pdf', t41:'turkce1-pdf', t42:'turkce1-pdf', t43:'turkce1-pdf', t44:'turkce1-pdf',
+  t45:'turkce1-pdf', t46:'turkce1-pdf', t47:'turkce1-pdf', t48:'turkce1-pdf', t49:'turkce1-pdf',
+  t50:'turkce1-pdf', t51:'turkce1-pdf', t52:'turkce1-pdf', t53:'turkce1-pdf', t54:'turkce1-pdf',
+  t55:'turkce1-pdf', t56:'turkce1-pdf', t57:'turkce1-pdf', t58:'turkce1-pdf', t59:'turkce1-pdf',
+  t60:'turkce1-pdf', t61:'turkce1-pdf', t62:'turkce1-pdf', t63:'turkce1-pdf', t64:'turkce1-pdf',
   s0:'sayma-pdf', s1:'sayma-pdf', s2:'sayma-pdf', s3:'sayma-pdf', s4:'sayma-pdf', s5:'sayma-pdf',
   s6:'sayma-pdf', s7:'sayma-pdf', s8:'sayma-pdf', s9:'sayma-pdf', s10:'sayma-pdf',
   n1:'sayma-pdf', n2:'sayma-pdf', n3:'sayma-pdf', n4:'sayma-pdf', n5:'sayma-pdf',
   n6:'sayma-pdf', n7:'sayma-pdf', n8:'sayma-pdf', n9:'sayma-pdf',
+
+  /* 3. sınıf Türkçe PDF motoru — y01–y64.
+     Şartname: output/pdf/3_sinif_turkce_oyunlari_detayli_duzeltmeler.pdf
+     Bant, roket-yakıt, tren-tünel, radar-kapsül ve daktilo ortak motorları
+     kaldırıldı; 36 yazma kazanımında ekran klavyesiyle gerçek üretim var. */
+  y01:'turkce3-pdf', y02:'turkce3-pdf', y03:'turkce3-pdf', y04:'turkce3-pdf',
+  y05:'turkce3-pdf', y06:'turkce3-pdf', y07:'turkce3-pdf', y08:'turkce3-pdf',
+  y09:'turkce3-pdf', y10:'turkce3-pdf', y11:'turkce3-pdf', y12:'turkce3-pdf',
+  y13:'turkce3-pdf', y14:'turkce3-pdf', y15:'turkce3-pdf', y16:'turkce3-pdf',
+  y17:'turkce3-pdf', y18:'turkce3-pdf', y19:'turkce3-pdf', y20:'turkce3-pdf',
+  y21:'turkce3-pdf', y22:'turkce3-pdf', y23:'turkce3-pdf', y24:'turkce3-pdf',
+  y25:'turkce3-pdf', y26:'turkce3-pdf', y27:'turkce3-pdf', y28:'turkce3-pdf',
+  y29:'turkce3-pdf', y30:'turkce3-pdf', y31:'turkce3-pdf', y32:'turkce3-pdf',
+  y33:'turkce3-pdf', y34:'turkce3-pdf', y35:'turkce3-pdf', y36:'turkce3-pdf',
+  y37:'turkce3-pdf', y38:'turkce3-pdf', y39:'turkce3-pdf', y40:'turkce3-pdf',
+  y41:'turkce3-pdf', y42:'turkce3-pdf', y43:'turkce3-pdf', y44:'turkce3-pdf',
+  y45:'turkce3-pdf', y46:'turkce3-pdf', y47:'turkce3-pdf', y48:'turkce3-pdf',
+  y49:'turkce3-pdf', y50:'turkce3-pdf', y51:'turkce3-pdf', y52:'turkce3-pdf',
+  y53:'turkce3-pdf', y54:'turkce3-pdf', y55:'turkce3-pdf', y56:'turkce3-pdf',
+  y57:'turkce3-pdf', y58:'turkce3-pdf', y59:'turkce3-pdf', y60:'turkce3-pdf',
+  y61:'turkce3-pdf', y62:'turkce3-pdf', y63:'turkce3-pdf', y64:'turkce3-pdf',
 
   /* 4. sınıf matematik PDF motoru — p01–p56.
      Şartname: output/pdf/4_sinif_matematik_oyunlari_detayli_duzeltmeler.pdf
@@ -21312,6 +21402,22 @@ const PHASER_OYUNLAR = {
   p45:'matematik4-pdf', p46:'matematik4-pdf', p47:'matematik4-pdf', p48:'matematik4-pdf',
   p49:'matematik4-pdf', p50:'matematik4-pdf', p51:'matematik4-pdf', p52:'matematik4-pdf',
   p53:'matematik4-pdf', p54:'matematik4-pdf', p55:'matematik4-pdf', p56:'matematik4-pdf',
+
+  /* 4. sınıf sosyal bilgiler PDF motoru — sb01–sb36.
+     Şartname: output/pdf/4_sinif_sosyal_bilgiler_oyunlari_detayli_duzeltmeler.pdf
+     Harita/anket/bütçe turları konusuna özel sahnede; bant, roket ve
+     kronometre ortak motorlarına düşmez. İpucu metinleri doğru seçeneğin
+     adını söylemez; karar için gereken veri (renk anahtarı, fiyat, sayım)
+     ekranda okunur. */
+  sb01:'sosyal4-pdf', sb02:'sosyal4-pdf', sb03:'sosyal4-pdf', sb04:'sosyal4-pdf',
+  sb05:'sosyal4-pdf', sb06:'sosyal4-pdf', sb07:'sosyal4-pdf', sb08:'sosyal4-pdf',
+  sb09:'sosyal4-pdf', sb10:'sosyal4-pdf', sb11:'sosyal4-pdf', sb12:'sosyal4-pdf',
+  sb13:'sosyal4-pdf', sb14:'sosyal4-pdf', sb15:'sosyal4-pdf', sb16:'sosyal4-pdf',
+  sb17:'sosyal4-pdf', sb18:'sosyal4-pdf', sb19:'sosyal4-pdf', sb20:'sosyal4-pdf',
+  sb21:'sosyal4-pdf', sb22:'sosyal4-pdf', sb23:'sosyal4-pdf', sb24:'sosyal4-pdf',
+  sb25:'sosyal4-pdf', sb26:'sosyal4-pdf', sb27:'sosyal4-pdf', sb28:'sosyal4-pdf',
+  sb29:'sosyal4-pdf', sb30:'sosyal4-pdf', sb31:'sosyal4-pdf', sb32:'sosyal4-pdf',
+  sb33:'sosyal4-pdf', sb34:'sosyal4-pdf', sb35:'sosyal4-pdf', sb36:'sosyal4-pdf',
 
   /* 4. sınıf fen bilimleri PDF motoru — f01-f48 (parti parti bağlanıyor).
      Şartname: output/pdf/4_sinif_fen_bilimleri_oyunlari_detayli_duzeltmeler.pdf

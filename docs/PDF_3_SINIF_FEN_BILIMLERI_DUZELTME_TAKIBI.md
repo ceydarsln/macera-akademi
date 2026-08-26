@@ -72,3 +72,45 @@ Bu iki dersin düzeltmeleri birlikte planlanmalı — tek bir içerik geçişi 1
 4. Emoji sızıntısı olan 5 bant kartı ve kutu etiketi taşmaları
 5. On üç radar yönergesinin oyuna özel yeniden yazılması
 6. Roket sahnesinin 14 sıralama oyunundan kaldırılması
+
+---
+
+## Uygulama durumu — 26 Ağustos 2026
+
+**g01–g48 uygulandı.** Bulgular tek tek oyuna değil paylaşılan motorlara ait
+olduğu için ders için sıfırdan bir sahne motoru yazıldı:
+`web/phaser/fen3-pdf-phaser.html` (13 tur kipi, 3543 satır). Katalogdaki
+g01–g48 bu motora bağlandı (`PHASER_OYUNLAR`), yönerge çift okunmasın diye
+`text=''` dalına eklendi; web ve APK kopyaları birebir aynı (md5 doğrulandı).
+
+### Doğrulanmış öncelikli hataların karşılığı
+
+| # | Şartname bulgusu | Ne yapıldı |
+|---|---|---|
+| 1 | 67 bant kartının 58'i doğru kutunun adını söylüyordu | `sinifla` kipinde ipuçları karta geri götüren soru; öz denetim ipucunun kutu adını içermesini kusur sayıyor |
+| 2 | g40: kronometre var, saksı/fide yok; hedef 3 yerde yazılı | `sula` kipi: gerçek saksı, fide, toprak ve sulama kabı; **ekranda tek sayı yok**, aralık aşılınca toprakta göllenme görünüyor, az/fazla su can götürmüyor |
+| 3 | g24 ve g44'te grup sayıları ekranda yoktu | `grafik` kipi veri kutusu zorunlu (öz denetim satır değeriyle hedefi karşılaştırıyor); blok satırlarıyla hizalı sayı ölçeği eklendi, depo sayacı grafiğin altında |
+| 4 | 5 kartın simgesi kutu simgesiyle aynıydı (g07, g13, g19) | Kart, etiket ve kutulardan simge tümüyle kaldırıldı; iki denetim de simge kalıntısını kusur sayıyor |
+| 5 | g13: üç satıra taşan kutu etiketi | Kutu etiketi `ad` + `alt` satırına bölündü, kutu içinde kalıyor (144 turluk kırpılma taraması temiz) |
+| 6 | 7 radar oyununda birebir aynı yönerge | Her oyunun yönergesi kendi konusunu anlatıyor; öz denetim iki oyunun aynı yönergeyi paylaşmasını kusur sayıyor. Katalogdaki eski "bant çalışıyor / radarı sürükle" metinleri ve 18 başlık ("... Bandı", "... Radarı") motorla eşitlendi |
+
+Ayrıca roket-YAKIT sahnesi 6 sıralama oyunundan, tren-tünel g27'den
+(yerine yayı yükle gerilen dinamometre), uzay zemini 5 hafıza oyunundan
+kaldırıldı; hafızada can 6'dan genel standart olan 3'e indi ve her
+eşleşme bir gerekçe adımıyla doğrulanıyor. Çanta/plan/proje kazanımlarında
+seçilen öge ekranda gerçekten toplanıyor (`topla`), g48'in düz labirenti
+patika + gözlem noktası + kayıt defteri olan bir gözlem alanına dönüştü.
+Her oyunun üçüncü turunda öğrenci kendi gözlemini, önerisini ya da
+gerekçesini üretiyor (öz denetim son turun üretim kipi olmasını şart koşuyor).
+
+### Denetim
+
+- `__TEST__.olcutDenetimi()` — motorla taşınan öz denetim: 48 oyun, 0 kusur.
+- `tmp/fen3_kosum.js` — her oyunun her turunu doğru hamlelerle bitirir:
+  48/48 oyun, can kaybı olmadan.
+- `tools/fen3_denetim.html` — 48 oyunun 144 turunu 390x844 iframe'de tarar
+  (kırpılma, 44 px dokunma alanı, simge ipucu, cevap sızıntısı): 144/144 temiz.
+  İlk taramada dört kusur bulundu ve düzeltildi: "Dil"/"Kil" gibi kısa
+  etiketler 42 px'e düşüyordu; g36'da sözcük kartları veri sırasında
+  çizildiği için kabul edilen sıra ekrandan okunuyordu; g44'te "en çeşitli
+  grup" sorusu veri kutusundaki en uzun satırı okumakla çözülüyordu.
