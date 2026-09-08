@@ -10,7 +10,14 @@ SABLONLAR="$KAYNAK/phaser"
 VARLIKLAR="$PROJE_KOKU/app/src/main/assets"
 
 mkdir -p "$VARLIKLAR/phaser"
-DAMGA=$(md5 -q "$SABLONLAR/svgciz.js" | cut -c1-8)
+if command -v md5 >/dev/null 2>&1; then
+  DAMGA=$(md5 -q "$SABLONLAR/svgciz.js" | cut -c1-8)
+elif command -v md5sum >/dev/null 2>&1; then
+  DAMGA=$(md5sum "$SABLONLAR/svgciz.js" | cut -c1-8)
+else
+  echo "Hata: md5 veya md5sum bulunamadı." >&2
+  exit 1
+fi
 for f in "$SABLONLAR"/*-phaser.html; do
   ad=$(basename "$f" -phaser.html)
   sed -e 's|https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js|phaser.min.js|' \

@@ -2,6 +2,10 @@
 
 Bu depo doğrudan sunucuya klonlanabilir. Canlı kullanıcı parolaları veya MySQL bağlantı bilgileri depoda bulunmaz.
 
+Sunucuda başka uygulamalar da çalışıyorsa önerilen yöntem Docker kurulumudur.
+Hazır container ve Compose adımları için [DOCKER_KURULUMU.md](DOCKER_KURULUMU.md)
+dosyasını kullanın. Aşağıdaki adımlar Docker kullanılmayan klasik kurulum içindir.
+
 ## Gereksinimler
 
 - PHP 7.4 veya üzeri

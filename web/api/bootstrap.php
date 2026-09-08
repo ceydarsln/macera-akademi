@@ -15,6 +15,52 @@ final class ApiProblem extends RuntimeException
     }
 }
 
+function env_text(string $name, string $default = ''): string
+{
+    $value = getenv($name);
+    return $value === false ? $default : trim((string) $value);
+}
+
+function env_bool(string $name, bool $default = false): bool
+{
+    $value = getenv($name);
+    if ($value === false || trim((string) $value) === '') {
+        return $default;
+    }
+    return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+}
+
+function environment_config(): ?array
+{
+    $name = env_text('MACERA_DB_NAME');
+    $user = env_text('MACERA_DB_USER');
+    if ($name === '' || $user === '') {
+        return null;
+    }
+
+    $originText = env_text(
+        'MACERA_ALLOWED_ORIGINS',
+        'https://maceraakademi.com.tr,https://www.maceraakademi.com.tr,https://appassets.androidplatform.net,null'
+    );
+    $origins = array_values(array_filter(array_map('trim', explode(',', $originText)), static function ($value) {
+        return $value !== '';
+    }));
+
+    return [
+        'database' => [
+            'host' => env_text('MACERA_DB_HOST', 'db'),
+            'port' => (int) env_text('MACERA_DB_PORT', '3306'),
+            'name' => $name,
+            'user' => $user,
+            'password' => env_text('MACERA_DB_PASSWORD'),
+            'charset' => env_text('MACERA_DB_CHARSET', 'utf8mb4'),
+        ],
+        'allowed_origins' => $origins,
+        'token_ttl_days' => (int) env_text('MACERA_TOKEN_TTL_DAYS', '90'),
+        'debug' => env_bool('MACERA_DEBUG', false),
+    ];
+}
+
 function api_config(): array
 {
     static $config = null;
@@ -23,15 +69,14 @@ function api_config(): array
     }
 
     $path = __DIR__ . '/config.local.php';
-    if (!is_file($path)) {
+    $loaded = is_file($path) ? require $path : environment_config();
+    if ($loaded === null) {
         throw new ApiProblem(
-            'Sunucu yapılandırması eksik. api/config.sample.php dosyasını config.local.php olarak kopyalayın.',
+            'Sunucu yapılandırması eksik. config.local.php dosyasını veya MACERA_DB_* ortam değişkenlerini tanımlayın.',
             503,
             'config_missing'
         );
     }
-
-    $loaded = require $path;
     if (!is_array($loaded) || empty($loaded['database'])) {
         throw new ApiProblem('Sunucu yapılandırması geçersiz.', 503, 'config_invalid');
     }
@@ -72,14 +117,16 @@ function db(): PDO
     $host = (string) ($db['host'] ?? 'localhost');
     $port = (int) ($db['port'] ?? 3306);
     $name = (string) ($db['name'] ?? '');
+    $user = (string) ($db['user'] ?? '');
+    $password = (string) ($db['password'] ?? '');
     $charset = (string) ($db['charset'] ?? 'utf8mb4');
-    if ($name === '') {
-        throw new ApiProblem('MySQL veritabanı adı tanımlanmamış.', 503, 'config_invalid');
+    if ($name === '' || $user === '' || $password === '' || $password === 'BURAYA_GUCLU_PAROLA_YAZIN') {
+        throw new ApiProblem('MySQL bağlantı bilgileri güvenli biçimde tamamlanmamış.', 503, 'config_invalid');
     }
 
     $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s', $host, $port, $name, $charset);
     try {
-        $pdo = new PDO($dsn, (string) ($db['user'] ?? ''), (string) ($db['password'] ?? ''), [
+        $pdo = new PDO($dsn, $user, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,

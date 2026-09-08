@@ -4,7 +4,7 @@ Macera Akademi, 1–4. sınıf düzeyleri için 658 müfredat oyunu içeren bir 
 
 ## Mevcut durum
 
-- Sürüm: `2.8-test` (`versionCode 20`)
+- Sürüm: `2.8.1` (`versionCode 22`)
 - Toplam oyun: 658
 - Phaser motorunda çalışan: 657
 - DOM motorunda çalışan: 1 (`v40`)
@@ -46,6 +46,13 @@ cp web/api/config.sample.php web/api/config.local.php
 MySQL'de boş bir veritabanı oluşturup `web/database/schema.sql` dosyasını içe aktarın. Ardından `config.local.php` içine yalnızca sunucudaki gerçek bağlantı bilgilerini yazın ve web sunucusunun document root'unu `web/` klasörüne yönlendirin. Ayrıntılı kontrol listesi [YAYIN_KURULUMU.md](YAYIN_KURULUMU.md) dosyasındadır.
 
 `config.local.php` Git'e eklenmez. Canlı ortam HTTPS olmadan kullanılmamalıdır.
+
+## Docker kurulumu
+
+Sunucudaki diğer uygulamalardan bağımsız kurulum için hazır Docker yapısı bulunur.
+Mevcut şirket MySQL/MariaDB sunucusu kullanılabilir veya isteğe bağlı ayrı MySQL
+container açılabilir. Ayrıntılar [DOCKER_KURULUMU.md](DOCKER_KURULUMU.md)
+dosyasındadır.
 
 ## Debug APK derleme
 
