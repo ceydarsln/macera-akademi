@@ -10,7 +10,15 @@ Bu dosyada "tamamlandı" işareti yalnız şu beş koşul birlikte sağlanınca 
 4. Yanlış cevap doğruyu söylemeden, içerik üzerinde nedenini gösterir; motor/refleks hatası can kaybettirmez.
 5. 390×844 telefon ekranında karar verilecek cümle tam görünür, hiçbir metin kırpılmaz/taşmaz ve dokunma alanları en az 44 px'tir.
 
-## Motor dağılımı (test edilen 15 şablon)
+## Güncel doğrulama — 26 Ağustos 2026
+
+- `tools/dom_kosum.html#ids=z01,…,z64` ile 64 oyun × 3 tur tamamlandı: **64/64 geçti**, kalan ve koşum hatası yok.
+- Web motorunun 390×844 ilk tur ölçümünde 64/64 oyun için yatay taşma, ekran dışı görünür hedef ve 44 px altı görünür etkileşim hedefi yok.
+- `web/phaser/turkce4-pdf-phaser.html` ile `app/src/main/assets/phaser/turkce4-pdf.html` byte eşittir; iki dosyanın gömülü JavaScript'i sözdizimi denetiminden geçer.
+- Yazma turlarında serbest metin alanı ve ölçüt doğrulaması vardır; ekrandaki hazır örnek metnin kopyası reddedilir.
+- Dinleme turları örneği seslendirir ve seçenekleri dinleme sonrasına bırakır. Konuşma turları `z09, z21, z27, z37, z39, z61` basılı tutma süresi ve öz değerlendirme ile tamamlanır; **ses kaydı veya konuşma tanıma yapılmaz**. Bu nedenle kullanıcıya kayıt alındığını söyleyen metinler "Konuşma süresi yeterli." olarak düzeltildi.
+
+## PDF ilk denetim notları (tarihsel)
 
 | Motor | Şablon | Oyun sayısı | Öne çıkan sorun |
 |---|---|---|---|
@@ -30,10 +38,10 @@ Bu dosyada "tamamlandı" işareti yalnız şu beş koşul birlikte sağlanınca 
 | tallyChart | cetele | 1 | Cevap cümlesi sütun adını birebir içeriyor; çetele yerine rakam sayacı |
 | surveyChart | cetele (anket) | 1 | Oy ("Ela") sütun adıyla aynı; "ÇETELE TABLOSU" başlığı seçim oyununa uymuyor; sonuç yorumu adımı yok |
 
-## Kazanım dağılımı
+## Kazanım dağılımı (güncel)
 
 38 yazma (T.Y.), 10 konuşma (T.K.), 9 dinleme (T.D.), 7 okuma (T.O.) hedefli oyun.
-Yazma ve konuşma hedeflerinin hiçbirinde şu an gerçek üretim (serbest yazı alanı, ses kaydı) yok.
+Yazma hedefleri serbest metin alanı ve açık ölçütlerle çalışır. Konuşma hedeflerinde ses kaydı bulunmaz; süre ve öz değerlendirme, konuşma üretiminin yerine geçmez.
 
 ## 4. sınıfa özgü kazanımlar
 
@@ -42,12 +50,11 @@ Bu sınıfta ilk kez gelen yazım/noktalama hedefleri ayrı dikkat ister:
 üç nokta ve konuşma çizgisi (z20), arasöz virgülü ve kısa çizgi (z35),
 yay ayraç ve eğik çizgi (z45), sesteş sözcükler (z10, z11), terim anlam (z26, z46),
 bağlaçlar (z33, z34), kaynak gösterme (z32) ve kaynak güvenilirliği (z29).
-Bu oyunların hepsinde karar verilecek cümlenin tam görünmesi kritik — şu an bant ve
-dedektif motorlarındaki kırpılma bu kazanımları ölçülemez hâle getiriyor.
+Bu oyunların hepsinde karar verilecek cümlenin tam görünmesi kritiktir; 390×844 ölçümünde bu oyunlarda görünür hedef taşması saptanmadı.
 
 ## Oyun listesi
 
-| ID | Oyun | Gerçek eylem kabul ölçütü | Durum |
+| ID | Oyun | Gerçek eylem kabul ölçütü | PDF ilk durumu |
 |---|---|---|---|
 | z01 | Katılıyorum Bandı | Görüş panoda sabit; karar gerekçe ve öneriyle tamamlanır. | PDF'de |
 | z02 | Yayınevi Masası | Kartlarda aday cümleler; balon simge kopyası kaldırılır. | PDF'de |
@@ -114,4 +121,4 @@ dedektif motorlarındaki kırpılma bu kazanımları ölçülemez hâle getiriyo
 | z63 | Sınıf Seçimi | Oy sütun adını tekrarlamaz; çetele görünür; sonuç yorumlanır. | PDF'de |
 | z64 | Karar Basamakları | Gerçek meclis süreci; bağlam ekranda sürekli durur. | PDF'de |
 
-"PDF'de" = düzeltme şartnamesi yazıldı, uygulamaya henüz aktarılmadı.
+"PDF'de" = PDF ilk denetimindeki tarihsel durumdur; güncel uygulama ve doğrulama sonucu yukarıdaki **Güncel doğrulama** bölümündedir.

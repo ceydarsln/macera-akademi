@@ -2,16 +2,25 @@ plugins {
     id 'com.android.application'
 }
 
+def uploadKeystoreFile = rootProject.file('.signing/macera-akademi-upload.jks')
+def uploadPasswordFile = rootProject.file('.signing/upload-password.txt')
+def uploadSigningAvailable = uploadKeystoreFile.isFile() && uploadPasswordFile.isFile()
+def uploadPassword = uploadSigningAvailable ? uploadPasswordFile.getText('UTF-8').trim() : null
+
 android {
     namespace 'com.maceraakademi.app'
-    compileSdk 34
+    compileSdk {
+        version = release(36) {
+            it.minorApiLevel = 1
+        }
+    }
 
     defaultConfig {
         applicationId "com.maceraakademi.app"
         minSdk 23
-        targetSdk 34
-        versionCode 20
-        versionName "2.8-test"
+        targetSdk 36
+        versionCode 22
+        versionName "2.8.1"
 
         /* Piper sesi yerel kitaplıkla (sherpa-onnx) çalışıyor. Yalnız 64 bit
            ARM paketleniyor: 2017 sonrası bütün Android telefonlar bu mimaride
@@ -27,8 +36,20 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            if (uploadSigningAvailable) {
+                storeFile uploadKeystoreFile
+                storePassword uploadPassword
+                keyAlias 'macera-upload'
+                keyPassword uploadPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

@@ -2,8 +2,8 @@ package com.maceraakademi.app;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.speech.tts.Voice;
 
@@ -56,17 +57,21 @@ public class MainActivity extends AppCompatActivity {
        Android WebView'in kendi konuşma motoru (speechSynthesis) sessiz kalıyor.
        Bu yüzden telefonun yerleşik Türkçe metin okuma motoruna köprü kuruyoruz;
        HTML tarafı window.AndroidTTS.speak(...) çağırıyor. */
-    /* Piper sesi (uygulamanın içinde gelen doğal Türkçe model). Hazırsa
-       okuma ondan yapılır; kurulamazsa telefonun kendi motoruna düşülür. */
+    /* Piper sesi (uygulamanın içinde gelen doğal Türkçe model). Sistem TTS
+       kullanılamıyorsa yedek olarak tembel başlatılır. */
     private PiperSes piper;
+    private boolean piperBaslatildi = false;
     /* Chatterbox ile önceden üretilmiş kayıtlar — varsa ilk tercih. */
     private KayitliSes kayit;
 
     private TextToSpeech tts;
-    private boolean ttsReady = false;
-    private String ttsStatus = "notready";   // ok | missing | failed | notready
-    private String ttsPending = null;        // motor hazır olmadan istenen metin
+    private volatile boolean ttsReady = false;
+    private volatile String ttsStatus = "notready";   // ok | missing | failed | notready
+    private volatile String ttsPending = null;        // motor hazır olmadan istenen son metin
+    private volatile int ttsPendingNesli = 0;
     private String ttsSesAdi = "";           // seçilen sesin adı (tanılama için)
+    /** Ekran/oyun değişince UI kuyruğunda bekleyen ses görevlerini de geçersiz kılar. */
+    private final AtomicInteger sesNesli = new AtomicInteger(0);
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -136,15 +141,12 @@ public class MainActivity extends AppCompatActivity {
         web.setBackgroundColor(0xFF241A3D);
         web.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(false);
-        }
+        WebView.setWebContentsDebuggingEnabled(false);
 
         kayit = new KayitliSes();
         kayit.kur(this);
         piper = new PiperSes();
-        piper.kur(this);
-        setupTts();                      /* yedek: telefonun kendi motoru */
+        setupTts();                      /* hızlı ve tekrar çağrılabilir ana motor */
         web.addJavascriptInterface(new TtsBridge(), "AndroidTTS");
 
         web.loadUrl(BASE_URL);
@@ -164,17 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 web.evaluateJavascript(
                     "(function(){try{" +
-                    "  if(typeof state==='undefined') return 'exit';" +
-                    "  if(state.purchaseConfirm){ closeBuyConfirm(); return 'handled'; }" +
-                    "  if(state.confirmDelete){ state.confirmDelete=false; renderAll(); return 'handled'; }" +
-                    "  if(state.friendModal){ closeFriendModal(); return 'handled'; }" +
-                    "  if(state.screen==='gamePlayer'){ go('subjectList'); return 'handled'; }" +
-                    "  if(state.screen==='messages'){ openFriends(); return 'handled'; }" +
-                    "  if(state.screen==='subjectList'||state.screen==='soon'){ go('home'); return 'handled'; }" +
-                    "  if(state.screen==='changePass'||state.screen==='diag'){ go('home'); return 'handled'; }" +
-                    "  if(state.screen==='account'||state.screen==='settings'||state.screen==='friends'){ go('home'); return 'handled'; }" +
-                    "  if(state.screen==='login'||state.screen==='register'||state.screen==='guestGrade'){ go('welcome'); return 'handled'; }" +
-                    "  return 'exit';" +
+                    "  return typeof androidGeriTusu==='function' ? androidGeriTusu() : 'exit';" +
                     "}catch(e){ return 'exit'; }})()",
                     value -> {
                         if (value == null || value.contains("exit")) geriGitVeyaCik();
@@ -200,13 +192,15 @@ public class MainActivity extends AppCompatActivity {
             public void onInit(int status) {
                 if (status != TextToSpeech.SUCCESS) {
                     ttsStatus = "failed";
+                    piperBaslat();
                     return;
                 }
                 int res = tts.setLanguage(new Locale("tr", "TR"));
                 if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
                     /* Türkçe ses paketi kurulu değil: uygulama çalışmaya devam eder,
-                       kullanıcıya HTML tarafında bilgi verilir. */
+                    kullanıcıya HTML tarafında bilgi verilir. */
                     ttsStatus = "missing";
+                    piperBaslat();
                     return;
                 }
                 enIyiSesiSec();
@@ -214,12 +208,17 @@ public class MainActivity extends AppCompatActivity {
                    1.05 perde çocuk sesine benzetip mekanikleştiriyordu. */
                 tts.setSpeechRate(0.92f);
                 tts.setPitch(1.0f);
+                tts.setAudioAttributes(new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                        .build());
                 ttsReady = true;
                 ttsStatus = "ok";
                 if (ttsPending != null) {
                     String t = ttsPending;
+                    int n = ttsPendingNesli;
                     ttsPending = null;
-                    tts.speak(t, TextToSpeech.QUEUE_FLUSH, null, "macera");
+                    sistemSesiniOku(t, n);
                 }
             }
         });
@@ -228,19 +227,19 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Cihazda birden çok Türkçe ses bulunur; varsayılan genelde en düşük
      * kaliteli sıkıştırılmış ses olur ve robotik duyulur. Kurulu Türkçe
-     * sesleri kaliteye göre sıralayıp en iyisini seçiyoruz. Ağ sesleri
-     * (Google'ın doğal sesleri) belirgin biçimde daha insana yakın, bu
-     * yüzden eşit kalitede onlara öncelik veriyoruz — çevrimdışıyken
-     * sistem kendiliğinden yerel sese düşüyor.
+     * sesleri kaliteye göre sıralayıp en iyi YEREL sesi seçiyoruz. Ağ sesi
+     * daha doğal olabilse de her yönergede saniyelerce bağlantı bekletebilir;
+     * oyun içi yönlendirmede düşük gecikme ve çevrimdışı çalışma önceliklidir.
      */
     private void enIyiSesiSec() {
         try {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
             Set<Voice> sesler = tts.getVoices();
             if (sesler == null || sesler.isEmpty()) return;
 
-            Voice enIyi = null;
-            int enIyiPuan = Integer.MIN_VALUE;
+            Voice enIyiYerel = null;
+            Voice enIyiAg = null;
+            int enIyiYerelPuan = Integer.MIN_VALUE;
+            int enIyiAgPuan = Integer.MIN_VALUE;
             for (Voice v : sesler) {
                 if (v == null || v.getLocale() == null) continue;
                 String dil = v.getLocale().getLanguage();
@@ -248,14 +247,19 @@ public class MainActivity extends AppCompatActivity {
                 if (v.getFeatures() != null
                         && v.getFeatures().contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED)) continue;
 
-                /* kalite baskın ölçüt; ağ sesi küçük bir artı */
+                /* Kalite baskın ölçüt; yerel ve ağ sesleri ayrı sıralanır. */
                 int puan = v.getQuality() * 10;
-                if (v.isNetworkConnectionRequired()) puan += 3;
                 /* "x-low" gibi düşük kaliteli varyantları geriye it */
                 if (v.getName() != null && v.getName().contains("-low")) puan -= 50;
 
-                if (puan > enIyiPuan) { enIyiPuan = puan; enIyi = v; }
+                if (v.isNetworkConnectionRequired()) {
+                    if (puan > enIyiAgPuan) { enIyiAgPuan = puan; enIyiAg = v; }
+                } else if (puan > enIyiYerelPuan) {
+                    enIyiYerelPuan = puan;
+                    enIyiYerel = v;
+                }
             }
+            Voice enIyi = enIyiYerel != null ? enIyiYerel : enIyiAg;
             if (enIyi != null) {
                 tts.setVoice(enIyi);
                 ttsSesAdi = enIyi.getName() + " (kalite " + enIyi.getQuality() + ")";
@@ -265,18 +269,66 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** Sistem motorunu ana iş parçacığında, her çağrıda benzersiz bir kimlikle
+     *  başlatır. Bu yol hazırlanmış sistem motorunda tekrar düğmesine anında
+     *  yanıt verir; sabit utterance kimliği kullanan motor önbellekleri de
+     *  ikinci çağrıyı yutamaz. */
+    private void sistemSesiniOku(final String metin, final int istekNesli) {
+        runOnUiThread(() -> {
+            if (istekNesli != sesNesli.get()) return;
+            if (!ttsReady || tts == null) {
+                ttsPendingNesli = istekNesli;
+                ttsPending = metin;
+                return;
+            }
+            if (kayit != null) kayit.durdur();
+            if (piper != null) piper.durdur();
+            tts.stop();
+            int sonuc = tts.speak(metin, TextToSpeech.QUEUE_FLUSH, null,
+                    "macera-" + System.nanoTime());
+            if (sonuc == TextToSpeech.ERROR) {
+                ttsReady = false;
+                ttsStatus = "failed";
+                ttsPendingNesli = istekNesli;
+                ttsPending = metin;
+                piperBaslat();
+            }
+        });
+    }
+
+    /** Piper pahalı model kopyalama/ısınmasını yalnız sistem TTS gerçekten
+     *  kullanılamadığında yapar. Hazır olduğunda en son bekleyen yönergeyi
+     *  okur; eski oyunlardan kalan metinler stop() tarafından temizlenir. */
+    private synchronized void piperBaslat() {
+        if (piperBaslatildi || piper == null) return;
+        piperBaslatildi = true;
+        piper.kur(this, () -> {
+            String bekleyen = ttsPending;
+            int n = ttsPendingNesli;
+            if (bekleyen == null || n != sesNesli.get()
+                    || piper == null || !piper.hazirMi()) return;
+            ttsPending = null;
+            piper.oku(bekleyen);
+        });
+    }
+
     /** HTML tarafına açılan tek arayüz. Sadece @JavascriptInterface işaretli
      *  metotlar erişilebilir; sayfa uygulamanın kendi assets klasöründen yüklenir. */
     private class TtsBridge {
         @JavascriptInterface
         public void speak(String text) {
             if (text == null || text.trim().isEmpty()) return;
-            /* SIRA: 1) hazır kayıt (Chatterbox, en iyi kalite, sıfır işlem)
-                      2) Piper (kayıt yoksa, cihazda üretir)
-                      3) telefonun kendi sesi (Piper hazır değilse) */
+            final int istekNesli = sesNesli.incrementAndGet();
+            /* SIRA: 1) hazır kayıt (varsa sıfır üretim)
+                      2) yerel sistem TTS (anlık ve tekrar çağrılabilir)
+                      3) Piper (sistem Türkçe sesi yoksa çevrimdışı yedek) */
             if (kayit != null && kayit.oku(MainActivity.this, text)) {
                 if (piper != null) piper.durdur();
                 if (tts != null) tts.stop();
+                return;
+            }
+            if (ttsReady && tts != null) {
+                sistemSesiniOku(text, istekNesli);
                 return;
             }
             if (piper != null && piper.hazirMi()) {
@@ -284,24 +336,25 @@ public class MainActivity extends AppCompatActivity {
                 piper.oku(text);
                 return;
             }
-            if (!ttsReady || tts == null) {
-                ttsPending = text;   /* motor henüz hazır değil: hazır olunca okunacak */
-                return;
-            }
-            tts.stop();
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "macera");
+            ttsPendingNesli = istekNesli;
+            ttsPending = text;       /* motor hazır olunca yalnız son istek okunur */
+            if (!"notready".equals(ttsStatus)) piperBaslat();
         }
 
         @JavascriptInterface
         public void stop() {
+            final int durdurmaNesli = sesNesli.incrementAndGet();
+            ttsPending = null;
             if (kayit != null) kayit.durdur();
             if (piper != null) piper.durdur();
-            if (tts != null) tts.stop();
+            runOnUiThread(() -> {
+                if (durdurmaNesli == sesNesli.get() && tts != null) tts.stop();
+            });
         }
 
         @JavascriptInterface
         public String status() {
-            /* Piper hazırsa Türkçe ses her hâlükârda var. */
+            if (ttsReady) return "ok";
             if (piper != null && piper.hazirMi()) return "ok";
             return ttsStatus;
         }
@@ -310,6 +363,8 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public String voice() {
             if (kayit != null && !kayit.bosMu()) return "Chatterbox hazır kayıtlar";
+            if (ttsReady)
+                return ttsSesAdi.isEmpty() ? "yerel sistem sesi" : ttsSesAdi;
             if (piper != null && piper.hazirMi()) return "Piper tr_TR-fahrettin (uygulama içi)";
             return ttsSesAdi.isEmpty() ? ("sistem sesi · " + ttsStatus) : ttsSesAdi;
         }
@@ -318,6 +373,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        sesNesli.incrementAndGet();
+        ttsPending = null;
         if (kayit != null) kayit.durdur();
         if (piper != null) piper.durdur();
         if (tts != null) tts.stop();

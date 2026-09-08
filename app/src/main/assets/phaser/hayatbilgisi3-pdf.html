@@ -2161,6 +2161,209 @@ GAMES.h72={title:'Gelişmenin Etkileri',theme:'muze',
   result:'Bir gelişmenin hayatını nasıl değiştirdiğini örnek ve ölçütle anlattın.'}
 ]};
 
+/* ---- h43 Sağlık Denetimi (bant durduruldu: gün akışı) ---- */
+GAMES.h43={title:'Sağlık Denetimi',theme:'ev',
+ finish:'Davranışların sağlığa etkisini ayırdın, miktarın ölçüt olduğunu gördün ve kendi alışkanlığında değiştireceğin şeyi söyledin.',rounds:[
+ {kind:'sinifla',prompt:'Bu davranış sağlığını korur mu?',sahne:SAHNE.gun,
+  soru:'Bu davranış sağlığa ne yapar?',kutular:['KORUR','ZARAR VERİR'],
+  ipucu:'Kart günün hangi anına düşüyor? Ona göre düşün.',
+  kartlar:[
+   {t:'Gece yarısına kadar ekran karşısında kalır.',sahne:'gece',dogru:1,neden:'Uykusuzluk büyümeyi ve dikkati bozar.'},
+   {t:'Sabah kahvaltısını yaparak okula gider.',sahne:'sabah',dogru:0,neden:'Kahvaltı günün enerjisini verir.'},
+   {t:'Her gün en az yarım saat hareket eder.',sahne:'öğleden sonra',dogru:0,neden:'Hareket kalbi ve kasları güçlendirir.'},
+   {t:'Susadığında su yerine gazlı içecek içer.',sahne:'gün boyu',dogru:1,neden:'Şekerli içecek dişleri ve sağlığı zorlar.'},
+   {t:'Yemekten önce ellerini sabunla yıkar.',sahne:'öğle',dogru:0,neden:'El yıkamak mikropları uzaklaştırır.'},
+   {t:'Ders çalışırken hiç ara vermez, gözünü dinlendirmez.',sahne:'akşam',dogru:1,neden:'Ara vermemek gözü ve dikkati yorar.'}]},
+ {kind:'karar',prompt:'Miktar değişince davranış da değişir.',sahne:SAHNE.gun,
+  durum:'Zeynep hafta içi akşamları bir dilim tatlı yiyor ve dişlerini fırçalayıp yatıyor. Hafta sonu ise gün boyu şekerleme atıştırıyor, dişlerini fırçalamayı da unutuyor.',
+  soru:'Zeynep’in tatlı alışkanlığı için ne söylenebilir?',
+  secenekler:[
+   {label:'Hafta içi ölçülü, hafta sonu ölçüsüz',correct:true},
+   {label:'Tatlı her zaman zararlıdır',hint:'Hafta içi bir dilim yiyip dişlerini fırçalıyor.'},
+   {label:'Tatlı hiçbir zaman zarar vermez',hint:'Hafta sonu gün boyu atıştırıp dişlerini fırçalamıyor.'}],
+  araSoz:'Doğru. Peki ölçüt ne?',
+  neden:{soru:'Bir davranışın sağlığa zarar verip vermediğini ne belirler?',secenekler:[
+   {label:'Miktarı ve yanında ne yapıldığı',correct:true},
+   {label:'Sevilip sevilmediği',hint:'Sevmek ölçüt değildir.'},
+   {label:'Hafta içi mi hafta sonu mu olduğu',hint:'Gün adı değil, miktar ve süre önemlidir.'}]},
+  result:'Aynı davranış az olunca sağlığı korur, çok olunca zarar verir.'},
+ {kind:'konus',prompt:'Kendi alışkanlığını gözden geçir.',sahne:SAHNE.gun,
+  gorev:'Kendi günündeki bir alışkanlığı değerlendir ve değiştireceğin bir şeyi söyle.',
+  ornek:'Örnek: Akşamları çok geç yatıyorum. Bundan sonra yatmadan yarım saat önce ekranı kapatacağım.',
+  olcutler:['Kendi alışkanlığımı söyledim.','Sağlığa etkisini değerlendirdim.','Değiştireceğim şeyi belirttim.'],
+  result:'Kendi alışkanlığını gözden geçirip bir değişiklik kararı verdin.'}
+]};
+
+/* ---- h44 Güvenlik (kapsül-radar kaldırıldı: gerçek sahne, sabit kart) ---- */
+GAMES.h44={title:'Güvende Kalmak',theme:'sokak',
+ finish:'Tehlikeli durumları gerçek sahnelerden tanıdın, benzer görünen durumların farklı tepki gerektirdiğini gördün ve güvendiğin yetişkinleri belirledin.',rounds:[
+ {kind:'karar',prompt:'Bu durumda ne yaparsın?',sahne:SAHNE.sokak,
+  durum:'Okul çıkışı seni tanımadığın bir yetişkin durdurup "annen beni gönderdi, hadi arabaya bin" diyor. Annen sana böyle bir şey söylememişti.',
+  soru:'Ne yaparsın?',
+  secenekler:[
+   {label:'Gitmem; hemen okula dönüp öğretmenime söylerim',correct:true},
+   {label:'Binerim, annemi tanıyor olabilir',hint:'Annen haber vermediyse binmek tehlikelidir; tanıdık olduğunu söylemesi yeterli değil.'},
+   {label:'Kimseye söylemeden uzaklaşırım',hint:'Uzaklaşmak iyi ama mutlaka güvendiğin bir yetişkine haber vermelisin.'}],
+  ipucu:'Seçenekler sabit duruyor; acele etme.',
+  result:'Ailen haber vermediyse hiçbir yetişkinle gitmezsin ve durumu hemen bildirirsin.'},
+ {kind:'karar',prompt:'Benzer görünen iki durum, farklı tepki.',sahne:SAHNE.sokak,
+  durum:'Birinci durum: Alışverişte annenden ayrı düştün, kalabalıkta kayboldun. İkinci durum: Sınıfta bir arkadaşın sana sürekli takılıp eşyalarını saklıyor.',
+  soru:'Kaybolduğunda ÖNCE kime haber verirsin?',
+  secenekler:[
+   {label:'Görevli ya da kasadaki çalışana',correct:true},
+   {label:'Yanımdaki başka bir çocuğa',hint:'Bir çocuk seni ailene ulaştıramaz; görevli ulaştırabilir.'},
+   {label:'Kimseye; kendim ararım',hint:'Tek başına aramak kaybolmayı uzatır.'}],
+  araSoz:'Doğru. Peki ikinci durumda?',
+  neden:{soru:'Arkadaşın sürekli takılıp eşyalarını saklıyorsa ne yaparsın?',secenekler:[
+   {label:'Rahatsız olduğumu söylerim, sürerse öğretmenime bildiririm',correct:true},
+   {label:'Ben de onun eşyalarını saklarım',hint:'Aynısını yapmak sorunu büyütür.'},
+   {label:'Hiçbir şey söylemem, geçer',hint:'Sürekli tekrarlanan davranış kendiliğinden geçmez; bildirmek gerekir.'}]},
+  result:'Kaybolmada görevliye, zorbalıkta güvendiğin bir yetişkine haber verilir.'},
+ {kind:'konus',prompt:'Güvendiğin yetişkinleri söyle.',sahne:SAHNE.sokak,
+  gorev:'Bir tehlikede haber vereceğin iki yetişkini söyle ve onlara ne diyeceğini anlat.',
+  ornek:'Örnek: Anneme ve sınıf öğretmenime haber veririm. "Beni rahatsız eden bir şey oldu, yardım eder misin?" derim.',
+  olcutler:['İki güvendiğim yetişkin söyledim.','Ne diyeceğimi belirttim.','Anlaşılır konuştum.'],
+  result:'Güvendiğin yetişkinleri ve söyleyeceğin cümleyi belirledin.'}
+]};
+
+/* ---- h45 Güvenlik Adımları (roket kaldırıldı: gerçek senaryo sahnesi) ---- */
+GAMES.h45={title:'Güvenlik Adımları',theme:'sokak',
+ finish:'Tehlikede yapılacakları sıraladın, farklı tehlikelerde sıranın değiştiğini gerekçelendirdin ve kurgusal bir durumu baştan sona uyguladın.',rounds:[
+ {kind:'sira',prompt:'Kalabalıkta kaybolunca hangi adım önce gelir?',sahne:SAHNE.sokak,
+  gorev:'Alışveriş merkezinde ailenden ayrı düştün. Yapacaklarını sırayla diz.',
+  kartlar:[
+   {t:'Olduğun yerde dur, koşarak uzaklaşma.'},
+   {t:'Çevrende görevli ya da kasadaki bir çalışan ara.'},
+   {t:'Adını ve ailenin adını söyle.'},
+   {t:'Görevliyle birlikte bekle, kimseyle ayrılma.'}],
+  dogru:[0,1,2,3],
+  ipucular:['İlk anda ne yapılır? Koşmak seni daha da uzaklaştırır.','Durdun; şimdi kimden yardım istersin?',
+   'Görevliyi buldun; ona ilk ne söylersin?','Bilgiyi verdin; şimdi ne yaparsın?'],
+  result:'Dur, görevli bul, kim olduğunu söyle ve onunla bekle.'},
+ {kind:'karar',prompt:'Tehlike değişince sıra da değişir.',sahne:SAHNE.ev,
+  durum:'Evde tek başınayken mutfaktan duman geliyor ve yanık kokusu var.',
+  soru:'Bu durumda İLK adım ne olmalı?',
+  secenekler:[
+   {label:'Evden çıkıp güvenli bir yere gitmek',correct:true},
+   {label:'Dumanın nereden geldiğine yakından bakmak',hint:'Yangına yaklaşmak tehlikelidir; önce uzaklaşılır.'},
+   {label:'Eşyaları toplamak',hint:'Eşya toplamak zaman kaybettirir ve tehlikeyi artırır.'}],
+  araSoz:'Doğru. Peki kaybolmada ilk adım neden farklıydı?',
+  neden:{soru:'Kaybolmada “olduğun yerde dur”, yangında “hemen çık” deniyor. Neden?',secenekler:[
+   {label:'Kaybolmada bulunmak, yangında uzaklaşmak hayat kurtarır',correct:true},
+   {label:'İkisi de aynı şeydir',hint:'Biri seni yerinde tutar, diğeri oradan uzaklaştırır; aynı değil.'},
+   {label:'Kurallar rastgeledir',hint:'Her adımın bir nedeni vardır.'}]},
+  result:'Adım sırası tehlikenin türüne göre değişir; ölçüt neyin hayat kurtardığıdır.'},
+ {kind:'konus',prompt:'Kurgusal bir durumu baştan sona anlat.',sahne:SAHNE.sokak,
+  gorev:'Bir tehlike durumu düşün ve yapacaklarını baştan sona sırayla anlat.',
+  ornek:'Örnek: Parkta annemden ayrılırsam olduğum yerde dururum. Bir görevli bulup adımı ve annemin adını söylerim. Onunla birlikte beklerim.',
+  olcutler:['Bir durum seçtim.','Adımları sırayla anlattım.','Kime haber vereceğimi söyledim.'],
+  result:'Bir tehlike durumunda yapacaklarını baştan sona anlattın.'}
+]};
+
+/* ---- h46 Trafik Kuralları (emoji eşleşmesi kaldırıldı: kural → sonucu) ---- */
+GAMES.h46={title:'Trafik Kuralları',theme:'sehir',
+ finish:'Kuralları sonuçlarıyla eşledin, kurala uyulmadığında ne olduğunu gördün ve bir kuralın nedenini kendi cümlenle açıkladın.',rounds:[
+ {kind:'esle',prompt:'Her kuralı sağladığı güvenlikle eşle.',sahne:SAHNE.sokak,
+  soru:'Önce alttan bir sonuç seç, sonra onu sağlayan kurala dokun.',
+  ipucu:'Kural neyi önlüyor? Ona bak.',
+  yuvalar:[
+   {hedef:'Arabada emniyet kemeri takmak',dogru:0,neden:'Ani frende ileri savrulmayı önler.',hint:'Bu kural ani durmada işe yarar.'},
+   {hedef:'Bisiklette kask takmak',dogru:1,neden:'Düşmede başı korur.',hint:'Bu kural düşmede işe yarar.'},
+   {hedef:'Karşıya yaya geçidinden geçmek',dogru:2,neden:'Sürücünün seni görmesini sağlar.',hint:'Bu kural görünürlükle ilgili.'},
+   {hedef:'Kaldırımda yürümek',dogru:3,neden:'Taşıt yolundan uzak durmayı sağlar.',hint:'Bu kural nerede yürüdüğünle ilgili.'}],
+  etiketler:[
+   {t:'Ani durmada ileri savrulmam.'},
+   {t:'Düşersem başım korunur.'},
+   {t:'Sürücü beni zamanında görür.'},
+   {t:'Taşıtların geçtiği yerden uzak kalırım.'}]},
+ {kind:'karar',prompt:'Kurala uyulmazsa ne olur?',sahne:SAHNE.sokak,
+  durum:'Bir çocuk bisiklete kasksız bindi ve virajda düşüp başını yere çarptı. Aynı yolda kasklı giden arkadaşı da düştü ama başı korunmuştu.',
+  soru:'Bu iki durum neyi gösteriyor?',
+  secenekler:[
+   {label:'Kural düşmeyi önlemez ama sonucunu hafifletir',correct:true},
+   {label:'Kask takan hiç düşmez',hint:'Kasklı arkadaşı da düştü; kask düşmeyi engellemez.'},
+   {label:'Kask gereksizdir, ikisi de düştü',hint:'Sonuçları farklı oldu: birinin başı korundu.'}],
+  araSoz:'Doğru. Peki bu ne anlama geliyor?',
+  neden:{soru:'Trafik kuralları ne için konur?',secenekler:[
+   {label:'Kaza olduğunda zararı en aza indirmek için',correct:true},
+   {label:'Ceza kesmek için',hint:'Ceza kuralın kendisi değil, uyulmasını sağlayan bir araçtır.'},
+   {label:'Yolculuğu yavaşlatmak için',hint:'Amaç yavaşlatmak değil, korumaktır.'}]},
+  result:'Kurallar kazayı her zaman önlemez ama sonucunu hafifletir.'},
+ {kind:'yaz',prompt:'Bir kuralın nedenini yaz.',sahne:SAHNE.sokak,
+  gorev:'Bir trafik kuralı seç ve neden gerekli olduğunu "çünkü" ile açıkla.',
+  enAzKelime:8,buyukHarf:true,bitis:'.',gerekli:['çünkü'],
+  ipucuMetin:'… gerekir çünkü …',
+  ornekCevap:'Arabada emniyet kemeri takmak gerekir çünkü ani durmada ileri savrulmayı önler.',
+  result:'Bir kuralı nedeniyle birlikte açıkladın.'}
+]};
+
+/* ---- h47 Acil Çağrı Cümlesi (kartlar küçük harfle; eksik bilgi çeldirici) ---- */
+GAMES.h47={title:'Acil Çağrı Cümlesi',theme:'ev',
+ finish:'Görevliye söylenecek cümleyi kurdun, eksik bilgili çağrıların neden işe yaramadığını gördün ve kendi çağrını yaptın.',rounds:[
+ {kind:'sira',prompt:'Görevliye söyleyeceğin cümleyi kur.',sahne:SAHNE.ev,
+  gorev:'Kartlar küçük harfle geliyor; baş harf ve nokta senin kararın.',
+  kartlar:[{t:'adım kerem'},{t:'gül sokak numara on ikideyim'},{t:'komşumuzun evinden duman çıkıyor'}],
+  dogru:[0,1,2],
+  ipucular:['Görevli önce kiminle konuştuğunu bilmeli.','Yardımı nereye göndersin?','Ne olduğunu ne zaman anlatırsın?'],
+  ipucu:'Sıra: kim, nerede, ne oldu.',
+  result:'Ad, adres ve olay bu sırayla söylenir; görevli yardımı böyle gönderebilir.'},
+ {kind:'karar',prompt:'Bu çağrıda ne eksik?',sahne:SAHNE.ev,
+  durum:'Bir çocuk aradı: "Çabuk gelin, burada biri düştü!" dedi ve kapattı. Ekip yola çıkamadı.',
+  soru:'Ekip neden yola çıkamadı?',
+  secenekler:[
+   {label:'Adres söylenmedi',correct:true},
+   {label:'Olay anlatılmadı',hint:'“Biri düştü” denildi; olay kısaca anlatıldı.'},
+   {label:'Çok yavaş konuşuldu',hint:'Konuşma hızı ekibi durdurmaz; bilgi eksikti.'}],
+  araSoz:'Doğru. Peki ikinci eksik ne?',
+  neden:{soru:'Bu çağrıda başka ne eksikti?',secenekler:[
+   {label:'Görevlinin sorularını beklemeden kapatması',correct:true},
+   {label:'Adını söylemesi',hint:'Ad yararlıdır ama ekibi yola çıkaran bilgi adrestir.'},
+   {label:'Yüksek sesle konuşması',hint:'Ses yüksekliği bir eksiklik değil.'}]},
+  result:'Adres olmadan yardım gönderilemez; görevli izin verene kadar hatta kalınır.'},
+ {kind:'konus',prompt:'Kendi çağrını yap.',sahne:SAHNE.ev,
+  gorev:'Kurguladığın bir acil durumu baştan sona bildir: adın, adresin ve ne olduğu.',
+  ornek:'Örnek: Alo, adım Elif. Çınar Sokak numara beş, üçüncü kattayım. Komşumuz merdivende düştü, kalkamıyor.',
+  olcutler:['Adımı söyledim.','Adresimi tam söyledim.','Olayı kısaca anlattım.','Sakin konuştum.'],
+  result:'Eksiksiz bir acil çağrı yaptın.'}
+]};
+
+/* ---- h48 Trafik Afişi (kart seçme değil, adım adım ürün oluşturma) ---- */
+GAMES.h48={title:'Trafik Afişi Atölyesi',theme:'sehir',
+ finish:'Afişini adım adım kendin kurdun, net mesajın ne olduğunu ayırdın ve kendi sloganını yazdın.',rounds:[
+ {kind:'canta',prompt:'Afişine koyacağın ögeleri seç.',sahne:SAHNE.sokak,
+  gorev:'Boş bir afiş tuvalin var. Dokunduğun öge afişin üzerine gerçekten yerleşiyor.',
+  soru:'Bir trafik güvenliği afişinde hangi ögeler bulunmalı?',gerekenSayi:4,
+  ipucu:'Afişte her şey olmaz; uzaktan bakınca anlaşılan ögeleri seç.',
+  esyalar:[
+   {t:'Büyük ve okunaklı bir slogan',gerekli:true,neden:'Afişin mesajı uzaktan okunmalı.'},
+   {t:'Kuralı gösteren bir resim',gerekli:true,neden:'Resim mesajı anında anlatır.'},
+   {t:'Yaya geçidi çizgileri',gerekli:true,neden:'Konuyu somutlaştırır.'},
+   {t:'Kimin hazırladığı (sınıf adı)',gerekli:true,neden:'Afişin sahibi belli olmalı.'},
+   {t:'Üç paragraflık uzun açıklama',gerekli:false,hint:'Afiş uzaktan okunur; uzun metin okunmaz.'},
+   {t:'Konuyla ilgisi olmayan çıkartmalar',gerekli:false,hint:'İlgisiz süsler mesajı gölgeler.'},
+   {t:'Çok küçük yazılmış telefon numarası',gerekli:false,hint:'Okunamayacak kadar küçük yazı afişte işe yaramaz.'}]},
+ {kind:'karar',prompt:'Hangi afişin mesajı daha net?',sahne:SAHNE.sokak,
+  durum:'A afişinde büyük harflerle "ÖNCE BAK, SONRA GEÇ" yazıyor ve bir yaya geçidi resmi var. B afişinde küçük yazıyla yedi satırlık bir metin ve dört farklı resim var.',
+  soru:'Hangi afiş amacına daha iyi ulaşır?',
+  secenekler:[
+   {label:'A; tek mesaj, büyük yazı, tek resim',correct:true},
+   {label:'B; daha çok bilgi veriyor',hint:'Afiş uzaktan ve hızlıca okunur; çok bilgi mesajı gölgeler.'},
+   {label:'İkisi de aynı',hint:'Okunabilirlik ikisinde çok farklı.'}],
+  araSoz:'Doğru. Peki ölçüt ne?',
+  neden:{soru:'İyi bir afişi ne belirler?',secenekler:[
+   {label:'Uzaktan bakınca tek bir mesajın anlaşılması',correct:true},
+   {label:'Ne kadar çok bilgi içerdiği',hint:'Afiş broşür değildir.'},
+   {label:'Ne kadar renkli olduğu',hint:'Renk yardımcıdır ama mesajın yerini tutmaz.'}]},
+  result:'İyi afiş tek mesajı büyük ve net verir.'},
+ {kind:'yaz',prompt:'Kendi sloganını yaz.',sahne:SAHNE.sokak,
+  gorev:'Afişin için kısa ve akılda kalıcı bir slogan yaz. Hangi kuralı anlattığı belli olsun.',
+  enAzKelime:3,buyukHarf:true,bitis:'!',
+  ipucuMetin:'Örnek biçim: … , … !',
+  yasak:['Önce bak, sonra geç!'],
+  ornekCevap:'Kaskını tak, başını koru!',
+  result:'Afişini kendi sloganınla tamamladın.'}
+]};
+
 /* ===== açılış ===== */
 game=GAMES[GAME_ID]||GAMES.h37;
 render();

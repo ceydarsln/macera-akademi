@@ -367,6 +367,9 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .dikte-yuva span.dolu{border-style:solid;border-color:#2f9e5e;background:#e7f7ec}
 .dikte-yuva span.aktif{border-color:#f1b53a}
 .dikte-yuva span.bosluk{border-style:dotted;background:transparent;font-size:13px;color:#5b7185}
+.ses-yok{width:min(330px,96%);margin:6px auto 0;padding:7px 10px;border-radius:12px;
+ background:#fff4d6;border:3px solid #e0a92b;color:#7a5210;font-weight:900;font-size:13px;text-align:center;line-height:1.25}
+.ses-yok b{color:#4a3000;font-size:15px}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -391,7 +394,52 @@ let game,roundIndex=0,lives=3,score=0,state={},locked=false,drag=null,clockDrag=
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const speech=s=>String(s??'').replace(/\+/g,' artı ').replace(/[−–-]/g,' eksi ').replace(/[×x]/g,' çarpı ').replace(/[:÷]/g,' bölü ').replace(/=/g,' eşittir ').replace(/\s+/g,' ').trim();
-function speak(text,repeat=false){try{if(parent&&parent!==window&&typeof parent.oku==='function')return parent.oku(speech(text),repeat)}catch(e){}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(speech(text));u.lang='tr-TR';speechSynthesis.speak(u);return true}catch(e){return false}}
+/* ===== SES YEDEĞİ =====
+   Bu motorlarda hedef şartname gereği ekrana KASTEN yazılmıyor, yalnız sesle
+   veriliyor. Cihazda Türkçe ses paketi yoksa (ya da kullanıcı sesi kapattıysa)
+   speakNow false dönüyor ve oyun çözülemez hâle geliyordu: çocuk ne duyuyor ne
+   görüyor. Kataloğun oku() yorumunda tarif edilen yedek yol buydu ama kullanan
+   yoktu. Artık speak() gerçekten seslendirildi mi bilgisini tutuyor; seslendirme
+   olmuyorsa o turun gizli hedefi "ses yok" notuyla görünür kılınıyor.
+   Çözülemeyen oyun, görünen hedeften kötüdür. */
+let sesVar=null;
+function sesYok(){return sesVar===false}
+function speak(text,repeat=false){
+ let ok=false,koprü=false;
+ try{if(parent&&parent!==window&&typeof parent.oku==='function'){koprü=true;ok=!!parent.oku(speech(text),repeat)}}catch(e){}
+ /* Köprü varsa onun cevabı bağlayıcıdır. Aksi hâlde motorun kendi
+    speechSynthesis'i devreye giriyor ve o hata vermediği için köprünün
+    "ses yok" sinyalini maskeliyordu. */
+ if(!koprü){try{
+   const sesler=speechSynthesis.getVoices()||[];
+   /* getVoices ilk çağrıda boş dönebilir; boşluğu "bilinmiyor" sayıp
+      yanlış alarm vermiyoruz. */
+   if(!sesler.length||sesler.some(v=>/^tr/i.test(v.lang||''))){
+    speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(speech(text));
+    u.lang='tr-TR';speechSynthesis.speak(u);ok=true}
+  }catch(e){ok=false}}
+ /* Boş metin her zaman false döner; bayrağı yalnız gerçek denemeler belirler. */
+ if(String(text||'').trim()){sesVar=ok;sesUyariCiz()}
+ return ok}
+function sesUyariCiz(){
+ const kap=document.querySelector('.scene');if(!kap)return;
+ let el=document.getElementById('sesYokKutu');
+ const h=sesYok()&&typeof gizliHedef==='function'?gizliHedef(round&&round()):'';
+ if(!h){if(el)el.remove();return}
+ if(!el){el=document.createElement('div');el.id='sesYokKutu';el.className='ses-yok';kap.appendChild(el)}
+ el.innerHTML='🔇 Ses açılamadı, hedef gösteriliyor: <b>'+esc(h)+'</b>'}
+/* Gizli hedef: bu motorda yedi kip hedefi yalnız sesle veriyor.
+   sepet ve konum kiplerinde gizlenen şey nesne ADLARI; onlar banner yerine
+   kartların üzerinde açılıyor (bkz. sepetCiz/konumCiz içindeki sesYok()). */
+function gizliHedef(r){
+ if(!r)return '';
+ const a=(typeof asama==='function')?asama(r):r;
+ switch(r.kind){
+  case 'kurbaga': return String((r.hedefler||[])[state.ix||0]||'');
+  case 'tren': case 'uzay': return String(a.hedefSes||'');
+  case 'fabrika': return String(a.kelime||'');
+  case 'dikte': return String(a.kelime||'');
+  default: return ''}}
 function parentComplete(){try{if(parent&&parent!==window&&typeof parent.completeGame==='function'){parent.completeGame(game.finish,score);return}}catch(e){}showOverlay()}
 function showOverlay(){document.getElementById('app').insertAdjacentHTML('beforeend',`<div class="overlay"><div class="overlay-card"><div class="big">🏆</div><h2>Harikasın!</h2><p>${esc(game.finish)}</p><button class="action" onclick="location.reload()">Yeniden oyna</button></div></div>`)}
 function units(icon,n,cls=''){return `<div class="row">${Array.from({length:n},(_,i)=>`<span class="unit ${cls}" data-unit="${i}">${icon}</span>`).join('')}</div>`}
@@ -403,7 +451,7 @@ function dotChart(cols,key=1){return `<div class="chart">${cols.map(c=>`<div cla
 function sceneHtml(r){return typeof r.scene==='function'?r.scene(state):r.scene||''}
 function hud(){return `<header class="hud"><div class="round">Tur ${roundIndex+1}/3</div><div class="prompt">${esc(round().prompt)}</div><div class="hud-right"><span class="lives">${'❤️'.repeat(lives)}${'🖤'.repeat(3-lives)}</span><button class="sound" aria-label="Yönergeyi dinle">🔊</button></div></header>`}
 function round(){return game.rounds[roundIndex]}
-function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;sonCeza=0;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();/* rAF geri çağrısı bir sonraki karede çalışıyor; gizli sekmede hiç
+function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;sonCeza=0;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();sesUyariCiz();/* rAF geri çağrısı bir sonraki karede çalışıyor; gizli sekmede hiç
    çalışmayıp sekme görünür olunca kuyruktan dönüyor. O ana kadar oyun
    bitmişse round() undefined oluyordu. Tur numarası da doğrulanıyor ki
    geciken kare bir önceki turun yönergesini okumasın. */
@@ -730,7 +778,8 @@ function renderCiz(r){izKur(r);izCiz(r);
    Şartname: ilk turda kelime yazıları görünmez, her nesnenin adı ayrı dinleme
    düğmesiyle çalınır, tekrar dinleme cezasız, baş-orta-son konumu çalışılır. */
 function sepetCiz(r){
- const yaziAcik=state.acik||r.yaziAcik;
+ /* Ses yoksa nesne adları açılır: yoksa çocuk ne duyar ne okur. */
+ const yaziAcik=state.acik||r.yaziAcik||sesYok();
  const secili=state.secili||[];
  const sepetler=r.sepetler||[{ad:r.sepetAd||'Sepet',im:'🧺'}];
  $('#stage').innerHTML=`<div class="stack">${sahneSvg(r.sahne,'')}
@@ -766,7 +815,7 @@ function konumCiz(r){const i=state.ix||0,n=r.nesneler[i];
  if(!n)return;
  $('#stage').innerHTML=`<div class="stack">${sahneSvg(r.sahne,'')}
   <div class="nesne-alan"><div class="resim-kart" style="cursor:default;border-style:solid"><span class="im">${n.im}</span>
-   <span class="ad">${state.acik?esc(n.ad):'🔊'}</span></div></div>
+   <span class="ad">${(state.acik||sesYok())?esc(n.ad):'🔊'}</span></div></div>
   <div class="caption">${esc(state.not||r.gorev)}</div>
   <div class="caption">${i+1}/${r.nesneler.length}</div></div>`;
  $('#task').innerHTML=`<div class="actions"><button class="action" id="adDinle">🔊 Adını dinle</button></div>

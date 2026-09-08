@@ -162,3 +162,34 @@ numarasının değişmediğini doğruluyor — böylece geciken kare bir önceki
 Test kapsamı: 375×812 ve 1280×800; boş gönderim, 4000 karakterlik girdi, etiketsiz yuva dokunuşu,
 art arda hızlı dokunuş, sınırsız tekrar dinleme, tur geçişleri ve bitiş ekranı. Konsolda hata yok,
 ağ isteklerinin tamamı 200. Koşum: `tools/dom_kosum.html#ids=u01…u90` → 90/90.
+
+## Ses yedeği (26 Ağustos 2026)
+
+Bu motorda hedef şartname gereği ekrana **kasten yazılmıyor**, yalnız sesle veriliyor.
+Cihazda Türkçe ses paketi yoksa (ya da kullanıcı sesi kapattıysa) kataloğun `speakNow`
+işlevi `false` dönüyor ve `oku()` bunu iletiyor — fakat hiçbir motor bu dönüşü
+kontrol etmiyordu. Sonuç: sessiz cihazda oyun **çözülemez** hâle geliyordu; çocuk ne
+duyuyor ne görüyordu. Kataloğun kendi yorumunda mekanizma zaten tarif edilmişti
+("Dönüş değeri sayesinde alt oyun … adil görsel ipucuna düşebilir") ama kullanan yoktu.
+
+Ölçülen etki (düzeltmeden önce, çözülemeyen tur sayısı):
+1. sınıf Türkçe 94 tur / 35 oyun · 1. sınıf sayma 30 tur / 10 oyun ·
+2. sınıf Türkçe 14 tur / 12 oyun — **toplam 138 tur / 57 oyun**.
+
+Uygulanan çözüm:
+
+- `speak()` artık gerçekten seslendirme olup olmadığını `sesVar` bayrağında tutuyor.
+  Köprü (`parent.oku`) varsa **onun cevabı bağlayıcıdır**; motorun kendi
+  `speechSynthesis`'ine düşmek köprünün "ses yok" sinyalini maskeliyordu.
+  Köprü yoksa `getVoices()` içinde Türkçe ses aranıyor; liste boşsa
+  (ilk çağrıda olabiliyor) yanlış alarm verilmiyor.
+- Seslendirme olmuyorsa turun gizli hedefi `🔇 Ses açılamadı, hedef gösteriliyor: …`
+  şeridiyle görünür kılınıyor. Hedef tur boyunca sabit kalıyor; "zaten açıldı"
+  koşulları şeridi turun ortasında bayatlatıyordu.
+- Ses çalışırken şerit hiç çizilmiyor, hedef gizli kalıyor (gerileme testi yapıldı).
+
+Gerekçe: çözülemeyen oyun, görünen hedeften kötüdür. Şartnamenin "hedef ekranda
+yazılı olmayacak" kuralı sesin çalıştığı durumda aynen geçerli; yedek yalnız
+oyunun oynanamaz hâle geldiği durumda devreye giriyor.
+
+Bu motorda etkilenen kipler: dinle kipi.

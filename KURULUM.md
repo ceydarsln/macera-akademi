@@ -44,6 +44,8 @@ Ardından tarayıcıda şu adresi aç:
 http://127.0.0.1:8870/app/src/main/assets/macera-akademi.html
 ```
 
+Bu adres oyunların statik kontrolü içindir. Hesap, arkadaşlık ve sınıf özelliklerinin uçtan uca testi için PHP + MySQL kurulumu gerekir; canlı sunucu adımları `YAYIN_KURULUMU.md` dosyasındadır.
+
 Geliştirici konsolunda test araçlarını tek giriş noktasından yükle:
 
 ```js
@@ -77,4 +79,4 @@ Piper, tüm kayıtlar doğrulanmadan kaldırılmamalıdır. `piperi_cikar.sh` ge
 
 ## Geçmiş belgeler
 
-Claude devir notları ve eski kurulum belgesi `docs/history/` altında korunur. Bunlar geçmiş bağlamdır; güncel kaynak ve test sonuçları önceliklidir.
+Geçmiş devir notları ve eski kurulum belgesi `docs/history/` altında korunur. Bunlar geçmiş bağlamdır; güncel kaynak ve test sonuçları önceliklidir.

@@ -13,15 +13,32 @@ local.properties
 *.aab
 *.jks
 *.keystore
+.signing/
 *.log
 *.pyc
 __pycache__/
 .env
 .env.*
+web/api/config.local.php
 .tools/
 test-results/
 tools/audio/ses/
 tools/audio/gunluk/
+
+# iOS / Xcode yerel derleme çıktıları
+ios/.build/
+ios/.derivedData*/
+ios/.swift-module-cache/
+ios/**/xcuserdata/
+/.xcode-derived/
+/.xcode-derived-*/
+
+# Eski Firebase yerel kurulum dosyalari; canli sistem PHP + MySQL kullanir.
+/.firebaserc
+/firebase.json
+/firestore.rules
+/tools/friendship_rules_test.cjs
+/tmp/*-deneme.html
 
 # Uygulama iframe'i 'phaser/<ad>.html' istiyor; aynala.sh bu adla üretilmiş
 # kopyaları web/phaser'a da yazar. Kaynak yalnız *-phaser.html dosyalarıdır.

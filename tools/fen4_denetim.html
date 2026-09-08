@@ -102,7 +102,17 @@ function sizintiDenetle(W,r){
          karbonhidrat..." satırı bütün kutuları saydığı için karar hâlâ
          öğrenciye ait — ölçüt 3 zaten bu veriyi ekranda istiyor. */
       const dogruAd=(r.kutular||[])[k.dogru]||'';
-      const gecer = ad => { const a=sade(ad); return a.length>=5 && (sahne.includes(a)||yonerge.includes(a)) };
+      const kutuKokleri=(r.kutular||[]).map(ad=>sade(String(ad).replace(/\([^)]*\)/g,'')));
+      const ekran=' '+sahne+' '+yonerge+' ';
+      const gecer = ad => {
+        /* Parantez içi açıklamayı zorunlu tutma. Ortak sözcük eliptik
+           kullanılmışsa da ayırt edici sözcüğü say: "ısı alır mı, verir mi"
+           yönergesi iki kutuyu da gösterir. */
+        const tam=sade(ad),kok=sade(String(ad).replace(/\([^)]*\)/g,''));
+        if([tam,kok].some(a=>a.length>=5&&ekran.includes(' '+a+' ')))return true;
+        const diger=kutuKokleri.filter(x=>x!==kok).flatMap(x=>x.split(' '));
+        return kok.split(' ').some(soz=>soz.length>=4&&diger.indexOf(soz)<0&&ekran.includes(' '+soz+' '));
+      };
       /* Doğru kutunun adı bir rakibin adının içindeyse ("BİLİMSEL" ile
          "BİLİMSEL DEĞİL") ekranda geçmesi hangisini işaret ettiğini
          söylemez; bu bir sızıntı değil. */
@@ -188,7 +198,7 @@ function sizintiDenetle(W,r){
   return kusur;
 }
 
-window.SONUC={bitti:false,kusurlu:[],rapor:[],toplamTur:0};
+window.SONUC={bitti:false,kusurlu:[],rapor:[],toplamTur:0,ozDenetim:null};
 
 (async()=>{
   yaz('denetim: '+IDS.length+' oyun × 3 tur');
@@ -212,6 +222,18 @@ window.SONUC={bitti:false,kusurlu:[],rapor:[],toplamTur:0};
       yaz('✗ '+id+' — '+bulgular.length+' bulgu','b');
       bulgular.forEach(b=>yaz('&nbsp;&nbsp;'+b,'n'));
     } else yaz('✓ '+id,'g');
+  }
+  try{
+    const oz=JSON.parse(cerceve.contentWindow.eval('JSON.stringify(window.__TEST__.denetle())'));
+    window.SONUC.ozDenetim=oz;
+    if(oz.oyun!==48||(oz.kusur||[]).length){
+      window.SONUC.kusurlu.push('öz-denetim');
+      yaz('✗ motor öz-denetimi: '+oz.oyun+' oyun · '+(oz.kusur||[]).length+' kusur','b');
+      (oz.kusur||[]).forEach(b=>yaz('&nbsp;&nbsp;'+b,'n'));
+    } else yaz('✓ motor öz-denetimi: 48 oyun · 0 kusur','g');
+  }catch(e){
+    window.SONUC.kusurlu.push('öz-denetim');
+    yaz('✗ motor öz-denetimi çalışmadı: '+e.message,'b');
   }
   window.SONUC.bitti=true;
   yaz('<br>BİTTİ · temiz '+(IDS.length-window.SONUC.kusurlu.length)+'/'+IDS.length+

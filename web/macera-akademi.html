@@ -14,10 +14,6 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ffd7ea'/%3E%3Ctext x='50' y='68' font-size='54' text-anchor='middle'%3E%F0%9F%A6%8A%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Firebase kütüphanesi buradan yüklenir; bağlantıyı önceden kur ki giriş/kayıt beklemesin -->
-<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-<link rel="dns-prefetch" href="https://firestore.googleapis.com">
-<link rel="dns-prefetch" href="https://identitytoolkit.googleapis.com">
 <!-- Yazı tipleri BEKLETMEDEN yüklenir: metin hemen yedek yazı tipiyle çizilir,
      Baloo/Nunito indikten sonra kendiliğinden yerine geçer. -->
 <link rel="stylesheet" media="print" onload="this.media='all'"
@@ -1771,12 +1767,7 @@ let gs = {}; /* runtime state for the currently open game */
    Çevrimdışıyken Firestore veriyi cihazda tutar, bağlantı gelince eşitler.
    ===================================================================== */
 const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyD1YYaYPiw6vs-OU2WumstadBHZBiPFMJY",
-  authDomain:        "macera-akademi.firebaseapp.com",
-  projectId:         "macera-akademi",
-  storageBucket:     "macera-akademi.firebasestorage.app",
-  messagingSenderId: "451675959063",
-  appId:             "1:451675959063:web:7464ff1654414be8b85152"
+  apiKey: "", authDomain: "", projectId: "", storageBucket: "", messagingSenderId: "", appId: ""
 };
 const FIREBASE_VERSION = '12.16.0';
 /* Firestore veritabanı kimliği. Firebase konsolunda "Database ID" alanına
@@ -1892,6 +1883,7 @@ function mergeProgress(local, remote){
   if(!local) return remote;
   if(!remote) return local;
   return {
+    uid: remote.uid || local.uid || '',
     username: remote.username || local.username,
     grade:    remote.grade || local.grade,
     email:    remote.email || local.email,
@@ -1904,8 +1896,10 @@ function mergeProgress(local, remote){
     owned: Array.from(new Set([].concat(remote.owned||[], local.owned||[]))),
     badges: Array.from(new Set([].concat(remote.badges||[], local.badges||[]))),
     coinsEarned: Math.max(local.coinsEarned||0, remote.coinsEarned||0),
+    duelStats: Object.assign({}, remote.duelStats||{}, local.duelStats||{}),
     look: Object.assign({}, LOOK_DEFAULT, remote.look||{}, local.look||{}),
     teacherCode: remote.teacherCode || local.teacherCode || '',
+    teacherUid: remote.teacherUid || local.teacherUid || '',
     teacherUid: remote.teacherUid || local.teacherUid || '',
     teacher: remote.teacher || local.teacher || ''
   };
@@ -2468,6 +2462,11 @@ function speakNow(text){
     }catch(e){}
   }
   return false;
+}
+
+function stopSpeech(){
+  try{ if(window.AndroidTTS && typeof window.AndroidTTS.stop === 'function') window.AndroidTTS.stop(); }catch(e){}
+  try{ if(window.speechSynthesis) window.speechSynthesis.cancel(); }catch(e){}
 }
 
 function speak(text){
@@ -17370,6 +17369,7 @@ function initGS(game){
 }
 
 function openGame(id){
+  stopSpeech();
   if(otoGecisSayac){ clearInterval(otoGecisSayac); otoGecisSayac = null; }
   if(typeof nwStopTimer === 'function') nwStopTimer();
   if(typeof cdStop === 'function') cdStop();
@@ -17390,6 +17390,7 @@ function openGame(id){
 }
 
 function retryGame(){
+  stopSpeech();
   gs = initGS(getGame(state.currentGameId));
   renderGameBody();
 }
@@ -20804,6 +20805,7 @@ function autoSpeak(game){
              PHASER_OYUNLAR[game.id] === 'turkce2-pdf' ||
              PHASER_OYUNLAR[game.id] === 'turkce1-pdf' ||
              PHASER_OYUNLAR[game.id] === 'hayatbilgisi2-pdf' ||
+             PHASER_OYUNLAR[game.id] === 'hayatbilgisi3-pdf' ||
              PHASER_OYUNLAR[game.id] === 'fen3-pdf' ||
              PHASER_OYUNLAR[game.id] === 'fen4-pdf') text = '';
   else if (phaserOyunuMu(game)) text = game.cfg.speak || game.cfg.instruction;
@@ -21448,6 +21450,10 @@ const PHASER_OYUNLAR = {
   f21:'fen4-pdf', f22:'fen4-pdf', f23:'fen4-pdf', f24:'fen4-pdf',
   f25:'fen4-pdf', f26:'fen4-pdf', f27:'fen4-pdf', f28:'fen4-pdf',
   f29:'fen4-pdf', f30:'fen4-pdf', f31:'fen4-pdf', f32:'fen4-pdf',
+  f33:'fen4-pdf', f34:'fen4-pdf', f35:'fen4-pdf', f36:'fen4-pdf',
+  f37:'fen4-pdf', f38:'fen4-pdf', f39:'fen4-pdf', f40:'fen4-pdf',
+  f41:'fen4-pdf', f42:'fen4-pdf', f43:'fen4-pdf', f44:'fen4-pdf',
+  f45:'fen4-pdf', f46:'fen4-pdf', f47:'fen4-pdf', f48:'fen4-pdf',
   /* 2. sınıf hayat bilgisi PDF motoru — h01-h36.
      Şartname: output/pdf/2_sinif_hayat_bilgisi_oyunlari_detayli_duzeltmeler.pdf
      Bant, radar-kapsül, roket-yakıt, tren-tünel ve kronometre ortak
@@ -21461,6 +21467,19 @@ const PHASER_OYUNLAR = {
   h25:'hayatbilgisi2-pdf', h26:'hayatbilgisi2-pdf', h27:'hayatbilgisi2-pdf', h28:'hayatbilgisi2-pdf',
   h29:'hayatbilgisi2-pdf', h30:'hayatbilgisi2-pdf', h31:'hayatbilgisi2-pdf', h32:'hayatbilgisi2-pdf',
   h33:'hayatbilgisi2-pdf', h34:'hayatbilgisi2-pdf', h35:'hayatbilgisi2-pdf', h36:'hayatbilgisi2-pdf',
+
+  /* 3. sınıf hayat bilgisi PDF motoru — h37-h72.
+     Gerçek yaşam sahneleri, kroki, afet güvenliği, musluk ve öğrencinin
+     kendi verisinden kurduğu grafikle üç turlu düzeltme şartnamesi. */
+  h37:'hayatbilgisi3-pdf', h38:'hayatbilgisi3-pdf', h39:'hayatbilgisi3-pdf', h40:'hayatbilgisi3-pdf',
+  h41:'hayatbilgisi3-pdf', h42:'hayatbilgisi3-pdf', h43:'hayatbilgisi3-pdf', h44:'hayatbilgisi3-pdf',
+  h45:'hayatbilgisi3-pdf', h46:'hayatbilgisi3-pdf', h47:'hayatbilgisi3-pdf', h48:'hayatbilgisi3-pdf',
+  h49:'hayatbilgisi3-pdf', h50:'hayatbilgisi3-pdf', h51:'hayatbilgisi3-pdf', h52:'hayatbilgisi3-pdf',
+  h53:'hayatbilgisi3-pdf', h54:'hayatbilgisi3-pdf', h55:'hayatbilgisi3-pdf', h56:'hayatbilgisi3-pdf',
+  h57:'hayatbilgisi3-pdf', h58:'hayatbilgisi3-pdf', h59:'hayatbilgisi3-pdf', h60:'hayatbilgisi3-pdf',
+  h61:'hayatbilgisi3-pdf', h62:'hayatbilgisi3-pdf', h63:'hayatbilgisi3-pdf', h64:'hayatbilgisi3-pdf',
+  h65:'hayatbilgisi3-pdf', h66:'hayatbilgisi3-pdf', h67:'hayatbilgisi3-pdf', h68:'hayatbilgisi3-pdf',
+  h69:'hayatbilgisi3-pdf', h70:'hayatbilgisi3-pdf', h71:'hayatbilgisi3-pdf', h72:'hayatbilgisi3-pdf',
 
   /* İki kullanıcı PDF'inde ayrıntılandırılan 49 matematik oyunu.
      Her biri üç turlu, hikâyeye özel sahneye gider; genel uzay/kepçe
@@ -21786,6 +21805,8 @@ function renderWelcome(){
   </a>
   <p style="text-align:center; font-size:12.5px; margin:10px 0 0;">
     <a href="#" onclick="go('diag'); return false;" style="color:var(--ink-soft); font-weight:700;">🔍 Bağlantıyı test et</a>
+    &nbsp;·&nbsp;
+    <a href="#" onclick="openPrivacy('welcome'); return false;" style="color:var(--ink-soft); font-weight:700;">🛡️ Gizlilik</a>
   </p>
   <div style="height:30px"></div>
   `;
@@ -21852,6 +21873,8 @@ function renderRegister(){
     <div class="field"><label>ŞİFRE</label><input id="regPass" type="password" placeholder="En az 6 karakter..."></div>
     <div class="field"><label>ŞİFREYİ ONAYLA</label><input id="regPass2" type="password" placeholder="Şifreni tekrar yaz..." onkeydown="if(event.key==='Enter')doRegister()"></div>
     <button class="btn btn-teal" id="regBtn" onclick="doRegister()">KAYIT OL</button>
+    <p style="font-size:11.5px; color:var(--ink-soft); line-height:1.5;">Kayıt olarak verilerinin
+      <a href="#" onclick="openPrivacy('register'); return false;">Gizlilik Politikası</a>'nda açıklandığı gibi işlenmesini kabul edersin.</p>
     <p style="margin-top:14px; font-size:13px;">Zaten bir kahraman mısın? <a href="#" onclick="gotoAuth('login'); return false;" style="color:var(--ink-soft); font-weight:800;">Giriş yap!</a></p>
   </div>
   <div style="height:20px"></div>
@@ -24545,6 +24568,7 @@ function renderSettings(){
       <span class="cr-arrow">›</span></a>
     <div class="section-title" style="margin:14px 0 6px; padding:0;">🛠️ Destek</div>
     <button class="btn btn-outline" onclick="toast('Bu özellik demo sürümünde pasif 🙂')">❓ SSS</button>
+    <button class="btn btn-outline" onclick="openPrivacy('settings')">🛡️ Gizlilik Politikası</button>
     <div class="section-title" style="margin:14px 0 6px; padding:0;">👤 Hesap İşlemleri</div>
     ${state.isGuest ? `
       <div class="detail-row" style="font-size:12.5px;">Mod: <b>Hesapsız (misafir)</b> · ${state.hero.className||'-'}</div>
@@ -24564,13 +24588,48 @@ function renderSettings(){
   </div>
   <div style="height:80px"></div>`;
 }
+let privacyReturnScreen = 'settings';
+function openPrivacy(from){ privacyReturnScreen = from || 'settings'; go('privacy'); }
+function renderPrivacyPolicy(){
+  return `<div class="topbar">
+    <button class="back" onclick="go(privacyReturnScreen)">‹</button>
+    <div class="top-title">Gizlilik Politikası</div><div style="width:40px"></div>
+  </div>
+  <div class="panel" style="margin:16px; line-height:1.65;">
+    <div class="title-hero" style="font-size:18px; margin-bottom:4px;">Macera Akademi Gizlilik Politikası</div>
+    <div style="font-size:11px; color:var(--ink-soft); margin-bottom:14px;">Son güncelleme: 8 Eylül 2026</div>
+    <p><b>Veri sorumlusu:</b> 4DIMENSION BİLİŞİM VE DANIŞMANLIK ANONİM ŞİRKETİ.</p>
+    <p>Macera Akademi, eğitim oyunlarını sunmak, ilerlemeyi cihazlar arasında eşitlemek,
+      sınıf etkinliklerini göstermek ve güvenli arkadaşlık özelliklerini çalıştırmak için
+      yalnızca gerekli bilgileri işler.</p>
+    <div class="section-title" style="padding:0; margin:14px 0 6px;">Toplanan bilgiler</div>
+    <p>Kahraman adı, sınıf seviyesi, veli e-posta adresi, seçilirse öğretmen/sınıf kodu,
+      oyun ilerlemesi, seviye, puan, sanal ödüller, avatar tercihleri, arkadaşlık durumu,
+      uygulamadaki hazır mesajlar, düello ve sınıf yarışması sonuçları.</p>
+    <p>Parola, PHP sunucusunda tek yönlü ve güvenli parola özeti olarak işlenir; açık metin olarak saklanmaz.
+      Uygulama reklam göstermez; konum, rehber, fotoğraf, kamera veya mikrofon verisi toplamaz.</p>
+    <div class="section-title" style="padding:0; margin:14px 0 6px;">Paylaşım ve güvenlik</div>
+    <p>Hesap ve ilerleme verileri Macera Akademi sunucusundaki MySQL veritabanında saklanır. Sınıf kodu kullanan
+      öğrencinin ilerleme ve yarışma bilgileri ilgili öğretmen tarafından görülebilir.
+      Arkadaşlar yalnızca tam kahraman adıyla aranabilir ve serbest metin yerine önceden
+      tanımlı mesajlar gönderilebilir. Veriler satılmaz.</p>
+    <div class="section-title" style="padding:0; margin:14px 0 6px;">Saklama ve silme</div>
+    <p>Veriler hesap etkin olduğu sürece veya hizmet için gerektiği kadar saklanır.
+      Ayarlar → Hesabımı Sil yoluyla hesap ve ilişkili veriler kalıcı olarak silinebilir.
+      Hesapsız kullanımda ilerleme yalnızca cihazda tutulur ve aynı ekrandan sıfırlanabilir.</p>
+    <div class="section-title" style="padding:0; margin:14px 0 6px;">Haklar ve iletişim</div>
+    <p>Verilerinizle ilgili bilgi, düzeltme veya silme talebi için
+      <a href="mailto:ceydaarslan@4dimension.io">ceydaarslan@4dimension.io</a> adresine yazabilir
+      ya da <a href="tel:+905520730155">0552 073 01 55</a> numarasını arayabilirsiniz.</p>
+  </div><div style="height:28px"></div>`;
+}
 function confirmDeleteAccount(){
   state.confirmDelete = true;
   renderAll();
 }
 async function reallyDeleteAccount(){
-  state.confirmDelete = false;
   if(state.isGuest){
+    state.confirmDelete = false;
     clearGuest();
     await doLogout();
     toast('İlerleme sıfırlandı.');
@@ -24578,16 +24637,57 @@ async function reallyDeleteAccount(){
   }
   try{
     await initServer();
-    const { doc, deleteDoc } = fb.D;
     const u = fb.auth.currentUser;
-    if(u){
-      await deleteDoc(doc(fb.db, 'profiles', u.uid)).catch(()=>{});
-      await deleteDoc(doc(fb.db, 'publicProfiles', u.uid)).catch(()=>{});
-      await u.delete().catch(()=>{});
+    if(!u) throw new Error('Oturum bulunamadı. Lütfen yeniden giriş yap.');
+
+    const password = document.getElementById('delete-account-password')?.value || '';
+    if(!password) throw new Error('Hesabı silmek için parolanı yaz.');
+
+    const { EmailAuthProvider, reauthenticateWithCredential } = fb.Au;
+    const credential = EmailAuthProvider.credential(authEmailFor(state.currentUser), password);
+    try{
+      await withTimeout(reauthenticateWithCredential(u, credential), 15000, 'Kimlik doğrulama zaman aşımına uğradı');
+    }catch(e){
+      const code = String(e && e.code || '');
+      if(code.includes('invalid-credential') || code.includes('wrong-password')){
+        throw new Error('Parola yanlış.');
+      }
+      throw e;
     }
-  }catch(e){}
-  await doLogout();
-  toast('Hesap silindi.');
+
+    const { collection, query, where, getDocs, getDoc, doc, deleteDoc } = fb.D;
+    const uid = u.uid;
+    const refs = new Map();
+    const collect = async (name, field, op, value) => {
+      const snapshot = await getDocs(query(collection(fb.db, name), where(field, op, value)));
+      snapshot.docs.forEach(item => refs.set(item.ref.path, item.ref));
+    };
+
+    await Promise.all([
+      collect('friendships', 'users', 'array-contains', uid),
+      collect('messages', 'from', '==', uid),
+      collect('messages', 'to', '==', uid),
+      collect('duels', 'players', 'array-contains', uid),
+      collect('classProgress', 'uid', '==', uid),
+      collect('contestScores', 'uid', '==', uid)
+    ]);
+
+    refs.set(`profiles/${uid}`, doc(fb.db, 'profiles', uid));
+    refs.set(`publicProfiles/${uid}`, doc(fb.db, 'publicProfiles', uid));
+    const usernameRef = doc(fb.db, 'usernames', String(state.currentUser).toLowerCase());
+    if((await getDoc(usernameRef)).exists()) refs.set(usernameRef.path, usernameRef);
+
+    await Promise.all(Array.from(refs.values()).map(ref => deleteDoc(ref)));
+    await u.delete();
+
+    state.confirmDelete = false;
+    await doLogout();
+    toast('Hesabın ve tüm verilerin silindi.');
+  }catch(e){
+    state.confirmDelete = true;
+    renderAll();
+    setTimeout(()=>toast('Hesap silinemedi: ' + firebaseHata(e)), 50);
+  }
 }
 function renderDeleteConfirm(){
   const guest = state.isGuest;
@@ -24596,6 +24696,9 @@ function renderDeleteConfirm(){
       <div style="font-size:44px">🗑️</div>
       <div class="title-hero" style="font-size:18px;">${guest ? 'İlerlemeyi sıfırla?' : 'Hesabını sil?'}</div>
       <p>Tüm ilerlemen, seviyen ve altınların kalıcı olarak silinir. Bu işlem geri alınamaz.</p>
+      ${guest ? '' : `<div class="field"><label>PAROLA</label>
+        <input id="delete-account-password" type="password" autocomplete="current-password"
+          placeholder="Parolan" aria-label="Parolan"></div>`}
       <button class="btn btn-pink" onclick="reallyDeleteAccount()">Evet, Sil</button>
       <button class="btn btn-outline" onclick="state.confirmDelete=false; renderAll();">Vazgeç</button>
     </div></div>`;
@@ -24659,6 +24762,8 @@ async function friendLookup(name){
   catch(e){ return {ok:false, error:firebaseHata(e)}; }
   if(!snap.exists()) return {ok:false, error:'Böyle bir kahraman bulunamadı. Adı doğru yazdığından emin ol.'};
   const d = snap.data();
+  if(!d || typeof d.uid !== 'string' || !d.uid || typeof d.username !== 'string')
+    return {ok:false, error:'Bu kahramanın arama kaydı eksik. Arkadaşından hesabına yeniden girmesini iste.'};
   return {ok:true, user:{uid:d.uid, username:d.username, level:d.level||1, grade:d.grade||1}};
 }
 
@@ -24709,6 +24814,14 @@ async function doFriendSearch(){
   const name = el ? el.value : '';
   state.friendSearch = {query:name, searching:true, result:null, error:''};
   renderAll();
+  /* Ekran açılır açılmaz aramaya basılırsa liste sorgusu hâlâ sürüyor
+     olabilir. Önce mevcut istekleri yükleyerek gelen isteğin yanlışlıkla
+     yeni bir giden istek gibi gönderilmesini önle. */
+  if(!state.friends.loaded && !state.friends.loading) await friendsLoad();
+  else if(state.friends.loading){
+    const son = Date.now() + 13000;
+    while(state.friends.loading && Date.now() < son) await new Promise(r=>setTimeout(r,80));
+  }
   const res = await friendLookup(name);
   state.friendSearch.searching = false;
   if(res.ok){
@@ -24732,6 +24845,14 @@ async function friendRequestSend(uid, username){
     await initServer();
     const { doc, setDoc, serverTimestamp } = fb.D;
     const me = myUid();
+    if(!me || !uid || me === uid) throw new Error('Geçersiz arkadaş isteği');
+    const mevcut = [...state.friends.list, ...state.friends.incoming, ...state.friends.outgoing]
+      .find(f=>f.uid===uid);
+    if(mevcut){
+      toast(mevcut.status === 'accepted' ? 'Zaten arkadaşsınız ✅' : 'Bu kişiyle bekleyen bir istek var ⏳');
+      await friendsLoad();
+      return;
+    }
     await withTimeout(setDoc(doc(fb.db,'friendships', pairKey(me, uid)), {
       users:[me, uid].sort(), requester:me, status:'pending', createdAt:serverTimestamp()
     }), 10000, 'İstek gönderilemedi');
@@ -24746,6 +24867,11 @@ async function friendRequestAccept(uid){
     await initServer();
     const { doc, updateDoc } = fb.D;
     const me = myUid();
+    if(!me || !state.friends.incoming.some(f=>f.uid===uid)){
+      toast('Bu istek artık beklemiyor; liste yenileniyor.');
+      await friendsLoad();
+      return;
+    }
     await withTimeout(updateDoc(doc(fb.db,'friendships', pairKey(me, uid)), {status:'accepted'}),
                       10000, 'Kabul edilemedi');
     toast('Artık arkadaşsınız! 🎉');
@@ -24834,7 +24960,11 @@ async function messageSend(uid, presetId){
    ===================================================================== */
 function openFriends(){
   go('friends');
-  if(!state.isGuest && !state.friends.loaded) friendsLoad();
+  if(!state.isGuest){
+    /* Eski/yarıda kalmış profiller de tam adla bulunabilsin. */
+    writeUsernameIndex();
+    if(!state.friends.loaded) friendsLoad();
+  }
 }
 
 /* Arkadaş kartından davet: kategori seçilmiş hâlde oyunu başlat */
@@ -25193,9 +25323,43 @@ async function runDiagnostics(){
 }
 
 /* ===================== YÖNLENDİRME (ROUTER) ===================== */
+/* Android'in fiziksel/ekran geri tuşu için tek karar noktası. Java katmanı
+   bu işlevi çağırır; "handled" dönerse Activity kapanmaz, "exit" yalnız
+   kök ekranda Android'in normal geri davranışına izin verir. */
+function androidGeriTusu(){
+  try{
+    if(state.purchaseConfirm){ closeBuyConfirm(); return 'handled'; }
+    if(state.confirmDelete){ state.confirmDelete=false; renderAll(); return 'handled'; }
+    if(state.friendModal){ closeFriendModal(); return 'handled'; }
+
+    if(state.screen === 'gamePlayer'){ go('subjectList'); return 'handled'; }
+    if(state.screen === 'duelPlay'){
+      if(typeof dlQuit === 'function') dlQuit(); else go('arena');
+      return 'handled';
+    }
+    if(state.screen === 'duelResult'){ go('arena'); return 'handled'; }
+    if(state.screen === 'messages'){ openFriends(); return 'handled'; }
+    if(state.screen === 'privacy'){ go(privacyReturnScreen); return 'handled'; }
+    if(state.screen === 'inventory'||state.screen === 'customize'||state.screen === 'levelPath'){
+      go('character'); return 'handled';
+    }
+    if(state.screen === 'subjectList'||state.screen === 'soon'||state.screen === 'account'||
+       state.screen === 'settings'||state.screen === 'friends'||state.screen === 'character'||
+       state.screen === 'arena'||state.screen === 'tasks'||state.screen === 'changePass'||
+       state.screen === 'diag'){
+      go('home'); return 'handled';
+    }
+    if(state.screen === 'login'||state.screen === 'register'||state.screen === 'guestGrade'){
+      go('welcome'); return 'handled';
+    }
+    return 'exit';
+  }catch(e){ return 'exit'; }
+}
+
 function go(screen){
   /* ekran değişince eski form hatası ekranda kalmasın */
   if(screen !== state.screen) state.formError = '';
+  if(state.screen === 'gamePlayer' && screen !== 'gamePlayer') stopSpeech();
   if(screen !== 'customize' && screen !== 'inventory') state.purchaseConfirm = null;
   if(screen !== 'gamePlayer'){
     if(typeof nwStopTimer === 'function') nwStopTimer();
@@ -25228,6 +25392,7 @@ function renderAll(){
     case 'customize':  html = renderCustomize(); break;
     case 'levelPath':  html = renderLevelPath(); break;
     case 'settings': html = renderSettings() + renderBottomNav('settings'); break;
+    case 'privacy': html = renderPrivacyPolicy(); break;
     case 'friends': html = renderFriends() + renderBottomNav('friends'); break;
     case 'subjectList': html = renderSubjectList(); break;
     case 'soon': html = renderSoon(); break;
@@ -25333,5 +25498,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
   }
 });
 </script>
+<script src="api-client.js"></script>
 </body>
 </html>

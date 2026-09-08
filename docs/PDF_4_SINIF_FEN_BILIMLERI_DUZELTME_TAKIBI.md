@@ -126,7 +126,9 @@ Her parti iki araçla sınanıyor:
 | f30 Pusula Atölyesi | tepsi | **pusula adım adım kurulur, sonunda iğne kuzeyi gösterir** | ✅ uygulandı |
 | f31 Devre Elemanları | köprü | **eleman devrede yerini alır, son eşleşmede ampul yanar** | ✅ uygulandı |
 | f32 Devre Kurma | roket | adımlar devre masasında uygulanır, son adımda devre çalışır | ✅ uygulandı |
-| f33–f48 | — | — | PDF'de |
+| f33–f36 | eski ortak şablonlar | enerji kaynakları/atölye/arıza/grafik; okunur veri ve öğrenci gerekçesi | ✅ uygulandı |
+| f37–f42 | eski ortak şablonlar | ışık kaynağı, karanlık kutu, görme deneyi, ışık kirliliği ve çözüm maketi | ✅ uygulandı |
+| f43–f48 | eski ortak şablonlar | sürdürülebilirlik, gerçek şehir maketi, sorun-çözüm, veri grafiği ve rota planı | ✅ uygulandı |
 
 Parti 1'de (f01–f08) kapatılan doğrulanmış hatalar: **#1** wrongHint sızıntısı
 (bu partideki bant oyunları f01 ve f07'de ipuçları artık doğru kutunun adını
@@ -227,3 +229,27 @@ Sınamada bulunan iki gerçek kusur:
 Sınama: `fen4_denetim.html` f01–f32 için **96 turun tamamında temiz**;
 `fen4_kosum.html` 32/32 oyunu can kaybetmeden bitiriyor (katalog bağlantısı
 ön kontrolü dahil); `window.__TEST__.denetle()` 32 oyunda kusursuz.
+
+### Parti 5–6 (f33–f48) notları — 48 oyunun tamamı kapandı
+
+Enerji, ışık ve sürdürülebilir şehir temalarındaki son 16 oyun derse özel
+motora aktarıldı. f36 ve f47'de veri satırları ile sayı ölçeği ekranda; öğrenci
+grafiği deneme-yanılmayla değil okuyarak kuruyor. f39'da ışık/cisim/göz tek tek
+deneniyor; f40'ta ışık kirliliğinin farklı canlılara etkisi eşleştiriliyor.
+f44'te şehir maketi gerçekten kuruluyor, f48'de öğrenci şehir planında rotayı
+çizip güvenlik gerekçesi veriyor.
+
+Koşum aracı yeni `grafik`, `deney` ve `plan` kiplerini gerçek etkileşimlerle
+çözecek biçimde genişletildi. Son sınamada bulunan iki içerik kusuru da kapandı:
+f39 örnek cevabındaki Türkçe `I/ı` eşleşmesi güvenli hâle getirildi; f40 örnek
+cevabı 12 sözcük ölçütünü gerçekten geçecek biçimde düzeltildi. Mobil denetimde
+parantezli kutu adlarının ürettiği yanlış alarm da, ana ve ayırt edici etiket
+sözcükleri birlikte karşılaştırılarak giderildi.
+
+Son doğrulama (27 Ağustos 2026):
+
+- `fen4_kosum.html`: **48/48 oyun**, her biri üç tur ve **3/3 can**.
+- `fen4_denetim.html`: **48/48 oyun**, 390×844 görünümde **144/144 tur temiz**.
+- `window.__TEST__.denetle()`: **48 oyun, 0 kusur**.
+- Web ve Android motor kopyaları birebir eşit; katalog f01–f48'in tamamını
+  `fen4-pdf` motoruna bağlıyor.

@@ -1,6 +1,6 @@
 # Macera Akademi
 
-Macera Akademi, 1–4. sınıf düzeyleri için 658 müfredat oyunu içeren bir Android eğitim uygulamasıdır. Ana uygulama tek sayfalık bir web uygulaması olarak çalışır ve Android tarafında WebView ile paketlenir.
+Macera Akademi, 1–4. sınıf düzeyleri için 658 müfredat oyunu içeren bir eğitim uygulamasıdır. Ana uygulama tek sayfalık bir web uygulaması olarak çalışır; Android ve iOS tarafında WebView ile paketlenir. Web yayını hesap ve ilerleme verilerini PHP API üzerinden MySQL'de saklar.
 
 ## Mevcut durum
 
@@ -19,10 +19,13 @@ Bu depo, 22 Ağustos 2026 tarihli devir paketinin ve aynı tarihteki canlı Andr
 ```text
 app/                    Android uygulaması
 web/macera-akademi.html Ana uygulama ve oyun kataloğu için tek kaynak
+web/api-client.js       PHP/MySQL API istemcisi
+web/api/                Güvenli hesap ve oyun API'si
+web/database/schema.sql MySQL şeması
 web/phaser/             Phaser şablonlarının kaynak sürümleri
 tools/                  Eşleme ve otomatik oyun testleri
 tools/audio/            Chatterbox manifesti ve üretim araçları
-docs/history/           Claude devir notları ve geçmiş oturum kayıtları
+docs/history/           Geçmiş devir notları ve oturum kayıtları
 ```
 
 `app/src/main/assets/` altındaki web dosyaları Android derleme girdisidir. Bunlar `web/` kaynaklarından aşağıdaki komutla yenilenir:
@@ -30,6 +33,19 @@ docs/history/           Claude devir notları ve geçmiş oturum kayıtları
 ```bash
 ./tools/aynala.sh
 ```
+
+## Web sunucusuna kurulum
+
+Sunucuda PHP 7.4+ ve `pdo_mysql` gereklidir. Depo klonlandıktan sonra:
+
+```bash
+./tools/aynala.sh
+cp web/api/config.sample.php web/api/config.local.php
+```
+
+MySQL'de boş bir veritabanı oluşturup `web/database/schema.sql` dosyasını içe aktarın. Ardından `config.local.php` içine yalnızca sunucudaki gerçek bağlantı bilgilerini yazın ve web sunucusunun document root'unu `web/` klasörüne yönlendirin. Ayrıntılı kontrol listesi [YAYIN_KURULUMU.md](YAYIN_KURULUMU.md) dosyasındadır.
+
+`config.local.php` Git'e eklenmez. Canlı ortam HTTPS olmadan kullanılmamalıdır.
 
 ## Debug APK derleme
 

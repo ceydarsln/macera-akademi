@@ -530,7 +530,7 @@ let state = {
 let gs = {}; /* runtime state for the currently open game */
 
 /* ===================== VERİTABANI KATMANI (DATA LAYER) ===================== */
-/* Hesaplar cihazda kalıcı olarak saklanır: Claude ortamında window.storage,
+/* Hesaplar cihazda kalıcı olarak saklanır: desteklenen ortamda window.storage,
    APK/tarayıcıda localStorage. Tüm veri erişimi tek bir DB nesnesinden geçer;
    ileride uzak bir sunucuya taşınmak istenirse sadece bu fonksiyonlar değişir. */
 const DB = {

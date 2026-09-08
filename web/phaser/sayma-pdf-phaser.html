@@ -326,6 +326,9 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .odul.ucur{transform:translate(60px,-70px) rotate(18deg)}
 .sahne-katman{position:relative;width:min(330px,98%)}
 .sahne-katman .ust{position:absolute;inset:0;pointer-events:none}
+.ses-yok{width:min(330px,96%);margin:6px auto 0;padding:7px 10px;border-radius:12px;
+ background:#fff4d6;border:3px solid #e0a92b;color:#7a5210;font-weight:900;font-size:13px;text-align:center;line-height:1.25}
+.ses-yok b{color:#4a3000;font-size:15px}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -354,7 +357,47 @@ const speech=s=>String(s??'').replace(/\+/g,' artı ').replace(/[−–-]/g,' ek
    okumaz (gs.spokenKey karşılaştırması). Dinleme düğmeleri bu bayrağı
    geçirmediği için ikinci basıştan sonra sessiz kalıyordu; hedef sayı
    ekranda hiç yazılı olmadığından çocuk ilk okumayı kaçırırsa kilitleniyordu. */
-function speak(text,repeat=false){try{if(parent&&parent!==window&&typeof parent.oku==='function')return parent.oku(speech(text),repeat)}catch(e){}try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(speech(text));u.lang='tr-TR';speechSynthesis.speak(u);return true}catch(e){return false}}
+/* ===== SES YEDEĞİ =====
+   Bu motorlarda hedef şartname gereği ekrana KASTEN yazılmıyor, yalnız sesle
+   veriliyor. Cihazda Türkçe ses paketi yoksa (ya da kullanıcı sesi kapattıysa)
+   speakNow false dönüyor ve oyun çözülemez hâle geliyordu: çocuk ne duyuyor ne
+   görüyor. Kataloğun oku() yorumunda tarif edilen yedek yol buydu ama kullanan
+   yoktu. Artık speak() gerçekten seslendirildi mi bilgisini tutuyor; seslendirme
+   olmuyorsa o turun gizli hedefi "ses yok" notuyla görünür kılınıyor.
+   Çözülemeyen oyun, görünen hedeften kötüdür. */
+let sesVar=null;
+function sesYok(){return sesVar===false}
+function speak(text,repeat=false){
+ let ok=false,koprü=false;
+ try{if(parent&&parent!==window&&typeof parent.oku==='function'){koprü=true;ok=!!parent.oku(speech(text),repeat)}}catch(e){}
+ /* Köprü varsa onun cevabı bağlayıcıdır. Aksi hâlde motorun kendi
+    speechSynthesis'i devreye giriyor ve o hata vermediği için köprünün
+    "ses yok" sinyalini maskeliyordu. */
+ if(!koprü){try{
+   const sesler=speechSynthesis.getVoices()||[];
+   /* getVoices ilk çağrıda boş dönebilir; boşluğu "bilinmiyor" sayıp
+      yanlış alarm vermiyoruz. */
+   if(!sesler.length||sesler.some(v=>/^tr/i.test(v.lang||''))){
+    speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(speech(text));
+    u.lang='tr-TR';speechSynthesis.speak(u);ok=true}
+  }catch(e){ok=false}}
+ /* Boş metin her zaman false döner; bayrağı yalnız gerçek denemeler belirler. */
+ if(String(text||'').trim()){sesVar=ok;sesUyariCiz()}
+ return ok}
+function sesUyariCiz(){
+ const kap=document.querySelector('.scene');if(!kap)return;
+ let el=document.getElementById('sesYokKutu');
+ const h=sesYok()&&typeof gizliHedef==='function'?gizliHedef(round&&round()):'';
+ if(!h){if(el)el.remove();return}
+ if(!el){el=document.createElement('div');el.id='sesYokKutu';el.className='ses-yok';kap.appendChild(el)}
+ el.innerHTML='🔇 Ses açılamadı, hedef gösteriliyor: <b>'+esc(h)+'</b>'}
+/* Gizli hedef: yalnız 'yaz' turunda hedef sayı sesle veriliyor. 'ciz'
+   turunda rakam kılavuzda ve oyun başlığında görünür, ses gerekmiyor. */
+function gizliHedef(r){
+ /* Hedef tur boyunca sabit gösteriliyor: "zaten açıldı" koşulları banner'ı
+    turun ortasında bayatlatıyordu ve bilgi her hâlükârda aynı. */
+ if(!r||r.kind!=='yaz'||state.hedef==null)return '';
+ return String(state.hedef)+' ('+sayiAdiTR(state.hedef)+')'}
 function parentComplete(){try{if(parent&&parent!==window&&typeof parent.completeGame==='function'){parent.completeGame(game.finish,score);return}}catch(e){}showOverlay()}
 function showOverlay(){document.getElementById('app').insertAdjacentHTML('beforeend',`<div class="overlay"><div class="overlay-card"><div class="big">🏆</div><h2>Harikasın!</h2><p>${esc(game.finish)}</p><button class="action" onclick="location.reload()">Yeniden oyna</button></div></div>`)}
 function units(icon,n,cls=''){return `<div class="row">${Array.from({length:n},(_,i)=>`<span class="unit ${cls}" data-unit="${i}">${icon}</span>`).join('')}</div>`}
@@ -366,7 +409,7 @@ function dotChart(cols,key=1){return `<div class="chart">${cols.map(c=>`<div cla
 function sceneHtml(r){return typeof r.scene==='function'?r.scene(state):r.scene||''}
 function hud(){return `<header class="hud"><div class="round">Tur ${roundIndex+1}/3</div><div class="prompt">${esc(round().prompt)}</div><div class="hud-right"><span class="lives">${'❤️'.repeat(lives)}${'🖤'.repeat(3-lives)}</span><button class="sound" aria-label="Yönergeyi dinle">🔊</button></div></header>`}
 function round(){return game.rounds[roundIndex]}
-function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();/* rAF geri çağrısı bir sonraki karede çalışıyor; gizli sekmede hiç
+function render(){if(!game||roundIndex>=game.rounds.length)return;state={};locked=false;document.getElementById('app').innerHTML=hud()+`<main class="scene" data-theme="${round().theme||game.theme||'room'}"><div class="feedback"></div><section class="stage ${round().dark?'dark':''}" id="stage"></section><section class="task" id="task"></section></main>`;$('.sound').onclick=()=>speak(round().prompt,true);renderRound();sesUyariCiz();/* rAF geri çağrısı bir sonraki karede çalışıyor; gizli sekmede hiç
    çalışmayıp sekme görünür olunca kuyruktan dönüyor. O ana kadar oyun
    bitmişse round() undefined oluyordu. Tur numarası da doğrulanıyor ki
    geciken kare bir önceki turun yönergesini okumasın. */
@@ -531,7 +574,7 @@ function yazCiz(r){
  if(state.faz===2)return yazIz(r);
  $('#stage').innerHTML=`<div class="stack">${sahneSvg(r.sahne,'')}
   ${yazSlotlar()}
-  <div class="caption">${esc(state.not||'Sayıyı dinle, sonra rakamlarını seç. Sayı ekranda yazılı değil.')}</div></div>`;
+  <div class="caption">${esc(state.not||(sesYok()?'Ses açılamadı: sayı aşağıda gösteriliyor. Rakamlarını seç.':'Sayıyı dinle, sonra rakamlarını seç. Sayı ekranda yazılı değil.'))}</div></div>`;
  $('#task').innerHTML=`<div class="actions"><button class="action" id="yazDinle">🔊 Sayıyı dinle</button></div>
   <div class="tus-rakam">${[0,1,2,3,4,5,6,7,8,9].map(n=>`<button data-rakam="${n}">${n}</button>`).join('')}</div>`;
  $('#yazDinle').onclick=()=>speak(sayiAdiTR(state.hedef),true);

@@ -67,7 +67,9 @@ class PiperSes {
 
     /* ---------------- kurulum ---------------- */
 
-    void kur(final Context baglam){
+    void kur(final Context baglam){ kur(baglam, null); }
+
+    void kur(final Context baglam, final Runnable hazirOlunca){
         kuyruk.execute(new Runnable(){
             @Override public void run(){
                 try {
@@ -130,6 +132,7 @@ class PiperSes {
                     Log.i(ETIKET, "Piper hazır · örnek hızı " + ornekHizi
                           + " · ısınma " + sure + " ms, " + ornek + " örnek ("
                           + String.format("%.2f", ornek / (float) ornekHizi) + " sn ses)");
+                    if (hazirOlunca != null) hazirOlunca.run();
                 } catch (Throwable t){
                     hazir = false;
                     durum = "hata";
@@ -144,7 +147,7 @@ class PiperSes {
     void oku(final String metin){
         if (metin == null || metin.trim().isEmpty()) return;
         final int benimNesil = nesil.incrementAndGet();
-        durdur();
+        synchronized (this){ kapatCalar(); }
         kuyruk.execute(new Runnable(){
             @Override public void run(){
                 if (!hazir || motor == null) return;
@@ -267,6 +270,10 @@ class PiperSes {
     }
 
     void durdur(){
+        /* Yalnız AudioTrack'i kapatmak yetmez: yerel model eski cümleyi
+           üretmeye devam edip tek iş kuyruğunda sonraki oyunu bekletiyordu.
+           Nesli artırınca callback ilk fırsatta üretimi de iptal eder. */
+        nesil.incrementAndGet();
         synchronized (this){ kapatCalar(); }
     }
 
@@ -278,7 +285,6 @@ class PiperSes {
     }
 
     void kapat(){
-        nesil.incrementAndGet();
         durdur();
         kuyruk.execute(new Runnable(){
             @Override public void run(){

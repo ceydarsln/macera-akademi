@@ -129,6 +129,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 svg.sahne{width:min(320px,94%);height:auto;max-height:170px;display:block}
 svg.mini{flex:0 0 74px;width:74px;height:auto;display:block}
 .sahne-not{font-size:12px;font-weight:850;color:var(--muted);text-align:center;line-height:1.25}
+.ses-yedek{margin-top:6px;font-size:12px;font-weight:850;text-align:center;line-height:1.3;
+ color:#8a4b12;background:#fff3e0;border:2px solid #f0b775;border-radius:10px;padding:6px 8px}
+.ses-yedek b{font-size:15px;letter-spacing:.5px}
 .konus-balon{flex:0 0 auto;background:#fff;border:3px solid var(--line);border-radius:16px 16px 16px 4px;padding:8px 11px;font-weight:870;font-size:clamp(12px,3.2vw,15px);line-height:1.35;max-width:min(324px,95%);overflow-wrap:break-word;text-align:left}
 @media (max-height:640px){.stage{min-height:160px}.scene{gap:6px}.choice{min-height:48px}svg.sahne{max-height:130px}.metin-kart{max-height:170px}.yazi-alan{min-height:76px}}
 </style>
@@ -517,7 +520,7 @@ function dinleCiz(r){
   good()})}
 function renderDinle(r){state.dinleme=0;state.not='';dinleCiz(r)}
 
-/* ===== KONUS: örnek dinletilir, öğrenci GERÇEKTEN ses üretir (süre ölçülür),
+/* ===== KONUS: örnek dinletilir, öğrenci ses üretimini süreyle gösterir,
    sonra gerekçe/anlaşılabilirlik ölçütlerini tek tek işaretler. ===== */
 function konusCiz(r){
  const sure=state.sure||0;
@@ -535,7 +538,7 @@ function konusCiz(r){
   const yeter=sure>=1200;
   $('#task').innerHTML=`<button class="tut ${state.basili?'basili':''}" id="konusTut">Basılı tut ve konuş</button>`+
    `<div class="sure-cubuk"><i style="--w:${Math.min(100,sure/2000*100)}%"></i></div>`+
-   `<div class="hint">${yeter?'Konuşman kaydedildi.':'En az 1,2 saniye konuş.'} (${(sure/1000).toFixed(1)} sn)</div>`+
+   `<div class="hint">${yeter?'Konuşma süresi yeterli.':'En az 1,2 saniye konuş.'} (${(sure/1000).toFixed(1)} sn)</div>`+
    (yeter?`<button class="choice" id="konusBitti">Konuştum</button>`:'');
   const b=$('#konusTut');
   const bas=()=>{state.basili=true;state.bas=Date.now();konusCiz(r);
@@ -543,7 +546,7 @@ function konusCiz(r){
     if(c)c.style.setProperty('--w',Math.min(100,state.sure/2000*100)+'%')},80)};
   const birak=()=>{if(!state.basili)return;state.basili=false;clearInterval(state.sayac);
    state.sure=Date.now()-state.bas;
-   state.not=state.sure>=1200?'Konuşmanı aldık.':'Çok kısa oldu; biraz daha uzun konuş.';konusCiz(r)};
+   state.not=state.sure>=1200?'Konuşma süresi yeterli.':'Çok kısa oldu; biraz daha uzun konuş.';konusCiz(r)};
   b.onpointerdown=e=>{e.preventDefault();bas()};
   b.onpointerup=birak;b.onpointerleave=birak;b.onpointercancel=birak;
   const bt=$('#konusBitti');if(bt)bt.onclick=()=>{state.faz=2;state.not='';konusCiz(r)};
@@ -559,6 +562,27 @@ function renderKonus(r){state.faz=0;state.dinledi=false;state.sure=0;state.basil
 
 /* ===== DIKTE: hedef sözcük hiçbir yerde YAZILI DEĞİL; yalnız dinlenir ve
    karışık harf havuzundan kurulur. Tekrar dinleme cezasız. ===== */
+/* Dikte hedefi tilki balonuna YAZILMAMALI: parent.oku() metni ekrana da basıyor,
+   böylece çocuğun duyarak yazması gereken sözcük okunur hâle geliyordu. Dikte
+   sözcüğü bu yüzden yalnız seslendiriciye gider, kabuğa hiç uğramaz.
+   Dönüş: gerçekten bir seslendirme başladı mı? Ses yoksa (cihazda TTS yok ya da
+   ses kapalı) tur çözülemez duruma düşmesin diye çağıran taraf sözcüğü görünür
+   kılar — görünen hedef, çözülemeyen turdan iyidir. */
+function turkceSesVar(){
+ try{if(window.AndroidTTS&&typeof window.AndroidTTS.speak==='function')return true}catch(e){}
+ try{if(!('speechSynthesis' in window)||!window.speechSynthesis)return false;
+  const sesler=speechSynthesis.getVoices()||[];
+  /* getVoices() ilk çağrıda boş dönebilir; boşken "yok" demek yanlış olur,
+     bu yüzden yalnız dolu listede Türkçe yoksa olumsuz karar veriyoruz. */
+  if(!sesler.length)return true;
+  return sesler.some(v=>/^tr\b|^tr-/i.test(v.lang||''))}catch(e){return false}}
+function sesliSoyle(metin){
+ const t=String(metin||'');if(!t)return false;
+ if(!turkceSesVar())return false;
+ try{if(window.AndroidTTS&&typeof window.AndroidTTS.speak==='function'){window.AndroidTTS.speak(t);return true}}catch(e){}
+ try{const u=new SpeechSynthesisUtterance(t);u.lang='tr-TR';u.rate=.95;
+  speechSynthesis.cancel();speechSynthesis.speak(u);return true}catch(e){}
+ return false}
 function dikteCiz(r){
  const i=state.ix||0,s=r.sozcukler[i];if(!s)return;
  const kur=state.kurulan||[];
@@ -567,6 +591,7 @@ function dikteCiz(r){
   ilerleme(r.sozcukler.length,i)+
   `<div class="ses-kart"><div class="ses-dalga">${[12,22,30,18,26,14].map(h=>`<i style="height:${h}px"></i>`).join('')}</div>`+
    `<div class="sahne-not">${esc(r.baglam||'Sözcüğü dinle')}</div>`+
+   (state.sesYok?`<div class="ses-yedek">🔇 Bu cihazda ses yok · sözcük: <b>${esc(s.t)}</b></div>`:'')+
    `<div class="sayim">${state.dinleme?state.dinleme+' kez dinledin':'Henüz dinlemedin'}</div></div>`+
   `<div class="dikte-yuva">${kur.length?kur.map(h=>`<span>${esc(h)}</span>`).join(''):'<span>&nbsp;</span>'}</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
@@ -576,7 +601,8 @@ function dikteCiz(r){
    :`<div class="hint">Harfler dinledikten sonra açılır.</div>`);
  $('#dinleBtn').onclick=()=>{
   if(locked)return;
-  state.dinleme=(state.dinleme||0)+1;speak(s.ses||s.t,true);
+  state.dinleme=(state.dinleme||0)+1;
+  if(!sesliSoyle(s.ses||s.t))state.sesYok=true;
   if(!state.havuz.length)state.havuz=karistir(s.t.split('').concat(s.celdirici||[]));
   state.not='';dikteCiz(r)};
  $$('[data-harf]').forEach(b=>b.onclick=()=>{
@@ -596,7 +622,11 @@ function dikteCiz(r){
  const g=$('#dikteGeri');
  if(g)g.onclick=()=>{if(locked||!kur.length)return;
   state.kurulan=kur.slice(0,-1);state.kullanilan=(state.kullanilan||[]).slice(0,-1);dikteCiz(r)}}
-function renderDikte(r){state.ix=0;state.kurulan=[];state.kullanilan=[];state.havuz=[];state.dinleme=0;state.not='';dikteCiz(r)}
+/* Bazı tarayıcılarda ses listesi gecikmeli geliyor; geldiğinde dikte turu
+   yeniden çizilsin ki yanlışlıkla açılmış yedek not kapansın. */
+try{if(window.speechSynthesis)speechSynthesis.addEventListener('voiceschanged',()=>{
+ if(round()&&round().kind==='dikte'&&state.sesYok&&turkceSesVar()){state.sesYok=false;dikteCiz(round())}})}catch(e){}
+function renderDikte(r){state.ix=0;state.kurulan=[];state.kullanilan=[];state.havuz=[];state.dinleme=0;state.not='';state.sesYok=false;dikteCiz(r)}
 
 /* ===== YONERGE: ok bloğu yerine YAZILI yönerge. Öğrenci yönergeyi yazar,
    sahne yazılana göre hareket eder (şartname: "yönerge yazar" kazanımı). ===== */

@@ -103,6 +103,47 @@ async function turuCoz(W,adim){
     W.eval('state.isitiyor=false');
     await bekle(adim);
     tikla(W,'#durBtn'); await bekle(adim);
+  } else if(r.kind==='grafik'){
+    for(let i=0;i<r.kategoriler.length;i++){
+      for(let n=0;n<r.kategoriler[i].hedef;n++){
+        tikla(W,'[data-ekle="'+i+'"]'); await bekle(60);
+      }
+    }
+    tikla(W,'#onayBtn'); await bekle(adim);
+  } else if(r.kind==='deney'){
+    const gereken=r.enAzDeneme||3;
+    for(const a of r.anahtarlar){
+      const denenen=Number(W.eval('String((state.denenen||[]).length)'))||0;
+      if(denenen>=gereken)break;
+      tikla(W,'[data-a="'+a.id+'"]'); await bekle(80);
+    }
+    for(let n=0;n<r.sorular.length;n++){
+      const i=Number(W.eval('String(state.ix||0)'))||0;
+      const j=r.sorular[i].secenekler.findIndex(o=>o.dogru);
+      tikla(W,'[data-sec="'+j+'"]'); await bekle(adim);
+    }
+  } else if(r.kind==='plan'){
+    const yonler=[['U',0,-1],['D',0,1],['L',-1,0],['R',1,0]];
+    const anahtar=(x,y)=>x+','+y;
+    const kuyruk=[{x:r.basla.x,y:r.basla.y,yol:[]}],gorulen=new Set([anahtar(r.basla.x,r.basla.y)]);
+    let cozum=null;
+    while(kuyruk.length&&!cozum){
+      const simdi=kuyruk.shift();
+      if(simdi.x===r.hedef.x&&simdi.y===r.hedef.y){cozum=simdi.yol;break}
+      yonler.forEach(([yon,dx,dy])=>{
+        const x=simdi.x+dx,y=simdi.y+dy,k=anahtar(x,y);
+        if(x>=0&&y>=0&&x<r.genislik&&y<r.yukseklik&&!gorulen.has(k)&&r.plan[y][x]!=='#'){
+          gorulen.add(k);kuyruk.push({x,y,yol:simdi.yol.concat(yon)});
+        }
+      });
+    }
+    if(!cozum)throw new Error('plan için rota bulunamadı');
+    for(const yon of cozum){tikla(W,'[data-yon="'+yon+'"]');await bekle(60)}
+    tikla(W,'#calisBtn'); await bekle(adim);
+    if(r.gerekce){
+      const j=r.gerekce.secenekler.findIndex(o=>o.dogru);
+      tikla(W,'[data-ger="'+j+'"]'); await bekle(adim);
+    }
   } else if(r.kind==='yaz'){
     const ta=W.document.querySelector('#yaziAlan');
     ta.value=r.ornekCevap; ta.dispatchEvent(new W.Event('input'));

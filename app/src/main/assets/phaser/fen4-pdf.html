@@ -124,6 +124,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 .isit-dugme.kapali{background:#8fa3b3;box-shadow:0 5px 0 #6b7d8b}
 .gozlem-satir{width:min(330px,96%);border:3px solid var(--line);border-radius:13px;background:#fff;
  padding:7px 10px;font-size:13px;font-weight:900;line-height:1.3;text-align:center}
+/* deney — öğrenci değişkenleri tek tek açıp kapatarak koşulları kendisi bulur */
+.anahtarlar{width:min(330px,96%);display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.anahtarlar button{flex:1 1 30%;min-width:96px;min-height:48px;border:3px solid var(--line);border-radius:13px;
+ background:#fff;font-size:13px;font-weight:900;line-height:1.2;padding:6px 8px}
+.anahtarlar button.on{border-color:var(--ok);background:#e8f6ef;color:#0a6349}
 .olcek{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:min(330px,96%);height:48px;min-height:48px;background:transparent;margin:0}
 .olcek::-webkit-slider-runnable-track{height:14px;border-radius:8px;background:#dae7ef;border:2px solid #a6bece}
 .olcek::-moz-range-track{height:14px;border-radius:8px;background:#dae7ef;border:2px solid #a6bece}
@@ -478,6 +483,73 @@ const SAHNE={
     `<line x1="44" y1="70" x2="62" y2="86" stroke="#c3ccd4" stroke-width="4"/>`)+
   `<text x="160" y="132" font-size="10.5" font-weight="900" text-anchor="middle" fill="#eef4f7">${
     calisir?'devre kapalı — ampul yanıyor':'devre henüz çalışmıyor'}</text>`)},
+
+ /* gündüz/gece ve ışık kaynağı — kaynak kendi ortamında görünür */
+ isik:(st,ek)=>{const v=ek||(st&&st.vurgu)||'';
+  const gece=['yildiz','ampul','mum','fener','ates','ekran'].indexOf(v)>=0;
+  return SVG(320,126,
+  `<rect width="320" height="126" fill="${gece?'#121d38':'#dbeefb'}"/>`+
+  `<rect x="0" y="100" width="320" height="26" fill="${gece?'#26364f':'#8fae86'}"/>`+
+  (v==='gunes'?`<circle cx="160" cy="52" r="24" fill="#f6c944"/>`+
+    Array.from({length:8},(_,i)=>`<line x1="${160+30*Math.cos(i*Math.PI/4)}" y1="${52+30*Math.sin(i*Math.PI/4)}" x2="${160+40*Math.cos(i*Math.PI/4)}" y2="${52+40*Math.sin(i*Math.PI/4)}" stroke="#f6c944" stroke-width="3.5"/>`).join(''):'')+
+  (v==='yildiz'?Array.from({length:9},(_,i)=>`<circle cx="${30+i*32}" cy="${26+(i%3)*20}" r="${2+i%2}" fill="#fff"/>`).join(''):'')+
+  (v==='simsek'?`<path d="M150 20 l-16 40 h16 l-10 36 l34 -46 h-18 l12 -30 z" fill="#f6e05e" stroke="#d9a03c" stroke-width="2"/>`:'')+
+  (v==='ampul'?`<circle cx="160" cy="48" r="20" fill="#ffe066" stroke="#d99b20" stroke-width="3"/><rect x="152" y="68" width="16" height="10" fill="#8fa3b3"/><line x1="160" y1="0" x2="160" y2="28" stroke="#5d6f7d" stroke-width="3"/>`:'')+
+  (v==='mum'?`<rect x="150" y="56" width="20" height="44" fill="#f4ecd8" stroke="#c9b48b" stroke-width="2"/><path d="M160 36 q8 12 0 20 q-8 -8 0 -20 z" fill="#f6c944"/>`:'')+
+  (v==='fener'?`<rect x="128" y="60" width="44" height="18" rx="4" fill="#40505c"/><path d="M172 60 l34 -14 v46 l-34 -14 z" fill="#ffe066" opacity=".75"/>`:'')+
+  (v==='ates'?`<ellipse cx="160" cy="70" rx="12" ry="8" fill="#8fbf6a"/><circle cx="160" cy="62" r="5" fill="#d4ff6b"/>`:'')+
+  (v==='ekran'?`<rect x="126" y="38" width="68" height="44" rx="5" fill="#2f4356"/><rect x="130" y="42" width="60" height="36" fill="#cfe6f4"/>`:'')+
+  (v==='ay'?`<circle cx="160" cy="48" r="20" fill="#dfe4e8"/><circle cx="152" cy="44" r="4" fill="#c3ccd4"/><circle cx="166" cy="56" r="3" fill="#c3ccd4"/>`:'')+
+  (v==='ayna'?`<rect x="136" y="30" width="48" height="56" rx="5" fill="#cfe6f4" stroke="#8fa3b3" stroke-width="3"/><path d="M140 82 l40 -48" stroke="#fff" stroke-width="4" opacity=".7"/>`:'')+
+  (v?'':`<text x="160" y="60" font-size="12" font-weight="900" text-anchor="middle" fill="#7a8c99">ışık kaynağı</text>`))},
+ /* karanlık oda — ışık, göz ve cisim üçlüsü tek tek denenir */
+ oda:(d)=>{const {isik,cisim,goz}=d;
+  const gor=isik&&cisim&&goz;
+  return SVG(320,132,
+  `<rect width="320" height="132" fill="${isik?'#f2ede0':'#151b26'}"/>`+
+  `<rect x="0" y="106" width="320" height="26" fill="${isik?'#b99f74':'#0e131c'}"/>`+
+  (isik?`<circle cx="70" cy="30" r="14" fill="#ffe066" stroke="#d99b20" stroke-width="3"/><line x1="70" y1="0" x2="70" y2="16" stroke="#5d6f7d" stroke-width="3"/>`
+   :`<circle cx="70" cy="30" r="14" fill="none" stroke="#3a4553" stroke-width="3"/><line x1="70" y1="0" x2="70" y2="16" stroke="#3a4553" stroke-width="3"/>`)+
+  (cisim?`<rect x="146" y="66" width="42" height="40" rx="4" fill="${isik?'#cf6a5f':'#2a3340'}" stroke="${isik?'#a04a41':'#3a4553'}" stroke-width="2.5"/>`:'')+
+  (goz?`<ellipse cx="262" cy="70" rx="20" ry="12" fill="#fff" stroke="#5d6f7d" stroke-width="2.5"/><circle cx="262" cy="70" r="7" fill="#3a4553"/>`
+   :`<path d="M244 70 q18 -14 36 0 q-18 14 -36 0" fill="none" stroke="#3a4553" stroke-width="2.5"/><line x1="244" y1="60" x2="280" y2="80" stroke="#3a4553" stroke-width="3"/>`)+
+  (gor?`<path d="M84 34 l52 32 M190 78 l52 -6" stroke="#ffe066" stroke-width="2.5" stroke-dasharray="5 4"/>`:'')+
+  `<text x="160" y="124" font-size="10.5" font-weight="900" text-anchor="middle" fill="${isik?'#5b4636':'#7a8c99'}">${
+    gor?'cismi görüyoruz':'cismi göremiyoruz'}</text>`)},
+ /* gece şehri — ışık kirliliği durumu ve canlılara etkisi */
+ geceSehir:(st,ek)=>{const v=ek||(st&&st.vurgu)||'';
+  const parlak=v!=='cozum';
+  return SVG(320,138,
+  `<rect width="320" height="138" fill="${parlak?'#2b3550':'#0d1424'}"/>`+
+  (parlak?'':Array.from({length:14},(_,i)=>`<circle cx="${16+i*22}" cy="${14+(i%4)*12}" r="${1.6+i%2}" fill="#fff"/>`).join(''))+
+  Array.from({length:5},(_,i)=>`<rect x="${18+i*60}" y="${60+(i%3)*14}" width="42" height="${70-(i%3)*14}" fill="#1b2436"/>`+
+   Array.from({length:4},(_,j)=>`<rect x="${24+i*60+(j%2)*16}" y="${68+(i%3)*14+Math.floor(j/2)*16}" width="10" height="10" fill="${parlak?'#ffe066':'#3a4553'}"/>`).join('')).join('')+
+  Array.from({length:4},(_,i)=>{const x=48+i*72;
+   return `<rect x="${x-2}" y="86" width="4" height="34" fill="#5d6f7d"/>`+
+    (parlak?`<path d="M${x-16} 86 h32 l-6 -10 h-20 z" fill="#ffe066"/><path d="M${x-26} 86 a26 26 0 0 1 52 0 z" fill="#ffe066" opacity=".28"/>`
+     :`<path d="M${x-16} 86 h32 l-6 -10 h-20 z" fill="#8fa3b3"/><path d="M${x-14} 86 a14 14 0 0 1 28 0 z" fill="#ffe066" opacity=".22"/>`)}).join('')+
+  (v==='kus'?`<path d="M210 26 q10 -8 20 0 q10 -8 20 0" fill="none" stroke="#fff" stroke-width="2.5"/>`+
+    `<text x="230" y="46" font-size="9.5" font-weight="800" text-anchor="middle" fill="#ffd97a">yön şaşırdı</text>`:'')+
+  `<text x="160" y="132" font-size="10" font-weight="900" text-anchor="middle" fill="#cfe0f0">${
+    parlak?'gökyüzü aydınlık — yıldızlar görünmüyor':'gökyüzü karardı — yıldızlar göründü'}</text>`)},
+ /* şehir maketi tepsisi — seçilen öge makete yerleşir */
+ maket:(m)=>{const v=a=>m.some(x=>x.id===a);
+  return SVG(320,140,
+  `<rect width="320" height="140" fill="#dbeefb"/>`+
+  `<rect x="8" y="52" width="304" height="80" rx="6" fill="#cbdcc4" stroke="#8fae86" stroke-width="3"/>`+
+  (v('yesil')?`<circle cx="52" cy="92" r="18" fill="#5f9c4a"/><rect x="49" y="92" width="6" height="18" fill="#6b4d2a"/>`+
+    `<circle cx="80" cy="102" r="11" fill="#7ab55f"/>`:'')+
+  (v('bina')?`<rect x="112" y="66" width="30" height="46" fill="#b7c3cc" stroke="#8fa3b3" stroke-width="2"/>`+
+    Array.from({length:4},(_,i)=>`<rect x="${117+(i%2)*13}" y="${72+Math.floor(i/2)*14}" width="8" height="8" fill="#dff0f7"/>`).join(''):'')+
+  (v('yaya')?`<rect x="152" y="98" width="66" height="14" fill="#e3d9c4" stroke="#b9a98c" stroke-width="1.5"/>`+
+    `<text x="185" y="108" font-size="8" font-weight="900" text-anchor="middle" fill="#8a7a5c">YAYA BÖLGESİ</text>`:'')+
+  (v('toplu')?`<rect x="152" y="70" width="52" height="18" rx="3" fill="#e0a53c" stroke="#a97c14" stroke-width="2"/>`+
+    `<circle cx="164" cy="90" r="4" fill="#40505c"/><circle cx="192" cy="90" r="4" fill="#40505c"/>`:'')+
+  (v('bisiklet')?`<path d="M228 106 h64" stroke="#5f9c4a" stroke-width="5" stroke-dasharray="8 5"/>`+
+    `<text x="260" y="100" font-size="8" font-weight="900" text-anchor="middle" fill="#4f7f3a">BİSİKLET YOLU</text>`:'')+
+  (v('gunes')?`<rect x="228" y="62" width="34" height="20" rx="2" fill="#2f4356" stroke="#1b2a3a" stroke-width="2" transform="skewX(-12)"/>`+
+    `<text x="288" y="76" font-size="8" font-weight="900" text-anchor="middle" fill="#4d6a80">panel</text>`:'')+
+  `<text x="160" y="36" font-size="11" font-weight="900" text-anchor="middle" fill="#2a4a63">ŞEHİR MAKETİ — ${m.length} öge</text>`)},
  /* ocak + kap + madde + termometre; sağda sıcaklık-zaman çizgisi birikir */
  ocak:(d)=>{const {T,Tmin,Tmax,oran,faz,madde,kayit,yaniyor}=d;
   const y=v=>112-((v-Tmin)/(Tmax-Tmin))*92;
@@ -1028,9 +1100,168 @@ function renderIsit(r){const m=r.madde;
  state.T=m.baslangicC;state.oran=0;state.kayit=[m.baslangicC];state.isitiyor=false;
  state.bozuldu=false;state.tik=false;state.gozlem=m.gozlem0;state.not='';isitCiz(r)}
 
+/* ===== GRAFIK: şartnamenin #3 numaralı doğrulanmış hatası. Denemede kaynak
+   satırında yalnız birim açıklaması yazıyordu ("1 şimşek = %10"); hangi
+   kaynağın kaç blok olduğu HİÇBİR yerde belirtilmemişti, oyun deneme-yanılmayla
+   çözülüyordu. Sayaç da toplam blok sayısını vererek ipucu sızdırıyordu.
+   Şimdi: veri satırları ekranda okunur biçimde duruyor, grafikte sayı ölçeği
+   var ve toplam sayacı yok. Yanlış sütuna konan blok geri döner, grafik silinmez. ===== */
+function grafikCiz(r){
+ const dolu=state.dolu||r.kategoriler.map(()=>0);
+ const enB=r.enBuyuk||Math.max(...r.kategoriler.map(k=>k.hedef))+1;
+ $('#stage').innerHTML=
+  `<div class="veri-tablo">${r.veriler.map(v=>`<div class="veri-satir"><span>${esc(v.ad)}</span><span>${esc(v.deger)}</span></div>`).join('')}</div>`+
+  `<div class="grafik"><div class="olcekcol">${
+    Array.from({length:enB+1},(_,i)=>`<span>${i}</span>`).join('')}</div>`+
+   `<div class="sutunlar">${r.kategoriler.map((k,i)=>
+     `<div class="sutun"><div class="cubuk" style="height:${(enB)*16+4}px">${
+       Array.from({length:dolu[i]},()=>'<i></i>').join('')}</div>`+
+      `<div class="ad">${esc(k.ad)}</div></div>`).join('')}</div></div>`+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<div class="grafik"><div class="olcekcol"></div><div class="sutunlar">${
+    r.kategoriler.map((k,i)=>`<div class="sutun"><button data-ekle="${i}">+</button>`+
+     `<button data-sil="${i}">−</button></div>`).join('')}</div></div>`+
+  `<button class="choice" id="onayBtn">Grafiği onayla</button>`+
+  (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
+ $$('[data-ekle]').forEach(b=>b.onclick=()=>{
+  if(locked)return;const i=+b.dataset.ekle;
+  state.dolu=state.dolu||r.kategoriler.map(()=>0);
+  if(state.dolu[i]>=enB)return uyar('Ölçeğin dışına çıkamazsın');
+  state.dolu[i]++;state.not='';grafikCiz(r)});
+ $$('[data-sil]').forEach(b=>b.onclick=()=>{
+  if(locked)return;const i=+b.dataset.sil;
+  state.dolu=state.dolu||r.kategoriler.map(()=>0);
+  if(state.dolu[i]>0)state.dolu[i]--;
+  state.not='';grafikCiz(r)});
+ $('#onayBtn').onclick=()=>{
+  if(locked)return;
+  const d=state.dolu||r.kategoriler.map(()=>0);
+  const yanlis=r.kategoriler.map((k,i)=>({k,i})).filter(({k,i})=>d[i]!==k.hedef);
+  if(yanlis.length){
+   const y=yanlis[0];
+   /* grafik SİLİNMEZ; yalnız hangi satırı yeniden okuması gerektiği söylenir */
+   state.not=(y.k.ad+' sütununu veri satırından yeniden oku.');
+   grafikCiz(r);return wrong(r.hint||'Veri satırıyla sütunu karşılaştır.')}
+  state.not=r.sonuc||'';grafikCiz(r);good('Grafik tamam!')}}
+function renderGrafik(r){state.dolu=r.kategoriler.map(()=>0);state.not='';grafikCiz(r)}
+
+/* ===== PLAN: ızgara düz labirent değil, sokakları, kavşakları ve işaret
+   noktaları olan bir şehir planı. Görev metni rotayı söylemez; güzergâh
+   seçimi gerekçelendirilir. Engele çarpınca program silinmez, yalnız
+   hatalı adım işaretlenir. ===== */
+function planIzgara(r,konum,program){
+ const G=r.genislik,Y=r.yukseklik,h=30;
+ const hucre=(x,y)=>{
+  const k=r.plan[y][x];
+  const renk={'.':'#e8eef3','#':'#8fa3b3','c':'#d9c9a8','p':'#a8d6a0','o':'#f3d9a0'}[k]||'#e8eef3';
+  return `<rect x="${x*h}" y="${y*h}" width="${h}" height="${h}" fill="${renk}" stroke="#c3ccd4" stroke-width="1"/>`+
+   (k==='#'?`<rect x="${x*h+4}" y="${y*h+4}" width="${h-8}" height="${h-8}" rx="3" fill="#6b7d8b"/>`:'')+
+   (k==='p'?`<circle cx="${x*h+h/2}" cy="${y*h+h/2}" r="8" fill="#5f9c4a"/><text x="${x*h+h/2}" y="${y*h+h/2+4}" font-size="9" font-weight="900" text-anchor="middle" fill="#fff">P</text>`:'')+
+   (k==='o'?`<rect x="${x*h+6}" y="${y*h+8}" width="${h-12}" height="${h-16}" fill="#d9a03c"/><text x="${x*h+h/2}" y="${y*h+h/2+4}" font-size="9" font-weight="900" text-anchor="middle" fill="#fff">O</text>`:'')};
+ let hucreler='';
+ for(let y=0;y<Y;y++)for(let x=0;x<G;x++)hucreler+=hucre(x,y);
+ return `<svg class="plan" viewBox="0 0 ${G*h} ${Y*h}" role="img">`+hucreler+
+  `<circle cx="${konum.x*h+h/2}" cy="${konum.y*h+h/2}" r="10" fill="#2a75ad" stroke="#fff" stroke-width="2.5"/>`+
+  `<text x="${konum.x*h+h/2}" y="${konum.y*h+h/2+4}" font-size="11" text-anchor="middle" fill="#fff">🚲</text>`+
+  `</svg>`}
+function planCiz(r){
+ const p=state.program||[];
+ $('#stage').innerHTML=
+  `<div class="kap"><div class="kap-ad">🗺️ ${esc(r.planAd||'Mahalle planı')} — P park · O okul · gri: ana cadde</div>`+
+  planIzgara(r,state.konum,p)+`</div>`+
+  (r.gorev?`<div class="kart">${esc(r.gorev)}</div>`:'')+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ $('#task').innerHTML=
+  `<div class="program">${p.length?p.map((a,i)=>
+    `<span class="${state.hataIx===i?'hata':''}">${{'U':'⬆️','D':'⬇️','L':'⬅️','R':'➡️'}[a]}</span>`).join('')
+   :'<span style="border:0;background:none;font-size:12px;font-weight:800;color:#9aabb9">program boş</span>'}</div>`+
+  `<div class="yonler">${['U','D','L','R'].map(a=>
+    `<button data-yon="${a}">${{'U':'⬆️','D':'⬇️','L':'⬅️','R':'➡️'}[a]}</button>`).join('')}</div>`+
+  `<div class="row"><button class="choice kisa" id="geriBtn">← son adımı al</button>`+
+   `<button class="choice kisa" id="calisBtn">Sür</button></div>`+
+  (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
+ $$('[data-yon]').forEach(b=>b.onclick=()=>{
+  if(locked)return;state.program=(state.program||[]).concat(b.dataset.yon);
+  state.hataIx=-1;state.not='';planCiz(r)});
+ $('#geriBtn').onclick=()=>{if(locked)return;state.program=(state.program||[]).slice(0,-1);
+  state.hataIx=-1;planCiz(r)};
+ $('#calisBtn').onclick=()=>{if(locked)return;planCalistir(r)}}
+function planCalistir(r){
+ const p=state.program||[];
+ if(!p.length)return uyar('Önce birkaç yön ekle');
+ let x=r.basla.x,y=r.basla.y;
+ for(let i=0;i<p.length;i++){
+  const d={'U':[0,-1],'D':[0,1],'L':[-1,0],'R':[1,0]}[p[i]];
+  const nx=x+d[0],ny=y+d[1];
+  const disari=nx<0||ny<0||nx>=r.genislik||ny>=r.yukseklik;
+  const engel=!disari&&r.plan[ny][nx]==='#';
+  if(disari||engel){
+   /* program SİLİNMEZ; yalnız hatalı adım işaretlenir ve plan üzerinde tarif edilir */
+   state.konum={x,y};state.hataIx=i;
+   state.not=engel?'Burada ana caddeye girdin; bisiklet yolu oradan geçmiyor.':'Plan dışına çıktın.';
+   planCiz(r);return wrong(state.not)}
+  x=nx;y=ny}
+ state.konum={x,y};state.hataIx=-1;
+ if(x!==r.hedef.x||y!==r.hedef.y){
+  state.not='Okula ulaşmadın; program bitti ama başka bir noktadasın.';
+  planCiz(r);return wrong(state.not)}
+ state.not=r.sonuc||'';planCiz(r);
+ if(r.gerekce){state.gerekce=r.gerekce;planGerekce(r);return}
+ good('Okula ulaştın!')}
+function planGerekce(r){
+ const g=r.gerekce;
+ $('#task').innerHTML=`<div class="caption soru">${esc(g.soru)}</div>`+
+  `<div class="choices">${g.secenekler.map((o,j)=>`<button class="choice" data-ger="${j}">${esc(o.t)}</button>`).join('')}</div>`;
+ $$('[data-ger]').forEach(b=>b.onclick=()=>{
+  if(locked)return;const o=g.secenekler[+b.dataset.ger];
+  if(!o.dogru)return wrong(g.hint||'Seçtiğin yolu plan üzerinde yeniden düşün.');
+  good('Güzergâhını gerekçelendirdin!')})}
+function renderPlan(r){state.program=[];state.konum={x:r.basla.x,y:r.basla.y};
+ state.hataIx=-1;state.not='';state.gerekce=null;planCiz(r)}
+
+/* ===== DENEY: radar-kapsül yerine gerçek bir düzenek. Öğrenci değişkenleri
+   tek tek açıp kapatarak koşulları kendisi buluyor; seçenekler yeterince
+   deneme yapılmadan açılmıyor ve deneme yapmak ceza değil. ===== */
+function deneyCiz(r){
+ const d=state.durum||{};
+ const denenen=(state.denenen||[]).length;
+ const yeter=denenen>=(r.enAzDeneme||3);
+ $('#stage').innerHTML=
+  (r.ciz?r.ciz(d):'')+
+  (r.gorev?`<div class="kart">${esc(r.gorev)}</div>`:'')+
+  `<div class="gozlem-satir">${esc(r.sonucMetni?r.sonucMetni(d):'')}</div>`+
+  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
+ const i=state.ix||0,q=(r.sorular||[])[i];
+ $('#task').innerHTML=
+  `<div class="anahtarlar">${r.anahtarlar.map(a=>
+    `<button class="${d[a.id]?'on':''}" data-a="${a.id}">${esc(a.ad)}<br>${d[a.id]?'AÇIK':'KAPALI'}</button>`).join('')}</div>`+
+  `<div class="hint">${denenen} farklı durum denedin${yeter?'':' — en az '+(r.enAzDeneme||3)+' gerekli'}. Denemek ceza değildir.</div>`+
+  (yeter&&q?`<div class="caption soru">${esc(q.soru)}</div>`+
+   `<div class="choices">${q.secenekler.map((o,j)=>`<button class="choice" data-sec="${j}">${esc(o.t)}</button>`).join('')}</div>`+
+   ilerleme(r.sorular.length,i):'');
+ $$('[data-a]').forEach(b=>b.onclick=()=>{
+  if(locked)return;
+  const k=b.dataset.a;
+  state.durum=Object.assign({},state.durum,{[k]:!state.durum[k]});
+  const imza=r.anahtarlar.map(a=>state.durum[a.id]?1:0).join('');
+  if((state.denenen||[]).indexOf(imza)<0)state.denenen=(state.denenen||[]).concat(imza);
+  state.not='';deneyCiz(r)});
+ $$('[data-sec]').forEach(b=>b.onclick=()=>{
+  if(locked)return;
+  const o=q.secenekler[+b.dataset.sec];
+  if(!o.dogru)return wrong(o.hint||q.hint||'Düzeneği yeniden dene ve gözle.');
+  state.ix=i+1;state.not=q.neden||'';
+  if(state.ix>=r.sorular.length){deneyCiz(r);return good()}
+  feedback('Doğru');gecisBasla(()=>deneyCiz(r),FAST?30:520)})}
+function renderDeney(r){
+ state.durum={};r.anahtarlar.forEach(a=>state.durum[a.id]=!!a.baslangic);
+ state.denenen=[r.anahtarlar.map(a=>state.durum[a.id]?1:0).join('')];
+ state.ix=0;state.not='';deneyCiz(r)}
+
 function renderRound(){const r=round();if(!r)return;
  const fn={sinifla:renderSinifla,karar:renderKarar,sira:renderSira,esle:renderEsle,
-  kur:renderKur,sozdiz:renderSozdiz,yaz:renderYaz,hafiza:renderHafiza,gozlem:renderGozlem,isit:renderIsit}[r.kind];
+  kur:renderKur,sozdiz:renderSozdiz,yaz:renderYaz,hafiza:renderHafiza,gozlem:renderGozlem,isit:renderIsit,grafik:renderGrafik,plan:renderPlan,deney:renderDeney}[r.kind];
  (fn||renderKarar)(r)}
 
 const GAMES={};
@@ -2691,8 +2922,8 @@ GAMES.f24={title:'Deney Düzeneği',theme:'lab',
         çekilip çekilmediği karardan SONRA canlanıyor) ---- */
 GAMES.f25={title:'Mıknatıs Kutusu',theme:'atolye',
  finish:'Mıknatısın hangi maddeleri çektiğini test ettin, "her metal çekilmez" kuralını kurdun ve kendi tahminini yazdın.',rounds:[
- {kind:'sinifla',prompt:'Mıknatıs bu maddeyi çeker mi?',sahne:(st)=>SAHNE.miknatis(st),
-  soru:'Mıknatıs bu maddeyi çeker mi?',
+ {kind:'sinifla',prompt:'Mıknatıs bu maddeye ne yapar?',sahne:(st)=>SAHNE.miknatis(st),
+  soru:'Mıknatıs bu maddeye ne yapar?',
   kutular:['ÇEKER','ÇEKMEZ'],
   ipucu:'Karar verdikten sonra maddenin ne yaptığını göreceksin.',
   kartlar:[
@@ -3239,6 +3470,770 @@ GAMES.f32={title:'Devre Kurma',theme:'atolye',
    {ad:'"ampul" sözcüğünü kullan',desen:'ampul'}],
   ornekCevap:'Önce pili koyarım, sonra kabloları uçlarına bağlarım, ampulü takarım ve en son anahtarı kapatıp yakarım.',
   result:'Devre kurma adımlarını kendin anlattın.'}]};
+
+/* ---- f33 Enerji Kaynakları (bant kaldırıldı: kaynak kendi sahnesinde
+        duruyor; tartışmalı örnekler ölçütle savunuluyor) ---- */
+GAMES.f33={title:'Enerji Kaynakları',theme:'sehir',
+ finish:'Kaynakları yenilenebilirlik ölçütüne göre ayırdın, tartışmalı örnekleri ölçütle savundun ve seçimini gerekçelendirdin.',rounds:[
+ {kind:'sinifla',prompt:'Bu kaynak tükenir mi, kendini yeniler mi?',sahne:SAHNE.kantin,
+  soru:'Bu enerji kaynağı hangi gruba girer?',
+  kutular:['YENİLENEBİLİR','YENİLENEMEZ'],
+  ipucu:'Ölçüt: insan ömrü ölçeğinde kendini yeniliyor mu, tükeniyor mu?',
+  kartlar:[
+   {t:'Güneş — panellere gündüz boyunca ışık düşüyor',dogru:0,
+    neden:'Güneş milyarlarca yıl daha ışık verecek; tükenme kaygısı yok.',
+    hint:'Bu kaynak yarın da aynı biçimde var olacak mı?'},
+   {t:'Kömür — yer altından çıkarılıyor, çıkarıldıkça azalıyor',dogru:1,
+    neden:'Kömür milyonlarca yılda oluşur; kullandığımız hızda yerine konmaz.',
+    hint:'Bu kaynak kullandığımız hızda yerine konabiliyor mu?'},
+   {t:'Rüzgâr — türbinler eserken dönüyor',dogru:0,
+    neden:'Rüzgâr atmosfer ısındıkça sürekli yeniden oluşur.',
+    hint:'Bu kaynağın bir deposu var mı, yoksa sürekli mi oluşuyor?'},
+   {t:'Petrol — rafineride işleniyor, rezervler azalıyor',dogru:1,
+    neden:'Petrol de fosil kaynaktır; oluşması milyonlarca yıl sürer.',
+    hint:'Bu kaynağın oluşması ne kadar sürüyor?'},
+   {t:'Akarsu — baraj türbinlerini döndürüyor',dogru:0,
+    neden:'Suyun döngüsü Güneş enerjisiyle sürekli işler.',
+    hint:'Bu kaynağı besleyen bir döngü var mı?'},
+   {t:'Doğal gaz — borularla taşınıyor, rezervden çekiliyor',dogru:1,
+    neden:'Doğal gaz da fosil kaynaktır ve rezervi sınırlıdır.',
+    hint:'Bu kaynak yerin altındaki sınırlı bir rezervden mi geliyor?'}]},
+ {kind:'karar',prompt:'Tartışmalı örnekleri ölçütle savun.',sahne:SAHNE.kantin,
+  sorular:[
+   {durum:'Biyokütle: odun ve bitki artıkları yakılarak enerji elde ediliyor. Yeni ağaç dikilirse yerine konuyor, dikilmezse orman azalıyor.',
+    soru:'Biyokütle hangi gruba girer?',
+    ipucu:'Ölçüt: kullandığımız hızda yerine konabiliyor mu?',
+    hint:'Cevap kaynağın kendisine mi, nasıl kullanıldığına mı bağlı?',
+    secenekler:[
+     {t:'Yerine yenisi dikilirse yenilenebilir; dikilmezse tükenir — nasıl kullanıldığına bağlı',dogru:true},
+     {t:'Her koşulda yenilenebilirdir'},
+     {t:'Her koşulda yenilenemezdir'}],
+    neden:'Bazı kaynaklarda yenilenebilirlik, kullanım biçiminin sonucudur.',
+    gerekce:{soru:'Bu ayrımı yapan ölçüt neydi?',
+     secenekler:[
+      {t:'Kullandığımız hızda yerine konup konmaması',dogru:true},
+      {t:'Kaynağın doğada bulunması'}],
+     neden:'Kömür de doğada bulunur ama yenilenemez.'}},
+   {durum:'Hidroelektrik: su döngüsü tükenmiyor ama baraj vadiyi sular altında bırakıyor ve balık göçünü kesiyor.',
+    soru:'Hidroelektrik için ne söylenebilir?',
+    hint:'Yenilenebilir olmak, çevreye hiç etkisi yok demek mi?',
+    secenekler:[
+     {t:'Yenilenebilirdir ama çevresel etkileri de değerlendirilmelidir',dogru:true},
+     {t:'Yenilenebilir olduğu için hiçbir zararı yoktur'},
+     {t:'Zararı olduğu için yenilenemez sayılır'}],
+    neden:'Yenilenebilirlik ile çevreye zararsızlık aynı şey değildir.'},
+   {durum:'Bir şehir "temiz enerji" diyerek tamamı kömürden gelen elektriği reklam ediyor.',
+    soru:'Bu iddiayı nasıl sınarsın?',
+    hint:'İddianın dayandığı veriyi kim yayımlıyor?',
+    secenekler:[
+     {t:'Üretim verilerine bakar, kaynak dağılımını kontrol ederim',dogru:true},
+     {t:'Reklamdaki renklere bakarım'},
+     {t:'Şehrin adına bakarım'}],
+    neden:'İddia ölçümle sınanır; "temiz" sözcüğü tek başına kanıt değildir.'}]},
+ {kind:'yaz',prompt:'Bir kaynağı neden o gruba koyduğunu açıkla.',sahne:SAHNE.kantin,
+  gorev:'Bir enerji kaynağı seç. Hangi gruba koyduğunu ve neden o gruba koyduğunu yaz.',
+  ornek:'Kalıp: "… yenilenebilir/yenilenemez çünkü …"',
+  yerTutucu:'Kaynak ve gerekçen…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"yenilenebilir" ya da "yenilenemez" yaz',desen:'yenilenebilir|yenilenemez'},
+   {ad:'kaynağın adını yaz (güneş, rüzgâr, kömür, petrol, su, gaz…)',
+    desen:'güneş|rüzgâr|kömür|petrol|su\\b|gaz|biyokütle|akarsu'}],
+  ornekCevap:'Rüzgâr yenilenebilir bir kaynaktır çünkü hava ısındıkça sürekli yeniden oluşur ve tükenmez.',
+  result:'Sınıflandırmanı ölçüte dayandırdın.'}]};
+
+/* ---- f34 Elektrik Atölyesi (tepsi kaldırıldı: seçilen eleman tezgâha
+        konuyor ve devre görünür biçimde tamamlanıyor) ---- */
+GAMES.f34={title:'Elektrik Atölyesi',theme:'atolye',
+ finish:'Devreyi atölyede kurup çalıştırdın, eksik eleman senaryolarını çözdün ve gereken elemanları kendin sıraladın.',rounds:[
+ {kind:'kur',prompt:'İstenen elemanı al; devre tezgâhta kuruluyor.',
+  kap:{ciz:(ic)=>`<div class="kap"><div class="kap-ad">🔌 Devre tezgâhı</div>`+
+   SAHNE.devre({kurulan:ic.map(h=>h.parca).filter(Boolean)})+
+   `<div class="kap-ad">${ic.length?ic.map(h=>h.ad).join(' · '):'tezgâh boş'}</div></div>`},
+  kapKalsin:true,
+  ipucu:'Takılan her eleman devre şemasında görünür.',
+  havuz:[
+   {id:'pil',ad:'Pil',parca:'pil',neden:'Enerji kaynağı olmadan akım oluşmaz.'},
+   {id:'kablo',ad:'Kablo',parca:'kablo',neden:'Akımın izleyeceği yol kuruldu.'},
+   {id:'ampul',ad:'Ampul',parca:'ampul',neden:'Devrenin işini görünür kılan eleman takıldı.'},
+   {id:'anahtar',ad:'Anahtar',parca:'anahtar',neden:'Anahtar kapanınca yol tamamlandı ve ampul yandı.'},
+   {id:'x1',ad:'Tahta çubuk',hint:'Bu madde elektriği iletir mi?'},
+   {id:'x2',ad:'Plastik cetvel',hint:'Bu madde iletken mi, yalıtkan mı?'},
+   {id:'x3',ad:'Mıknatıs',hint:'Bu deneyin konusu manyetizma mı, elektrik devresi mi?'}],
+  istekler:[
+   {metin:'Usta: "Önce enerjiyi verecek elemanı ve akımın yolunu al."',
+    gerekli:['pil','kablo'],tamam:'Kaynak ve yol hazır; ampul henüz yok.',
+    hint:'Enerjiyi ne veriyor, akım nereden geçiyor?'},
+   {metin:'Usta: "Şimdi enerjiyi ışığa çevirecek elemanı ekle."',
+    gerekli:['ampul'],tamam:'Ampul takıldı ama devre hâlâ açık.',
+    hint:'Işığı hangi eleman üretiyor?'},
+   {metin:'Usta: "Son olarak akımı denetleyecek elemanı ekle ve devreyi kapat."',
+    gerekli:['anahtar'],tamam:'Devre kapandı: ampul yanıyor.',
+    hint:'Akımı başlatıp durduran eleman hangisi?'}]},
+ {kind:'karar',prompt:'Eksik eleman senaryoları.',sahne:(st,ek)=>SAHNE.devre(st,ek),
+  sorular:[
+   {durum:'Devrede kablo, ampul ve anahtar var; pil yok.',sahneEk:'ampul',
+    soru:'Devre çalışır mı?',
+    ipucu:'Devrenin çalışması için kaynak, yol ve tüketici gerekliydi.',
+    hint:'Akımı başlatacak eleman var mı?',
+    secenekler:[
+     {t:'Çalışmaz; enerji kaynağı olmadan akım oluşmaz',dogru:true},
+     {t:'Çalışır; anahtar kapatılırsa yeter'}],
+    neden:'Pil, devredeki akımın kaynağıdır.',
+    gerekce:{soru:'Basit bir devrede en az hangi üçlü bulunmalı?',
+     secenekler:[
+      {t:'Kaynak, yol ve tüketici',dogru:true},
+      {t:'Anahtar, mıknatıs ve cetvel'}],
+     neden:'Bu üçlü olmadan devre kurulmuş sayılmaz.'}},
+   {durum:'Kablo yerine tahta çubuk bağlanıyor.',
+    soru:'Ampul yanar mı?',
+    hint:'Tahta elektriği iletir mi?',
+    secenekler:[
+     {t:'Yanmaz; tahta yalıtkandır, akımı iletmez',dogru:true},
+     {t:'Yanar; tahta da bir yoldur'}],
+    neden:'Yolun iletken olması gerekir; yalıtkan akımı geçirmez.'},
+   {durum:'Aynı devreye ikinci bir pil ekleniyor.',
+    soru:'Ne gözlenir?',
+    hint:'Daha çok enerji ampule ne yapar?',
+    secenekler:[
+     {t:'Ampul daha parlak yanar',dogru:true},
+     {t:'Ampul hiç yanmaz'},
+     {t:'Hiçbir değişiklik olmaz'}],
+    neden:'Kaynak arttıkça ampulden geçen akım ve parlaklık artar.'}]},
+ {kind:'yaz',prompt:'Devre için gereken elemanları kendin sırala.',
+  sahne:()=>SAHNE.devre({kurulan:['pil','kablo','ampul','anahtar']}),
+  gorev:'Bir ampulü yakmak için hangi elemanlar gerekir? Virgülle ayırarak yaz ve her birinin işini kısaca söyle.',
+  ornek:'Kalıp: "… , … , … gerekir; … enerji verir, … yolu oluşturur."',
+  yerTutucu:'Elemanlar ve işleri…',
+  enAzKelime:14,bitis:'.',
+  denetim:[{ad:'en az üç elemanı virgülle ayırarak say',desen:'[^,]+,[^,]+,'},
+   {ad:'"pil" sözcüğünü kullan',desen:'pil'},
+   {ad:'"ampul" sözcüğünü kullan',desen:'ampul'}],
+  ornekCevap:'Pil, kablo, ampul ve anahtar gerekir; pil enerji verir, kablo yolu oluşturur, ampul ışık üretir.',
+  result:'Gerekli elemanları işleriyle sıraladın.'}]};
+
+/* ---- f35 Arıza Bulma (radar kaldırıldı: çalışmayan devre ekranda,
+        öğrenci arızayı devreye bakarak buluyor) ---- */
+GAMES.f35={title:'Arıza Bulma',theme:'atolye',
+ finish:'Çalışmayan devrelerde arızayı devreye bakarak buldun, olasılıkları test ederek eledin ve bulgunu kanıtıyla anlattın.',rounds:[
+ {kind:'karar',prompt:'Devre çalışmıyor. Arıza nerede?',sahne:(st,ek)=>SAHNE.devre(st,ek),
+  sorular:[
+   {durum:'Ekranda: pil takılı, kablolar bağlı, ampul yerinde. Anahtar AÇIK (yol kesik). Ampul yanmıyor.',
+    sahneEk:'ampul',
+    soru:'Ampul neden yanmıyor?',
+    ipucu:'Devreye bak: yol kesiksiz mi?',
+    hint:'Akımın tam tur atabilmesi için ne gerekiyordu?',
+    secenekler:[
+     {t:'Anahtar açık olduğu için yol kesik; akım dolaşamıyor',dogru:true},
+     {t:'Pil bitmiş'},
+     {t:'Ampul bozuk'}],
+    neden:'Görünen kanıt: anahtar açık. Başka bir arıza aramadan önce bu düzeltilir.',
+    gerekce:{soru:'Bu tanıyı neye dayandırdın?',
+     secenekler:[
+      {t:'Devrede gördüğüm açık anahtara',dogru:true},
+      {t:'Tahmine'}],
+     neden:'Arıza teşhisi gözlenen kanıta dayanır.'}},
+   {durum:'Anahtar kapalı, pil ve ampul yerinde ama bir kablonun ucu pilden çıkmış.',
+    soru:'Arıza nedir?',
+    hint:'Yol her yerde kesiksiz mi?',
+    secenekler:[
+     {t:'Kopuk bağlantı; yol tamamlanmıyor',dogru:true},
+     {t:'Anahtar bozuk'},
+     {t:'Ampul çok küçük'}],
+    neden:'Tek bir kopukluk bile bütün devreyi durdurur.'},
+   {durum:'Her şey bağlı, anahtar kapalı ama kablo yerine tahta çubuk kullanılmış.',
+    soru:'Arıza nedir?',
+    hint:'Yol iletken mi?',
+    secenekler:[
+     {t:'Yol yalıtkan bir maddeden; tahta akımı iletmez',dogru:true},
+     {t:'Pil ters takılmış'}],
+    neden:'Yolun iletken olması, kesiksiz olması kadar önemlidir.'}]},
+ {kind:'karar',prompt:'Birden çok olasılık var: test ederek ele.',sahne:(st,ek)=>SAHNE.devre(st,ek),
+  sorular:[
+   {durum:'Ampul yanmıyor. Üç olasılık var: pil bitmiş, ampul bozuk, bağlantı kopuk.',
+    sahneEk:'ampul',
+    soru:'İlk hangi testi yaparsın?',
+    ipucu:'En hızlı ve en kolay bakılan şeyden başlanır.',
+    hint:'Hangi olasılığı hiçbir parça değiştirmeden gözle kontrol edebilirsin?',
+    secenekler:[
+     {t:'Bağlantılara bakarım; gözle kontrol edilir, parça değiştirmek gerekmez',dogru:true},
+     {t:'Önce pili yenisiyle değiştiririm'},
+     {t:'Önce ampulü yenisiyle değiştiririm'}],
+    neden:'Teşhiste önce ucuz ve hızlı testler yapılır.',
+    gerekce:{soru:'Neden önce parça değiştirmiyoruz?',
+     secenekler:[
+      {t:'Değiştirince arızanın nerede olduğunu öğrenemeyiz',dogru:true},
+      {t:'Yeni parça pahalı olduğu için'}],
+     neden:'Rastgele parça değiştirmek arızayı gizler; test onu bulur.'}},
+   {durum:'Bağlantılar sağlam. Aynı ampulü, çalıştığı bilinen başka bir devreye taktın ve yandı.',
+    soru:'Bu test neyi eledi?',
+    hint:'Ampul başka devrede yandıysa ampulde sorun var mı?',
+    secenekler:[
+     {t:'Ampulün bozuk olma olasılığını eledi',dogru:true},
+     {t:'Pilin bitmiş olma olasılığını eledi'}],
+    neden:'Bir parçayı çalışan bir düzenekte denemek onu listeden çıkarır.'},
+   {durum:'Bağlantı sağlam, ampul sağlam. Geriye tek olasılık kaldı.',
+    soru:'Arıza nerede?',
+    hint:'Elenen ikisi dışında ne kalıyor?',
+    secenekler:[
+     {t:'Pilde; diğer iki olasılık test edilerek elendi',dogru:true},
+     {t:'Yine ampulde'}],
+    neden:'Olasılıkları teker teker eleyerek arızaya ulaşmak bilimsel bir yöntemdir.'}]},
+ {kind:'yaz',prompt:'Arızayı ve nasıl bulduğunu anlat.',
+  sahne:()=>SAHNE.devre({kurulan:['pil','kablo','ampul']}),
+  gorev:'Bir devre çalışmıyor. Arızanın ne olduğunu ve bunu hangi testle bulduğunu yaz.',
+  ornek:'Kalıp: "Arıza … . Bunu … test ederek buldum."',
+  yerTutucu:'Arıza ve testin…',
+  enAzKelime:12,bitis:'.',
+  denetim:[{ad:'"test" ya da "dene" ya da "kontrol" sözcüğünü kullan',desen:'test|dene|kontrol'},
+   {ad:'arızanın ne olduğunu yaz (kopuk, açık, bitmiş, bozuk, yalıtkan…)',
+    desen:'kopuk|açık|bitmiş|bozuk|yalıtkan|kesik'}],
+  ornekCevap:'Arıza kopuk bir bağlantıydı. Bunu bütün uçları tek tek kontrol ederek buldum.',
+  result:'Bulgunu kanıtıyla anlattın.'}]};
+
+/* ---- f36 Enerji Grafiği — şartnamenin #3 numaralı doğrulanmış hatası.
+     Denemede kaynak satırında yalnız birim açıklaması yazıyordu ("1 şimşek
+     = %10"); hangi kaynağın kaç blok olduğu HİÇBİR yerde belirtilmemişti ve
+     oyun deneme-yanılmayla çözülüyordu. Sayaç da toplam blok sayısını
+     vererek ipucu sızdırıyordu. Şimdi veriler okunur biçimde ekranda,
+     grafikte sayı ölçeği var, toplam sayacı yok. ---- */
+GAMES.f36={title:'Enerji Grafiği',theme:'sehir',
+ finish:'Veri satırlarını okuyup grafiği kurdun, baskın kaynağı ve yenilenebilir payı yorumladın ve şehir için bir öneri getirdin.',rounds:[
+ {kind:'grafik',prompt:'Veri satırlarını oku ve grafiği kur.',
+  soru:'Her kaynağın sütununu veriye göre doldur.',
+  ipucu:'Soldaki ölçek sayıları gösterir; toplam sayacı yok, veriye bakacaksın.',
+  hint:'Hangi satırın sayısıyla hangi sütun eşleşiyor?',
+  veriler:[
+   {ad:'☀️ Güneş santralleri',deger:'3 birim'},
+   {ad:'💨 Rüzgâr türbinleri',deger:'2 birim'},
+   {ad:'🌊 Hidroelektrik',deger:'2 birim'},
+   {ad:'🪨 Kömür santrali',deger:'3 birim'}],
+  kategoriler:[{ad:'Güneş',hedef:3},{ad:'Rüzgâr',hedef:2},{ad:'Hidro',hedef:2},{ad:'Kömür',hedef:3}],
+  enBuyuk:5,
+  sonuc:'Grafik veriye uyuyor: toplam 10 birimin 7\'si yenilenebilir kaynaktan.',
+  result:'Grafiği veriye göre kurdun.'},
+ {kind:'karar',prompt:'Kurduğun grafiği yorumla.',
+  sahne:()=>SAHNE.kantin(),
+  sorular:[
+   {durum:'Grafik — Güneş 3 · Rüzgâr 2 · Hidro 2 · Kömür 3 (toplam 10 birim)',
+    soru:'Tek başına en çok üretim hangi kaynaktan geliyor?',
+    ipucu:'Sütun yüksekliklerini karşılaştır.',
+    hint:'En yüksek sütunlar hangileri, kaç tane?',
+    secenekler:[
+     {t:'Güneş ve kömür eşit: ikisi de 3 birim',dogru:true},
+     {t:'Yalnız kömür'},
+     {t:'Yalnız rüzgâr'}],
+    neden:'İki sütun aynı yükseklikte; "en çok" tek bir kaynağa ait değil.',
+    gerekce:{soru:'Bu soruyu cevaplarken neye baktın?',
+     secenekler:[
+      {t:'Sütunların ölçekteki sayı değerlerine',dogru:true},
+      {t:'Sütunların rengine'}],
+     neden:'Grafik okumak, ölçekten sayı okumaktır.'}},
+   {durum:'Aynı grafik ekranda. Yenilenebilir kaynaklar: güneş, rüzgâr, hidro.',
+    soru:'Yenilenebilir payı kaç birimdir?',
+    hint:'Üç yenilenebilir sütunu topla: 3 + 2 + 2',
+    secenekler:[
+     {t:'7 birim (10 birimin 7\'si)',dogru:true},
+     {t:'3 birim'},
+     {t:'5 birim'}],
+    neden:'Üç yenilenebilir sütunun toplamı 7, kömür 3.'},
+   {durum:'Şehir yenilenebilir payını artırmak istiyor.',
+    soru:'Grafiğe göre hangi adım bu payı en çok artırır?',
+    hint:'Hangi sütunu küçültüp hangilerini büyütmek gerekir?',
+    secenekler:[
+     {t:'Kömür sütununu küçültüp yenilenebilir sütunları büyütmek',dogru:true},
+     {t:'Bütün sütunları eşitlemek'},
+     {t:'Hidro sütununu küçültmek'}],
+    neden:'Pay, yenilenebilir toplamının toplam üretime oranıdır.'}]},
+ {kind:'yaz',prompt:'Şehir için bir enerji önerisi getir.',sahne:()=>SAHNE.kantin(),
+  gorev:'Grafiği yorumla: şehir enerjisini nasıl daha sürdürülebilir yapabilir? Önerini nedeniyle yaz.',
+  ornek:'Kalıp: "… artırılmalı çünkü …"',
+  yerTutucu:'Önerin ve nedeni…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'bir kaynağın adını yaz (güneş, rüzgâr, hidro, kömür)',
+    desen:'güneş|rüzgâr|hidro|kömür'},
+   {ad:'"yenilenebilir" ya da "azalt" ya da "artır" yaz',desen:'yenilenebilir|azalt|artır'}],
+  ornekCevap:'Güneş panelleri artırılmalı çünkü kömür payı azalırsa hava kirliliği de birlikte azalır.',
+  result:'Grafiği yorumlayıp öneri getirdin.'}]};
+
+/* ---- f37 Işık Kaynakları (bant kaldırıldı: kaynak kendi ortamında —
+        gündüz ya da gece — görünüyor; ay ve ayna çeldirici) ---- */
+GAMES.f37={title:'Işık Kaynakları',theme:'gece',
+ finish:'Doğal ve yapay ışık kaynaklarını ayırdın, ışık yayan ile yansıtanı ayırt ettin ve çevrenden örnek verdin.',rounds:[
+ {kind:'sinifla',prompt:'Bu ışık kaynağı doğal mı, yapay mı?',
+  sahne:(st,ek)=>SAHNE.isik(st,ek),
+  soru:'Bu ışık kaynağı hangi gruba girer?',
+  kutular:['DOĞAL','YAPAY (insan yapımı)'],
+  ipucu:'Ölçüt: bu kaynağı insan mı üretti, doğada kendiliğinden mi var?',
+  kartlar:[
+   {t:'Güneş',sahneEk:'gunes',dogru:0,neden:'Güneş kendi ışığını üretir ve doğada kendiliğinden vardır.',
+    hint:'Bunu bir fabrikada üretebilir miyiz?'},
+   {t:'Ampul',sahneEk:'ampul',dogru:1,neden:'Ampul insan tasarımıdır; elektrikle ışık üretir.',
+    hint:'Bunu kim üretti?'},
+   {t:'Yıldızlar',sahneEk:'yildiz',dogru:0,neden:'Yıldızlar kendi ışığını üreten gök cisimleridir.',
+    hint:'Bunlar insan eliyle mi yapıldı?'},
+   {t:'Mum',sahneEk:'mum',dogru:1,neden:'Mum insan yapımı bir ışık kaynağıdır.',
+    hint:'Bunu kim biçimlendirdi?'},
+   {t:'Şimşek',sahneEk:'simsek',dogru:0,neden:'Şimşek atmosferde kendiliğinden oluşur.',
+    hint:'Bu olayı biz mi başlatıyoruz?'},
+   {t:'Ateş böceği',sahneEk:'ates',dogru:0,neden:'Ateş böceği vücudunda kendi ışığını üretir.',
+    hint:'Bu canlı ışığı kendi mi üretiyor?'},
+   {t:'Telefon ekranı',sahneEk:'ekran',dogru:1,neden:'Ekran insan yapımıdır ve elektrikle çalışır.',
+    hint:'Bu nesne doğada bulunur mu?'}]},
+ {kind:'karar',prompt:'Işık yayan mı, yansıtan mı?',sahne:(st,ek)=>SAHNE.isik(st,ek),
+  sorular:[
+   {durum:'Dolunay gecesi Ay çok parlak görünüyor.',sahneEk:'ay',
+    soru:'Ay bir ışık kaynağı mıdır?',
+    ipucu:'Ölçüt: kendi ışığını üretiyor mu, başka bir ışığı mı yansıtıyor?',
+    hint:'Ay karanlıkta tek başına parlar mıydı?',
+    secenekler:[
+     {t:'Değildir; Güneş\'ten aldığı ışığı yansıtır',dogru:true},
+     {t:'Doğal bir ışık kaynağıdır'},
+     {t:'Yapay bir ışık kaynağıdır'}],
+    neden:'Parlamak ile ışık üretmek aynı şey değildir.',
+    gerekce:{soru:'Işık kaynağı olmanın ölçütü nedir?',
+     secenekler:[
+      {t:'Işığı kendisinin üretmesi',dogru:true},
+      {t:'Parlak görünmesi'}],
+     neden:'Yansıtıcılar parlar ama ışık üretmez.'}},
+   {durum:'Güneşli bir günde ayna göz alıyor.',sahneEk:'ayna',
+    soru:'Ayna bir ışık kaynağı mıdır?',
+    hint:'Karanlık bir odada ayna görünür mü?',
+    secenekler:[
+     {t:'Değildir; üzerine düşen ışığı yansıtır',dogru:true},
+     {t:'Yapay bir ışık kaynağıdır'}],
+    neden:'Karanlıkta ayna hiçbir şey göstermez; demek ki ışık üretmiyor.'},
+   {durum:'Karanlık bir odada ateş böceği ile ayna yan yana duruyor.',
+    soru:'Hangisi görünür?',
+    hint:'Hangisi kendi ışığını üretiyordu?',
+    secenekler:[
+     {t:'Ateş böceği; kendi ışığını ürettiği için görünür',dogru:true},
+     {t:'Ayna; yüzeyi parlak olduğu için'},
+     {t:'İkisi de görünür'}],
+    neden:'Yansıtıcının görünmesi için önce bir kaynağa ihtiyaç vardır.'}]},
+ {kind:'yaz',prompt:'Çevrenden bir doğal, bir yapay kaynak söyle.',
+  sahne:(st)=>SAHNE.isik(st,'ampul'),
+  gorev:'Çevrenden bir doğal ve bir yapay ışık kaynağı yaz. Hangisinin neden o gruba girdiğini de açıkla.',
+  ornek:'Kalıp: "… doğaldır, … yapaydır çünkü …"',
+  yerTutucu:'İki kaynak ve gerekçen…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"doğal" sözcüğünü kullan',desen:'doğal'},
+   {ad:'"yapay" sözcüğünü kullan',desen:'yapay'}],
+  ornekCevap:'Güneş doğal bir kaynaktır, masamdaki lamba yapaydır çünkü lambayı insanlar fabrikada üretmiştir.',
+  result:'İki kaynağı gerekçesiyle ayırdın.'}]};
+
+/* ---- f38 Karanlık Kutu Deneyi (roket kaldırıldı: adımlar kutuda
+        uygulanıyor ve son adımda sonuç görülüyor) ---- */
+GAMES.f38={title:'Karanlık Kutu Deneyi',theme:'lab',
+ finish:'Deneyi adım adım kurdun, ışık dışındaki her şeyi sabit tuttun ve sonucu nedeniyle anlattın.',rounds:[
+ {kind:'sira',prompt:'Deney adımlarını sırayla uygula.',
+  sahne:(st)=>SAHNE.oda({isik:((st&&st.dizi)||[]).length>=4,cisim:((st&&st.dizi)||[]).length>=2,goz:((st&&st.dizi)||[]).length>=3}),
+  gorev:'Karanlık bir kutunun içine bir cisim koyup görüp göremediğimizi test edeceğiz. Adımları sırayla uygula.',
+  ipucu:'Uygulanan adımlar kutunun içinde görünür.',
+  kartlar:[
+   {t:'Araştırma sorumu yazarım: cismi görmek için ne gerekli?',neden:'Soru, neyi değiştireceğimizi belirler.'},
+   {t:'Kutunun içine cismi yerleştiririm',neden:'Görülecek nesne kutuya konur.'},
+   {t:'Kutunun küçük deliğinden bakarım — hiçbir şey göremem',neden:'Işık yokken göz cismi göremez; bu ilk gözlemimiz.'},
+   {t:'Kutunun içine küçük bir ışık kaynağı koyup açarım',neden:'Değiştirdiğimiz tek şey ışık; cisim ve göz aynı yerde.'},
+   {t:'Yeniden bakıp iki gözlemi karşılaştırırım',neden:'Fark yalnız ışıktan geldiği için sonucu ona bağlayabiliriz.'}],
+  dogru:[0,1,2,3,4],
+  ipucular:['Deneye başlamadan önce neyi arayacağını yazmalısın.',
+   'Görülecek nesne kutuya konmadan bakmanın anlamı var mı?',
+   'Işığı açmadan ÖNCE bir gözlem yapmalısın; yoksa neyle karşılaştıracaksın?',
+   'İlk gözlemi yaptın; şimdi tek bir şeyi değiştir.','']},
+ {kind:'karar',prompt:'Işık dışında ne sabit tutuldu?',
+  sahne:(st,ek)=>SAHNE.oda({isik:ek==='acik',cisim:true,goz:true}),
+  sorular:[
+   {durum:'İlk gözlemde kutu karanlıktı; ikinci gözlemde ışık açıldı. Cisim ve bakan göz aynı yerde kaldı.',
+    sahneEk:'acik',
+    soru:'Bu deneyde değiştirilen tek şey neydi?',
+    ipucu:'İki gözlem arasında ne değişti, ne aynı kaldı?',
+    hint:'Cisim yerinden oynadı mı, göz değişti mi?',
+    secenekler:[
+     {t:'Yalnız ışık; cisim ve göz sabit tutuldu',dogru:true},
+     {t:'Hem ışık hem cisim değişti'},
+     {t:'Yalnız cisim değişti'}],
+    neden:'Tek değişken ışık olduğu için farkı ona bağlayabiliriz.',
+    gerekce:{soru:'Cisim de değiştirilseydi ne olurdu?',
+     secenekler:[
+      {t:'Farkın ışıktan mı cisimden mi geldiğini bilemezdik',dogru:true},
+      {t:'Sonuç daha güvenilir olurdu'}],
+     neden:'Aynı anda iki şey değişirse etkileri ayrılamaz.'}},
+   {durum:'Kutuda ışık var, cisim var ama bakan kişi gözlerini kapatıyor.',
+    soru:'Cisim görülür mü?',
+    hint:'Görme için kaç şey gerekiyordu?',
+    secenekler:[
+     {t:'Görülmez; görmek için göz de gereklidir',dogru:true},
+     {t:'Görülür; ışık yeterlidir'}],
+    neden:'Görme için ışık, cisim ve göz üçü birden gerekir.'},
+   {durum:'Kutuda ışık var, göz bakıyor ama içeride hiç cisim yok.',
+    soru:'Ne görülür?',
+    hint:'Bakacak bir nesne var mı?',
+    secenekler:[
+     {t:'Görülecek bir cisim olmadığı için sadece boş kutu görülür',dogru:true},
+     {t:'Yine bir cisim görünür'}],
+    neden:'Üçlünün her biri ayrı ayrı gereklidir.'}]},
+ {kind:'yaz',prompt:'Deneyin sonucunu ve nedenini yaz.',
+  sahne:()=>SAHNE.oda({isik:true,cisim:true,goz:true}),
+  gorev:'Karanlık kutu deneyinin sonucunu yaz: cismi görebilmek için neler gerekliymiş, neden?',
+  ornek:'Kalıp: "Cismi görmek için … , … ve … gerekir çünkü …"',
+  yerTutucu:'Sonucun ve nedeni…',
+  enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"ışık" sözcüğünü kullan',desen:'ışık'},
+   {ad:'"göz" sözcüğünü kullan',desen:'göz'},
+   {ad:'"cisim" ya da "nesne" sözcüğünü kullan',desen:'cisim|cismi|nesne'}],
+  ornekCevap:'Cismi görmek için ışık, cisim ve göz gerekir çünkü ışık olmadan cisimden gözümüze bir şey ulaşmaz.',
+  result:'Görmenin koşullarını gerekçesiyle yazdın.'}]};
+GAMES.f41={title:'Işık Kirliliği Çözüm Maketi',theme:'sehir',
+ finish:'Çözüm ögelerini şehir maketine yerleştirdin, seçimini ölçütle değerlendirdin ve belediyeye önerini yazdın.',rounds:[
+ {kind:'kur',prompt:'Gece dostu şehir maketini kur.',sahne:(st)=>SAHNE.maket((st&&st.icerik)||[]),
+  istekler:[
+   {ad:'Gökyüzünü koruyan sokak',gerekli:['yesil','yaya'],neden:'Yeşil alan ve yaya bölgesi, ışığın gerektiği yerlere sınırlı yönlendirilmesini destekler.'},
+   {ad:'Gereksiz ışığı azaltan ulaşım',gerekli:['toplu','bisiklet'],neden:'Toplu taşıma ve bisiklet yolu, yoğun araç ışığını ve enerji kullanımını azaltır.'},
+   {ad:'Verimli aydınlatma alanı',gerekli:['gunes','bina'],neden:'Enerji verimli bina ve güneş paneli, aydınlatmanın kaynak etkisini azaltır.'}],
+  havuz:[{id:'yesil',t:'Park ve ağaçlar',ic:'canlılara karanlık alan'},{id:'yaya',t:'Yaya bölgesi',ic:'gereken yerde ışık'},{id:'toplu',t:'Toplu taşıma',ic:'az araç ışığı'},{id:'bisiklet',t:'Bisiklet yolu',ic:'sessiz ulaşım'},{id:'gunes',t:'Güneş paneli',ic:'yenilenebilir enerji'},{id:'bina',t:'Yalıtımlı bina',ic:'az enerji kaybı'}]},
+ {kind:'karar',prompt:'Maketini ölçütle değerlendir.',sahne:(st)=>SAHNE.maket([{id:'yesil'},{id:'yaya'},{id:'toplu'},{id:'bisiklet'}]),
+  sorular:[
+   {durum:'Maketindeki sokak lambaları aşağı yönlü ve gece yarısından sonra daha az kullanılıyor.',
+    soru:'Bu iki kararın ortak yararı nedir?',ipucu:'Hem ışığın yönünü hem açık kalma süresini düşün.',hint:'Gökyüzüne kaçan ve kullanılmayan ışık ne olur?',
+    secenekler:[{t:'Gereksiz ışık ve enerji kullanımı azalır',dogru:true},{t:'Gece daha aydınlık olur diye yıldızlar artar'},{t:'Lambalar daha çok elektrik üretir'}],neden:'Işığı doğru yerde ve gerekli sürede kullanmak iki etkiyi de azaltır.'},
+   {durum:'Parkın kenarındaki lambalar doğrudan kuş yuvalarına bakıyor.',
+    soru:'Hangi değişiklik daha uygundur?',hint:'Işığın yönü canlıların alanına mı, yürüyüş yoluna mı gitmeli?',
+    secenekler:[{t:'Lambayı yola doğru çevirip yuvaya gelen ışığı azaltmak',dogru:true},{t:'Yuvayı daha parlak lambayla aydınlatmak'}],neden:'Canlıların dinlenme alanına gereksiz ışık vermemek gerekir.'},
+   {durum:'Bir arkadaşın "her ışığı kapatalım" diyor.',
+    soru:'Dengeli bir plan ne yapar?',hint:'Güvenlik için gereken ışıkla gereksiz ışığı ayır.',
+    secenekler:[{t:'Güvenlik gereken yerleri aydınlatır, gereksiz ışığı yönlendirir veya kapatır',dogru:true},{t:'Her yeri sabaha kadar aynı parlaklıkta yakar'}],neden:'Amaç karanlık yaratmak değil, doğru aydınlatmadır.'}]},
+ {kind:'yaz',prompt:'Belediyeye maketini anlat.',sahne:(st)=>SAHNE.maket([{id:'yesil'},{id:'yaya'},{id:'toplu'},{id:'bisiklet'},{id:'gunes'}]),
+  gorev:'Belediyeye maketindeki iki çözümü ve ışık kirliliğine nasıl yardım ettiğini yaz.',ornek:'Kalıp: "… ve … ekledim çünkü …"',yerTutucu:'Maketindeki çözümler…',enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'iki maket ögesinden birini yaz (park, bisiklet, taşıma, panel)',desen:'park|bisiklet|taşıma|panel'},{ad:'"ışık" ya da "enerji" sözcüğünü kullan',desen:'ışık|enerji'}],
+  ornekCevap:'Maketimde park ve bisiklet yolu ekledim çünkü gereksiz ışık ve enerji kullanımı daha az olur.',result:'Maketindeki çözümü gerekçelendirdin.'}]};
+
+/* ---- f42 Işık Kartları (hafıza sahnesi uzay değil, kaynakların doğal
+        ortamı; kartlar karışır ve her çift gerekçeyle doğrulanır) ---- */
+GAMES.f42={title:'Işık Özellikleri',theme:'gece',
+ finish:'Işık kaynaklarını özellikleriyle eşleştirdin, yansıtan cisimleri ayırdın ve gözleminden örnek verdin.',rounds:[
+ {kind:'hafiza',prompt:'Kartları aç; kaynağı özelliğiyle eşleştir.',sahne:(st)=>SAHNE.isik(st,'yildiz'),
+  ciftler:[
+   {a:'Güneş',b:'Doğal, kendi ışığını üretir',gerekce:{soru:'Güneş neden ışık kaynağıdır?',secenekler:[{t:'Kendi ışığını üretir',dogru:true},{t:'Parlak yüzeyi vardır'}],neden:'Güneş ışığı kendisi üretir.'}},
+   {a:'Ampul',b:'Yapay, elektrikle ışık üretir'},{a:'Ateş böceği',b:'Doğal, canlı olarak ışık üretir'},{a:'Ay',b:'Işık üretmez; Güneş ışığını yansıtır'},{a:'Ayna',b:'Üzerine düşen ışığı yansıtır'},{a:'Mum',b:'Yapay, yanarken ışık üretir'}]},
+ {kind:'karar',prompt:'Kaynak ile yansıtıcıyı ayır.',sahne:(st,ek)=>SAHNE.isik(st,ek),
+  sorular:[
+   {durum:'Karanlık odada kapalı bir telefon ekranı ve yanan mum var.',sahneEk:'mum',
+    soru:'Hangisi ışık kaynağıdır?',ipucu:'Hangisi kendi ışığını şu anda üretiyor?',hint:'Telefon ekranı kapalıyken ışık yayar mı?',
+    secenekler:[{t:'Yanan mum',dogru:true},{t:'Kapalı telefon ekranı'},{t:'İkisi de'}],neden:'Mum yanarken ışık üretir; kapalı ekran üretmez.'},
+   {durum:'Güneş ışığı aynaya düşüyor ve duvara parlak bir leke yansıyor.',sahneEk:'ayna',
+    soru:'Ayna için hangisi doğrudur?',hint:'Aynanın ışığı nereden geliyor?',
+    secenekler:[{t:'Kendi ışığını üretmez, gelen ışığı yansıtır',dogru:true},{t:'Güneş gibi ışık üretir'}],neden:'Aynanın parlaklığı ona gelen ışığa bağlıdır.'},
+   {durum:'Geceleri uzakta yıldızlar ve Ay birlikte görünüyor.',sahneEk:'ay',
+    soru:'Hangisi kendi ışığını üretir?',hint:'Parlayan her şey kaynak mı?',
+    secenekler:[{t:'Yıldızlar',dogru:true},{t:'Ay'},{t:'İkisi de üretir'}],neden:'Yıldızlar ışık üretir; Ay Güneş ışığını yansıtır.'}]},
+ {kind:'yaz',prompt:'Bir kaynağı ve bir yansıtıcıyı karşılaştır.',sahne:(st)=>SAHNE.isik(st,'ayna'),
+  gorev:'Çevrenden bir ışık kaynağı ve bir yansıtıcı nesne seç. Aralarındaki farkı nedenleriyle yaz.',ornek:'Kalıp: "… kaynak, … yansıtıcıdır çünkü …"',yerTutucu:'Karşılaştırman…',enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"kaynak" ya da "ışık" sözcüğünü kullan',desen:'kaynak|ışık'},{ad:'"yansıt" sözcüğünü kullan',desen:'yansıt'}],
+  ornekCevap:'Lamba ışık kaynağıdır, ayna yansıtıcıdır çünkü lamba ışık üretir ama ayna gelen ışığı yansıtır.',result:'Kaynak ile yansıtıcıyı gözlemine dayandırdın.'}]};
+
+/* ---- f43 Sürdürülebilirlik Ölçütü ---- */
+GAMES.f43={title:'Sürdürülebilirlik Ölçütü',theme:'sehir',
+ finish:'Şehir uygulamalarını kaynak, atık ve canlılar açısından değerlendirdin; kararını kanıtla savundun.',rounds:[
+ {kind:'sinifla',prompt:'Uygulama şehir için uzun vadede uygun mu?',sahne:SAHNE.kantin,
+  soru:'Bu uygulama sürdürülebilir mi?',kutular:['SÜRDÜRÜLEBİLİR','SÜRDÜRÜLEMEZ'],ipucu:'Kaynak tüketimi, atık ve canlılara etkisini birlikte düşün.',
+  kartlar:[
+   {t:'Mahalleye yağmur suyunu bahçe sulamada kullanan depo kuruluyor.',dogru:0,neden:'Su tekrar kullanılır ve şebeke suyu daha az tüketilir.',hint:'Aynı suyun ikinci bir yararı oluyor mu?'},
+   {t:'Kısa yol için sağlıklı ağaçlar kesilip her gün daha çok araç yolu açılıyor.',dogru:1,neden:'Ağaç ve habitat kaybı uzun vadeli zararı artırır.',hint:'Yol dışında kaybolan bir yaşam alanı var mı?'},
+   {t:'Okul yemekhanesinde tek kullanımlık yerine yıkanabilir kaplar kullanılıyor.',dogru:0,neden:'Atık miktarı tekrar kullanımla azalır.',hint:'Bu kap bir kez mi kullanılıyor?'},
+   {t:'Boş sınıfların klimaları gün boyu açık bırakılıyor.',dogru:1,neden:'Gereksiz enerji tüketimi kaynakları boşa harcar.',hint:'Enerji kullanılırken sınıfta ihtiyaç var mı?'},
+   {t:'Apartman çatısına güneş paneli kuruluyor.',dogru:0,neden:'Güneşten yenilenebilir enerji elde edilir.',hint:'Bu kaynak doğal döngüyle yeniden geliyor mu?'},
+   {t:'Dere kenarına çöpler düzenli olarak bırakılıyor.',dogru:1,neden:'Atık suyu ve canlıların yaşam alanını kirletir.',hint:'Atığın gittiği yerde canlılar yaşar mı?'}]},
+ {kind:'karar',prompt:'Çözümü kanıtla seç.',sahne:()=>SAHNE.maket([{id:'yesil'},{id:'bisiklet'},{id:'gunes'}]),
+  sorular:[
+   {durum:'Mahallede ulaşım kaynaklı hava kirliliği ölçümü yüksek çıkıyor. İki öneri var: tek kişilik araçları artırmak veya toplu taşıma-bisiklet yolunu güçlendirmek.',
+    soru:'Hangi öneri soruna daha doğrudan yanıt verir?',ipucu:'Ölçülen kirlilik hangi davranışla ilişkilidir?',hint:'Daha çok araç mı, ortak ulaşım mı?',
+    secenekler:[{t:'Toplu taşıma ve bisiklet yolunu güçlendirmek',dogru:true},{t:'Tek kişilik araç kullanımını artırmak'}],neden:'Aynı yolculuk için daha az araç kullanmak emisyonu azaltabilir.',
+    gerekce:{soru:'Bu kararın dayanağı neydi?',secenekler:[{t:'Ölçümde ulaşım kaynaklı kirliliğin yüksek olması',dogru:true},{t:'Bisikletin renginin yeşil olması'}],neden:'Çözüm, ölçülen sorunla ilişkili olmalıdır.'}},
+   {durum:'Parkta çöp kutuları az olduğu için ambalajlar çimenlere bırakılıyor.',
+    soru:'İlk hangi adım uygundur?',hint:'Atığı doğaya ulaşmadan nerede toplamak gerekir?',
+    secenekler:[{t:'Ayrı toplama kutuları koyup düzenli toplamak',dogru:true},{t:'Çimenleri betonla kaplamak'}],neden:'Atığı kaynağında toplamak parkı ve canlıları korur.'},
+   {durum:'Yeni konutların çatısı yazın çok ısınıyor; klima tüketimi artıyor.',
+    soru:'Hangi çözüm enerji gereksinimini azaltabilir?',hint:'Binaya giren ısıyı düşün.',
+    secenekler:[{t:'Yalıtım ve gölgelendirme kullanmak',dogru:true},{t:'Klimayı sürekli daha düşük sıcaklığa ayarlamak'}],neden:'Yalıtım ve gölge, soğutma gereksinimini azaltır.'}]},
+ {kind:'yaz',prompt:'Kendi şehrin için karar ver.',sahne:()=>SAHNE.maket([{id:'yesil'},{id:'toplu'},{id:'bisiklet'}]),
+  gorev:'Yaşadığın çevrede sürdürülebilir olabilecek bir uygulama öner ve hangi sorunu azaltacağını yaz.',ornek:'Kalıp: "… yapılmalı çünkü … azalır."',yerTutucu:'Önerin ve kanıtın…',enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'bir şehir ögesi yaz (su, çöp, ulaşım, enerji)',desen:'su|çöp|ulaşım|enerji'},{ad:'bir etki yaz (azal, koru, temiz)',desen:'azal|koru|temiz'}],
+  ornekCevap:'Mahallede bisiklet yolu yapılmalı çünkü ulaşım için harcanan enerji ve hava kirliliği azalır.',result:'Sürdürülebilirlik kararını sorunla ilişkilendirdin.'}]};
+
+/* ---- f44 Sürdürülebilir Şehir Maketi ---- */
+GAMES.f44={title:'Sürdürülebilir Şehir Maketi',theme:'sehir',
+ finish:'Şehir modelini gerçekten kurdun, her ögenin etkisini değerlendirdin ve tasarımını paylaştın.',rounds:[
+ {kind:'kur',prompt:'Sürdürülebilir şehir modelini kur.',sahne:(st)=>SAHNE.maket((st&&st.icerik)||[]),
+  istekler:[
+   {ad:'Yaşanabilir mahalle',gerekli:['yesil','yaya'],neden:'Yeşil alan gölge ve yaşam alanı sağlar; yaya alanı araç ihtiyacını azaltır.'},
+   {ad:'Düşük etkili ulaşım',gerekli:['toplu','bisiklet'],neden:'Toplu taşıma ve bisiklet, tek araç kullanımını azaltır.'},
+   {ad:'Enerjiyi iyi kullanan yapı',gerekli:['bina','gunes'],neden:'Yalıtımlı bina enerji kaybını azaltır; panel yenilenebilir enerji üretir.'}],
+  havuz:[{id:'yesil',t:'Yeşil park',ic:'gölge ve yaşam alanı'},{id:'yaya',t:'Yaya bölgesi',ic:'kısa yolculuklar'},{id:'toplu',t:'Toplu taşıma',ic:'ortak yolculuk'},{id:'bisiklet',t:'Bisiklet yolu',ic:'emisyonsuz ulaşım'},{id:'bina',t:'Yalıtımlı bina',ic:'az ısı kaybı'},{id:'gunes',t:'Güneş paneli',ic:'yenilenebilir enerji'}]},
+ {kind:'karar',prompt:'Maketindeki ögeleri dengele.',sahne:(st)=>SAHNE.maket([{id:'yesil'},{id:'yaya'},{id:'toplu'},{id:'bisiklet'},{id:'bina'},{id:'gunes'}]),
+  sorular:[
+   {durum:'Maketinde yalnız güneş paneli var; fakat herkes kısa mesafeye bile tek başına araçla gidiyor.',
+    soru:'Modeli hangi ekleme tamamlar?',ipucu:'Enerji üretimi dışında hangi sorun sürüyor?',hint:'Kısa yolculuk için alternatif var mı?',
+    secenekler:[{t:'Yaya ve bisiklet yolları eklemek',dogru:true},{t:'Daha büyük otopark yapmak'},{t:'Tüm parkları kaldırmak'}],neden:'Kısa mesafede aktif ulaşım araç kullanımını azaltır.'},
+   {durum:'Yeni binalar yazın çok sıcak, kışın çok soğuk oluyor.',
+    soru:'Hangi model ögesi doğrudan yardımcı olur?',hint:'Enerjinin binadan kaçışını düşün.',
+    secenekler:[{t:'Yalıtımlı bina',dogru:true},{t:'Daha geniş araç yolu'}],neden:'Yalıtım, ısı kaybını ve gereksiz ısınma-soğutma ihtiyacını azaltır.'},
+   {durum:'Park alanı küçültülüp yerinde otopark yapılması öneriliyor.',
+    soru:'Neyi değerlendirmek gerekir?',hint:'Park yalnız boş bir alan mıdır?',
+    secenekler:[{t:'Parkın gölge, su ve canlıların yaşamına katkısını',dogru:true},{t:'Yalnız otopark çizgilerinin sayısını'}],neden:'Yeşil alanlar kentte canlılar ve insan yaşamı için işlev görür.'}]},
+ {kind:'yaz',prompt:'Modelinin etkisini açıkla.',sahne:(st)=>SAHNE.maket([{id:'yesil'},{id:'yaya'},{id:'toplu'},{id:'bisiklet'},{id:'bina'},{id:'gunes'}]),
+  gorev:'Şehir modelindeki iki ögeyi seç; hangi sorunu azaltacaklarını nedenleriyle yaz.',ornek:'Kalıp: "… ile … ekledim çünkü …"',yerTutucu:'Modelinin etkisi…',enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'iki ögeden birini yaz (park, bisiklet, bina, panel)',desen:'park|bisiklet|bina|panel'},{ad:'"enerji" ya da "hava" ya da "canlı" sözcüğünü kullan',desen:'enerji|hava|canlı'}],
+  ornekCevap:'Park ve bisiklet yolu ekledim çünkü hava kirliliği azalır ve canlılar için yaşam alanı korunur.',result:'Şehir modelinin etkisini gerekçelendirdin.'}]};
+
+/* ---- f45 Model Kurma Süreci ---- */
+GAMES.f45={title:'Şehir Modeli Süreci',theme:'sehir',
+ finish:'Model geliştirme sürecini sıraya koydun, veriye göre değişiklik yaptın ve değerlendirme önerini yazdın.',rounds:[
+ {kind:'sira',prompt:'Model geliştirme adımlarını sırala.',sahne:(st)=>SAHNE.maket(((st&&st.dizi)||[]).length>=3?[{id:'yesil'},{id:'bisiklet'}]:[]),
+  gorev:'Mahallenin ulaşım sorununa yönelik şehir modeli geliştireceksin. Adımları bilimsel süreçteki yerlerine koy.',ipucu:'Önce sorunu tanımlar, sonra veri toplar; model kurup deneyerek geliştirirsin.',
+  kartlar:[
+   {t:'Mahalledeki ulaşım sorununu ve sorumu tanımlarım',neden:'Modelin hangi sorunu çözeceğini belirlerim.'},
+   {t:'Yaya, araç ve hava ölçümlerini toplarım',neden:'Kararımı tahmine değil veriye dayandırırım.'},
+   {t:'Veriye göre şehir modelimi tasarlarım',neden:'Çözüm ögelerini soruna göre seçerim.'},
+   {t:'Modeli kullanıp etkisini gözlemlerim',neden:'Çözümün gerçekten işe yarayıp yaramadığını görürüm.'},
+   {t:'Sonucu değerlendirip modeli geliştiririm',neden:'Eksik kalan etkileri iyileştiririm.'}],dogru:[0,1,2,3,4],
+  ipucular:['Önce hangi sorunu çözeceğini bilmelisin.','Sorunu duyduktan sonra kanıt toplarsın.','Veri olmadan model seçimi rastgele olur.','Modelin etkisi sınanmadan sonucu bilemezsin.','']},
+ {kind:'karar',prompt:'Veriye göre modelini geliştir.',sahne:()=>SAHNE.maket([{id:'toplu'},{id:'bisiklet'}]),
+  sorular:[
+   {durum:'Modelden sonra araç sayısı azaldı ama okul girişinde yaya güvenliği sorunu sürüyor.',
+    soru:'Bir sonraki model değişikliği ne olmalı?',ipucu:'Kalan sorun hangi ögeyle ilgilidir?',hint:'Araç sayısı değil, girişteki yaya güvenliği ölçülmüş.',
+    secenekler:[{t:'Okul çevresine yaya bölgesi eklemek',dogru:true},{t:'Toplu taşımayı kaldırmak'},{t:'Parkları otoparka çevirmek'}],neden:'Model, ölçülen ve çözülmemiş soruna göre geliştirilir.',
+    gerekce:{soru:'Bu değişikliği neye dayandırdın?',secenekler:[{t:'Girişte yaya güvenliği sorununun sürmesine',dogru:true},{t:'Bisiklet yolunun renginin yeşil olmasına'}],neden:'Model değişikliği gözlem verisine dayanmalıdır.'}},
+   {durum:'Yağmurlu günlerde bisiklet yolunun su biriktirdiği gözleniyor.',
+    soru:'Hangi inceleme modeli geliştirmeye yardım eder?',hint:'Sorunun nerede ve ne zaman oluştuğunu ölç.',
+    secenekler:[{t:'Eğim ve suyun biriktiği noktaları kaydetmek',dogru:true},{t:'Yolu hiç kullanmadan aynı bırakmak'}],neden:'Ölçüm, sorunun nedenini ayırmaya yardımcı olur.'},
+   {durum:'Yeni gölgeliklerle yazın park sıcaklığı düştü.',
+    soru:'Bu sonuçla ne yapmalısın?',hint:'İşe yarayan bir öge için sonraki bilimsel adım nedir?',
+    secenekler:[{t:'Sonucu kaydedip başka uygun alanlarda da değerlendirmek',dogru:true},{t:'Ölçümü silip eski tasarıma dönmek'}],neden:'Etkili çözüm kayda geçirilir ve uygun yerlerde sınanır.'}]},
+ {kind:'yaz',prompt:'Modelini nasıl geliştireceğini yaz.',sahne:()=>SAHNE.maket([{id:'yesil'},{id:'yaya'},{id:'bisiklet'}]),
+  gorev:'Bir şehir modelini denedikten sonra hangi veriyi toplayacağını ve bu veriye göre neyi değiştirebileceğini yaz.',ornek:'Kalıp: "… ölçerim; çünkü … ise … değiştiririm."',yerTutucu:'Verin ve sonraki adımın…',enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"ölç" ya da "gözlem" sözcüğünü kullan',desen:'ölç|gözlem'},{ad:'"değiştir" ya da "geliştir" sözcüğünü kullan',desen:'değiştir|geliştir'}],
+  ornekCevap:'Bisiklet yolunu kullanan kişi sayısını gözlemlerim çünkü azsa yolu daha güvenli yapmak için tasarımı geliştiririm.',result:'Modelini veriye göre geliştirme planı yaptın.'}]};
+
+/* ---- f46 Şehir Sorunları ve Çözümleri ---- */
+GAMES.f46={title:'Şehir Sorunları ve Çözümleri',theme:'sehir',
+ finish:'Şehir sorunlarını uygun çözümlerle eşleştirdin, çözümün sınırlarını değerlendirdin ve kanıtla öneri yazdın.',rounds:[
+ {kind:'esle',prompt:'Her sorunu en doğrudan çözümle eşleştir.',sahne:()=>SAHNE.maket([{id:'yesil'},{id:'toplu'},{id:'bisiklet'}]),
+  gorev:'Sorun kartını seçip uygun çözüm satırına dokun.',ipucu:'Çözüm, sorunun nedenine doğrudan etki etmeli.',
+  yuvalar:[
+   {t:'Kısa yolculuklara güvenli bisiklet ve yaya bağlantısı kurmak',gerekce:{soru:'Bu çözüm neyi azaltmayı hedefler?',secenekler:[{t:'Kısa mesafede araç kullanımını',dogru:true},{t:'Binaların pencere sayısını'}],neden:'Güvenli bağlantılar kısa yolculukta araç yerine aktif ulaşımı mümkün kılar.'}},
+   {t:'Binalarda yalıtım ve gölgelendirme uygulamak'},{t:'Atıkları ayrı toplayıp tekrar kullanım ve dönüşüm sağlamak'},{t:'Yağmur suyunu geçirgen alanlarda toprağa ulaştırmak'},{t:'Park ve ağaç alanlarını koruyup artırmak'},{t:'Toplu taşıma seferlerini iyileştirmek'}],
+  parcalar:[
+   {t:'Kısa mesafede çok sayıda tek kişilik araç yolculuğu',yuva:0},{t:'Kışın çok ısı kaybeden apartmanlar',yuva:1},{t:'Geri dönüştürülebilir ambalajların çöpe karışması',yuva:2},{t:'Yağmurdan sonra suyun beton üstünde birikmesi',yuva:3},{t:'Mahallede gölgenin ve kuşların azalması',yuva:4},{t:'Otobüs bekleme süresi yüzünden araç kullanımının artması',yuva:5}]},
+ {kind:'karar',prompt:'Çözümün etkisini sınırlarıyla değerlendir.',sahne:()=>SAHNE.maket([{id:'yesil'},{id:'bisiklet'},{id:'toplu'}]),
+  sorular:[
+   {durum:'Bisiklet yolu yapıldı, ama kavşaklarda güvenli geçiş yok.',
+    soru:'Çözümün işe yaraması için ne eklenmeli?',ipucu:'Yolun kesildiği tehlikeli noktaları düşün.',hint:'Sadece yol çizmek her yerde güvenli ulaşım sağlar mı?',
+    secenekler:[{t:'Kavşaklarda güvenli geçiş ve işaretleme eklemek',dogru:true},{t:'Bisiklet yolunu tabelasız bırakmak'},{t:'Yalnız araç şeritlerini genişletmek'}],neden:'Ağ, kesintisiz ve güvenli olduğunda daha çok kişi kullanabilir.'},
+   {durum:'Bir apartman yalnız çatı yalıtımı yaptı, ama pencerelerden çok ısı kaçıyor.',
+    soru:'Bu veriye göre ne söylenir?',hint:'Isı kaybının bütün yollarını düşün.',
+    secenekler:[{t:'Yalıtımın etkisi pencereler için de değerlendirilmelidir',dogru:true},{t:'Çatı yalıtımı yapıldığı için başka hiçbir şey önemli değildir'}],neden:'Çözümü ölçerek eksik kalan kaynakları bulmak gerekir.'},
+   {durum:'Park dikildi fakat genç ağaçlar yazın düzenli sulanmıyor.',
+    soru:'Sürdürülebilir plan ne ekler?',hint:'Ağaçların yaşaması için uzun vadede ne gerekir?',
+    secenekler:[{t:'Bakım ve su ihtiyacını planlamak',dogru:true},{t:'Ağaçları yalnız açılış günü sulamak'}],neden:'Bir çözümün devam eden bakım ihtiyacı da tasarlanmalıdır.'}]},
+ {kind:'yaz',prompt:'Bir şehir sorununa kanıtlı çözüm yaz.',sahne:()=>SAHNE.maket([{id:'yesil'},{id:'bisiklet'},{id:'toplu'}]),
+  gorev:'Çevrende gördüğün bir şehir sorununu seç; çözümünü, hangi veriyi izleyeceğini ve nedenini yaz.',ornek:'Kalıp: "… için … yaparım; … ölçerim çünkü …"',yerTutucu:'Sorun, çözüm ve kanıtın…',enAzKelime:14,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"ölç" ya da "say" sözcüğünü kullan',desen:'ölç|say'},{ad:'bir çözüm fiili kullan (yap, ekle, azalt)',desen:'yap|ekle|azalt'}],
+  ornekCevap:'Okul çevresindeki araç yoğunluğu için bisiklet yolu eklerim; araç sayısını ölçerim çünkü çözümün kirliliği azaltıp azaltmadığını görürüm.',result:'Sorununu çözüm ve kanıtla ilişkilendirdin.'}]};
+
+/* ---- f47 Şehir Verisi Grafiği (hedef sayılar veri satırlarında açık,
+        grafik deneme-yanılma değil; toplam sayaç ipucu vermez) ---- */
+GAMES.f47={title:'Şehir Verisi Grafiği',theme:'sehir',
+ finish:'Ulaşım verisini grafiğe aktardın, veriyi yorumladın ve şehir için ölçülebilir öneri getirdin.',rounds:[
+ {kind:'grafik',prompt:'Anket satırlarını okuyup grafiği kur.',soru:'Her ulaşım türünün sütununu verilen kişi sayısına göre doldur.',ipucu:'Ölçekteki sayıyı ve her veri satırını birlikte oku; toplam sayacı yok.',hint:'Hangi ulaşım türünün yanında hangi sayı yazıyor?',
+  veriler:[{ad:'Yaya',deger:'5 kişi'},{ad:'Bisiklet',deger:'3 kişi'},{ad:'Toplu taşıma',deger:'4 kişi'},{ad:'Tek kişilik araç',deger:'2 kişi'}],
+  kategoriler:[{ad:'Yaya',hedef:5},{ad:'Bisiklet',hedef:3},{ad:'Toplu taşıma',hedef:4},{ad:'Araç',hedef:2}],enBuyuk:6,
+  sonuc:'Grafik veriye uyuyor: 14 kişinin 12\'si yaya, bisiklet veya toplu taşımayı seçmiş.',result:'Ulaşım grafiğini veriye göre kurdun.'},
+ {kind:'karar',prompt:'Grafikteki eğilimi yorumla.',sahne:()=>SAHNE.maket([{id:'yaya'},{id:'bisiklet'},{id:'toplu'}]),
+  sorular:[
+   {durum:'Grafik — Yaya 5 · Bisiklet 3 · Toplu taşıma 4 · Tek kişilik araç 2 (toplam 14 kişi)',
+    soru:'En çok seçilen ulaşım türü hangisidir?',ipucu:'Sütun değerlerini karşılaştır.',hint:'Hangi sayı en büyük?',
+    secenekler:[{t:'Yaya: 5 kişi',dogru:true},{t:'Bisiklet: 3 kişi'},{t:'Tek kişilik araç: 2 kişi'}],neden:'Yaya sütunu 5 ile diğerlerinden yüksektir.',
+    gerekce:{soru:'Bu sonucu nereden aldın?',secenekler:[{t:'Grafikteki sayı ölçeğinden',dogru:true},{t:'Sütunun renginden'}],neden:'Grafik okumada yükseklik ölçek değeriyle birlikte anlam taşır.'}},
+   {durum:'Aynı grafikte yaya, bisiklet ve toplu taşıma toplamı 5 + 3 + 4 kişidir.',
+    soru:'Bu üç ulaşım türünü seçen kaç kişi var?',hint:'Üç sayıyı topla.',
+    secenekler:[{t:'12 kişi',dogru:true},{t:'9 kişi'},{t:'14 kişi'}],neden:'5 + 3 + 4 = 12 kişidir.'},
+   {durum:'Şehir tek kişilik araç kullanımını daha da azaltmak istiyor.',
+    soru:'Hangi değişiklik veriye uygun bir sonraki adım olur?',hint:'Alternatif ulaşım türlerini daha erişilebilir yap.',
+    secenekler:[{t:'Bisiklet ve toplu taşıma bağlantılarını iyileştirmek',dogru:true},{t:'Yaya geçitlerini kaldırıp araç şeritlerini artırmak'}],neden:'Güvenli ve kolay alternatifler, araç yerine başka ulaşım seçimini destekler.'}]},
+ {kind:'yaz',prompt:'Veriye dayalı ulaşım önerisi yaz.',sahne:()=>SAHNE.maket([{id:'yaya'},{id:'bisiklet'},{id:'toplu'}]),
+  gorev:'Grafikteki veriye göre şehirde hangi ulaşım ögesini geliştireceğini ve etkisini yaz.',ornek:'Kalıp: "… geliştirilirse … çünkü …"',yerTutucu:'Önerin ve veriye dayanağın…',enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'bir ulaşım türü yaz (yaya, bisiklet, toplu, araç)',desen:'yaya|bisiklet|toplu|araç'},{ad:'bir etki yaz (azal, art, güvenli)',desen:'azal|art|güvenli'}],
+  ornekCevap:'Bisiklet bağlantıları geliştirilirse araç kullanımı azalır çünkü grafikte bisikleti zaten üç kişi seçmiştir.',result:'Grafik verisine dayalı öneri getirdin.'}]};
+
+/* ---- f48 Bisiklet Yolu Planı (düz labirent yok: plan sokakları ve
+        işaret noktalarını gösterir; rota tamamlanınca öğrenci gerekçe seçer) ---- */
+GAMES.f48={title:'Bisiklet Yolu Planı',theme:'sehir',
+ finish:'Bisikletliyi şehir planında okula ulaştırdın, güvenli güzergâhı gerekçelendirdin ve plan önerini yazdın.',rounds:[
+ {kind:'plan',prompt:'Parktan okula güvenli bisiklet rotası kur.',planAd:'Yeşil Mahalle planı',
+  gorev:'Bisikletli P parkından O okula gidecek. Gri ana cadde araç trafiği yoğun; güvenli sokaklardan rota kur.',ipucu:'Planı oku: P park, O okul, gri hücreler ana cadde. Rota komşu sokaklardan geçmeli.',
+  genislik:7,yukseklik:5,plan:['...#...','.p.#.o.','...#...','.......','...#...'],basla:{x:1,y:1},hedef:{x:5,y:1},
+  gerekce:{soru:'Seçtiğin rota neden daha uygundu?',hint:'Planın hangi bilgisini kullandın?',secenekler:[{t:'Yoğun ana caddeden uzak, bağlantılı sokaklardan ilerledi',dogru:true},{t:'En çok gri hücreden geçti'}],neden:'Bisiklet planı, güvenlik için ana caddeden uzak bağlantıları kullanır.'},sonuc:'Rota okul kapısına ulaştı.'},
+ {kind:'karar',prompt:'Planı güvenlik ve erişimle değerlendir.',sahne:()=>SAHNE.maket([{id:'bisiklet'},{id:'yaya'},{id:'yesil'}]),
+  sorular:[
+   {durum:'Bisiklet yolu parkta başlıyor fakat okul kapısına 100 metre kala yoğun ana caddede bitiyor.',
+    soru:'Planı nasıl geliştirirsin?',ipucu:'Rota nereye kesintisiz ulaşmalı?',hint:'En riskli nokta yolun bittiği yer olabilir mi?',
+    secenekler:[{t:'Okul kapısına kadar güvenli ve bağlantılı geçiş eklerim',dogru:true},{t:'Bisiklet yolunu parkta daha uzun yaparım'},{t:'Okul önündeki geçidi kaldırırım'}],neden:'Ulaşım ağı hedefe kadar güvenli bağlantı sağladığında kullanılabilir olur.',
+    gerekce:{soru:'Bu geliştirme hangi sorunu çözer?',secenekler:[{t:'Rota sonundaki kopuk ve riskli geçişi',dogru:true},{t:'Parktaki ağaç sayısını'}],neden:'Planın eksik parçası, okul önündeki bağlantıdır.'}},
+   {durum:'İki rota var: biri kısa ama yoğun araç yolu yanında, diğeri biraz uzun ama park ve yaya bölgesinden geçiyor.',
+    soru:'İlkokul öğrencileri için hangisi daha uygundur?',hint:'Süre kadar hangi ölçüt önemlidir?',
+    secenekler:[{t:'Park ve yaya bölgesinden geçen güvenli rota',dogru:true},{t:'Yoğun araç yolu yanındaki kısa rota'}],neden:'Çocukların ulaşımında güvenlik, birkaç dakika kısalıktan daha önemlidir.'},
+   {durum:'Yağmurlu günde bazı sokaklarda su birikiyor.',
+    soru:'Planı güncellemeden önce hangi veriyi toplarsın?',hint:'Sorunun yerini ve sıklığını öğren.',
+    secenekler:[{t:'Su biriken noktaları ve yağış zamanlarını kaydederim',dogru:true},{t:'Sokak adlarını rastgele değiştiririm'}],neden:'Ölçüm, güvenli rotayı hangi noktaların etkilediğini gösterir.'}]},
+ {kind:'yaz',prompt:'Kendi güvenli rota önerini yaz.',sahne:()=>SAHNE.maket([{id:'bisiklet'},{id:'yaya'},{id:'yesil'}]),
+  gorev:'Okula giden bir bisiklet rotasında hangi iki özelliğin bulunması gerektiğini ve nedenini yaz.',ornek:'Kalıp: "… ve … olmalı çünkü …"',yerTutucu:'Rota ölçütlerin…',enAzKelime:12,bitis:'.',gerekli:['çünkü'],
+  denetim:[{ad:'"güvenli" ya da "geçit" ya da "bağlantı" sözcüğünü kullan',desen:'güvenli|geçit|bağlantı'},{ad:'"bisiklet" ya da "okul" sözcüğünü kullan',desen:'bisiklet|okul'}],
+  ornekCevap:'Okula giden bisiklet yolu güvenli geçitlere ve kesintisiz bağlantıya sahip olmalı çünkü öğrenciler araç trafiğinden uzak kalır.',result:'Güvenli rota için ölçütlerini gerekçelendirdin.'}]};
+
+/* ---- f39 Görmenin Koşulları (radar kaldırıldı: karanlık oda ekranda,
+        öğrenci ışığı/cismi/gözü tek tek açıp kapatarak gözlüyor) ---- */
+GAMES.f39={title:'Görmenin Koşulları',theme:'gece',
+ finish:'Işık, cisim ve gözü tek tek deneyerek görmenin koşullarını kendin buldun ve gözlemine dayanarak yazdın.',rounds:[
+ {kind:'deney',prompt:'Anahtarları açıp kapatarak neyin gerekli olduğunu bul.',
+  gorev:'Karanlık bir oda. Üç anahtarı istediğin gibi açıp kapat ve cismi ne zaman görebildiğini gözle.',
+  enAzDeneme:3,
+  anahtarlar:[{id:'isik',ad:'Işık'},{id:'cisim',ad:'Cisim'},{id:'goz',ad:'Göz'}],
+  ciz:(d)=>SAHNE.oda({isik:d.isik,cisim:d.cisim,goz:d.goz}),
+  sonucMetni:(d)=>(d.isik&&d.cisim&&d.goz)?'Cismi görüyorum.':'Cismi göremiyorum.',
+  sorular:[
+   {soru:'Cismi ne zaman görebildin?',
+    hint:'Görebildiğin durumda kaç anahtar açıktı?',
+    secenekler:[
+     {t:'Yalnız üçü birden açıkken',dogru:true},
+     {t:'Yalnız ışık açıkken'},
+     {t:'Yalnız göz açıkken'}],
+    neden:'Üçü birden olmadan görme gerçekleşmiyor.'},
+   {soru:'Işığı kapatıp diğer ikisini açık bıraktın. Ne oldu?',
+    hint:'Işıksız durumda cismi görebildin mi?',
+    secenekler:[
+     {t:'Göremedim; ışık olmadan görme olmuyor',dogru:true},
+     {t:'Yine gördüm'}],
+    neden:'Işık, görmenin vazgeçilmez koşullarından biridir.'},
+   {soru:'Buradan çıkan sonuç nedir?',
+    hint:'Üç anahtarın her biri tek tek gerekli miydi?',
+    secenekler:[
+     {t:'Görmek için ışık, cisim ve göz üçü birden gerekir',dogru:true},
+     {t:'Görmek için yalnız göz yeterlidir'},
+     {t:'Görmek için yalnız ışık yeterlidir'}],
+    neden:'Her biri gerekli, hiçbiri tek başına yeterli değil.'}]},
+ {kind:'deney',prompt:'Şimdi ikisini açık tutup üçüncüyü tek tek dene.',
+  gorev:'Bu kez sistemli dene: her seferinde yalnız bir anahtarı değiştir ve sonucu gözle.',
+  enAzDeneme:4,
+  anahtarlar:[{id:'isik',ad:'Işık',baslangic:true},{id:'cisim',ad:'Cisim',baslangic:true},{id:'goz',ad:'Göz',baslangic:true}],
+  ciz:(d)=>SAHNE.oda({isik:d.isik,cisim:d.cisim,goz:d.goz}),
+  sonucMetni:(d)=>(d.isik&&d.cisim&&d.goz)?'Cismi görüyorum.':'Cismi göremiyorum.',
+  sorular:[
+   {soru:'Üçü açıkken yalnız cismi kaldırdın. Ne oldu?',
+    hint:'Bakacak bir nesne kalmadı mı?',
+    secenekler:[
+     {t:'Görecek bir cisim kalmadığı için göremedim',dogru:true},
+     {t:'Yine gördüm'}],
+    neden:'Cisim de üçlünün ayrı bir parçasıdır.'},
+   {soru:'Bu deneme biçiminin adı nedir?',
+    hint:'Her seferinde kaç şey değiştirdin?',
+    secenekler:[
+     {t:'Her seferinde tek değişkeni değiştirmek — değişken kontrolü',dogru:true},
+     {t:'Hepsini aynı anda değiştirmek'}],
+    neden:'Tek değişkeni değiştirmek, sonucu ona bağlamamızı sağlar.'},
+   {soru:'Neden hepsini aynı anda değiştirmiyoruz?',
+    hint:'İki şey birden değişirse hangisinin etkisi olduğunu ayırabilir misin?',
+    secenekler:[
+     {t:'Farkın hangisinden geldiğini ayıramayız',dogru:true},
+     {t:'Deney daha uzun sürer'}],
+    neden:'Değişken kontrolü, bilimsel deneyin temel kuralıdır.'}]},
+ {kind:'yaz',prompt:'Görmek için nelerin gerektiğini gözlemine dayanarak yaz.',
+  sahne:()=>SAHNE.oda({isik:true,cisim:true,goz:true}),
+  gorev:'Denemelerine dayanarak yaz: bir cismi görebilmek için neler gerekli ve bunu nasıl anladın?',
+  ornek:'Kalıp: "… , … ve … gerekli. Bunu … deneyerek anladım."',
+  yerTutucu:'Sonucun ve nasıl bulduğun…',
+  enAzKelime:12,bitis:'.',
+  denetim:[{ad:'"ışık" sözcüğünü kullan',desen:'ışık'},
+   {ad:'"göz" sözcüğünü kullan',desen:'göz'},
+   {ad:'"cisim" ya da "nesne" sözcüğünü kullan',desen:'cisim|cismi|nesne'},
+   {ad:'nasıl bulduğunu yaz ("dene", "kapat", "aç" ya da "gözle")',desen:'dene|kapat|aç[tıi]|gözle'}],
+  ornekCevap:'Bir cismi görmek için ışık, cisim ve göz gerekli. Bunu her birini tek tek kapatıp sonucu gözleyerek anladım.',
+  result:'Sonucu kendi denemene dayandırdın.'}]};
+
+/* ---- f40 Işık Kirliliği (köprü kaldırıldı: gece şehri sahnede, eşleşen
+        etki canlılarda canlanıyor) ---- */
+GAMES.f40={title:'Işık Kirliliği',theme:'gece',
+ finish:'Işık kirliliğinin canlılara etkilerini eşleştirdin, farklı canlıların farklı etkilendiğini gördün ve bir etkiyi kendi cümlenle anlattın.',rounds:[
+ {kind:'esle',prompt:'Aşırı gece aydınlatmasının etkisini canlısıyla eşle.',
+  sahne:(st,ek)=>SAHNE.geceSehir(st,ek),
+  soru:'Bu etki hangi canlıda görülür?',
+  ipucu:'Önce alttaki canlıya, sonra üstteki etki satırına dokun.',
+  yuvalar:[
+   {t:'Gece göç ederken yıldızlara göre yön bulur; parlak şehir ışıkları onu şaşırtır',
+    neden:'Aydınlık gökyüzü yön bulmayı zorlaştırır.',canlan:'kus',
+    gerekce:{soru:'Bu canlı yönünü neye göre buluyordu?',
+     secenekler:[{t:'Gökyüzündeki ışıklara',dogru:true},{t:'Sokak lambalarına'}],
+     hint:'Satırdaki açıklamayı yeniden oku.'}},
+   {t:'Yumurtadan çıkınca denizin parıltısına doğru gider; sahildeki lambalar onu karaya çeker',
+    neden:'Yanlış yöne giden yavrular denize ulaşamaz.',
+    gerekce:{soru:'Yavruyu yanlış yöne çeken ne?',
+     secenekler:[{t:'Sahildeki yapay ışıklar',dogru:true},{t:'Denizin sesi'}],
+     hint:'Satırda hangi ışıktan söz ediliyor?'}},
+   {t:'Geceleri çiçek tozu taşır; lambaların çevresinde dönüp durarak işini yapamaz',
+    neden:'Tozlaşma azalınca bitkiler de etkilenir.',
+    gerekce:{soru:'Bu canlının işi aksayınca ne etkilenir?',
+     secenekler:[{t:'Bitkilerin tozlaşması',dogru:true},{t:'Denizin tuzluluğu'}],
+     hint:'Satırda bu canlının işi ne diye yazıyor?'}},
+   {t:'Karanlıkta uyku düzeni kurar; pencereden giren sürekli ışık uykusunu böler',
+    neden:'Karanlık, uyku düzenini kuran doğal işarettir.',
+    gerekce:{soru:'Uyku düzenini bozan ne?',
+     secenekler:[{t:'Gece boyunca süren yapay aydınlık',dogru:true},{t:'Gündüz güneşi'}],
+     hint:'Satır hangi ışıktan söz ediyor?'}}],
+  parcalar:[
+   {t:'Göçmen kuş',yuva:0,hint:'Hangi satırda göç ve yön bulma geçiyor?'},
+   {t:'Deniz kaplumbağası yavrusu',yuva:1,hint:'Hangi satırda sahil ve deniz geçiyor?'},
+   {t:'Gece kelebeği',yuva:2,hint:'Hangi satırda çiçek tozu geçiyor?'},
+   {t:'İnsan',yuva:3,hint:'Hangi satırda uyku düzeni geçiyor?'}]},
+ {kind:'karar',prompt:'Her canlı aynı biçimde etkilenmez.',sahne:(st,ek)=>SAHNE.geceSehir(st,ek),
+  sorular:[
+   {durum:'Aynı sokak lambası: göçmen kuşun yönünü şaşırtıyor, gece kelebeğini çevresine topluyor, insanın uykusunu bölüyor.',
+    soru:'Bu ne gösteriyor?',
+    ipucu:'Aynı kaynak, farklı canlılarda farklı sonuç.',
+    hint:'Üç canlı da aynı biçimde mi etkileniyor?',
+    secenekler:[
+     {t:'Aynı ışık kaynağı farklı canlıları farklı biçimlerde etkiler',dogru:true},
+     {t:'Bütün canlılar aynı biçimde etkilenir'},
+     {t:'Yalnız insanlar etkilenir'}],
+    neden:'Etkinin biçimi, canlının ışığı ne için kullandığına bağlıdır.',
+    gerekce:{soru:'Bu yüzden çözüm ararken neye dikkat etmeliyiz?',
+     secenekler:[
+      {t:'Farklı canlıların ihtiyaçlarına birlikte bakmaya',dogru:true},
+      {t:'Yalnız insanların rahatına'}],
+     neden:'Tek bir canlıya göre çözüm, ötekine zarar verebilir.'}},
+   {durum:'Bir sahil kasabası, kaplumbağa yuvalama mevsiminde sahil lambalarını kısıyor.',
+    soru:'Bu neyi hedefliyor?',
+    hint:'Yavruların yanlış yöne gitmesine ne yol açıyordu?',
+    secenekler:[
+     {t:'Yavruların denize doğru gitmesini sağlamayı',dogru:true},
+     {t:'Elektrik faturasını düşürmeyi'},
+     {t:'Sahili karartıp turist çekmeyi'}],
+    neden:'Çözüm, etkilenen canlının ihtiyacına göre tasarlanır.'},
+   {durum:'Bir şehir bütün lambaları söndürmeyi öneriyor.',
+    soru:'Bu iyi bir çözüm müdür?',
+    hint:'İnsanların gece güvenliği ne olur?',
+    secenekler:[
+     {t:'Değil; ışığı yok etmek yerine gökyüzüne kaçmasını engellemek gerekir',dogru:true},
+     {t:'Evet; en kesin çözüm budur'}],
+    neden:'Amaç karanlık değil, ışığın gerektiği yere yönlendirilmesidir.'}]},
+ {kind:'yaz',prompt:'Bir etkiyi kendi cümlenle anlat.',sahne:(st)=>SAHNE.geceSehir(st,'kus'),
+  gorev:'Işık kirliliğinin bir canlıya etkisini seç. Hangi canlı, nasıl etkileniyor? Kendi cümlelerinle yaz.',
+  ornek:'Kalıp: "… , gece ışıkları yüzünden … "',
+  yerTutucu:'Canlı ve etkisi…',
+  enAzKelime:12,bitis:'.',
+  denetim:[{ad:'bir canlının adını yaz (kuş, kaplumbağa, kelebek, insan)',
+    desen:'kuş|kaplumbağa|kelebek|insan|böcek'},
+   {ad:'"ışık" sözcüğünü kullan',desen:'ışık'}],
+  ornekCevap:'Göçmen kuşlar geceleri yapay ışıklar yüzünden yönlerini şaşırıyor ve göç yollarından uzaklara sapabiliyorlar.',
+  result:'Bir etkiyi kendi cümlenle anlattın.'}]};
 
 /* ===== Motora gömülü öz denetim =====
    Bir oyunu tarayıcıda tek tek açmadan altı kabul ölçütünün metin

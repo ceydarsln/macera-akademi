@@ -40,7 +40,7 @@ Bu dosyada "tamamlandı" işareti yalnız şu altı koşul birlikte sağlanınca
 | 5 | Veri/miktar hazır veriliyor | h66: "Kâğıt: 6 · Plastik: 4 · Metal: 3" yazılı + "0/13 blok"; h65: miktar 3 yerde | h65, h66 |
 | 6 | Hayati konularda sahne ciddiyeti bozuk | h64 deprem anı roket-YAKIT sahnesinde; h63 kutu etiketleri taşıyor | h63, h64 |
 
-h37–h72 arasındaki 36 oyunun tamamı yüklendi; motorlarda çökme veya konsol hatası oluşmadı.
+h37–h72 arasındaki 36 oyunun tamamı yüklendi; motorlarda çökme veya konsol hatası oluşmadı. 26 Ağustos 2026 doğrulamasında otomatik DOM koşumu 36/36 geçti. h62 kroki ve h63'ün uzun afet kartı 390×844 görünümde ayrıca ölçüldü; yatay/dikey taşma ve 44 pikselden küçük dokunma hedefi bulunmadı.
 
 ## Sınıflar arası ortak kusurlar
 
@@ -54,46 +54,46 @@ Bu derste bulunan üç kusur başka derslerde de rapor edilmişti — tek motor 
 
 | ID | Oyun | Ana sorun | Durum |
 |---|---|---|---|
-| h37 | Gelişim Basamakları | Öğrencinin kendi hedefi tanımlı değil; karar bağlamsız | PDF'de |
-| h38 | Plan Masası | Takvim/süre görünmüyor; servis tezgâhı | PDF'de |
-| h39 | Okul Hakları Bandı | Bant kırpılması; okul ortamı yok | PDF'de |
-| h40 | Hak-Sorumluluk Terazisi | Kavramsal yanlış model; blok sayısı ekranda | PDF'de |
-| h41 | Çocuk Hakları Köprüsü | Emoji eşleşmesi; hak görselleri yok | PDF'de |
-| h42 | Proje Oylaması | Oy seçenek adıyla aynı; sonuç yorumu yok | PDF'de |
-| h43 | Sağlık Denetim Bandı | Gün akışı görselleşmiyor; bant kırpılması | PDF'de |
-| h44 | Güvenlik Radarı | Güvenlik kararı hız oyununa bağlanmış | PDF'de |
-| h45 | Güvenlik Adımları | Roket sahnesi; senaryo sahnesi yok | PDF'de |
-| h46 | Trafik Kuralı Köprüsü | Emoji eşleşmesi; kuralın sonucu gösterilmiyor | PDF'de |
-| h47 | Acil Çağrı Cümlesi | Kart dizme; görevli geri bildirimi yok | PDF'de |
-| h48 | Trafik Afişi Atölyesi | "Özgün ürün" kazanımı kart seçmeye inmiş | PDF'de |
-| h49 | Aile-Toplum Bandı | Ölçek farkı görselleşmiyor; bant kırpılması | PDF'de |
-| h50 | Meslek Köprüsü | 6 eşleşmenin 6'sı emojiyle çözülebiliyor; yazı taşması | PDF'de |
-| h51 | Meslek Atölyesi | Etiket kopyası; araç kullanımı görünmüyor | PDF'de |
-| h52 | Yardımlaşma Kartları | Erişilebilirlik sahnesi yok | PDF'de |
-| h53 | Proje Adımları | Roket sahnesi; süreç görselleşmiyor | PDF'de |
-| h54 | Yardımlaşma Cümlesi | İzin isteyen ifade ayrımı yok; kart dizme | PDF'de |
-| h55 | Koruma Bandı | Mekân fotoğrafı yok; bant kırpılması | PDF'de |
-| h56 | Yönetim Köprüsü | Emoji eşleşmesi; bina görseli yok | PDF'de |
-| h57 | Atatürk Kartları | Uzay zemini; özellik-başarı bağı gösterilmiyor | PDF'de |
-| h58 | Kişilik Radarı | Kapsül-radar; yakın anlamlı çeldirici yok | PDF'de |
-| h59 | Birlik Panosu | Etiket kopyası; pano sahnesi yok | PDF'de |
-| h60 | Cumhuriyet Yolu | Roket sahnesi; tarihler sırayı ele veriyor | PDF'de |
-| h61 | Doğa Köprüsü | Emoji eşleşmesi; fayda sahnesi yok | PDF'de |
-| h62 | Kroki Rehberi | Kroki değil labirent; konum ifadesi yok | PDF'de |
-| h63 | Afet Zaman Bandı | Kart tamamen kırpıldı; etiket taşması; kutu emojileri | PDF'de |
-| h64 | Deprem Anı Adımları | Hayati konu roket-YAKIT sahnesinde | PDF'de |
-| h65 | Sürdürülebilirlik Musluğu | Kronometre var musluk yok; miktar 3 yerde | PDF'de |
-| h66 | Geri Dönüşüm Grafiği | Veriler hazır yazılı; toplam sayaç ipucu veriyor | PDF'de |
-| h67 | Bilimsel Gelişme Köprüsü | Emoji eşleşmesi; öncesi-sonrası yok | PDF'de |
-| h68 | Teknoloji Denge Bandı | Durum sahnesi yok; bant kırpılması | PDF'de |
-| h69 | İletişim Zaman Şeridi | Roket sahnesi; ürün görselleri yok | PDF'de |
-| h70 | Sanatçı Kartları | Eser örneği yok; uzay zemini | PDF'de |
-| h71 | Sanat Sergisi | Etiket kopyası; sergi kurulmuyor | PDF'de |
-| h72 | Etki Radarı | Öncesi-sonrası karşılaştırması yok | PDF'de |
+| h37 | Gelişim Basamakları | Öğrencinin kendi hedefi tanımlı değil; karar bağlamsız | Tamamlandı |
+| h38 | Plan Masası | Takvim/süre görünmüyor; servis tezgâhı | Tamamlandı |
+| h39 | Okul Hakları Bandı | Bant kırpılması; okul ortamı yok | Tamamlandı |
+| h40 | Hak-Sorumluluk Terazisi | Kavramsal yanlış model; blok sayısı ekranda | Tamamlandı |
+| h41 | Çocuk Hakları Köprüsü | Emoji eşleşmesi; hak görselleri yok | Tamamlandı |
+| h42 | Proje Oylaması | Oy seçenek adıyla aynı; sonuç yorumu yok | Tamamlandı |
+| h43 | Sağlık Denetim Bandı | Gün akışı görselleşmiyor; bant kırpılması | Tamamlandı |
+| h44 | Güvenlik Radarı | Güvenlik kararı hız oyununa bağlanmış | Tamamlandı |
+| h45 | Güvenlik Adımları | Roket sahnesi; senaryo sahnesi yok | Tamamlandı |
+| h46 | Trafik Kuralı Köprüsü | Emoji eşleşmesi; kuralın sonucu gösterilmiyor | Tamamlandı |
+| h47 | Acil Çağrı Cümlesi | Kart dizme; görevli geri bildirimi yok | Tamamlandı |
+| h48 | Trafik Afişi Atölyesi | "Özgün ürün" kazanımı kart seçmeye inmiş | Tamamlandı |
+| h49 | Aile-Toplum Bandı | Ölçek farkı görselleşmiyor; bant kırpılması | Tamamlandı |
+| h50 | Meslek Köprüsü | 6 eşleşmenin 6'sı emojiyle çözülebiliyor; yazı taşması | Tamamlandı |
+| h51 | Meslek Atölyesi | Etiket kopyası; araç kullanımı görünmüyor | Tamamlandı |
+| h52 | Yardımlaşma Kartları | Erişilebilirlik sahnesi yok | Tamamlandı |
+| h53 | Proje Adımları | Roket sahnesi; süreç görselleşmiyor | Tamamlandı |
+| h54 | Yardımlaşma Cümlesi | İzin isteyen ifade ayrımı yok; kart dizme | Tamamlandı |
+| h55 | Koruma Bandı | Mekân fotoğrafı yok; bant kırpılması | Tamamlandı |
+| h56 | Yönetim Köprüsü | Emoji eşleşmesi; bina görseli yok | Tamamlandı |
+| h57 | Atatürk Kartları | Uzay zemini; özellik-başarı bağı gösterilmiyor | Tamamlandı |
+| h58 | Kişilik Radarı | Kapsül-radar; yakın anlamlı çeldirici yok | Tamamlandı |
+| h59 | Birlik Panosu | Etiket kopyası; pano sahnesi yok | Tamamlandı |
+| h60 | Cumhuriyet Yolu | Roket sahnesi; tarihler sırayı ele veriyor | Tamamlandı |
+| h61 | Doğa Köprüsü | Emoji eşleşmesi; fayda sahnesi yok | Tamamlandı |
+| h62 | Kroki Rehberi | Kroki değil labirent; konum ifadesi yok | Tamamlandı |
+| h63 | Afet Zaman Bandı | Kart tamamen kırpıldı; etiket taşması; kutu emojileri | Tamamlandı |
+| h64 | Deprem Anı Adımları | Hayati konu roket-YAKIT sahnesinde | Tamamlandı |
+| h65 | Sürdürülebilirlik Musluğu | Kronometre var musluk yok; miktar 3 yerde | Tamamlandı |
+| h66 | Geri Dönüşüm Grafiği | Veriler hazır yazılı; toplam sayaç ipucu veriyor | Tamamlandı |
+| h67 | Bilimsel Gelişme Köprüsü | Emoji eşleşmesi; öncesi-sonrası yok | Tamamlandı |
+| h68 | Teknoloji Denge Bandı | Durum sahnesi yok; bant kırpılması | Tamamlandı |
+| h69 | İletişim Zaman Şeridi | Roket sahnesi; ürün görselleri yok | Tamamlandı |
+| h70 | Sanatçı Kartları | Eser örneği yok; uzay zemini | Tamamlandı |
+| h71 | Sanat Sergisi | Etiket kopyası; sergi kurulmuyor | Tamamlandı |
+| h72 | Etki Radarı | Öncesi-sonrası karşılaştırması yok | Tamamlandı |
 
-"PDF'de" = düzeltme şartnamesi yazıldı, uygulamaya henüz aktarılmadı.
+"Tamamlandı" = üç turlu uygulama motoruna aktarıldı, web ve Android varlıkları eşlendi ve otomatik DOM koşumundan geçti.
 
-## Uygulama sırası önerisi
+## Uygulanan öncelik sırası
 
 1. **h40'ın kavramsal modeli** — tek oyun ama yanlış bir hak anlayışı öğretiyor, en öncelikli
 2. Köprü emoji sızıntısı (6 oyun + diğer derslerdeki köprüler)

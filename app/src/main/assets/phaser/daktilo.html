@@ -12,7 +12,7 @@
 <script src="phaser.min.js"></script>
 </head>
 <body>
-<div id="oyun"></div>
+<div id="oyun" tabindex="0" aria-label="Daktilo oyunu"></div>
 <script>
 /* ======================================================================
    MACERA AKADEMİ — SİHİRLİ DAKTİLO                    (Phaser 3.80.1)
@@ -318,6 +318,39 @@ class GameScene extends Phaser.Scene {
         wordWrap:{ width:450 } }).setOrigin(0.5).setDepth(9);
 
     this.kelimeyiKur();
+    this.fizikselKlavyeKur();
+  }
+
+  /* Fiziksel/Bluetooth klavye ve akıllı tahta tuşlarını ekrandaki daktilo
+     tuşlarına yönlendir. Böylece iki giriş yolu aynı puan, can ve animasyon
+     mantığını kullanır; ayrı bir cevap denetimi oluşmaz. */
+  fizikselKlavyeKur(){
+    this.fizikselTusDinleyici = e => this.fizikselTusaBas(e);
+    window.addEventListener('keydown', this.fizikselTusDinleyici);
+    const temizle = () => {
+      if (!this.fizikselTusDinleyici) return;
+      window.removeEventListener('keydown', this.fizikselTusDinleyici);
+      this.fizikselTusDinleyici = null;
+    };
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, temizle);
+    this.events.once(Phaser.Scenes.Events.DESTROY, temizle);
+  }
+
+  fizikselTusaBas(e){
+    if (this.kilit || e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || e.isComposing) return;
+    if (e.key === 'Backspace' || e.key === 'Delete'){
+      e.preventDefault();
+      if (!e.repeat) this.sil();
+      return;
+    }
+    if (typeof e.key !== 'string') return;
+    const harf = e.key.normalize('NFC').toLocaleUpperCase('tr-TR');
+    if ([...harf].length !== 1) return;
+    const tus = this.tuslar.find(t =>
+      String(t.harf).normalize('NFC').toLocaleUpperCase('tr-TR') === harf);
+    if (!tus) return;
+    e.preventDefault();
+    if (!e.repeat) this.harfBas(tus.harf, tus.gorsel.x, tus.gorsel.y, tus.gorsel);
   }
 
   /* --------------------------- kelime kurulumu --------------------------- */

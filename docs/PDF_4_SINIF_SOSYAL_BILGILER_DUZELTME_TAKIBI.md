@@ -55,6 +55,12 @@ Bu ders için motora eklenen yeni bileşenler:
 Katalog bağlanırken `text = ''` koşuluna `'sosyal4-pdf'` dalı eklendi: motor kendi tur yönergesini
 okuduğu için kataloğun eski tek-tur metni artık üstüne binmiyor.
 
+### Sesli öz değerlendirme sınırı
+
+`konus` akışı öğrencinin örneği dinleyip cevabını **sesli söylemesini** ve ölçütlerle kendini
+değerlendirmesini sağlar. Mikrofon kaydı veya konuşma tanıma yapmaz (`MediaRecorder` /
+`SpeechRecognition` kullanılmaz); arayüz de kayıt ya da tanıma sonucu olduğunu iddia etmez.
+
 ## Oyun listesi
 
 | ID | Oyun | Turlar | Yapılan | Durum |

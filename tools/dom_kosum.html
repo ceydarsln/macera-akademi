@@ -30,8 +30,9 @@ const ENGINE5 = Array.from({length:56},(_,i)=>'p'+String(i+1).padStart(2,'0')); 
 const ENGINE8 = Array.from({length:64},(_,i)=>'y'+String(i+1).padStart(2,'0'));   /* 3. sınıf Türkçe: partiler hâlinde büyüyor */
 const ENGINE11 = Array.from({length:36},(_,i)=>'sb'+String(i+1).padStart(2,'0'));  /* 4. sınıf sosyal bilgiler */
 const ENGINE7 = Array.from({length:36},(_,i)=>'h'+String(i+1).padStart(2,'0'));
-const ENGINE10 = Array.from({length:9},(_,i)=>'t'+String(i+1).padStart(2,'0')); /* 1. sınıf Türkçe */
-const ENGINE9 = Array.from({length:56},(_,i)=>'z'+String(i+1).padStart(2,'0'));  /* 4. sınıf Türkçe: partiler hâlinde büyüyor */
+const ENGINE12 = Array.from({length:12},(_,i)=>'h'+String(i+37)); /* 3. sınıf hayat bilgisi */
+const ENGINE10 = Array.from({length:64},(_,i)=>'t'+String(i+1).padStart(2,'0')); /* 1. sınıf Türkçe */
+const ENGINE9 = Array.from({length:64},(_,i)=>'z'+String(i+1).padStart(2,'0'));  /* 4. sınıf Türkçe: partiler hâlinde büyüyor */
 
 const panel = document.getElementById('panel');
 const cerceve = document.getElementById('cerceve');
@@ -54,7 +55,9 @@ function motorDosyasi(id){
   if (id[0] === 'u') return '../app/src/main/assets/phaser/turkce2-pdf.html';
   if (id[0] === 'p') return '../app/src/main/assets/phaser/matematik4-pdf.html';
   if (id[0] === 'y') return '../app/src/main/assets/phaser/turkce3-pdf.html';
-  if (id[0] === 'h') return '../app/src/main/assets/phaser/hayatbilgisi2-pdf.html';
+  if (id[0] === 'h') return Number(id.slice(1)) >= 37
+    ? '../app/src/main/assets/phaser/hayatbilgisi3-pdf.html'
+    : '../app/src/main/assets/phaser/hayatbilgisi2-pdf.html';
   if (id[0] === 'z') return '../app/src/main/assets/phaser/turkce4-pdf.html';
   if (id[0] === 't') return '../app/src/main/assets/phaser/turkce1-pdf.html';
   return '../app/src/main/assets/phaser/matematik-pdf.html';
@@ -1032,6 +1035,25 @@ async function tur7(W){
         await tikla(W, '[data-esya="' + j + '"]'); await bekle(60);
       }
       break;
+    case 'plan': {
+      const alan = r.alanSabit != null ? r.alanSabit : 0;
+      if (r.alanSabit == null){ await tikla(W, '[data-alan="' + alan + '"]'); await bekle(80); }
+      for (const i of r.alanlar[alan].dogru){ await tikla(W, '[data-adim="' + i + '"]'); await bekle(70); }
+      break;
+    }
+    case 'kroki':
+      for (let i = 0; i < r.adimlar.length; i++){
+        await kosul(() => Number(W.eval('String(state.ix)')) === i, 15000, 'kroki adımı ' + i);
+        await tikla(W, '[data-yer="' + r.adimlar[i].dogru + '"]'); await bekle(70);
+      }
+      break;
+    case 'grafik':
+      for (let i = 0; i < r.kategoriler.length; i++){
+        await tikla(W, '[data-say="' + r.kategoriler[i].adet + '"]'); await bekle(80);
+      }
+      await kosul(() => !!S(W, '[data-gsec]'), 15000, 'grafik yorumu');
+      await tikla(W, '[data-gsec="' + r.secenekler.findIndex(c => c.correct) + '"]');
+      break;
     default: throw new Error('bilinmeyen mekanik (hayat bilgisi 2): ' + r.kind);
   }
 }
@@ -1268,9 +1290,10 @@ async function tur9(W){
   }
 }
 
+
 /* ---- motor 11 (sb oyunları · 4. sınıf sosyal bilgiler) ----
-   Türkçe motorunun (tur8) çözücüsünü paylaşır; yalnız haritaya, grafiğe ve
-   ankete özgü üç dal eklenir. */
+   Türkçe motorunun (tur8) çözücüsünü paylaşır; yalnız haritaya ve ankete
+   özgü iki dal eklenir. */
 async function tur11(W){
   const r = turVerisi(W);
   if (r.kind === 'harita'){
@@ -1292,6 +1315,7 @@ async function tur11(W){
 
 /* ---------- koşucu ---------- */
 window.SONUC = { bitti:false, gecti:[], kaldi:[], hatalar:[] };
+
 
 /* ---------- motor 10 (t oyunları · 1. sınıf Türkçe) ----------
    Şartname sahnelerinde hız/refleks yok; her tur deterministik bir karar
@@ -1398,7 +1422,6 @@ async function tur10(W){
   }
 }
 
-
 async function oyunuOyna(id){
   const dosya = motorDosyasi(id);
   /* src değişimi eski belgeyi hemen düşürmez: load olayını bekle,
@@ -1432,7 +1455,7 @@ async function oyunuOyna(id){
 
 (async () => {
   const p = new URLSearchParams(location.hash.slice(1));
-  const ids = p.get('ids') ? p.get('ids').split(',') : [...ENGINE1, ...ENGINE2, ...ENGINE3, ...ENGINE4, ...ENGINE5, ...ENGINE8, ...ENGINE11, ...ENGINE6, ...ENGINE7, ...ENGINE9, ...ENGINE10];
+  const ids = p.get('ids') ? p.get('ids').split(',') : [...ENGINE1, ...ENGINE2, ...ENGINE3, ...ENGINE4, ...ENGINE5, ...ENGINE8, ...ENGINE11, ...ENGINE6, ...ENGINE7, ...ENGINE12, ...ENGINE9, ...ENGINE10];
   panel.textContent = '';
   yaz('koşum: ' + ids.length + ' oyun');
   for (const id of ids){
