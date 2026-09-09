@@ -58,6 +58,7 @@ Sunucuda:
 ```bash
 docker compose ps
 curl http://127.0.0.1:8080/api/index.php?action=health
+curl http://127.0.0.1:8080/api/teacher.php?action=health
 ```
 
 Beklenen API yanıtında `ok: true` ve `database: mysql` bulunur. Hata incelemek
@@ -79,6 +80,8 @@ maceraakademi.com.tr -> http://127.0.0.1:8080
 
 HTTPS sertifikası reverse proxy üzerinde kurulmalı; HTTP istekleri HTTPS'e
 yönlendirilmelidir. İstenirse `www.maceraakademi.com.tr` aynı hedefe bağlanır.
+Öğrenci uygulaması `/`, öğretmen paneli ise aynı container'daki `/ogretmen/`
+yolundan sunulur. Eski `maceraogretmen.netlify.app` adresine yönlendirme gerekmez.
 
 ## Güncelleme
 
@@ -90,10 +93,20 @@ docker compose up -d --build app
 Ayrı MySQL container kullanılıyorsa `--profile bundled-db` seçeneğini koruyun.
 MySQL volume'u uygulama container'ı yeniden oluşturulsa da kalır.
 
+Bu öğretmen paneli güncellemesinden **önce kurulmuş** bir veritabanında aşağıdaki
+geçiş dosyasını MySQL istemcisi veya phpMyAdmin ile bir kez uygulayın:
+
+```text
+web/database/migrations/2026-09-09-teacher-panel.sql
+```
+
+Yeni/boş kurulumlarda `schema.sql` tabloyu zaten oluşturduğu için ayrıca geçiş
+çalıştırılmaz.
+
 ## Önemli sınırlar
 
-- Mevcut Firebase kullanıcıları otomatik taşınmaz.
-- Mevcut öğretmen paneli Firebase kullanır; MySQL yarışmalarını yönetebilmesi
-  için ayrıca uyarlanmalıdır.
+- Öğrenci ve öğretmen paneli tek MySQL veritabanını kullanır.
+- Mevcut Firebase kullanıcıları otomatik taşınmaz. Ayrıntılı plan
+  `docs/FIREBASE_MYSQL_GECISI.md` dosyasındadır.
 - Parolaları Dockerfile, Compose veya GitHub içine yazmayın; yalnız `.env` veya
   şirketin secret yönetimini kullanın.

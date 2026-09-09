@@ -1,6 +1,6 @@
 # Macera Akademi
 
-Macera Akademi, 1–4. sınıf düzeyleri için 658 müfredat oyunu içeren bir eğitim uygulamasıdır. Ana uygulama tek sayfalık bir web uygulaması olarak çalışır; Android ve iOS tarafında WebView ile paketlenir. Web yayını hesap ve ilerleme verilerini PHP API üzerinden MySQL'de saklar.
+Macera Akademi, 1–4. sınıf düzeyleri için 658 müfredat oyunu içeren bir eğitim uygulamasıdır. Ana uygulama tek sayfalık bir web uygulaması olarak çalışır; Android ve iOS tarafında WebView ile paketlenir. Öğrenci uygulaması ve `/ogretmen/` öğretmen paneli aynı PHP API/MySQL sistemiyle tek yayında çalışır.
 
 ## Mevcut durum
 
@@ -22,6 +22,7 @@ web/macera-akademi.html Ana uygulama ve oyun kataloğu için tek kaynak
 web/api-client.js       PHP/MySQL API istemcisi
 web/api/                Güvenli hesap ve oyun API'si
 web/database/schema.sql MySQL şeması
+web/ogretmen/           Birleşik MySQL öğretmen paneli
 web/phaser/             Phaser şablonlarının kaynak sürümleri
 tools/                  Eşleme ve otomatik oyun testleri
 tools/audio/            Chatterbox manifesti ve üretim araçları
@@ -44,6 +45,11 @@ cp web/api/config.sample.php web/api/config.local.php
 ```
 
 MySQL'de boş bir veritabanı oluşturup `web/database/schema.sql` dosyasını içe aktarın. Ardından `config.local.php` içine yalnızca sunucudaki gerçek bağlantı bilgilerini yazın ve web sunucusunun document root'unu `web/` klasörüne yönlendirin. Ayrıntılı kontrol listesi [YAYIN_KURULUMU.md](YAYIN_KURULUMU.md) dosyasındadır.
+
+Canlı adresler öğrenci için `https://maceraakademi.com.tr/`, öğretmen için
+`https://maceraakademi.com.tr/ogretmen/` şeklindedir. Uygulama mimarisi
+[docs/UYGULAMA_MIMARISI.md](docs/UYGULAMA_MIMARISI.md), kullanıcı adımları
+[docs/KULLANIM_KILAVUZU.md](docs/KULLANIM_KILAVUZU.md) içindedir.
 
 `config.local.php` Git'e eklenmez. Canlı ortam HTTPS olmadan kullanılmamalıdır.
 

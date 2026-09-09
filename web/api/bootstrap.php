@@ -169,7 +169,11 @@ function need_string(array $data, string $key, int $max = 255, bool $allowEmpty 
     if (!$allowEmpty && $value === '') {
         throw new ApiProblem($key . ' alanı gerekli.', 422, 'validation_error');
     }
-    if (strlen($value) > $max * 4) {
+    $length = preg_match_all('/./us', $value, $characters);
+    if ($length === false) {
+        throw new ApiProblem($key . ' alanı geçerli UTF-8 metni olmalı.', 422, 'validation_error');
+    }
+    if ($length > $max) {
         throw new ApiProblem($key . ' alanı çok uzun.', 422, 'validation_error');
     }
     return $value;
@@ -290,6 +294,114 @@ function issue_token(int $userId): string
     $stmt->bindValue(2, $hash, PDO::PARAM_LOB);
     $stmt->execute();
     return $raw;
+}
+
+function active_class_for_teacher(int $teacherId): ?array
+{
+    $stmt = db()->prepare(
+        'SELECT code, name, grade, teacher_name, active, created_at, updated_at '
+        . 'FROM classes WHERE teacher_id = ? AND active = 1 ORDER BY updated_at DESC LIMIT 1'
+    );
+    $stmt->execute([$teacherId]);
+    $row = $stmt->fetch();
+    return $row ?: null;
+}
+
+function teacher_profile_from_row(array $row, ?array $class = null): array
+{
+    if ($class === null) {
+        $class = active_class_for_teacher((int) $row['id']);
+    }
+    return [
+        'uid' => (string) $row['id'],
+        'username' => (string) $row['username'],
+        'fullName' => (string) ($row['display_name'] ?? ''),
+        'email' => (string) ($row['email'] ?? ''),
+        'class' => $class ? [
+            'code' => (string) $class['code'],
+            'name' => (string) $class['name'],
+            'grade' => (int) $class['grade'],
+        ] : null,
+    ];
+}
+
+function current_teacher(array $data): array
+{
+    $token = bearer_token($data);
+    if ($token === '') {
+        throw new ApiProblem('Öğretmen oturumu bulunamadı. Lütfen yeniden giriş yapın.', 401, 'unauthorized');
+    }
+
+    $hash = hash('sha256', $token, true);
+    $stmt = db()->prepare(
+        'SELECT t.* FROM teacher_tokens tt JOIN teachers t ON t.id = tt.teacher_id '
+        . 'WHERE tt.token_hash = ? AND tt.expires_at > UTC_TIMESTAMP() AND t.active = 1 LIMIT 1'
+    );
+    $stmt->bindValue(1, $hash, PDO::PARAM_LOB);
+    $stmt->execute();
+    $teacher = $stmt->fetch();
+    if (!$teacher) {
+        throw new ApiProblem('Öğretmen oturumunun süresi doldu. Lütfen yeniden giriş yapın.', 401, 'session_expired');
+    }
+
+    $touch = db()->prepare('UPDATE teacher_tokens SET last_used_at = UTC_TIMESTAMP() WHERE token_hash = ?');
+    $touch->bindValue(1, $hash, PDO::PARAM_LOB);
+    $touch->execute();
+    return $teacher;
+}
+
+function issue_teacher_token(int $teacherId): string
+{
+    $raw = bin2hex(random_bytes(32));
+    $hash = hash('sha256', $raw, true);
+    $days = int_between(api_config()['token_ttl_days'] ?? 90, 1, 365, 90);
+    $stmt = db()->prepare(
+        'INSERT INTO teacher_tokens (teacher_id, token_hash, expires_at, created_at, last_used_at) '
+        . 'VALUES (?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL ' . $days . ' DAY), UTC_TIMESTAMP(), UTC_TIMESTAMP())'
+    );
+    $stmt->bindValue(1, $teacherId, PDO::PARAM_INT);
+    $stmt->bindValue(2, $hash, PDO::PARAM_LOB);
+    $stmt->execute();
+    return $raw;
+}
+
+function new_class_code(): string
+{
+    $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    for ($attempt = 0; $attempt < 30; $attempt++) {
+        $code = '';
+        for ($i = 0; $i < 6; $i++) {
+            $code .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+        }
+        $stmt = db()->prepare('SELECT 1 FROM classes WHERE code = ? LIMIT 1');
+        $stmt->execute([$code]);
+        if (!$stmt->fetchColumn()) {
+            return $code;
+        }
+    }
+    throw new ApiProblem('Yeni sınıf kodu üretilemedi. Lütfen tekrar deneyin.', 503, 'class_code_unavailable');
+}
+
+function teacher_class_or_fail(int $teacherId): array
+{
+    $class = active_class_for_teacher($teacherId);
+    if (!$class) {
+        throw new ApiProblem('Aktif sınıf bulunamadı.', 409, 'class_missing');
+    }
+    return $class;
+}
+
+function teacher_owns_record(string $table, string $id, int $teacherId): bool
+{
+    if (!in_array($table, ['assignments', 'contests'], true)) {
+        return false;
+    }
+    $stmt = db()->prepare(
+        'SELECT 1 FROM ' . $table . ' r JOIN classes c ON c.code = r.class_code '
+        . 'WHERE r.id = ? AND c.teacher_id = ? LIMIT 1'
+    );
+    $stmt->execute([$id, $teacherId]);
+    return (bool) $stmt->fetchColumn();
 }
 
 function public_user(int $userId): ?array

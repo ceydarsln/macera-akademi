@@ -1762,9 +1762,9 @@ let state = {
 let gs = {}; /* runtime state for the currently open game */
 
 /* =====================================================================
-   VERİTABANI KATMANI — FIREBASE (cihazlar arası)
-   Hesaplar Google Firebase'de tutulur; aynı hesaba her cihazdan girilebilir.
-   Çevrimdışıyken Firestore veriyi cihazda tutar, bağlantı gelince eşitler.
+   ESKİ FIREBASE UYUMLULUK KATMANI
+   Canlı veri akışı dosyanın sonundaki api-client.js tarafından PHP/MySQL
+   işlevleriyle değiştirilir. Yapılandırma bilinçli olarak boş tutulur.
    ===================================================================== */
 const FIREBASE_CONFIG = {
   apiKey: "", authDomain: "", projectId: "", storageBucket: "", messagingSenderId: "", appId: ""
@@ -1774,9 +1774,9 @@ const FIREBASE_VERSION = '12.16.0';
    'default' yazıldığı için ISIMLI bir veritabanı oluştu; SDK'nın varsayılanı
    ise '(default)'tır. Bu yüzden kimliği açıkça veriyoruz. */
 const FIRESTORE_DB_ID = 'default';
-/* Öğretmen paneli ayrı bir web uygulamasıdır. Karşılama ekranındaki bağlantı
-   buraya gider; APK içinde sistem tarayıcısında açılır (MainActivity yönlendirir). */
-const OGRETMEN_PANEL_URL = 'https://maceraogretmen.netlify.app';
+/* Öğretmen paneli aynı web/Docker yayınındaki /ogretmen/ yolundadır.
+   APK içinde bağlantı sistem tarayıcısında açılır (MainActivity yönlendirir). */
+const OGRETMEN_PANEL_URL = 'https://maceraakademi.com.tr/ogretmen/';
 let fb = null;
 
 /* Kullanıcı adı → iç e-posta (çocuk e-posta yazmaz; ad tekilliği de böyle garanti olur) */

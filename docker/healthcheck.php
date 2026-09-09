@@ -8,7 +8,17 @@ $context = stream_context_create([
         'ignore_errors' => true,
     ],
 ]);
-$body = @file_get_contents('http://127.0.0.1/api/index.php?action=health', false, $context);
-$result = is_string($body) ? json_decode($body, true) : null;
+$urls = [
+    'http://127.0.0.1/api/index.php?action=health',
+    'http://127.0.0.1/api/teacher.php?action=health',
+];
 
-exit(is_array($result) && ($result['ok'] ?? false) === true ? 0 : 1);
+foreach ($urls as $url) {
+    $body = @file_get_contents($url, false, $context);
+    $result = is_string($body) ? json_decode($body, true) : null;
+    if (!is_array($result) || ($result['ok'] ?? false) !== true) {
+        exit(1);
+    }
+}
+
+exit(0);

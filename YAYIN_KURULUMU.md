@@ -25,7 +25,9 @@ dosyasını kullanın. Aşağıdaki adımlar Docker kullanılmayan klasik kurulu
 6. `config.local.php` içindeki veritabanı adı, kullanıcı adı ve parolayı doldurun. Bu dosyayı commit etmeyin.
 7. Alan adının document root'unu deponun `web/` klasörüne yönlendirin.
 8. `https://maceraakademi.com.tr/api/index.php?action=health` adresini açın. `ok: true` ve `database: mysql` görülmelidir.
-9. Ana sayfada deneme hesabı oluşturup çıkış/giriş ve ilerleme kaydını kontrol edin.
+9. `https://maceraakademi.com.tr/api/teacher.php?action=health` adresinde de `ok: true` yanıtını doğrulayın.
+10. `/ogretmen/` adresinde deneme öğretmen hesabı ve sınıf kodu oluşturun.
+11. Ana sayfada deneme öğrenci hesabı açıp sınıf kodunu kaydedin; öğrencinin öğretmen panelinde göründüğünü kontrol edin.
 
 ## Güncelleme
 
@@ -37,6 +39,11 @@ git pull --ff-only origin main
 ```
 
 Şema değişikliği varsa yeni SQL geçişi ayrıca uygulanmalıdır. `config.local.php` ve kullanıcı verileri Git tarafından değiştirilmez.
+
+Bu öğretmen paneli güncellemesinden önce kurulmuş veritabanlarında
+`web/database/migrations/2026-09-09-teacher-panel.sql` dosyasını bir kez
+uygulayın. Yeni kurulumlar güncel `schema.sql` dosyasını kullandığı için buna
+ihtiyaç duymaz.
 
 ## Güvenlik notları
 
@@ -53,4 +60,10 @@ Bu kurulum yeni ve boş bir MySQL veritabanı oluşturur. Eski Firestore profil 
 
 ## Öğretmen paneli
 
-Öğrenci uygulamasının sınıf, ödev ve yarışma tabloları MySQL şemasında hazırdır. Mevcut harici öğretmen paneli Firebase kullandığı için ayrıca PHP API'ye geçirilmeden bu tablolara veri yazamaz. Öğretmen paneli kaynakları bu depoda değildir; panel geçişi ayrı teslim edilmelidir.
+Öğretmen paneli bu deponun `web/ogretmen/` klasöründedir ve
+`https://maceraakademi.com.tr/ogretmen/` yolundan açılır. Panel, öğrenci
+uygulamasıyla aynı MySQL sınıf, ilerleme, ödev ve yarışma kayıtlarını kullanır.
+Eski harici Netlify/Firebase öğretmen paneli canlı yayın için gerekli değildir.
+
+Ayrıntılı mimari `docs/UYGULAMA_MIMARISI.md`, günlük kullanım adımları
+`docs/KULLANIM_KILAVUZU.md` dosyasındadır.
