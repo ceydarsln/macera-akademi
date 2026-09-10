@@ -19,8 +19,8 @@ android {
         applicationId "com.maceraakademi.app"
         minSdk 23
         targetSdk 36
-        versionCode 22
-        versionName "2.8.1"
+        versionCode 23
+        versionName "2.8.2"
 
         /* Piper sesi yerel kitaplıkla (sherpa-onnx) çalışıyor. Yalnız 64 bit
            ARM paketleniyor: 2017 sonrası bütün Android telefonlar bu mimaride

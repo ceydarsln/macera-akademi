@@ -4,6 +4,8 @@
   const TOKEN_KEY = 'macera-api-token-v1';
   const UID_KEY = 'macera-api-uid-v1';
   const CACHE_KEY = 'cache-profile-v1';
+  const LEGACY_BACKUP_KEY = 'legacy-firebase-profile-v1';
+  const GUEST_PROFILE_KEY = 'guest-profile-v1';
   const PRODUCTION_API = 'https://maceraakademi.com.tr/api/index.php';
   let healthPromise = null;
   let currentUid = localRead(UID_KEY) || '';
@@ -69,6 +71,40 @@
     currentUid = uid ? String(uid) : '';
   }
   function clearApiSession(){ setApiSession('', ''); }
+
+  /*
+   * Firebase kullanan eski Android sürümleri ilerlemeyi CACHE_KEY altında
+   * saklıyordu. MySQL sürümüne uygulama güncellemesiyle geçen cihazda henüz
+   * MySQL oturumu bulunmadığı için bu kaydı silmek, çevrimdışı ilerlemeyi de
+   * kaybettiriyordu. Eski profil önce misafir profiline dönüştürülür; kullanıcı
+   * "Hesap oluştur" dediğinde mevcut kayıt akışı bu ilerlemeyi yeni MySQL
+   * hesabına taşır. Ayrıca ham yedek, kayıt tamamlanana kadar ayrı tutulur.
+   */
+  function preserveLegacyProgress(profile){
+    if(!profile || !profile.username) return null;
+    const rescued = {
+      username:String(profile.username||''), email:String(profile.email||''),
+      teacherCode:String(profile.teacherCode||'').trim().toUpperCase(),
+      grade:Number(profile.grade)||1, level:Number(profile.level)||1,
+      xp:Number(profile.xp)||0, coins:Number(profile.coins)||0,
+      look:Object.assign({},LOOK_DEFAULT,profile.look||{}),
+      owned:Array.isArray(profile.owned)?profile.owned:[],
+      badges:Array.isArray(profile.badges)?profile.badges:[],
+      coinsEarned:Number(profile.coinsEarned)||0,
+      duelStats:profile.duelStats||{}, completed:profile.completed||{},
+      settings:profile.settings||{sound:true,music:true,taskNotif:true,rewardNotif:true}
+    };
+    try{
+      window.localStorage.setItem(LEGACY_BACKUP_KEY,JSON.stringify(rescued));
+      window.localStorage.setItem(GUEST_PROFILE_KEY,JSON.stringify({
+        grade:rescued.grade, level:rescued.level, xp:rescued.xp, coins:rescued.coins,
+        look:rescued.look, owned:rescued.owned, badges:rescued.badges,
+        coinsEarned:rescued.coinsEarned, duelStats:rescued.duelStats,
+        completed:rescued.completed, settings:rescued.settings
+      }));
+    }catch(e){ return null; }
+    return rescued;
+  }
 
   async function apiCall(action, payload, authenticated){
     const body = Object.assign({action:action}, payload || {});
@@ -153,6 +189,7 @@
       if(guest){
         const count = Object.keys(profile.completed).filter(function(k){ return profile.completed[k]; }).length;
         clearGuest(); state.isGuest = false;
+        try{ window.localStorage.removeItem(LEGACY_BACKUP_KEY); }catch(e){}
         if(count) setTimeout(function(){ toast(count + ' oyunluk ilerlemen hesabına taşındı ✅'); }, 900);
       }
       cacheWrite(result.user);
@@ -242,8 +279,20 @@
   async function verifySessionInBackground(optimistic){
     if(!apiToken()){
       if(optimistic){
-        try{ window.localStorage.removeItem('cache-profile-v1'); }catch(e){}
-        clearApiSession(); await doLogout(); toast('Tekrar giriş yapman gerekiyor 🔑');
+        const rescued=preserveLegacyProgress(cacheRead());
+        clearApiSession();
+        await doLogout();
+        if(rescued){
+          const guest=loadGuest();
+          if(guest){
+            applyGuest(guest);
+            go('account');
+            const count=Object.keys(rescued.completed||{}).filter(function(k){return rescued.completed[k];}).length;
+            toast((count?count+' oyunluk':'Eski')+' ilerlemen korundu ✅ Hesap oluşturup MySQL\'e taşı.');
+          }
+        }else{
+          toast('Tekrar giriş yapman gerekiyor 🔑');
+        }
       }
       return;
     }

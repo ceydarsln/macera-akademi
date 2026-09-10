@@ -4,7 +4,7 @@ Macera Akademi, 1–4. sınıf düzeyleri için 658 müfredat oyunu içeren bir 
 
 ## Mevcut durum
 
-- Sürüm: `2.8.1` (`versionCode 22`)
+- Sürüm: `2.8.2` (`versionCode 23`)
 - Toplam oyun: 658
 - Phaser motorunda çalışan: 657
 - DOM motorunda çalışan: 1 (`v40`)
@@ -116,6 +116,6 @@ http://127.0.0.1:8871/tools/test-harness.html?ids=m06,u03,v40&anlam=1
 
 - `v40` HTML tabanlı özel grafiği nedeniyle bilinçli olarak DOM motorundadır.
 - Chatterbox kayıt üretimi tamamlanmadan Piper kaldırılmamalıdır.
-- İmzalı AAB, gizlilik politikası ve Play Store varlıkları henüz hazırlanmamıştır.
+- `2.8.2` imzalı AAB paketi yerel olarak üretilmiştir; Play Console'a yükleme ve mağaza incelemesi ayrıdır.
 
 Geçmiş devir belgeleri bağlam ve kanıt olarak tutulur; güncel çalışma talimatı olarak `README.md`, kaynak kod ve doğrulanmış test sonuçları esas alınır.
