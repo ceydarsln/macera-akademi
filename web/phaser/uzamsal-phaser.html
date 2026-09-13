@@ -1863,6 +1863,11 @@ class SepetScene extends Temel {
 class SiraScene extends Temel {
   constructor(){ super('Sira'); }
 
+  init(veri){
+    this.turIndex = Math.max(0, Math.min(2, Number(veri && veri.turIndex) || 0));
+    this.toplamPuan = Math.max(0, Number(veri && veri.puan) || 0);
+  }
+
   emojiAyir(etiket){
     const t = duzMetin(etiket);
     const emo = (t.match(/^\s*(\p{Extended_Pictographic}[\u200d\ufe0f\p{Extended_Pictographic}]*)/u) || [,''])[1];
@@ -1873,20 +1878,38 @@ class SiraScene extends Temel {
   }
 
   create(){
-    const yon = duzMetin(CFG.instruction) || 'Sıradaki kim?';
-    this.arayuzKur(yon);
-    this.basariMesaji = duzMetin(CFG.successMsg) || 'Sırayı doğru saydın! 🏁';
-
-    const tur = CFG.siraTur || 'yol';
-    const ogeler = (CFG.items || []).map((i, ix) => Object.assign(this.emojiAyir(i.label), {
-      id: String(i.id), sira: ix + 1
+    const siraTuru = CFG.siraTur || 'yol';
+    const hamOgeler = (CFG.items || []).map((i, ix) => Object.assign(this.emojiAyir(i.label), {
+      id: String(i.id), kaynakSira: ix + 1
     }));
-    const dogrular = new Set((CFG.correct || []).map(String));
-    const n = ogeler.length;
+    const yarisTurlari = [
+      { dizilim:[0,1,2,3], istenen:3 },
+      { dizilim:[2,0,3,1], istenen:2 },
+      { dizilim:[1,3,0,2], istenen:4 }
+    ];
+    const yolTurlari = [
+      { dizilim:[0,1,2], istenen:2 },
+      { dizilim:[2,0,1], istenen:1 },
+      { dizilim:[1,2,0], istenen:3 }
+    ];
+    const turBilgisi = (siraTuru === 'yaris' ? yarisTurlari : yolTurlari)[this.turIndex];
+    const ogeler = turBilgisi.dizilim
+      .map(i => hamOgeler[i])
+      .filter(Boolean)
+      .map((o, ix) => Object.assign({}, o, { sira:ix + 1 }));
+    this.istenen = Math.min(turBilgisi.istenen, Math.max(1, ogeler.length));
 
-    /* istenen sıra: yönergedeki "3." / "2." */
-    const sm = yon.match(/(\d+)\s*\./);
-    this.istenen = Number(CFG.siraNo) || (sm ? Number(sm[1]) : 1);
+    const yon = siraTuru === 'yaris'
+      ? 'Önden say: ' + this.istenen + '. sıradaki hayvana dokun.'
+      : 'Otobüsten say: ' + this.istenen + '. duraktaki kişiye dokun.';
+    this.arayuzKur(yon);
+    this.puan = this.toplamPuan;
+    this.tazele();
+    this.basariMesaji = duzMetin(CFG.successMsg) || 'Sırayı doğru saydın! 🏁';
+    if (KOPRU) KOPRU.oku(yon);
+
+    const tur = siraTuru;
+    const n = ogeler.length;
 
     const zemin = this.add.graphics().setDepth(2);
     const yolY = this.seritAlt + 190;
@@ -1941,14 +1964,20 @@ class SiraScene extends Temel {
 
       c.setSize(96, 150);
       c.setInteractive({ useHandCursor:true });
-      c.setData('dogru', dogrular.size ? dogrular.has(o.id) : (o.sira === this.istenen));
+      c.setData('dogru', o.sira === this.istenen);
       c.on('pointerdown', () => {
         if (this.kilit) return;
         if (c.getData('dogru')){
           this.kilit = true;
           this.odul(200, x, y);
           this.tweens.add({ targets:kisi, y:kisi.y - 26, duration:220, yoyo:true, repeat:1,
-            onComplete: () => this.time.delayedCall(500, () => this.bitir(true)) });
+            onComplete: () => this.time.delayedCall(500, () => {
+              if (this.turIndex < 2){
+                this.scene.restart({ turIndex:this.turIndex + 1, puan:this.puan });
+              } else {
+                this.bitir(true);
+              }
+            }) });
         } else {
           this.tweens.add({ targets:c, angle:{ from:-7, to:7 }, duration:80, yoyo:true, repeat:2,
             onComplete: () => c.setAngle(0) });
@@ -1959,7 +1988,7 @@ class SiraScene extends Temel {
       });
     });
 
-    this.durumYazi.setText(tur === 'yaris' ? 'Önden say' : 'Otobüsten say');
+    this.durumYazi.setText('Tur ' + (this.turIndex + 1) + '/3 · ' + (tur === 'yaris' ? 'Önden say' : 'Otobüsten say'));
   }
 }
 

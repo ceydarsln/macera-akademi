@@ -302,6 +302,7 @@ try {
     }
 
     if ($action === 'contest_submit') {
+        rate_limit('contest_submit:' . $userId, 12, 1);
         $contestId = need_string($data, 'contestId', 64);
         $stmt = $pdo->prepare('SELECT * FROM contests WHERE id = ? AND active = 1 LIMIT 1');
         $stmt->execute([$contestId]);
@@ -309,17 +310,15 @@ try {
         if (!$contest || strtoupper((string) $contest['class_code']) !== strtoupper((string) ($user['teacher_code'] ?? ''))) {
             throw new ApiProblem('Bu yarışmaya katılma yetkiniz yok.', 403, 'contest_denied');
         }
-        $score = int_between($data['score'] ?? 0, 0, 2000000000, 0);
-        $correct = int_between($data['correct'] ?? 0, 0, 10000, 0);
+        $result = competition_result($data);
         $stmt = $pdo->prepare(
             'INSERT INTO contest_scores (contest_id, user_id, class_code, username, score, correct_count, grade) '
             . 'VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE '
-            . 'score = GREATEST(score, VALUES(score)), correct_count = IF(VALUES(score) >= score, VALUES(correct_count), correct_count), '
-            . 'grade = VALUES(grade), submitted_at = UTC_TIMESTAMP()'
+            . 'contest_id = VALUES(contest_id)'
         );
         $stmt->execute([
             $contestId, $userId, (string) $contest['class_code'], (string) $user['username'],
-            $score, $correct, int_between($data['grade'] ?? $user['grade'], 1, 4, (int) $user['grade']),
+            $result['score'], $result['correct'], (int) $contest['grade'],
         ]);
         respond(['ok' => true, 'data' => ['saved' => true]]);
     }
@@ -469,7 +468,11 @@ try {
     }
 
     if ($action === 'duel_create') {
+        rate_limit('duel_create:' . $userId, 10, 1);
         $otherId = require_user_id($data['oppUid'] ?? null);
+        if ($otherId === $userId) {
+            throw new ApiProblem('Kendinize meydan okuyamazsınız.', 422, 'self_duel');
+        }
         if (!accepted_friends($userId, $otherId)) {
             throw new ApiProblem('Yalnızca arkadaşlarınıza meydan okuyabilirsiniz.', 403, 'not_friends');
         }
@@ -477,23 +480,32 @@ try {
         if (!$other) {
             throw new ApiProblem('Rakip bulunamadı.', 404, 'user_not_found');
         }
-        $answers = json_value($data['answers'] ?? null, []);
+        $grade = int_between($data['grade'] ?? 0, 1, 4, 0);
+        if ($grade !== (int) $user['grade']) {
+            throw new ApiProblem('Düello sınıfı profilinizle uyuşmuyor.', 422, 'invalid_game_grade');
+        }
+        $category = competition_category(need_string($data, 'catId', 40), $grade);
+        $seed = int_between($data['seed'] ?? -1, 0, 2000000000, -1);
+        if ($seed < 0) {
+            throw new ApiProblem('Geçersiz düello tohumu.', 422, 'invalid_game_seed');
+        }
+        $result = competition_result($data);
         $stmt = $pdo->prepare(
             'INSERT INTO duels (from_user_id, to_user_id, from_name, to_name, grade, category_id, '
             . 'category_label, seed, from_score, from_correct, from_answers_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute([
             $userId, $otherId, (string) $user['username'], (string) $other['username'],
-            int_between($data['grade'] ?? 1, 1, 4, 1), need_string($data, 'catId', 40),
-            need_string($data, 'catLabel', 100), (int) ($data['seed'] ?? 1),
-            int_between($data['score'] ?? 0, 0, 2000000000, 0),
-            int_between($data['correct'] ?? 0, 0, 10000, 0), json_db($answers),
+            $grade, $category['id'], $category['label'], $seed,
+            $result['score'], $result['correct'], json_db($result['answers']),
         ]);
         respond(['ok' => true, 'data' => ['id' => (string) $pdo->lastInsertId()]], 201);
     }
 
     if ($action === 'duel_respond') {
+        rate_limit('duel_respond:' . $userId, 16, 1);
         $duelId = require_user_id($data['duelId'] ?? null, 'Geçersiz düello.');
+        $result = competition_result($data);
         $pdo->beginTransaction();
         try {
             $stmt = $pdo->prepare('SELECT * FROM duels WHERE id = ? FOR UPDATE');
@@ -502,8 +514,8 @@ try {
             if (!$duel || (int) $duel['to_user_id'] !== $userId || $duel['status'] !== 'pending') {
                 throw new ApiProblem('Bu meydan okuma artık yanıtlanamıyor.', 409, 'duel_not_pending');
             }
-            $toScore = int_between($data['score'] ?? 0, 0, 2000000000, 0);
-            $toCorrect = int_between($data['correct'] ?? 0, 0, 10000, 0);
+            $toScore = $result['score'];
+            $toCorrect = $result['correct'];
             $fromScore = (int) $duel['from_score'];
             $isDraw = $toScore === $fromScore ? 1 : 0;
             $winner = $isDraw ? null : ($toScore > $fromScore ? $userId : (int) $duel['from_user_id']);
@@ -512,7 +524,7 @@ try {
                 . 'winner_user_id = ?, is_draw = ?, played_at = UTC_TIMESTAMP() WHERE id = ?'
             );
             $stmt->execute([
-                $toScore, $toCorrect, json_db(json_value($data['answers'] ?? null, [])),
+                $toScore, $toCorrect, json_db($result['answers']),
                 $winner, $isDraw, $duelId,
             ]);
             $pdo->prepare('INSERT INTO duel_claims (duel_id, user_id) VALUES (?, ?)')->execute([$duelId, $userId]);

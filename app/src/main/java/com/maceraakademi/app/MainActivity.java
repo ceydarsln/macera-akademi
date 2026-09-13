@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private volatile String ttsStatus = "notready";   // ok | missing | failed | notready
     private volatile String ttsPending = null;        // motor hazır olmadan istenen son metin
     private volatile int ttsPendingNesli = 0;
+    private volatile float sesSeviyesi = 1.0f;
     private String ttsSesAdi = "";           // seçilen sesin adı (tanılama için)
     /** Ekran/oyun değişince UI kuyruğunda bekleyen ses görevlerini de geçersiz kılar. */
     private final AtomicInteger sesNesli = new AtomicInteger(0);
@@ -284,7 +285,9 @@ public class MainActivity extends AppCompatActivity {
             if (kayit != null) kayit.durdur();
             if (piper != null) piper.durdur();
             tts.stop();
-            int sonuc = tts.speak(metin, TextToSpeech.QUEUE_FLUSH, null,
+            Bundle ayarlar = new Bundle();
+            ayarlar.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, sesSeviyesi);
+            int sonuc = tts.speak(metin, TextToSpeech.QUEUE_FLUSH, ayarlar,
                     "macera-" + System.nanoTime());
             if (sonuc == TextToSpeech.ERROR) {
                 ttsReady = false;
@@ -339,6 +342,13 @@ public class MainActivity extends AppCompatActivity {
             ttsPendingNesli = istekNesli;
             ttsPending = text;       /* motor hazır olunca yalnız son istek okunur */
             if (!"notready".equals(ttsStatus)) piperBaslat();
+        }
+
+        @JavascriptInterface
+        public void setVolume(double level) {
+            sesSeviyesi = (float) Math.max(0.0, Math.min(1.0, level));
+            if (kayit != null) kayit.sesSeviyesi(sesSeviyesi);
+            if (piper != null) piper.sesSeviyesi(sesSeviyesi);
         }
 
         @JavascriptInterface

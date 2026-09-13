@@ -6,9 +6,14 @@
   const CACHE_KEY = 'cache-profile-v1';
   const LEGACY_BACKUP_KEY = 'legacy-firebase-profile-v1';
   const GUEST_PROFILE_KEY = 'guest-profile-v1';
+  const SYNC_DB_NAME = 'macera-sync-v1';
+  const SYNC_STORE = 'requests';
   const PRODUCTION_API = 'https://maceraakademi.com.tr/api/index.php';
   let healthPromise = null;
   let currentUid = localRead(UID_KEY) || '';
+  let syncDbPromise = null;
+  let syncFlushPromise = null;
+  let offlineNoticeShown = false;
 
   function localRead(key){
     try{ return window.localStorage.getItem(key) || ''; }catch(e){ return ''; }
@@ -71,6 +76,90 @@
     currentUid = uid ? String(uid) : '';
   }
   function clearApiSession(){ setApiSession('', ''); }
+
+  function openSyncDb(){
+    if(syncDbPromise) return syncDbPromise;
+    syncDbPromise = new Promise(function(resolve,reject){
+      if(!window.indexedDB){ reject(new Error('IndexedDB kullanılamıyor.')); return; }
+      const request = window.indexedDB.open(SYNC_DB_NAME, 1);
+      request.onupgradeneeded = function(){
+        const db = request.result;
+        if(!db.objectStoreNames.contains(SYNC_STORE)) db.createObjectStore(SYNC_STORE,{keyPath:'id'});
+      };
+      request.onsuccess = function(){ resolve(request.result); };
+      request.onerror = function(){ syncDbPromise=null; reject(request.error||new Error('Senkron kuyruğu açılamadı.')); };
+    });
+    return syncDbPromise;
+  }
+  async function syncStore(mode,operation){
+    const db = await openSyncDb();
+    return new Promise(function(resolve,reject){
+      const tx = db.transaction(SYNC_STORE,mode);
+      const store = tx.objectStore(SYNC_STORE);
+      let request;
+      try{ request=operation(store); }catch(err){ reject(err); return; }
+      request.onsuccess=function(){ resolve(request.result); };
+      request.onerror=function(){ reject(request.error||new Error('Senkron kuyruğu işlemi başarısız.')); };
+    });
+  }
+  function syncQueueAll(){ return syncStore('readonly',function(store){return store.getAll();}); }
+  function syncQueueDelete(id){ return syncStore('readwrite',function(store){return store.delete(id);}); }
+  function syncQueuePut(record){ return syncStore('readwrite',function(store){return store.put(record);}); }
+  function retryableSyncError(err){
+    const code=String(err&&err.code||'');
+    const status=Number(err&&err.status||0);
+    return code==='network_error'||code==='app/timeout'||status===429||status>=500;
+  }
+  async function queueSyncRequest(action,payload,key){
+    const uid=String(myUid()||'');
+    if(!uid) throw new Error('Senkron kuyruğu için oturum bulunamadı.');
+    const now=Date.now();
+    await syncQueuePut({
+      id:String(key), uid:uid, action:String(action), payload:payload||{},
+      requestId:uid+'-'+now+'-'+Math.random().toString(36).slice(2,10),
+      createdAt:now, attempts:0, nextAt:now
+    });
+    if(!offlineNoticeShown){ offlineNoticeShown=true; toast('İlerleme cihazda güvende · internet gelince gönderilecek 📴'); }
+    return {queued:true};
+  }
+  async function queueableApiCall(action,payload,key,timeoutMs){
+    try{
+      const request=apiCall(action,payload);
+      const result=timeoutMs ? await withTimeout(request,timeoutMs,'Senkron zaman aşımına uğradı') : await request;
+      return Object.assign({queued:false},result||{});
+    }catch(err){
+      if(!retryableSyncError(err)) throw err;
+      return queueSyncRequest(action,payload,key);
+    }
+  }
+  async function flushSyncQueue(){
+    if(syncFlushPromise) return syncFlushPromise;
+    syncFlushPromise=(async function(){
+      if(typeof navigator!=='undefined'&&navigator.onLine===false) return;
+      const uid=String(myUid()||'');
+      if(!uid||!apiToken()) return;
+      let records=[];
+      try{ records=await syncQueueAll(); }catch(e){ return; }
+      records=(records||[]).filter(function(item){return item&&String(item.uid)===uid;})
+        .sort(function(a,b){return (a.createdAt||0)-(b.createdAt||0);});
+      let synced=0;
+      for(const item of records){
+        if(Number(item.nextAt||0)>Date.now()) continue;
+        try{
+          await apiCall(item.action,Object.assign({},item.payload,{_requestId:item.requestId}));
+          await syncQueueDelete(item.id); synced++;
+        }catch(err){
+          if(err&&(['unauthorized','session_expired'].indexOf(String(err.code))>=0)) break;
+          if(!retryableSyncError(err)){ await syncQueueDelete(item.id); continue; }
+          item.attempts=Number(item.attempts||0)+1;
+          item.nextAt=Date.now()+Math.min(300000,Math.pow(2,Math.min(item.attempts,8))*1000);
+          await syncQueuePut(item);
+        }
+      }
+      if(synced){ offlineNoticeShown=false; toast('Bekleyen ilerleme sunucuyla eşitlendi ✅'); }
+    })().finally(function(){syncFlushPromise=null;});
+    return syncFlushPromise;
+  }
 
   /*
    * Firebase kullanan eski Android sürümleri ilerlemeyi CACHE_KEY altında
@@ -255,7 +344,9 @@
       teacherUid:state.hero.teacherUid||'', settings:state.settings, completed:state.completed
     };
     cacheWrite(snapshot);
-    try{ await initServer(); await pushState(snapshot); }catch(e){}
+    try{
+      await queueableApiCall('save_profile',{profile:snapshot},'profile:'+String(myUid()||''),10000);
+    }catch(e){}
     try{ await pushClassProgress(); }catch(e){}
   }
 
@@ -369,10 +460,12 @@
   async function pushClassProgress(){
     if(!clsCanOnline())return;
     const ids=Object.keys(state.completed).filter(function(k){return state.completed[k];});
-    await withTimeout(apiCall('class_progress',{
+    const payload={
       code:myClassCode(),grade:state.hero.grade,level:state.hero.level,xp:state.hero.xp,coins:state.hero.coins,
       doneIds:ids,duelWins:duelWins(),duelBest:duelState().stats.best||0
-    }),10000,'İlerleme gönderilemedi');
+    };
+    return queueableApiCall('class_progress',payload,
+      'class-progress:'+String(myUid()||'')+':'+String(payload.code||''),10000);
   }
   async function clsLoad(){
     const c=clsState();
@@ -387,9 +480,12 @@
     c.loading=false;renderAll();
   }
   async function contestSubmit(p){
-    await withTimeout(apiCall('contest_submit',{
-      contestId:p.contestId,score:p.score,correct:p.correct,grade:p.grade
-    }),12000,'Skor gönderilemedi');
+    const payload={
+      contestId:p.contestId,score:p.score,correct:p.correct,grade:p.grade,
+      answers:p.answers.map(function(a){return {ok:a.ok,ms:a.ms,score:a.score};})
+    };
+    return queueableApiCall('contest_submit',payload,
+      'contest:'+String(myUid()||'')+':'+String(p.contestId||''),12000);
   }
   async function contestBoard(contestId){
     const c=clsState();c.board={id:contestId,loading:true,error:'',list:[]};renderAll();
@@ -546,5 +642,9 @@
   window.messagesMarkRead=messagesMarkRead;
   window.messageSend=messageSend;
   window.runDiagnostics=runDiagnostics;
+  window.flushSyncQueue=flushSyncQueue;
   window.applyUser=applyUserWithSession;
+
+  window.addEventListener('online',function(){ flushSyncQueue().catch(function(){}); });
+  setTimeout(function(){ flushSyncQueue().catch(function(){}); },1500);
 })();

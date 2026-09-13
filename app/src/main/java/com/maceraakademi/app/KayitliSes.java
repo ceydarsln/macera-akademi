@@ -32,6 +32,7 @@ class KayitliSes {
 
     private final Set<String> mevcut = new HashSet<>();
     private MediaPlayer calar;
+    private volatile float ses = 1.0f;
 
     /** assets/ses içindeki kayıtların listesini bir kez okur. */
     void kur(Context baglam){
@@ -66,6 +67,7 @@ class KayitliSes {
             fd.close();
             mp.setOnCompletionListener(p -> { p.release(); if (calar == p) calar = null; });
             mp.prepare();
+            mp.setVolume(ses, ses);
             mp.start();
             calar = mp;
             return true;
@@ -73,6 +75,12 @@ class KayitliSes {
             Log.w(ETIKET, "kayıt çalınamadı (" + id + "): " + t);
             return false;
         }
+    }
+
+    void sesSeviyesi(float seviye){
+        ses = Math.max(0f, Math.min(1f, seviye));
+        MediaPlayer mp = calar;
+        if (mp != null) try { mp.setVolume(ses, ses); } catch (Throwable ignored){}
     }
 
     void durdur(){

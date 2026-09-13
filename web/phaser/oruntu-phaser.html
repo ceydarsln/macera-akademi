@@ -704,6 +704,11 @@ class GameScene extends Phaser.Scene {
 class CokgenScene extends Phaser.Scene {
   constructor(){ super('Cokgen'); }
 
+  init(veri){
+    this.turIndex=Math.max(0,Math.min(2,Number(veri&&veri.turIndex)||0));
+    this.toplamPuan=Math.max(0,Number(veri&&veri.puan)||0);
+  }
+
   cokgen(g,x,y,kenar,r,renk){
     const noktalar=[];
     for(let i=0;i<kenar;i++){
@@ -714,11 +719,17 @@ class CokgenScene extends Phaser.Scene {
 
   create(){
     this.can=3;this.kilit=false;
+    this.turlar=[
+      {dizi:[3,4,5],cevap:6,secenek:[5,6,7],kural:'Her adımda 1 kenar ekleniyor.'},
+      {dizi:[4,5,6],cevap:7,secenek:[6,7,8],kural:'Her adımda 1 kenar ekleniyor.'},
+      {dizi:[3,5,7],cevap:9,secenek:[8,9,10],kural:'Her adımda 2 kenar ekleniyor.'}
+    ];
+    this.tur=this.turlar[this.turIndex];
     const g=this.add.graphics();
     g.fillGradientStyle(0x79c982,0x79c982,0x173f32,0x173f32,1);g.fillRect(0,0,EN,BOY);
     g.fillStyle(0x163b2f,0.94);g.fillRoundedRect(14,14,452,130,18);
-    this.add.text(EN/2,40,'🔺  BÜYÜLÜ ORMAN YOLU',{fontFamily:'system-ui, sans-serif',fontSize:'23px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
-    this.add.text(EN/2,82,'Üçgen, kare, beşgen…\nHer adımda kaç kenar ekleniyor?',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#edfff0',align:'center',lineSpacing:5}).setOrigin(0.5);
+    this.add.text(EN/2,40,'🔺  BÜYÜLÜ ORMAN YOLU · TUR '+(this.turIndex+1)+'/3',{fontFamily:'system-ui, sans-serif',fontSize:'21px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
+    this.add.text(EN/2,82,this.tur.dizi.join(', ')+' kenarlı şekiller…\nSıradaki şekil kaç kenarlı?',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#edfff0',align:'center',lineSpacing:5}).setOrigin(0.5);
     this.canYazi=this.add.text(EN-30,122,'❤️❤️❤️',{fontSize:'18px'}).setOrigin(1,0.5);
     this.mesaj=this.add.text(EN/2,171,'Şekillerin kenarlarını say; boş taşı tamamla.',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#fff6c9',align:'center',wordWrap:{width:430}}).setOrigin(0.5);
 
@@ -726,19 +737,16 @@ class CokgenScene extends Phaser.Scene {
     xs.forEach((x,i)=>{
       g.fillStyle(i===3?0x254e3a:0xf8f1dd,1);g.fillRoundedRect(x-47,238,94,108,16);
       g.lineStyle(i===3?4:2,i===3?0xffd166:0xcbbf9e,1);g.strokeRoundedRect(x-47,238,94,108,16);
-      if(i<3)this.cokgen(g,x,292,i+3,31,[0xef6b54,0xf0c85a,0x71b9e6][i]);
+      if(i<3)this.cokgen(g,x,292,this.tur.dizi[i],31,[0xef6b54,0xf0c85a,0x71b9e6][i]);
       else this.add.text(x,292,'?',{fontFamily:'system-ui, sans-serif',fontSize:'38px',fontStyle:'bold',color:'#ffd166'}).setOrigin(0.5);
     });
 
     this.add.text(EN/2,416,'Sıradaki şekli seç:',{fontFamily:'system-ui, sans-serif',fontSize:'20px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
-    [{x:90,n:5},{x:240,n:6},{x:390,n:0}].forEach(o=>{
+    this.tur.secenek.forEach((n,i)=>{
+      const o={x:[90,240,390][i],n};
       const c=this.add.container(o.x,515).setDepth(10);
       const cg=this.add.graphics();cg.fillStyle(0xf6f0dc,1);cg.fillRoundedRect(-61,-58,122,116,18);cg.lineStyle(3,0xcbbf9e,1);cg.strokeRoundedRect(-61,-58,122,116,18);
-      if(o.n)this.cokgen(cg,0,0,o.n,36,o.n===6?0x77d59a:0x71b9e6);
-      else{
-        const pts=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?17:39;pts.push(new Phaser.Geom.Point(Math.cos(a)*r,Math.sin(a)*r));}
-        cg.fillStyle(0xf4c84a,1);cg.fillPoints(pts,true);cg.lineStyle(4,0x8e7424,1);cg.strokePoints(pts,true,true);
-      }
+      this.cokgen(cg,0,0,o.n,36,o.n===this.tur.cevap?0x77d59a:0x71b9e6);
       c.add(cg);c.setSize(136,130).setInteractive({useHandCursor:true});c.setData('kenar',o.n);c.on('pointerdown',()=>this.sec(c));
     });
     this.add.text(EN/2,630,'Kuralı resimlerden bul; seçeneklerde cevap sayısı yazmıyor.',{fontFamily:'system-ui, sans-serif',fontSize:'15px',color:'#d8f5df',align:'center',wordWrap:{width:420}}).setOrigin(0.5);
@@ -746,17 +754,21 @@ class CokgenScene extends Phaser.Scene {
 
   sec(c){
     if(this.kilit)return;
-    if(c.getData('kenar')!==6){
+    if(c.getData('kenar')!==this.tur.cevap){
       this.can--;this.canYazi.setText('❤️'.repeat(this.can)+'🖤'.repeat(3-this.can));
-      this.mesaj.setText('Bu şekil değil. 3, 4, 5… sıradaki şeklin 6 kenarı olmalı.').setColor('#ffe0df');
+      this.mesaj.setText('Bu şekil değil. '+this.tur.dizi.join(', ')+' örüntüsünün kuralını yeniden düşün.').setColor('#ffe0df');
       this.tweens.add({targets:c,angle:{from:-7,to:7},duration:70,yoyo:true,repeat:2,onComplete:()=>c.setAngle(0)});
-      if(this.can<=0){this.kilit=true;this.time.delayedCall(850,()=>this.scene.restart());}
+      if(this.can<=0){this.kilit=true;this.time.delayedCall(850,()=>this.scene.restart({turIndex:this.turIndex,puan:this.toplamPuan}));}
       return;
     }
-    this.kilit=true;this.mesaj.setText('Doğru! Her yeni şekle bir kenar ekleniyor.').setColor('#efffd2');
-    const tamam=this.add.graphics().setDepth(15);this.cokgen(tamam,410,292,6,31,0x77d59a);
+    this.kilit=true;this.toplamPuan+=100;this.mesaj.setText('Doğru! '+this.tur.kural).setColor('#efffd2');
+    const tamam=this.add.graphics().setDepth(15);this.cokgen(tamam,410,292,this.tur.cevap,31,0x77d59a);
     this.tweens.add({targets:c,scale:1.14,duration:140,yoyo:true});
-    this.time.delayedCall(700,()=>KOPRU.bitir('Üçgen, kare, beşgen, altıgen: her adımda bir kenar arttı! 🔺',300));
+    this.time.delayedCall(700,()=>{
+      if(this.turIndex<2)this.scene.restart({turIndex:this.turIndex+1,puan:this.toplamPuan});
+      else if(KOPRU)KOPRU.bitir('Üç farklı çokgen örüntüsünü tamamladın! 🔺',this.toplamPuan);
+      else this.scene.restart({turIndex:0,puan:0});
+    });
   }
 }
 
@@ -764,18 +776,29 @@ class CokgenScene extends Phaser.Scene {
 class MerdivenScene extends Phaser.Scene {
   constructor(){ super('Merdiven'); }
 
+  init(veri){
+    this.turIndex=Math.max(0,Math.min(2,Number(veri&&veri.turIndex)||0));
+    this.toplamPuan=Math.max(0,Number(veri&&veri.puan)||0);
+  }
+
   create(){
     this.can=3;this.kilit=false;
+    this.turlar=[
+      {dizi:[2,4,6],cevap:8,secenek:[7,8,9],artis:2},
+      {dizi:[3,6,9],cevap:12,secenek:[11,12,13],artis:3},
+      {dizi:[5,10,15],cevap:20,secenek:[18,20,25],artis:5}
+    ];
+    this.tur=this.turlar[this.turIndex];
     const g=this.add.graphics();
     g.fillGradientStyle(0x111b45,0x111b45,0x34235a,0x34235a,1);g.fillRect(0,0,EN,BOY);
     g.fillStyle(0xffffff,0.65);[[40,205],[130,185],[232,225],[350,175],[438,240],[65,650],[420,610]].forEach(p=>g.fillCircle(p[0],p[1],2));
     g.fillStyle(0x171d40,0.96);g.fillRoundedRect(14,14,452,132,18);
-    this.add.text(EN/2,40,'👽  UZAYLI MERDİVENİ',{fontFamily:'system-ui, sans-serif',fontSize:'24px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
-    this.add.text(EN/2,82,'Uzaylı her basamakta 2 sayı ilerliyor.\nBoş basamağa hangi sayı gelmeli?',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#e9eeff',align:'center',lineSpacing:5}).setOrigin(0.5);
+    this.add.text(EN/2,40,'👽  UZAYLI MERDİVENİ · TUR '+(this.turIndex+1)+'/3',{fontFamily:'system-ui, sans-serif',fontSize:'21px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5);
+    this.add.text(EN/2,82,'Uzaylı her basamakta '+this.tur.artis+' sayı ilerliyor.\nBoş basamağa hangi sayı gelmeli?',{fontFamily:'system-ui, sans-serif',fontSize:'17px',fontStyle:'bold',color:'#e9eeff',align:'center',lineSpacing:5}).setOrigin(0.5);
     this.canYazi=this.add.text(EN-30,123,'❤️❤️❤️',{fontSize:'18px'}).setOrigin(1,0.5);
-    this.mesaj=this.add.text(EN/2,172,'2, 4, 6… İkişer say.',{fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#ffe99a'}).setOrigin(0.5);
+    this.mesaj=this.add.text(EN/2,172,this.tur.dizi.join(', ')+'… '+this.tur.artis+'\'er say.',{fontFamily:'system-ui, sans-serif',fontSize:'18px',fontStyle:'bold',color:'#ffe99a'}).setOrigin(0.5);
 
-    const bas=[{x:42,y:620,w:98,h:88,n:'2'},{x:140,y:536,w:98,h:172,n:'4'},{x:238,y:452,w:98,h:256,n:'6'},{x:336,y:368,w:102,h:340,n:'?'}];
+    const bas=[{x:42,y:620,w:98,h:88,n:String(this.tur.dizi[0])},{x:140,y:536,w:98,h:172,n:String(this.tur.dizi[1])},{x:238,y:452,w:98,h:256,n:String(this.tur.dizi[2])},{x:336,y:368,w:102,h:340,n:'?'}];
     bas.forEach((b,i)=>{
       g.fillStyle([0x7257c7,0x6074d8,0x4e91dc,0x42b3cf][i],1);g.fillRoundedRect(b.x,b.y,b.w,b.h,12);
       g.lineStyle(4,0xd8e6ff,0.8);g.strokeRoundedRect(b.x,b.y,b.w,b.h,12);
@@ -783,7 +806,8 @@ class MerdivenScene extends Phaser.Scene {
     });
     this.uzayli=this.add.text(85,570,'👽',{fontSize:'52px'}).setOrigin(0.5).setDepth(10);
 
-    [{x:115,n:7},{x:240,n:8},{x:365,n:9}].forEach(o=>{
+    this.tur.secenek.forEach((n,i)=>{
+      const o={x:[115,240,365][i],n};
       const c=this.add.container(o.x,735).setDepth(12);const cg=this.add.graphics();
       cg.fillStyle(0xf7f4ff,1);cg.fillRoundedRect(-50,-36,100,72,16);cg.lineStyle(3,0x8d79d4,1);cg.strokeRoundedRect(-50,-36,100,72,16);
       c.add([cg,this.add.text(0,0,String(o.n),{fontFamily:'system-ui, sans-serif',fontSize:'28px',fontStyle:'bold',color:'#34235a'}).setOrigin(0.5)]);
@@ -793,17 +817,21 @@ class MerdivenScene extends Phaser.Scene {
 
   sec(c){
     if(this.kilit)return;
-    if(c.getData('sayi')!==8){
+    if(c.getData('sayi')!==this.tur.cevap){
       this.can--;this.canYazi.setText('❤️'.repeat(this.can)+'🖤'.repeat(3-this.can));
-      this.mesaj.setText(c.getData('sayi')+' değil. 6’dan sonra 2 daha say.').setColor('#ffd9dd');
+      this.mesaj.setText(c.getData('sayi')+' değil. '+this.tur.dizi[2]+'\'dan sonra '+this.tur.artis+' daha say.').setColor('#ffd9dd');
       this.tweens.add({targets:c,angle:{from:-7,to:7},duration:70,yoyo:true,repeat:2,onComplete:()=>c.setAngle(0)});
-      if(this.can<=0){this.kilit=true;this.time.delayedCall(850,()=>this.scene.restart());}
+      if(this.can<=0){this.kilit=true;this.time.delayedCall(850,()=>this.scene.restart({turIndex:this.turIndex,puan:this.toplamPuan}));}
       return;
     }
-    this.kilit=true;this.mesaj.setText('Doğru: 2, 4, 6, 8!').setColor('#eaffc9');
-    this.add.text(387,407,'8',{fontFamily:'system-ui, sans-serif',fontSize:'34px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5).setDepth(8);
+    this.kilit=true;this.toplamPuan+=100;this.mesaj.setText('Doğru: '+this.tur.dizi.concat([this.tur.cevap]).join(', ')+'!').setColor('#eaffc9');
+    this.add.text(387,407,String(this.tur.cevap),{fontFamily:'system-ui, sans-serif',fontSize:'34px',fontStyle:'bold',color:'#ffffff'}).setOrigin(0.5).setDepth(8);
     this.tweens.add({targets:this.uzayli,x:387,y:330,duration:750,ease:'Sine.easeInOut'});
-    this.time.delayedCall(900,()=>KOPRU.bitir('2, 4, 6, 8: uzaylı ikişer sayarak merdiveni çıktı! 👽',300));
+    this.time.delayedCall(900,()=>{
+      if(this.turIndex<2)this.scene.restart({turIndex:this.turIndex+1,puan:this.toplamPuan});
+      else if(KOPRU)KOPRU.bitir('Üç farklı sayı örüntüsünü tamamladın! 👽',this.toplamPuan);
+      else this.scene.restart({turIndex:0,puan:0});
+    });
   }
 }
 

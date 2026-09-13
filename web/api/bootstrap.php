@@ -469,6 +469,83 @@ function clear_rate_limit(string $action): void
     db()->prepare('DELETE FROM api_rate_limits WHERE rate_key = ?')->execute([rate_key($action)]);
 }
 
+/**
+ * Validate and normalize an eight-question contest/duel result.
+ *
+ * The browser is not allowed to choose the stored totals.  We rebuild them
+ * from the per-question timings and correctness flags using the same formula
+ * as the game.  This also gives the API a deliberately small, predictable
+ * payload to persist instead of arbitrary client JSON.
+ */
+function competition_result(array $data, int $questionCount = 8, int $secondsPerQuestion = 12): array
+{
+    $answers = json_value($data['answers'] ?? null, []);
+    if (count($answers) !== $questionCount || array_keys($answers) !== range(0, $questionCount - 1)) {
+        throw new ApiProblem('Yarışma cevapları eksik veya geçersiz.', 422, 'invalid_game_result');
+    }
+
+    $normalized = [];
+    $correct = 0;
+    $score = 0;
+    $streak = 0;
+    $maxMs = $secondsPerQuestion * 1000;
+
+    foreach ($answers as $answer) {
+        if (!is_array($answer) || !isset($answer['ok']) || !is_bool($answer['ok'])
+            || !isset($answer['ms']) || !is_int($answer['ms'])
+            || $answer['ms'] < 0 || $answer['ms'] > $maxMs || $answer['ms'] % 100 !== 0) {
+            throw new ApiProblem('Yarışma cevap dökümü geçersiz.', 422, 'invalid_game_result');
+        }
+
+        $isCorrect = $answer['ok'];
+        $answerScore = 0;
+        if ($isCorrect) {
+            $answerScore = 10
+                + max(0, (int) round(10 * (1 - ($answer['ms'] / $maxMs))))
+                + min($streak, 5) * 2;
+            $correct++;
+            $streak++;
+        } else {
+            $streak = 0;
+        }
+
+        if (isset($answer['score']) && (!is_int($answer['score']) || $answer['score'] !== $answerScore)) {
+            throw new ApiProblem('Yarışma puanı cevaplarla uyuşmuyor.', 422, 'invalid_game_result');
+        }
+        $score += $answerScore;
+        $normalized[] = ['ok' => $isCorrect, 'ms' => $answer['ms'], 'score' => $answerScore];
+    }
+
+    if (!isset($data['score']) || !is_int($data['score']) || $data['score'] !== $score
+        || !isset($data['correct']) || !is_int($data['correct']) || $data['correct'] !== $correct) {
+        throw new ApiProblem('Yarışma toplamı cevaplarla uyuşmuyor.', 422, 'invalid_game_result');
+    }
+
+    return ['answers' => $normalized, 'score' => $score, 'correct' => $correct];
+}
+
+function competition_category(string $categoryId, int $grade): array
+{
+    $categories = [
+        'topla' => ['Toplama', [1, 2, 3, 4]],
+        'cikar' => ['Çıkarma', [1, 2, 3, 4]],
+        'carp' => ['Çarpma', [2, 3, 4]],
+        'bol' => ['Bölme', [3, 4]],
+        'sayi' => ['Sayılar ve Örüntü', [1, 2]],
+        'kesir' => ['Kesirler', [3, 4]],
+        'saat' => ['Saat ve Para', [2, 3]],
+        'hece' => ['Hece ve Sözcük', [1, 2]],
+        'eszit' => ['Eş ve Zıt Anlam', [2, 3, 4]],
+        'essesli' => ['Eş Sesli Sözcükler', [3, 4]],
+        'nokta' => ['Noktalama ve Yazım', [3, 4]],
+        'mix' => ['Karışık Dersler', [1, 2, 3, 4]],
+    ];
+    if (!isset($categories[$categoryId]) || !in_array($grade, $categories[$categoryId][1], true)) {
+        throw new ApiProblem('Bu sınıf için geçersiz yarışma kategorisi.', 422, 'invalid_game_category');
+    }
+    return ['id' => $categoryId, 'label' => $categories[$categoryId][0]];
+}
+
 function same_pair(int $a, int $b): array
 {
     return $a < $b ? [$a, $b] : [$b, $a];

@@ -713,13 +713,19 @@
   }
   .cust-help b{ color:var(--ink); }
   .cust-done{
-    display:block; width:calc(100% - 32px); margin:8px 16px 12px;
+    display:block; flex:1; margin:0;
     border:3px solid rgba(255,255,255,.95); border-radius:20px; cursor:pointer;
     padding:15px 16px; color:#fff; font-family:var(--font-head); font-size:22px; font-weight:900;
     background:linear-gradient(180deg,#65dc91,#25a861);
     box-shadow:0 6px 0 #187e48, 0 10px 20px rgba(24,126,72,.25);
   }
   .cust-done:active{ transform:translateY(4px); box-shadow:0 2px 0 #187e48; }
+  .cust-actions{ display:flex; gap:10px; margin:8px 16px 12px; }
+  .cust-cancel{
+    flex:0 0 34%; border:2px solid rgba(117,91,151,.24); border-radius:20px; cursor:pointer;
+    padding:15px 10px; color:var(--ink-soft); background:rgba(255,255,255,.86);
+    font-family:var(--font-head); font-size:16px; font-weight:900;
+  }
   .cust-section-head{
     display:flex; align-items:center; justify-content:space-between; gap:8px;
     margin-bottom:10px; color:var(--ink); font-family:var(--font-head); font-size:17px; font-weight:900;
@@ -771,7 +777,7 @@
     .phaser-prompt-row{ left:7px; right:7px; }
     .phaser-prompt-row .mascot{ font-size:30px; }
     .phaser-prompt-row .speech-bubble{ font-size:13.5px; padding-top:7px; padding-bottom:7px; }
-    .phaser-content{ padding-top:130px !important; }
+    .phaser-content{ padding-top:62px !important; }
     .imm-hud{ gap:6px; padding-left:7px; padding-right:7px; }
     .hud-title .t1{ font-size:15px; }
     .hud-title .t2{ font-size:12px; }
@@ -1755,8 +1761,9 @@ let state = {
   owned:[],
   badges:[],
   customTab:'gender',
+  customDraft:null,
   hairFilter:'all',
-  settings:{ sound:true, music:true, taskNotif:true, rewardNotif:true },
+  settings:{ sound:true, soundLevel:100, music:true, taskNotif:true, rewardNotif:true },
   completed:{}
 };
 let gs = {}; /* runtime state for the currently open game */
@@ -2450,12 +2457,15 @@ function speakNow(text){
   if(!temiz) return false;
   const motor = speechEngine();
   if(motor === 'native'){
-    try{ window.AndroidTTS.speak(temiz); return true; }catch(e){}
+    try{
+      if(typeof window.AndroidTTS.setVolume === 'function') window.AndroidTTS.setVolume(soundLevel());
+      window.AndroidTTS.speak(temiz); return true;
+    }catch(e){}
   }
   if(motor === 'web' || motor === 'native'){
     try{
       const u = new SpeechSynthesisUtterance(temiz);
-      u.lang = 'tr-TR'; u.rate = 0.95; u.pitch = 1.0;
+      u.lang = 'tr-TR'; u.rate = 0.95; u.pitch = 1.0; u.volume = soundLevel();
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(u);
       return true;
@@ -2472,6 +2482,26 @@ function stopSpeech(){
 function speak(text){
   if(!state.settings.sound) return;
   speakNow(text);
+}
+
+function soundLevel(){
+  const n = Number(state.settings.soundLevel);
+  return Number.isFinite(n) ? Math.max(0, Math.min(1, n / 100)) : 1;
+}
+
+function previewSoundLevel(value){
+  const n = Math.max(0, Math.min(100, Number(value) || 0));
+  state.settings.soundLevel = n;
+  const label = document.getElementById('soundLevelLabel');
+  if(label) label.textContent = '%' + n;
+  try{ if(window.AndroidTTS && typeof window.AndroidTTS.setVolume === 'function') window.AndroidTTS.setVolume(n / 100); }catch(e){}
+}
+
+function commitSoundLevel(value){
+  previewSoundLevel(value);
+  state.settings.sound = Number(state.settings.soundLevel) > 0;
+  saveState();
+  renderAll();
 }
 
 /* 🔊 düğmesi: ilk okumada duymayan çocuk tekrar dinleyebilsin */
@@ -17426,7 +17456,7 @@ function paraSesi(){
     o.type = 'triangle';
     o.frequency.value = hz;
     g.gain.setValueAtTime(0.0001, simdi + gecikme);
-    g.gain.exponentialRampToValueAtTime(0.22, simdi + gecikme + 0.012);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0001, 0.22 * soundLevel()), simdi + gecikme + 0.012);
     g.gain.exponentialRampToValueAtTime(0.0001, simdi + gecikme + 0.28);
     o.connect(g); g.connect(a.destination);
     o.start(simdi + gecikme); o.stop(simdi + gecikme + 0.3);
@@ -21653,8 +21683,6 @@ function phaserCerceve(g){
 }
 
 function renderPhaserScreen(g){
-  /* Şablon DOM'a eklendikten sonra balon boşluğunu ölç. */
-  setTimeout(balonBosluguAyarla, 0);
   return `<div class="immersive-stage" id="immStage" style="background:#101c2b">
     <div class="imm-hud" style="background:linear-gradient(180deg,rgba(16,28,43,.96),rgba(16,28,43,0)); padding:10px 13px 18px;">
       <button class="back-btn" onclick="go('subjectList')">←</button>
@@ -21662,8 +21690,7 @@ function renderPhaserScreen(g){
         <div class="t2" style="color:#9fc3e0">${g.sub}</div></div>
       <div class="hud-chip">SV ${state.hero.level} · 🪙 ${state.hero.coins}</div>
     </div>
-    ${gs.celebrating ? '' : renderPhaserPrompt(g)}
-    <div class="imm-content phaser-content" id="gameBody" style="padding:var(--balon-bosluk,118px) 0 0; display:block; overflow:hidden;">
+    <div class="imm-content phaser-content" id="gameBody" style="padding:64px 0 0; display:block; overflow:hidden;">
       ${gs.celebrating ? renderCelebration(g) : phaserCerceve(g)}
     </div>
   </div>`;
@@ -21701,9 +21728,6 @@ function renderGameBody(){
     /* Kazanınca iframe'i kutlama ekranıyla değiştir; tekrar oynanırsa
        oyun sayfası baştan yüklenir. */
     el.innerHTML = gs.celebrating ? renderCelebration(g) : phaserCerceve(g);
-    const eski = document.getElementById('foxPrompt');
-    if(gs.celebrating && eski) eski.remove();
-    else if(!gs.celebrating && !eski) el.insertAdjacentHTML('beforebegin', renderPhaserPrompt(g));
     return;
   }
   const imm = isImmersive(g);
@@ -22981,7 +23005,10 @@ async function dlFinish(){
     d.result = {kind:'contest', play:p, award:aw, myScore:p.score,
                 catLabel:p.catLabel, contestId:p.contestId, contestTitle:p.contestTitle};
     go('duelResult');
-    try{ await initServer(); await contestSubmit(p); await contestBoard(p.contestId); }
+    try{
+      const sent = await contestSubmit(p);
+      if(!sent || !sent.queued) await contestBoard(p.contestId);
+    }
     catch(err){ d.result.error = firebaseHata(err); renderAll(); }
     return;
   }
@@ -23765,6 +23792,9 @@ function lookGet(){
   for(const k in LOOK_DEFAULT) if(state.hero.look[k] === undefined) state.hero.look[k] = LOOK_DEFAULT[k];
   return state.hero.look;
 }
+function editableLook(){
+  return state.screen === 'customize' && state.customDraft ? state.customDraft : lookGet();
+}
 
 /* ---------- Karakteri çiz ---------- */
 function renderLookSvg(look){
@@ -23800,15 +23830,15 @@ function renderLookSvg(look){
     ${hat ? hat.svg(outC) : ''}
   </svg>`;
 }
-function frameCss(){
-  const f = findIn(FRAMES, lookGet().frame);
+function frameCss(look){
+  const f = findIn(FRAMES, (look || lookGet()).frame);
   return (f && f.css) ? f.css : FRAMES[0].css;
 }
-function renderCharVisual(size){
+function renderCharVisual(size, selectedLook){
   size = size || 108;
-  const look = lookGet();
+  const look = selectedLook || lookGet();
   const pet = look.pet ? findIn(PETS, look.pet) : null;
-  return `<div class="char-visual" style="width:${size}px; height:${size}px; background:${frameCss()};">
+  return `<div class="char-visual" style="width:${size}px; height:${size}px; background:${frameCss(look)};">
     <div class="look-holder">${renderLookSvg(look)}</div>
     ${pet ? `<div class="char-pet" style="font-size:${Math.round(size*0.26)}px;">${pet.emo}</div>` : ''}
   </div>`;
@@ -23837,7 +23867,11 @@ async function buyLook(catKey, id){
   const thing = findIn(cat.list(), id); if(!thing || isOwned(id)) return;
   /* Kupa ödülleri altınla alınamaz — yalnızca yarışma zaferiyle açılır */
   if(thing.wins){
-    if(duelWins() >= thing.wins){ lookGet()[catKey] = id; await saveState(); renderAll(); }
+    if(duelWins() >= thing.wins){
+      editableLook()[catKey] = id;
+      if(state.screen !== 'customize') await saveState();
+      renderAll();
+    }
     else toast('🏆 Bu kupa ödülü ' + thing.wins + '. zaferde açılıyor — arkadaşınla yarış!');
     return;
   }
@@ -23865,7 +23899,7 @@ async function confirmBuyLook(){
   if((Number(state.hero.coins)||0) < thing.price){ renderAll(); toast('Yeterli altının yok — biraz daha oyun oyna 🪙'); return; }
   state.hero.coins -= thing.price;
   ownedList().push(p.id);
-  lookGet()[p.catKey] = p.id;
+  editableLook()[p.catKey] = p.id;
   await saveState();
   checkBadges();
   toast(thing.name + ' alındı ve giydirildi! ✨');
@@ -23877,7 +23911,7 @@ function renderBuyConfirm(){
   if(!p) return '';
   const cat = catByKey(p.catKey), thing = cat ? findIn(cat.list(), p.id) : null;
   if(!cat || !thing) return '';
-  const deneme = Object.assign({}, lookGet()); deneme[p.catKey] = p.id;
+  const deneme = Object.assign({}, editableLook()); deneme[p.catKey] = p.id;
   let onizleme;
   if(cat.type === 'color')      onizleme = `<div class="sw-color" style="background:${thing.c}"></div>`;
   else if(cat.type === 'frame') onizleme = `<div class="sw-color" style="background:${thing.css}"></div>`;
@@ -23903,7 +23937,7 @@ async function pickLook(catKey, id){
   if(r === 'wins'){ toast('🏆 Bu kupa ödülü ' + thing.wins + '. zaferde açılıyor — arkadaşınla yarış!'); return; }
   if(r === 'level'){ toast('Bu ' + thing.lv + '. seviyede açılıyor 🔒'); return; }
   if(r === 'buy'){ await buyLook(catKey, id); return; }
-  const look = lookGet();
+  const look = editableLook();
   look[catKey] = id;
   /* Karakter tipi seçilince kirpik ve saç ona göre önerilir */
   if(catKey === 'gender'){
@@ -23912,23 +23946,23 @@ async function pickLook(catKey, id){
     const onerilen = findIn(HAIRS, b.hair);
     if(onerilen && isUnlocked(onerilen)) look.hair = b.hair;
   }
-  await saveState();
+  if(state.screen !== 'customize') await saveState();
   renderAll();
 }
 async function clearLook(catKey){
-  lookGet()[catKey] = null;
-  await saveState();
+  editableLook()[catKey] = null;
+  if(state.screen !== 'customize') await saveState();
   renderAll();
 }
 async function toggleLashes(){
-  const look = lookGet();
+  const look = editableLook();
   look.lashes = !look.lashes;
-  await saveState();
+  if(state.screen !== 'customize') await saveState();
   renderAll();
 }
 async function applyPreset(id){
   const p = PRESETS.find(x=>x.id===id); if(!p) return;
-  const look = lookGet();
+  const look = editableLook();
   let kilitli = 0;
   Object.keys(p.look).forEach(k=>{
     const v = p.look[k];
@@ -23938,12 +23972,12 @@ async function applyPreset(id){
     const thing = findIn(cat.list(), v);
     if(thing && isUnlocked(thing)) look[k] = v; else kilitli++;
   });
-  await saveState();
+  if(state.screen !== 'customize') await saveState();
   toast(kilitli ? p.name + ' uygulandı (kilitli parçalar atlandı)' : p.name + ' uygulandı! ✨');
   renderAll();
 }
 async function randomLook(){
-  const look = lookGet();
+  const look = editableLook();
   const rnd = list => {
     const acik = list.filter(x=>isUnlocked(x));
     return acik.length ? acik[Math.floor(Math.random()*acik.length)].id : null;
@@ -23955,7 +23989,7 @@ async function randomLook(){
   look.hairAcc = Math.random() < 0.45 ? rnd(HAIR_ACCS) : null;
   look.acc     = Math.random() < 0.35 ? rnd(ACCS) : null;
   look.hat     = Math.random() < 0.35 ? rnd(HATS) : null;
-  await saveState();
+  if(state.screen !== 'customize') await saveState();
   toast('Rastgele görünüm! 🎲');
   renderAll();
 }
@@ -24096,13 +24130,25 @@ function checkBadges(){
 /* ---------- KİŞİSELLEŞTİRME EKRANI v2 ---------- */
 function openCustomize(tab){
   state.customTab = tab || state.customTab || 'gender';
+  state.customDraft = Object.assign({}, lookGet());
   go('customize');
+}
+async function finishCustomize(){
+  if(state.customDraft) state.hero.look = Object.assign({}, state.customDraft);
+  state.customDraft = null;
+  await saveState();
+  go('character');
+  toast('Görünümün kaydedildi ✓');
+}
+function cancelCustomize(){
+  state.customDraft = null;
+  go('character');
 }
 function setCustomTab(k){ state.customTab = k; state.hairFilter = 'all'; renderAll(); }
 function setHairFilter(f){ state.hairFilter = f; renderAll(); }
 
 function renderCustomize(){
-  const look = lookGet();
+  const look = editableLook();
   const aktif = state.customTab || 'gender';
   const cat = catByKey(aktif) || LOOK_CATS[0];
   let liste = cat.list();
@@ -24142,14 +24188,14 @@ function renderCustomize(){
   const hazir = PRESETS.map(p=>
     `<button class="preset-pill" onclick="applyPreset('${p.id}')">${p.emo} ${p.name}</button>`).join('');
 
-  return `<div class="list-header"><button class="back-btn" onclick="go('character')">←</button>
+  return `<div class="list-header"><button class="back-btn" onclick="cancelCustomize()">←</button>
     <div class="title-hero" style="font-size:18px; text-align:left;">✨ KİŞİSELLEŞTİR</div></div>
 
   <div class="cust-help"><b>1.</b> Aşağıdan bir kategori seç. &nbsp; <b>2.</b> Beğendiğin parçaya dokun.
     &nbsp; <b>3.</b> Hazır olunca büyük yeşil <b>BİTTİ</b> düğmesine bas.</div>
 
   <div class="cust-preview">
-    ${renderCharVisual(134)}
+    ${renderCharVisual(134, look)}
     <div style="display:flex; flex-direction:column; gap:6px;">
       <div style="font-size:11.5px; color:var(--ink-soft); font-weight:800;">🪙 ${state.hero.coins}</div>
       <button class="mini-btn" onclick="randomLook()">🎲 Rastgele</button>
@@ -24158,7 +24204,10 @@ function renderCustomize(){
     </div>
   </div>
 
-  <button class="cust-done" onclick="go('character')">✓ BİTTİ</button>
+  <div class="cust-actions">
+    <button class="cust-cancel" onclick="cancelCustomize()">İPTAL</button>
+    <button class="cust-done" onclick="finishCustomize()">✓ BİTTİ</button>
+  </div>
 
   <div class="preset-row">${hazir}</div>
   <div class="ctab-row">${sekmeler}</div>
@@ -24368,8 +24417,8 @@ function renderHome(){
   const tile = (onclick, emo, label) =>
     `<button class="icon-btn" onclick="${onclick}"><div class="icon-circle">${emo}</div><div class="icon-label">${label}</div></button>`;
 
-  /* 1. sınıfta içerik hazır: sadece dersler gösterilir, boş sekme yok.
-     Üst sınıflarda bütün sekmeler görünür (içerikleri henüz hazırlanıyor). */
+  /* SAYMA bölümü yalnızca 1. sınıfın rakam yazma oyunlarını içerir.
+     Üst sınıflarda yanlışlıkla aynı 1. sınıf bölümüne yönlendirilmemeli. */
   let tiles;
   if(gr === 1){
     tiles = [
@@ -24386,7 +24435,6 @@ function renderHome(){
       tile("openArena()", '🏆', 'YARIŞMA'),
       tile("openTasks()", '📜', 'GÖREVLER'),
       tile("openSubject('turkish')", '📖', 'TÜRKÇE'),
-      tile("openSubject('count')", '🔢', 'SAYMA'),
       tile("openSubject('math')", '🧮', 'MATEMATİK'),
       tile("openSubject('life')", '🌱', 'HAYAT BİLGİSİ'),
       tile("openSubject('social')", '🌍', 'SOSYAL BİLGİLER'),
@@ -24537,11 +24585,16 @@ async function doChangePass(){
 
 function renderSettings(){
   const s = state.settings;
+  const sesYuzde = Math.round(soundLevel() * 100);
   return `${renderProfileCard()}
   <div class="panel" style="margin:16px;">
     <div class="title-hero" style="font-size:17px; margin-bottom:10px;">AYARLAR</div>
     <div class="section-title" style="margin:0 0 6px; padding:0;">🎮 Oyun Ayarları</div>
     <div class="settings-row"><span>🔊 Ses</span><label class="switch"><input type="checkbox" ${s.sound?'checked':''} onchange="toggleSetting('sound')"><span class="slider-tg"></span></label></div>
+    <div class="settings-row" style="display:block;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:7px;"><span>Ses seviyesi</span><b id="soundLevelLabel">%${sesYuzde}</b></div>
+      <input aria-label="Ses seviyesi" type="range" min="0" max="100" step="5" value="${sesYuzde}" style="width:100%; accent-color:var(--teal);" oninput="previewSoundLevel(this.value)" onchange="commitSoundLevel(this.value)">
+    </div>
     <div class="settings-row"><span>🎵 Müzik</span><label class="switch"><input type="checkbox" ${s.music?'checked':''} onchange="toggleSetting('music')"><span class="slider-tg"></span></label></div>
     <div class="settings-row"><span>🌍 Dil</span><span style="font-weight:700;">Türkçe</span></div>
     <div class="section-title" style="margin:14px 0 6px; padding:0;">🎒 Sınıfım</div>
@@ -25340,7 +25393,8 @@ function androidGeriTusu(){
     if(state.screen === 'duelResult'){ go('arena'); return 'handled'; }
     if(state.screen === 'messages'){ openFriends(); return 'handled'; }
     if(state.screen === 'privacy'){ go(privacyReturnScreen); return 'handled'; }
-    if(state.screen === 'inventory'||state.screen === 'customize'||state.screen === 'levelPath'){
+    if(state.screen === 'customize'){ cancelCustomize(); return 'handled'; }
+    if(state.screen === 'inventory'||state.screen === 'levelPath'){
       go('character'); return 'handled';
     }
     if(state.screen === 'subjectList'||state.screen === 'soon'||state.screen === 'account'||
@@ -25359,6 +25413,7 @@ function androidGeriTusu(){
 function go(screen){
   /* ekran değişince eski form hatası ekranda kalmasın */
   if(screen !== state.screen) state.formError = '';
+  if(state.screen === 'customize' && screen !== 'customize') state.customDraft = null;
   if(state.screen === 'gamePlayer' && screen !== 'gamePlayer') stopSpeech();
   if(screen !== 'customize' && screen !== 'inventory') state.purchaseConfirm = null;
   if(screen !== 'gamePlayer'){
@@ -25498,6 +25553,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
   }
 });
 </script>
-<script src="api-client.js"></script>
+<script src="api-client.js?v=20260912-1"></script>
 </body>
 </html>

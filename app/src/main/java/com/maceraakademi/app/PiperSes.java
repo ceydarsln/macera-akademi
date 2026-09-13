@@ -53,6 +53,7 @@ class PiperSes {
 
     private OfflineTts motor;
     private AudioTrack calar;
+    private volatile float ses = 1.0f;
     private int ornekHizi = 22050;
 
     private final ExecutorService kuyruk = Executors.newSingleThreadExecutor();
@@ -242,7 +243,15 @@ class PiperSes {
                     .setBufferSizeInBytes(tampon)
                     .setTransferMode(AudioTrack.MODE_STREAM)
                     .build();
+            calar.setVolume(ses);
             calar.play();
+        }
+    }
+
+    void sesSeviyesi(float seviye){
+        ses = Math.max(0f, Math.min(1f, seviye));
+        synchronized (this){
+            if (calar != null) try { calar.setVolume(ses); } catch (Throwable ignored){}
         }
     }
 

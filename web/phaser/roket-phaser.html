@@ -907,10 +907,16 @@ class KurbagaScene extends Phaser.Scene {
         const n=yol[i+1];g.lineStyle(6,0xd9fff1,0.42);g.lineBetween(v.x+35,v.y-34,n.x-35,n.y+34);
       }
     });
-    const yanlis=this.add.container(390,625).setDepth(8);
-    const yc=this.add.graphics();yc.fillStyle(0xbfc9c8,1);yc.fillEllipse(0,0,108,66);yc.lineStyle(4,0x697c7c,1);yc.strokeEllipse(0,0,108,66);
-    yanlis.add([yc,this.add.text(0,0,'12',{fontFamily:'system-ui, sans-serif',fontSize:'26px',fontStyle:'bold',color:'#374848'}).setOrigin(0.5)]);
-    yanlis.setSize(120,78).setInteractive({useHandCursor:true}).setData('id','12');yanlis.setData('cizim',yc);yanlis.on('pointerdown',()=>this.tasSec(yanlis));
+    /* Çeldiriciler doğru taşlarla aynı renkte: gri/soluk görünerek cevabı
+       ele vermezler. 12 ve 17, 5'er saymada çocukların sık yaptığı iki
+       farklı "birkaç fazla" yanılgısını temsil eder. */
+    [{id:'12',x:390,y:625},{id:'17',x:105,y:285}].forEach(v=>{
+      const yanlis=this.add.container(v.x,v.y).setDepth(8);
+      const yc=this.add.graphics();yc.fillStyle(0x72c56b,1);yc.fillEllipse(0,0,108,66);yc.lineStyle(4,0x287c55,1);yc.strokeEllipse(0,0,108,66);
+      yanlis.add([yc,this.add.text(0,0,v.id,{fontFamily:'system-ui, sans-serif',fontSize:'26px',fontStyle:'bold',color:'#173f36'}).setOrigin(0.5)]);
+      yanlis.setSize(120,78).setInteractive({useHandCursor:true}).setData('id',v.id);
+      yanlis.setData('cizim',yc);yanlis.on('pointerdown',()=>this.tasSec(yanlis));
+    });
 
     this.kurbaga=this.add.text(55,708,'🐸',{fontSize:'55px'}).setOrigin(0.5).setDepth(15);
     this.add.text(55,758,'BAŞLANGIÇ',{fontFamily:'system-ui, sans-serif',fontSize:'13px',fontStyle:'bold',color:'#eafff7'}).setOrigin(0.5);
