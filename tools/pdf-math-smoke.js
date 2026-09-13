@@ -78,6 +78,7 @@ async function finishRound(page) {
     case 'choose':
     case 'pattern':
     case 'estimate':
+    case 'plateChoice':
       await clickCorrect(page, r.choices);
       break;
     case 'stages':
@@ -113,8 +114,14 @@ async function finishRound(page) {
       }
       break;
     case 'load':
+    case 'balanceLoad':
       for (let i = r.start; i < r.targetCount; i++) {
         await move(page, '[data-piece="supply"]', '[data-target="loadTarget"]');
+      }
+      break;
+    case 'countDrag':
+      for (let n = r.start - 1; n >= r.target; n--) {
+        await move(page, `[data-piece="n${n}"]`, '[data-target="countTarget"]');
       }
       break;
     case 'remove':
