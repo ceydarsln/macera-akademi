@@ -25,7 +25,6 @@ const OUT = path.resolve(process.env.PDF_MATH_GALLERY || 'tmp/pdf-math-gallery')
   for (const id of IDS) {
     await page.goto(`${BASE}?gallery=${id}#oyun=${id}`, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('.hud .round');
-    await page.waitForTimeout(550);
     await page.screenshot({ path: path.join(OUT, `${id}.png`) });
     process.stdout.write(`✓ ${id}\n`);
   }

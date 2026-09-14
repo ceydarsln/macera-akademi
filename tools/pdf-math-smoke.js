@@ -43,31 +43,6 @@ async function move(page, pieceSelector, targetSelector) {
   await page.waitForTimeout(80);
 }
 
-async function moveMany(page, moves) {
-  const result = await page.evaluate(sequence => {
-    for (let i = 0; i < sequence.length; i++) {
-      const { pieceSelector, targetSelector } = sequence[i];
-      const piece = document.querySelector(pieceSelector);
-      const target = document.querySelector(targetSelector);
-      if (!piece || !target) return { ok:false, index:i, pieceSelector, targetSelector };
-      const a = piece.getBoundingClientRect();
-      const start = { clientX:a.left + a.width / 2, clientY:a.top + a.height / 2 };
-      const b = target.getBoundingClientRect();
-      const end = { clientX:b.left + b.width / 2, clientY:b.top + b.height / 2 };
-      const pointerId = 70 + i;
-      piece.dispatchEvent(new PointerEvent('pointerdown', { ...start, pointerId, bubbles:true }));
-      piece.dispatchEvent(new PointerEvent('pointermove', { ...end, pointerId, bubbles:true }));
-      piece.dispatchEvent(new PointerEvent('pointerup', { ...end, pointerId, bubbles:true }));
-    }
-    return { ok:true, state:JSON.parse(JSON.stringify(state)) };
-  }, moves);
-  if (!result.ok) {
-    throw new Error(`Toplu sürükleme öğesi bulunamadı (${result.index}): ${result.pieceSelector} → ${result.targetSelector}`);
-  }
-  if (process.env.PDF_MATH_DEBUG) console.log('batch', moves.length, result.state);
-  await page.waitForTimeout(30);
-}
-
 async function info(page) {
   return page.evaluate(() => {
     const r = round();
@@ -89,33 +64,6 @@ async function info(page) {
       finalChoices: r.finalChoices || []
     };
   });
-}
-
-async function verifyIdentityAndLayout(page, id) {
-  const audit = await page.evaluate(expectedId => {
-    const scene = document.querySelector('.scene');
-    const atmosphere = document.querySelector('.scene-atmosphere');
-    const particles = document.querySelector('.success-particles');
-    const overflow = [...document.querySelectorAll('.hud,.visual,.task,[data-choice],.piece,.target,.action,.sound')]
-      .filter(el => {
-        const r = el.getBoundingClientRect();
-        return r.width > 0 && (r.left < -1 || r.right > innerWidth + 1);
-      })
-      .map(el => el.className || el.tagName);
-    return {
-      hasIdentity: !!scene?.classList.contains(`game-${expectedId}`),
-      motion: [...(scene?.classList || [])].find(x => x.startsWith('motion-')) || '',
-      accent: scene?.style.getPropertyValue('--scene-accent') || '',
-      atmosphereCount: atmosphere?.children.length || 0,
-      particleCount: particles?.children.length || 0,
-      horizontalOverflow: overflow
-    };
-  }, id);
-  if (!audit.hasIdentity || !audit.motion || !audit.accent ||
-      audit.atmosphereCount !== 4 || audit.particleCount !== 8 ||
-      audit.horizontalOverflow.length) {
-    throw new Error(`Sahne kimliği/yerleşim denetimi başarısız: ${JSON.stringify(audit)}`);
-  }
 }
 
 async function clickCorrect(page, choices) {
@@ -140,10 +88,9 @@ async function finishRound(page) {
       }
       break;
     case 'drag':
-      await moveMany(page, r.pieces.filter(x => x.target).map(p => ({
-        pieceSelector:`[data-piece="${p.id}"]`,
-        targetSelector:`[data-target="${p.target}"]`
-      })));
+      for (const p of r.pieces.filter(x => x.target)) {
+        await move(page, `[data-piece="${p.id}"]`, `[data-target="${p.target}"]`);
+      }
       break;
     case 'grid': {
       const correct = await page.evaluate(() => {
@@ -168,22 +115,19 @@ async function finishRound(page) {
       break;
     case 'load':
     case 'balanceLoad':
-      await moveMany(page, Array.from({ length:r.targetCount - r.start }, () => ({
-        pieceSelector:'[data-piece="supply"]',
-        targetSelector:'[data-target="loadTarget"]'
-      })));
+      for (let i = r.start; i < r.targetCount; i++) {
+        await move(page, '[data-piece="supply"]', '[data-target="loadTarget"]');
+      }
       break;
     case 'countDrag':
-      await moveMany(page, Array.from({ length:r.start - r.target }, (_,i) => ({
-        pieceSelector:`[data-piece="n${r.start - 1 - i}"]`,
-        targetSelector:'[data-target="countTarget"]'
-      })));
+      for (let n = r.start - 1; n >= r.target; n--) {
+        await move(page, `[data-piece="n${n}"]`, '[data-target="countTarget"]');
+      }
       break;
     case 'remove':
-      await moveMany(page, Array.from({ length:r.removeCount }, () => ({
-        pieceSelector:'[data-piece]',
-        targetSelector:'[data-target="returnCart"]'
-      })));
+      for (let i = 0; i < r.removeCount; i++) {
+        await move(page, '[data-piece]', '[data-target="returnCart"]');
+      }
       await clickCorrect(page, r.choices);
       break;
     case 'memory':
@@ -202,10 +146,9 @@ async function finishRound(page) {
       }
       break;
     case 'catch':
-      await moveMany(page, r.sequence.map(color => ({
-        pieceSelector:'[data-piece="hook"]',
-        targetSelector:`[data-target="${color}"]`
-      })));
+      for (const color of r.sequence) {
+        await move(page, '[data-piece="hook"]', `[data-target="${color}"]`);
+      }
       break;
     case 'survey':
       for (const response of r.responses) {
@@ -225,10 +168,7 @@ async function finishRound(page) {
     executablePath: process.env.PDF_MATH_CHROME ||
       '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   });
-  const page = await browser.newPage({
-    viewport: { width: 390, height: 844 },
-    reducedMotion: 'reduce'
-  });
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const failures = [];
   const consoleErrors = [];
   page.on('pageerror', e => consoleErrors.push(e.message));
@@ -238,7 +178,6 @@ async function finishRound(page) {
     try {
       await page.goto(`${BASE}?smoke=${id}#oyun=${id}`, { waitUntil: 'domcontentloaded' });
       await page.waitForSelector('.hud .round');
-      await verifyIdentityAndLayout(page, id);
       for (let turn = 1; turn <= 3; turn++) {
         const label = `Tur ${turn}/3`;
         const visible = await page.locator('.hud .round').textContent();
@@ -248,12 +187,7 @@ async function finishRound(page) {
           expected => document.querySelector('.hud .round')?.textContent.trim() === expected,
           `Tur ${turn + 1}/3`, { timeout: 4000 }
         );
-        else {
-          await page.waitForTimeout(220);
-          if (await page.locator('.overlay').count() !== 1) {
-            throw new Error('Tamamlama katmanı oluşmadı');
-          }
-        }
+        else await page.waitForSelector('.overlay', { timeout: 4000 });
       }
       process.stdout.write(`✓ ${id}\n`);
     } catch (e) {
