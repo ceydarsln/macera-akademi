@@ -9,8 +9,8 @@
 const { chromium } = require('playwright');
 
 const ALL_IDS = [
-  'm01','m02','m03','m04','m05','m06','m07','m08','m09','m10','m11','m12','m14','m15','m17','m18',
-  'm20','m22','m23','m24','m25','m26','m28','m31','m32','m33','m34','m35',
+  'm01','m02','m03','m04','m05','m06','m07','m08','m09','m10','m11','m12','m13','m14','m15','m16','m17','m18',
+  'm19','m20','m22','m23','m24','m25','m26','m28','m31','m32','m33','m34','m35',
   'm36','m37','m38','m39','m41','m42','m43','m44','m45','m46','m47','m48',
   'm49','m50','m51','m52','m53','m54','m55','m56','m57','m58','m59','m60','m61'
 ];
@@ -143,6 +143,11 @@ async function finishRound(page) {
     case 'multi':
       for (const item of r.items.filter(x => x.correct)) {
         await page.locator(`[data-item="${item.id}"]`).click();
+      }
+      break;
+    case 'selectCount':
+      for (let i = 0; i < r.target; i++) {
+        await page.locator(`[data-select="${i}"]`).click();
       }
       break;
     case 'catch':
