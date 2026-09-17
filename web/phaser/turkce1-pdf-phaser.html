@@ -347,6 +347,18 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .resim-kart.secili{border-color:#f0a500;background:#fff3d0;box-shadow:0 0 0 3px rgba(240,165,0,.4)}
 .resim-kart.dogru{border-color:#2f9e5e;background:#e7f7ec}
 .resim-kart.yanlis{border-color:#d94655;background:#fdeaec}
+.bubble-playfield,.pond-playfield{position:relative;width:min(330px,98%);height:230px;border-radius:18px;overflow:hidden}
+.bubble-playfield{background:linear-gradient(#cdeafd 0 76%,#3f92c4 76%);box-shadow:inset 0 -16px 0 rgba(127,198,232,.42)}
+.bubble-playfield:after{content:"";position:absolute;left:-5%;right:-5%;bottom:37px;height:13px;border-top:4px solid rgba(255,255,255,.42);border-radius:50%}
+.bubble-target{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);z-index:2;width:64px;height:64px;min-width:64px;min-height:64px;padding:0;border:3px solid #fff;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff,#cfeaf8 60%,#9fd2ee);box-shadow:0 5px 0 rgba(48,115,157,.28);font-weight:950;color:#1f3b52}
+.bubble-target:after{content:"";position:absolute;left:27px;bottom:-8px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:9px solid #9fd2ee}
+.bubble-target.dogru{opacity:.45;box-shadow:none}
+.pond-playfield{background:linear-gradient(#d7f2e4 0 52%,#3f9e83 52%);box-shadow:inset 0 -20px 0 rgba(26,111,91,.16)}
+.pond-playfield:before,.pond-playfield:after{content:"";position:absolute;border-radius:50%;background:rgba(133,217,170,.62);width:94px;height:25px;bottom:18px}.pond-playfield:before{left:12px}.pond-playfield:after{right:12px}
+.pond-frog{position:absolute;z-index:4;left:11px;bottom:54px;font-size:40px;filter:drop-shadow(0 4px 2px rgba(0,0,0,.18))}
+.pond-leaves{position:absolute;z-index:3;left:58px;right:10px;bottom:20px;display:grid;grid-template-columns:repeat(2,1fr);gap:9px 11px}
+.pond-leaf{min-width:0;min-height:58px;border:3px solid #d6f3d9;border-radius:50%;background:#78c77e;box-shadow:0 5px 0 #397d5a;font-size:19px;font-weight:950;color:#173a31}
+.pond-leaf:active{transform:translateY(3px);box-shadow:0 2px 0 #397d5a}
 .serit{display:flex;gap:6px;justify-content:center;width:min(316px,96%)}
 .serit button{flex:1;min-height:48px;border:3px dashed #b9945c;border-radius:11px;background:#f6ede0;
  font-weight:900;font-size:12px;color:#8a5725;cursor:pointer}
@@ -836,17 +848,19 @@ function renderKonum(r){state.ix=0;state.acik=false;state.not='';konumCiz(r)}
 const YAZIM=['ui-rounded, "Trebuchet MS", system-ui, sans-serif','Georgia, "Times New Roman", serif'];
 function balonCiz(r){
  const patlak=state.patlak||[];
- $('#stage').innerHTML=`<div class="stack">${sahneSvg('bubbles','')}
+ const noktalar=[[18,26],[50,21],[82,28],[25,59],[57,55],[84,62]];
+ const balonlar=`<div class="bubble-playfield">${r.baloncuklar.map((b,i)=>{
+   const bitti=patlak.indexOf(i)>=0;
+   const st=`font-family:${YAZIM[b.yazim||0]};font-size:${b.buyuk?40:26}px`;
+   const p=noktalar[i%noktalar.length];
+   return `<button class="bubble-target${bitti?' dogru':''}" data-b="${i}" ${bitti?'disabled':''}
+     style="--x:${p[0]}%;--y:${p[1]}%;${st}">${bitti?'💥':esc(b.h)}</button>`}).join('')}<span style="position:absolute;right:16px;bottom:22px;font-size:31px">🤿</span></div>`;
+ $('#stage').innerHTML=`<div class="stack">${balonlar}
   ${state.kars?`<div class="nesne-alan"><div class="resim-kart" style="cursor:default;border-style:solid"><span class="im" style="font-size:46px">${esc(state.kars[0])}</span><span class="ad">seçtiğin</span></div>
    <div class="resim-kart" style="cursor:default;border-style:solid"><span class="im" style="font-size:46px">${esc(state.kars[1])}</span><span class="ad">aranan</span></div></div>`:''}
   <div class="caption">${esc(state.not||r.gorev)}</div>
   <div class="caption">Patlatılan: ${patlak.length}/${r.baloncuklar.filter(b=>b.dogru).length}</div></div>`;
- $('#task').innerHTML=`<div class="nesne-alan">${r.baloncuklar.map((b,i)=>{
-   const bitti=patlak.indexOf(i)>=0;
-   const st=`font-family:${YAZIM[b.yazim||0]};font-size:${b.buyuk?40:26}px`;
-   return `<button class="resim-kart${bitti?' dogru':''}" data-b="${i}" ${bitti?'disabled':''}
-     style="border-radius:50%;width:74px;height:74px;justify-content:center;background:radial-gradient(circle at 34% 30%,#ffffff,#cfeaf8 60%,#9fd2ee)">
-    <span class="im" style="${st}">${bitti?'💥':esc(b.h)}</span></button>`}).join('')}</div>`;
+ $('#task').innerHTML='<div class="caption">Balonlara doğrudan gökyüzünde dokun</div>';
  $$('[data-b]').forEach(el=>el.onclick=()=>{const i=+el.dataset.b,b=r.baloncuklar[i];
   if(!b.dogru){state.kars=[b.h,r.hedefler[0]];
    state.not=b.hint||'“'+b.h+'” ile “'+r.hedefler[0]+'” biçimlerini karşılaştır: çizgileri aynı mı?';
@@ -916,14 +930,12 @@ function renderTren(r){state.asama=0;state.yer=[null,null];state.faz=0;state.kur
 function kurbagaCiz(r){
  const ix=state.ix||0,hedef=r.hedefler[ix];
  if(!hedef)return;
- $('#stage').innerHTML=`<div class="stack">${sahneSvg('pond','')}
+ const yapraklar=`<div class="pond-playfield"><span class="pond-frog">🐸</span><div class="pond-leaves">${gs('yaprak',r.yapraklar.length,3).map(i=>`<button class="pond-leaf" data-y="${i}">${esc(r.yapraklar[i])}</button>`).join('')}</div></div>`;
+ $('#stage').innerHTML=`<div class="stack">${yapraklar}
   ${state.acik?`<div class="hece-kutu">${esc(hedef)}</div>`:''}
   <div class="caption">${esc(state.not||r.gorev)}</div>
   <div class="caption">Hedef ${ix+1}/${r.hedefler.length}${state.sure!=null?' · süre '+state.sure.toFixed(1).replace('.',',')+' sn':''}</div></div>`;
- $('#task').innerHTML=`<div class="actions"><button class="action" id="heceDinle">🔊 Heceyi dinle</button></div>
-  <div class="nesne-alan">${gs('yaprak',r.yapraklar.length,3).map(i=>`<button class="resim-kart" data-y="${i}"
-    style="background:#bfe6c8;border-color:#5aa06e;border-radius:50% 50% 45% 45%;width:78px;height:74px;justify-content:center">
-   <span class="im" style="font-size:24px;letter-spacing:2px">${esc(r.yapraklar[i])}</span></button>`).join('')}</div>`;
+ $('#task').innerHTML='<div class="actions"><button class="action" id="heceDinle">🔊 Heceyi dinle</button></div>';
  $('#heceDinle').onclick=()=>speak(hedef.toLocaleLowerCase('tr'),true);
  $$('[data-y]').forEach(b=>b.onclick=()=>{const i=+b.dataset.y;
   if(r.yapraklar[i]!==hedef){

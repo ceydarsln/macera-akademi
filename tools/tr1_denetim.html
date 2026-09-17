@@ -22,7 +22,8 @@ iframe{width:390px;height:844px;border:0;justify-self:center;align-self:center;b
      ölçüt 4 — etiket/kart/seçeneklerde emoji ipucu olmayacak
      ölçüt 5 — 390x844'te kırpılma yok, dokunma alanı >= 44 px
      kip kuralı — dinleme turunda metin ve cevap anahtarı ekranda olmayacak */
-const IDS = Array.from({length:64},(_,i)=>'t'+String(i+1).padStart(2,'0'));
+const seciliIds=new URLSearchParams(location.search).get('ids');
+const IDS = seciliIds?seciliIds.split(',').filter(Boolean):Array.from({length:64},(_,i)=>'t'+String(i+1).padStart(2,'0'));
 const MOTOR = '../web/phaser/turkce1-pdf-phaser.html';
 const panel = document.getElementById('panel');
 const cerceve = document.getElementById('cerceve');
