@@ -88,8 +88,14 @@ async function finishRound(page) {
       }
       break;
     case 'drag':
-      for (const p of r.pieces.filter(x => x.target)) {
-        await move(page, `[data-piece="${p.id}"]`, `[data-target="${p.target}"]`);
+    case 'sceneDrag':
+      if (await page.evaluate(() => GAME_ID === 'm33')) {
+        const correct = r.pieces.find(x => x.target)?.target;
+        await move(page, `[data-piece="candidate-${correct}"]`, '[data-target="patternSlot"]');
+      } else {
+        for (const p of r.pieces.filter(x => x.target)) {
+          await move(page, `[data-piece="${p.id}"]`, `[data-target="${p.target}"]`);
+        }
       }
       break;
     case 'grid': {
@@ -114,6 +120,7 @@ async function finishRound(page) {
       }
       break;
     case 'load':
+    case 'sceneLoad':
     case 'balanceLoad':
     case 'massExperiment':
       for (let i = r.start; i < r.targetCount; i++) {
@@ -121,6 +128,7 @@ async function finishRound(page) {
       }
       break;
     case 'countDrag':
+    case 'sceneCountDrag':
       for (let n = r.start - 1; n >= r.target; n--) {
         await move(page, `[data-piece="n${n}"]`, '[data-target="countTarget"]');
       }
