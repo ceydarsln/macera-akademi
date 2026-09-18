@@ -451,6 +451,7 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .t3-prog{display:flex;flex-direction:column;gap:4px;width:100%;background:rgba(255,255,255,.72);border:2px dashed #8ea6b8;border-radius:12px;padding:6px;min-height:44px}
 .t3-prog i{font-style:normal;background:#fff;border:2px solid #9db4c4;border-radius:9px;padding:4px 9px;font-weight:850;font-size:13px;text-align:left}
 .t3-prog i.aktif{background:#ffe9a8;border-color:var(--gold)}
+.ui-dragging{position:relative!important;z-index:999!important;pointer-events:none!important;opacity:.94;box-shadow:0 10px 25px rgba(0,0,0,.28)!important}.drop-hot{filter:drop-shadow(0 0 9px #f1b53a)!important;outline:4px solid #f1b53a!important;outline-offset:3px}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -522,6 +523,12 @@ function Q(prompt,scene,choices,result,hint,extra={}){return{kind:'choice',promp
 function D(prompt,scene,pieces,targets,result,hint,extra={}){return{kind:'drag',prompt,scene,pieces,targets,result,hint,...extra}}
 function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,memory:renderMemory,tally:renderTally,serit:renderSerit,kule:renderKule,tepsi:renderTepsi,yaz:renderYaz,cumle:renderCumle,noktalama:renderNoktalama,dikte:renderDikte,metin:renderMetin,ses:renderSes,yonerge:renderYonerge,konus:renderKonus}[r.kind];(fn||renderChoice)(r)}
 function renderChoice(r){$('#task').innerHTML=`<div class="choices">${r.choices.map((c,i)=>`<button class="choice" data-choice="${i}">${c.html||esc(c.label)}</button>`).join('')}</div>`;$$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.choices[+b.dataset.choice];if(c.correct)good(c.message);else wrong(c.hint||r.hint)})}
+function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
+ k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
+ k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
+ const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit)birak(k,hit)}};
+ k.onpointerup=bitir;k.onpointercancel=bitir})}
 
 /* ===== 4. sınıf ortak yardımcılar ===== */
 const PLACES=[['yb','yüz binler'],['ob','on binler'],['bn','binler'],['yz','yüzler'],['on','onlar'],['br','birler']];
@@ -616,12 +623,14 @@ function renderCumle(r){
  const uygunMu=()=>r.kabul.some(k=>k.length===state.dizi.length&&k.every((s,n)=>s===r.kartlar[state.dizi[n]]));
  const ciz=()=>{
   $('#stage').innerHTML=`${typeof r.scene==='function'?r.scene(state):r.scene||''}
-   <div class="t3-serit">${state.dizi.length?state.dizi.map((i,n)=>`<i>${esc(n===0&&state.bas?buyukHarf(r.kartlar[i]):r.kartlar[i])}</i>`).join('')+(state.isaret?`<i class="isaret">${state.isaret}</i>`:''):'<span class="note">Şerit boş · kartlardan cümleyi kur</span>'}</div>
+   <div class="t3-serit" data-cumle-serit>${state.dizi.length?state.dizi.map((i,n)=>`<i>${esc(n===0&&state.bas?buyukHarf(r.kartlar[i]):r.kartlar[i])}</i>`).join('')+(state.isaret?`<i class="isaret">${state.isaret}</i>`:''):'<span class="note">Şerit boş · kartlardan cümleyi kur</span>'}</div>
    <div class="note">${state.faz==='diz'?'Sözcükleri anlamlı sıraya diz.':state.faz==='bas'?'Cümle hangi sözcükle başlıyorsa onu BÜYÜK harfe çevir.':'Cümlenin sonuna hangi işaret gelmeli?'}</div>`;
   if(state.faz==='diz'){
    $('#task').innerHTML=`<div class="t3-kelime">${r.kartlar.map((k,i)=>state.dizi.includes(i)?'':`<button data-k="${i}">${esc(k)}</button>`).join('')}</div>
     <div class="actions"><button class="action" data-geri>↶ Son sözcüğü geri al</button><button class="action" data-bitti>Dizilim tamam</button></div>`;
-   $$('[data-k]').forEach(b=>b.onclick=()=>{state.dizi.push(+b.dataset.k);ciz()});
+   const ekleKart=i=>{if(state.dizi.includes(i))return;state.dizi.push(i);ciz()};
+   $$('[data-k]').forEach(b=>b.onclick=()=>ekleKart(+b.dataset.k));
+   baglaSurukle('[data-k]','[data-cumle-serit]',k=>ekleKart(+k.dataset.k));
    $('[data-geri]').onclick=()=>{state.dizi.pop();ciz()};
    $('[data-bitti]').onclick=()=>{
     /* "Bütün kartları kullan" kuralı yok: havuzda anlamı bozan çeldirici sözcük
@@ -740,11 +749,13 @@ function renderYonerge(r){
    g+=`<div class="cc ${duvar?'wall':''}${iz&&!bot?' on':''}${bot?' bot':''}">${bot?(r.bot||'🤖'):hedef?(r.goalIcon||'🎯'):''}</div>`}
   $('#stage').innerHTML=`<div class="caption">${esc(r.baslik||'')}</div>
    <div class="codegrid" style="grid-template-columns:repeat(${r.cols},1fr)">${g}</div>
-   <div class="t3-prog">${state.prog.length?state.prog.map((k,i)=>`<i class="${state.aktif===i?'aktif':''}">${i+1}. ${esc(r.kartlar.find(x=>x.id===k).metin)}</i>`).join(''):'<span class="note">Yönerge boş · kartlardan cümleleri sırala</span>'}</div>
+   <div class="t3-prog" data-yonerge-serit>${state.prog.length?state.prog.map((k,i)=>`<i class="${state.aktif===i?'aktif':''}">${i+1}. ${esc(r.kartlar.find(x=>x.id===k).metin)}</i>`).join(''):'<span class="note">Yönerge boş · kartlardan cümleleri sırala</span>'}</div>
    <div class="note">${esc(r.hedefText||'')}</div>`;
   $('#task').innerHTML=`<div class="t3-kelime">${r.kartlar.filter(k=>!state.prog.includes(k.id)).map(k=>`<button data-y="${k.id}">${esc(k.metin)}</button>`).join('')}</div>
    <div class="actions"><button class="action" data-geri>↶ Son adımı sil</button><button class="action" data-calistir>▶️ Yönergeyi uygula</button></div>`;
-  $$('[data-y]').forEach(b=>b.onclick=()=>{if(state.prog.length<(r.maxSteps||8)){state.prog.push(b.dataset.y);ciz()}});
+  const ekleYonerge=id=>{if(state.prog.length<(r.maxSteps||8)&&!state.prog.includes(id)){state.prog.push(id);ciz()}};
+  $$('[data-y]').forEach(b=>b.onclick=()=>ekleYonerge(b.dataset.y));
+  baglaSurukle('[data-y]','[data-yonerge-serit]',k=>ekleYonerge(k.dataset.y));
   $('[data-geri]').onclick=()=>{state.prog.pop();state.pos=[...r.start];state.iz=[r.start.join(',')];ciz()};
   $('[data-calistir]').onclick=()=>calistir()};
  const calistir=()=>{
@@ -815,13 +826,15 @@ function renderKule(r){
   $$('[data-slot]').forEach(s=>s.onclick=()=>{
    const i=+s.dataset.slot;if(state.slots[i])return;
    if(state.pick===null)return wrong('Önce alttaki kartlardan birini seç.');
-   if(r.order[i]!==state.pick){const gerek=r.cards.find(x=>x.id===r.order[i]),secilen=r.cards.find(x=>x.id===state.pick);
-    return wrong(r.karsilastir?r.karsilastir(secilen,gerek):r.hint)}
-   state.slots[i]=state.pick;state.pick=null;ciz();
-   if(state.slots.every(Boolean))bitirTur(r)});
+   kuleYerlestir(r,state.pick,i,ciz)});
   $('#task').innerHTML=`<div class="chip-row">${kalan().map(c=>`<button class="choice" data-card="${c.id}" style="${state.pick===c.id?'outline:4px solid var(--gold)':''}">${c.label}</button>`).join('')||'<span class="note">Bütün kartlar yerleşti</span>'}</div>`;
-  $$('[data-card]').forEach(b=>b.onclick=()=>{state.pick=b.dataset.card;ciz()})};
+  $$('[data-card]').forEach(b=>b.onclick=()=>{state.pick=b.dataset.card;ciz()});
+  baglaSurukle('[data-card]','[data-slot]',(k,s)=>kuleYerlestir(r,k.dataset.card,+s.dataset.slot,ciz))};
  ciz()}
+function kuleYerlestir(r,id,i,ciz){if(state.slots[i])return;
+ if(r.order[i]!==id){const gerek=r.cards.find(x=>x.id===r.order[i]),secilen=r.cards.find(x=>x.id===id);
+  return wrong(r.karsilastir?r.karsilastir(secilen,gerek):r.hint)}
+ state.slots[i]=id;state.pick=null;ciz();if(state.slots.every(Boolean))bitirTur(r)}
 function renderTepsi(r){
  state.tray=[];
  const say=()=>{const m={};state.tray.forEach(id=>m[id]=(m[id]||0)+1);return m};
@@ -829,16 +842,17 @@ function renderTepsi(r){
   return k.length===Object.keys(m).length&&k.every(x=>m[x]===n[x])};
  const ciz=()=>{
   $('#stage').innerHTML=`${typeof r.scene==='function'?r.scene(state):r.scene||''}
-   <div class="m4-tray">${state.tray.length?state.tray.map((id,i)=>{const p=r.pool.find(x=>x.id===id);
+   <div class="m4-tray" data-tepsi>${state.tray.length?state.tray.map((id,i)=>{const p=r.pool.find(x=>x.id===id);
     return `<button class="slotted" data-rm="${i}">${p.label} ✕</button>`}).join(''):`<span class="tray-empty">${esc(r.emptyLabel||'Tepsi boş')}</span>`}</div>
    ${state.note?`<div class="note">${state.note}</div>`:''}`;
   $$('[data-rm]').forEach(b=>b.onclick=()=>{state.tray.splice(+b.dataset.rm,1);state.note='';ciz()});
   $('#task').innerHTML=`<div class="chip-row">${r.pool.map(p=>`<button class="choice" data-add="${p.id}">${p.label}</button>`).join('')}</div>
    <div class="actions"><button class="action" data-serve>${esc(r.serveLabel||'🍽️ Siparişi ver')}</button></div>`;
-  $$('[data-add]').forEach(b=>b.onclick=()=>{
-   const p=r.pool.find(x=>x.id===b.dataset.add);
+  const tepsiyeEkle=id=>{const p=r.pool.find(x=>x.id===id);
    if(r.need[p.id]===undefined&&r.strict){state.note=p.why||'';ciz();return wrong(p.why||r.hint)}
-   state.tray.push(p.id);state.note='';ciz()});
+   state.tray.push(p.id);state.note='';ciz()};
+  $$('[data-add]').forEach(b=>b.onclick=()=>tepsiyeEkle(b.dataset.add));
+  baglaSurukle('[data-add]','[data-tepsi]',k=>tepsiyeEkle(k.dataset.add));
   $('[data-serve]').onclick=()=>{
    if(!state.tray.length)return wrong('Tepsi boş; önce parçaları seç.');
    if(!tamam()){state.note=r.wrongNote||'';ciz();return wrong(r.hint)}
