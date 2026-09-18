@@ -28,19 +28,25 @@ async function drag(page, from, to) {
     { id: 'w01', from: '[data-piece="y0"]', to: '[data-target="cekirdek"]', value: 'state.toplam', expected: 100 },
     { id: 'w02', from: '[data-piece="y0"]', to: '[data-target="cekirdek"]', value: 'state.toplam', expected: 100 },
     { id: 'w05', from: '[data-share-piece]', to: '[data-share="a"]', value: 'state.a', expected: 1 },
-    { id: 'w09', from: '[data-piece="d1"]', to: '[data-target="tepsi"]', value: 'locked', expected: true }
+    { id: 'w09', from: '[data-piece="d1"]', to: '[data-target="tepsi"]', value: 'locked', expected: true },
+    { id: 'w32', from: '[data-parca="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 },
+    { id: 'w34', from: '[data-sec="0"]', to: '[data-ayna-hedef]', value: 'locked', expected: true },
+    { id: 'w43', from: '[data-kart="7"]', to: '[data-yer="0"]', value: 'state.yerlesen[0]', expected: 7 },
+    { id: 'w48', from: '[data-kart="2"]', to: '[data-yer="0"]', value: 'state.siklik[0]', expected: 2,
+      setup: 'state.faz=3;state.sayim=[2,5,3];state.siklik=[null,null,null];state.kartlar=[2,5,3];projeCiz(round())' }
   ];
 
   for (const check of checks) {
     await page.goto(`${FILE}?scene-smoke=${check.id}#oyun=${check.id}`, { waitUntil: 'domcontentloaded' });
+    if (check.setup) await page.evaluate(code => Function(code)(), check.setup);
     await page.waitForSelector(check.from);
     await drag(page, check.from, check.to);
     const actual = await page.evaluate(expr => Function(`return ${expr}`)(), check.value);
-    if (actual !== check.expected) throw new Error(`${check.id}: ${check.value} = ${actual}, beklenen ${check.expected}`);
+    if (JSON.stringify(actual) !== JSON.stringify(check.expected)) throw new Error(`${check.id}: ${check.value} = ${actual}, beklenen ${check.expected}`);
     console.log(`✓ ${check.id} gerçek sürükleme`);
   }
   await browser.close();
-  console.log('\n4/4 sahne hedefi gerçek işaretçi sürüklemesiyle geçti.');
+  console.log(`\n${checks.length}/${checks.length} sahne hedefi gerçek işaretçi sürüklemesiyle geçti.`);
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

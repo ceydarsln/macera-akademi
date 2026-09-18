@@ -5,7 +5,7 @@ const { pathToFileURL } = require('url');
 const { chromium } = require('playwright');
 
 const ROOT = path.resolve(__dirname, '..');
-const DEFAULT_IDS = Array.from({ length: 30 }, (_, i) => `w${String(i + 1).padStart(2, '0')}`);
+const DEFAULT_IDS = Array.from({ length: 48 }, (_, i) => `w${String(i + 1).padStart(2, '0')}`);
 const ids = process.argv.slice(2).length ? process.argv.slice(2) : DEFAULT_IDS;
 
 (async () => {

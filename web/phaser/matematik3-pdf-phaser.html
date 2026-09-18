@@ -20,6 +20,7 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .piece{min-width:66px;min-height:58px;max-width:145px;padding:7px;border:3px solid white;border-radius:17px;background:var(--panel);box-shadow:0 5px 0 rgba(35,77,108,.25);display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(21px,6vw,36px);font-weight:950;user-select:none;touch-action:none;position:relative;z-index:5}.piece small{display:block;font-size:12px}.piece.dragging{position:fixed;z-index:999;pointer-events:none;opacity:.94;transform:scale(1.09)}.piece.done{visibility:hidden}
 .target{flex:1 1 92px;min-width:92px;min-height:80px;border:4px dashed #6e9db9;border-radius:20px;background:rgba(255,255,255,.68);display:flex;align-items:center;justify-content:center;text-align:center;flex-wrap:wrap;padding:7px;font-size:clamp(20px,5.5vw,34px);font-weight:950}.target.hot{background:#fff6cc;border-style:solid;border-color:var(--gold);transform:scale(1.03)}.target .placed{width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:2px;font-size:22px}
 .scene-drop{cursor:pointer;touch-action:none;transition:filter .16s,transform .16s;outline:4px dashed rgba(43,131,198,.52);outline-offset:6px}.scene-drop.hot{filter:drop-shadow(0 0 10px #f1b53a);transform:scale(1.06);outline-color:#f1b53a}.scene-drop .placed{display:none}
+.ui-dragging{position:fixed!important;z-index:999!important;pointer-events:none!important;opacity:.94;transform:scale(1.08);box-shadow:0 10px 25px rgba(0,0,0,.28)!important}.drop-hot{filter:drop-shadow(0 0 9px #f1b53a)!important;outline:4px solid #f1b53a!important;outline-offset:3px}
 .feedback{position:absolute;left:50%;top:47%;z-index:150;transform:translate(-50%,-50%) scale(.7);opacity:0;pointer-events:none;background:#fff;border:4px solid var(--ok);border-radius:23px;padding:16px 21px;min-width:210px;text-align:center;font-size:clamp(20px,5.2vw,29px);font-weight:1000;box-shadow:0 12px 38px rgba(0,0,0,.27)}.feedback.show{animation:pop .95s ease both}.feedback.bad{border-color:var(--bad)}
 @keyframes pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}18%,74%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.08)}}@keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}@keyframes hop{50%{transform:translateY(-18px) scale(1.06)}}@keyframes drive{to{transform:translateX(280px)}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{filter:brightness(1.25);transform:scale(1.04)}}.shake{animation:shake .38s}.success-motion{animation:hop .75s ease}.spin{animation:spin 1.2s ease}.pulse{animation:pulse .8s ease infinite}
 .overlay{position:absolute;inset:0;z-index:300;background:rgba(9,27,46,.88);display:flex;align-items:center;justify-content:center;padding:20px}.overlay-card{width:min(390px,94%);background:white;border-radius:28px;padding:24px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.35)}.overlay h2{margin:0 0 8px;font-size:29px}.overlay p{font-size:17px;font-weight:750;color:var(--muted)}
@@ -412,6 +413,12 @@ function renderSequence(r){
 function renderMulti(r){state.selected=[];$('#task').innerHTML=`<div class="actions">${r.items.map((x,i)=>`<button class="action" data-item="${i}">${x.html||esc(x.label)}</button>`).join('')}</div>`;$$('[data-item]').forEach(b=>b.onclick=()=>{const x=r.items[+b.dataset.item];if(!x.correct)return wrong(r.hint);if(state.selected.includes(x.id))return;state.selected.push(x.id);b.style.background='#b9f0d4';if(r.onSelect){r.onSelect(state,x);updateStage()}if(state.selected.length===r.items.filter(x=>x.correct).length)good()})}
 function renderOrder(r){state.pos=0;$('#task').innerHTML=`<div class="actions">${r.items.map((x,i)=>`<button class="action" data-order="${i}">${x.html||esc(x.label)}</button>`).join('')}</div>`;$$('[data-order]').forEach(b=>b.onclick=()=>{const x=r.items[+b.dataset.order],want=r.order[state.pos];if(x.id!==want)return wrong(r.hint);b.disabled=true;b.style.background='#b9f0d4';state.pos++;if(r.onStep){r.onStep(state,x);updateStage()}if(state.pos===r.order.length)good()})}
 function bindDragTargets(r){$$('[data-target]').forEach(t=>t.onclick=()=>{if(!state.tapPiece)return;dropPiece(r,state.tapPiece,t.dataset.target)})}
+function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,ox=0,oy=0,sx=0,sy=0,w=0,h=0;
+  k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
+  k.onpointerdown=e=>{if(k.disabled||k.classList.contains('bitti'))return;const b=k.getBoundingClientRect();aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;ox=e.clientX-b.left;oy=e.clientY-b.top;w=b.width;h=b.height;k.setPointerCapture?.(e.pointerId)};
+  k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');Object.assign(k.style,{left:(e.clientX-ox)+'px',top:(e.clientY-oy)+'px',width:w+'px',height:h+'px'});$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
+  const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');['left','top','width','height'].forEach(x=>k.style[x]='');if(tasindi){k.dataset.dragged='1';if(hit)birak(k,hit)}};
+  k.onpointerup=bitir;k.onpointercancel=bitir})}
 function renderDrag(r){state.placed={};state.done=0;state.toplam=0;state.dilimler=[];state.y=state.o=state.b=0;const pieces=`<div class="pieces">${r.pieces.map(p=>`<div class="piece" data-piece="${p.id}" role="button">${p.html}</div>`).join('')}</div>`;const targets=r.sceneTargets?'':`<div class="targets">${r.targets.map(t=>`<div class="target" data-target="${t.id}">${t.html}<div class="placed"></div></div>`).join('')}</div>`;/* Sahne hedefli turlarda ayrı bir yazı kutusu oluşturma; parça doğrudan deney nesnesine gider. */
   $('#task').innerHTML=targets+pieces;$$('[data-piece]').forEach(el=>{el.onpointerdown=e=>startDrag(e,el,r);el.onclick=()=>{if(state.tapPiece===el.dataset.piece){state.tapPiece=null;el.style.outline=''}else{state.tapPiece=el.dataset.piece;$$('[data-piece]').forEach(x=>x.style.outline='');el.style.outline='4px solid #f1b53a'}}});bindDragTargets(r)}
 function startDrag(e,el,r){if(el.classList.contains('done'))return;e.preventDefault();const box=el.getBoundingClientRect();drag={el,r,id:el.dataset.piece,offX:e.clientX-box.left,offY:e.clientY-box.top,parent:el.parentNode,next:el.nextSibling};el.setPointerCapture?.(e.pointerId);el.classList.add('dragging');moveDrag(e);el.onpointermove=moveDrag;el.onpointerup=endDrag;el.onpointercancel=endDrag}
@@ -1320,17 +1327,15 @@ function mozaikSvg(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.ind
 function mozaikCiz(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.indexOf(i)>=0);
  const k=state.faz>=1?mozaikKenar(yerlesen):null;
  $('#stage').innerHTML=`<div class="stack">${mozaikSvg(r)}
-  <div class="caption">${state.faz===0?'Parçayı seç, sonra kesik çizgili yuvaya dokun.':state.faz===1?('Dış sınırı izle: '+state.izli.length+' birim kenar'):'Dış çevre '+k.dis.length+' birim'}</div></div>`;
+ <div class="caption">${state.faz===0?'Parçayı seç, sonra kesik çizgili yuvaya dokun.':state.faz===1?('Dış sınırı izle: '+state.izli.length+' birim kenar'):'Dış çevre '+k.dis.length+' birim'}</div></div>`;
  if(state.faz===0){
-  $('#task').innerHTML=`<div class="actions">${r.parcalar.map((p,i)=>`<button class="parca-btn${state.secili===i?' secili':''}${state.yerlesen.indexOf(i)>=0?' bitti':''}" data-parca="${i}">${esc(p.ad)}</button>`).join('')}</div>`;
+  $('#task').innerHTML=`<div class="caption">Gerçek parçayı kesik çizgili yerine sürükle.</div><div class="actions">${r.parcalar.map((p,i)=>`<button class="parca-btn${state.secili===i?' secili':''}${state.yerlesen.indexOf(i)>=0?' bitti':''}" data-parca="${i}">${poliSvg(p.nokta,p.renk,null,52)}<small>${esc(p.ad)}</small></button>`).join('')}</div>`;
   $$('[data-parca]').forEach(b=>b.onclick=()=>{const i=+b.dataset.parca;
    if(state.yerlesen.indexOf(i)>=0)return;state.secili=i;mozaikCiz(r)});
   $$('[data-yuva]').forEach(el=>el.onclick=()=>{const i=+el.dataset.yuva;
    if(state.secili==null)return feedback('Önce bir parça seç',true);
-   if(state.secili!==i)return wrong('Bu yuva seçtiğin parçanın biçimine uymuyor. Kenar sayısına bak.');
-   state.yerlesen.push(i);state.secili=null;
-   if(state.yerlesen.length>=r.parcalar.length){state.faz=1;state.izli=[];feedback('Mozaik kuruldu')}
-   mozaikCiz(r)});
+   mozaikYerlestir(r,state.secili,i)});
+  baglaSurukle('[data-parca]','[data-yuva]',(p,y)=>mozaikYerlestir(r,+p.dataset.parca,+y.dataset.yuva));
  }else if(state.faz===1){
   $('#task').innerHTML='<div class="caption">Yalnız dış sınırdaki kenarlara dokun. Kesik çizgililer iki parçanın arasında kaldı.</div>';
   $$('[data-dis]').forEach(el=>el.onclick=()=>{const i=+el.dataset.dis;
@@ -1344,6 +1349,11 @@ function mozaikCiz(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.ind
    if(!r.secenekler[+b.dataset.choice].correct)return wrong('İçte kalan ortak kenarlar çevreye dâhil değil. İzlediğin kırmızı kenarları say.');
    good()});
  }}
+function mozaikYerlestir(r,parca,yuva){if(state.yerlesen.indexOf(parca)>=0)return;
+ if(parca!==yuva)return wrong('Bu yuva seçtiğin parçanın biçimine uymuyor. Kenar sayısına bak.');
+ state.yerlesen.push(parca);state.secili=null;
+ if(state.yerlesen.length>=r.parcalar.length){state.faz=1;state.izli=[];feedback('Mozaik kuruldu')}
+ mozaikCiz(r)}
 function renderMozaik(r){state.faz=0;state.yerlesen=[];state.izli=[];state.secili=null;mozaikCiz(r)}
 
 /* ===== ortak: bir doğruya göre yansıma ===== */
@@ -1400,6 +1410,7 @@ function aynaSahne(r){const sec=state.secenekler[state.secim!=null?state.secim:-
  let ic=`<polygon points="${r.yarim.map(q=>q.join(',')).join(' ')}" fill="${r.renk}" stroke="#33526b" stroke-width="2"/>`;
  (r.ic||[]).forEach(n=>{ic+=`<circle cx="${n[0]}" cy="${n[1]}" r="3" fill="#33526b"/>`});
  ic+=`<line x1="${r.eksen}" y1="2" x2="${r.eksen}" y2="98" stroke="#e05aa0" stroke-width="3" stroke-dasharray="6 5"/>`;
+ ic+=`<rect data-ayna-hedef x="${r.eksen+3}" y="3" width="${104-r.eksen}" height="94" rx="7" fill="rgba(255,255,255,.12)" stroke="#7fb6de" stroke-width="2" stroke-dasharray="5 4"/>`;
  if(sec){ic+=`<polygon points="${sec.p.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="${sec.dogru?r.renk:'rgba(224,85,85,.45)'}" stroke="#33526b" stroke-width="2"/>`;
   (sec.ic||[]).forEach(n=>{ic+=`<circle cx="${n[0].toFixed(1)}" cy="${n[1].toFixed(1)}" r="3" fill="#33526b"/>`});
   if(sec.dogru)r.yarim.forEach((q,i)=>{const e=[2*r.eksen-q[0],q[1]];
@@ -1407,12 +1418,13 @@ function aynaSahne(r){const sec=state.secenekler[state.secim!=null?state.secim:-
  return `<svg viewBox="-4 -4 118 108" width="270" height="248">${ic}</svg>`}
 function aynaCiz(r){$('#stage').innerHTML=`<div class="stack">${aynaSahne(r)}
  <div class="caption">${esc(state.not||'Aynanın sağına hangi parça gelmeli?')}</div></div>`;
- $('#task').innerHTML=`<div class="actions">${state.secenekler.map((sc,i)=>`<button class="secenek-kart${state.secim===i?' secili':''}" data-sec="${i}">${poliSvg(sc.p,r.renk,sc.ic)}</button>`).join('')}</div>
-  <button class="action" id="aynaOk">Bu parçayı yerleştir</button>`;
- $$('[data-sec]').forEach(b=>b.onclick=()=>{state.secim=+b.dataset.sec;state.not='Parçayı aynanın sağına koydun; kenarları karşılaştır.';aynaCiz(r)});
- $('#aynaOk').onclick=()=>{if(state.secim==null)return wrong('Önce bir parça seç.');
-  if(!state.secenekler[state.secim].dogru){state.not='Üst üste getirdik: bu parça yarımın aynadaki hâline oturmuyor.';aynaCiz(r);return wrong(state.not)}
-  state.not='Eş parça: aynı boyutta ama yönü aynaya göre ters. Eş noktalar eksene aynı uzaklıkta.';aynaCiz(r);good()}}
+ $('#task').innerHTML=`<div class="caption">Parçayı tutup aynanın sağındaki kesik alana sürükle.</div><div class="actions">${state.secenekler.map((sc,i)=>`<button class="secenek-kart${state.secim===i?' secili':''}" data-sec="${i}">${poliSvg(sc.p,r.renk,sc.ic)}</button>`).join('')}</div>`;
+ $$('[data-sec]').forEach(b=>b.onclick=()=>{state.secim=+b.dataset.sec;state.not='Parça seçildi; aynanın sağındaki alana dokun.';aynaCiz(r)});
+ $('[data-ayna-hedef]').onclick=()=>{if(state.secim==null)return feedback('Önce bir parça seç',true);aynaYerlestir(r,state.secim)};
+ baglaSurukle('[data-sec]','[data-ayna-hedef]',(p)=>aynaYerlestir(r,+p.dataset.sec))}
+function aynaYerlestir(r,i){state.secim=i;
+ if(!state.secenekler[i].dogru){state.not='Üst üste getirdik: bu parça yarımın aynadaki hâline oturmuyor.';aynaCiz(r);return wrong(state.not)}
+ state.not='Eş parça: aynı boyutta ama yönü aynaya göre ters. Eş noktalar eksene aynı uzaklıkta.';aynaCiz(r);good()}
 function renderAyna(r){state.secim=null;state.not='';state.secenekler=aynaSecenekler(r);aynaCiz(r)}
 
 /* ===== w35: kilim dokuma tezgâhı ===== */
@@ -1710,11 +1722,12 @@ function siklikCiz(r){
  $$('[data-kart]').forEach(b=>b.onclick=()=>{state.secKart=+b.dataset.kart;state.not='Kart seçildi: hangi satıra ait?';siklikCiz(r)});
  $$('[data-yer]').forEach(el=>el.onclick=()=>{const i=+el.dataset.yer;
   if(state.secKart==null)return feedback('Önce bir sıklık kartı seç',true);
-  if(state.secKart!==r.satir[i].n){const g=Math.floor(r.satir[i].n/5),k=r.satir[i].n%5;
-   state.not=`Bu satırda ${g} beşli grup ve ${k} tek çizgi var. Kart kaybolmadı, yeniden dene.`;siklikCiz(r);return wrong(state.not)}
-  state.yerlesen[i]=state.secKart;state.secKart=null;state.not='Doğru: çetele ile sayı aynı satırda.';
-  siklikCiz(r);
-  if(state.yerlesen.every(x=>x!=null))good()})}
+  siklikYerlestir(r,state.secKart,i)});
+ baglaSurukle('[data-kart]','[data-yer]',(k,y)=>siklikYerlestir(r,+k.dataset.kart,+y.dataset.yer))}
+function siklikYerlestir(r,kart,i){if(kart!==r.satir[i].n){const g=Math.floor(r.satir[i].n/5),k=r.satir[i].n%5;
+ state.not=`Bu satırda ${g} beşli grup ve ${k} tek çizgi var. Kart kaybolmadı, yeniden dene.`;siklikCiz(r);return wrong(state.not)}
+ state.yerlesen[i]=kart;state.secKart=null;state.not='Doğru: çetele ile sayı aynı satırda.';
+ siklikCiz(r);if(state.yerlesen.every(x=>x!=null))good()}
 function renderSiklik(r){state.yerlesen=r.satir.map(()=>null);state.secKart=null;state.not='';
  state.kartlar=r.satir.map(s=>s.n).slice().sort(()=>Math.random()-0.5);siklikCiz(r)}
 
@@ -1876,9 +1889,8 @@ function projeCiz(r){const sat=state.satir||r.satir;
   $$('[data-kart]').forEach(b=>b.onclick=()=>{state.secKart=+b.dataset.kart;state.not='Kart seçildi.';projeCiz(r)});
   $$('[data-yer]').forEach(el=>el.onclick=()=>{const i=+el.dataset.yer;
    if(state.secKart==null)return feedback('Önce kart seç',true);
-   if(state.secKart!==state.sayim[i]){state.not='Bu satırdaki beşli grupları ve kalan çizgileri yeniden say.';projeCiz(r);return wrong(state.not)}
-   state.siklik[i]=state.secKart;state.secKart=null;state.not='Doğru.';projeCiz(r);
-   if(state.siklik.every(x=>x!=null)){state.faz=4;state.not='Sıklıklar kadar nokta koy.';gecisBasla(()=>projeCiz(r),FAST?30:700)}});
+   projeSiklikYerlestir(r,state.secKart,i)});
+  baglaSurukle('[data-kart]','[data-yer]',(k,y)=>projeSiklikYerlestir(r,+k.dataset.kart,+y.dataset.yer));
  }else if(state.faz===4){
   $('#task').innerHTML='<div class="caption">Her sütuna sıklığı kadar nokta ekle.</div>';
   $$('[data-sut]').forEach(el=>el.onclick=()=>{const i=+el.dataset.sut;
@@ -1890,12 +1902,15 @@ function projeCiz(r){const sat=state.satir||r.satir;
   const yor=r.yorumlar;
   $('#task').innerHTML=`<div class="caption">Proje kartına yazılacak İKİ doğru yorumu seç.</div>
    <div class="actions">${yor.map((y,i)=>`<button class="veri-kart${(state.secYorum||[]).indexOf(i)>=0?' secili':''}" data-yor="${i}">${esc(y.label)}</button>`).join('')}</div>`;
-  $$('[data-yor]').forEach(b=>b.onclick=()=>{const i=+b.dataset.yor;
+ $$('[data-yor]').forEach(b=>b.onclick=()=>{const i=+b.dataset.yor;
    if(!yor[i].correct)return wrong('Bu yorum grafikle uyuşmuyor ya da "kesin" dili kullanıyor.');
    if((state.secYorum||[]).indexOf(i)>=0)return;
    state.secYorum=(state.secYorum||[]).concat(i);projeCiz(r);
-   if(state.secYorum.length>=2)good()});
+  if(state.secYorum.length>=2)good()});
  }}
+function projeSiklikYerlestir(r,kart,i){if(kart!==state.sayim[i]){state.not='Bu satırdaki beşli grupları ve kalan çizgileri yeniden say.';projeCiz(r);return wrong(state.not)}
+ state.siklik[i]=kart;state.secKart=null;state.not='Doğru.';projeCiz(r);
+ if(state.siklik.every(x=>x!=null)){state.faz=4;state.not='Sıklıklar kadar nokta koy.';gecisBasla(()=>projeCiz(r),FAST?30:700)}}
 function renderProje(r){state.faz=r.sorular?0:1;state.ix=0;state.gec=[];state.not='';
  state.soru=r.soru;state.satir=r.satir;state.yanitlar=r.yanitlar;
  state.sayim=(r.satir||[]).map(()=>0);state.siklik=(r.satir||[]).map(()=>null);state.nokta=(r.satir||[]).map(()=>0);

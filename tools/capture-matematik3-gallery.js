@@ -7,10 +7,14 @@ const { chromium } = require('playwright');
 const sharp = require('sharp');
 
 const ROOT = path.resolve(__dirname, '..');
-const OUT = path.join(ROOT, 'artifacts', 'matematik3-w01-w30-inceleme');
+const START = Math.max(1, Number(process.argv[2]) || 1);
+const END = Math.min(48, Number(process.argv[3]) || 48);
+const FIRST = `w${String(START).padStart(2, '0')}`;
+const LAST = `w${String(END).padStart(2, '0')}`;
+const OUT = path.join(ROOT, 'artifacts', `matematik3-${FIRST}-${LAST}-inceleme`);
 const SHOTS = path.join(OUT, 'screens');
 const VIEWPORT = { width: 390, height: 844 };
-const IDS = Array.from({ length: 30 }, (_, i) => `w${String(i + 1).padStart(2, '0')}`);
+const IDS = Array.from({ length: END - START + 1 }, (_, i) => `w${String(i + START).padStart(2, '0')}`);
 
 function xml(value) {
   return String(value).replace(/[<>&"']/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' }[c]));
@@ -34,7 +38,7 @@ async function contactSheet(items, file) {
 function galleryHtml(items, sheets) {
   const cards = items.map(x => `<article id="${x.id}"><header><b>${x.id.toUpperCase()}</b><span>${xml(x.title)}</span></header><a href="screens/${x.id}.png" target="_blank"><img src="screens/${x.id}.png" loading="lazy" alt="${x.id.toUpperCase()} ${xml(x.title)} telefon ekranı"></a></article>`).join('');
   const links = sheets.map(x => `<a href="${x.file}" target="_blank">${x.label}</a>`).join('');
-  return `<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>3. Sınıf Matematik · W01–W30</title><style>*{box-sizing:border-box}body{margin:0;background:#edf4f8;color:#18324a;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}nav{position:sticky;top:0;z-index:5;padding:12px 16px;background:#17364d;color:white;box-shadow:0 3px 15px #17364d55}nav h1{margin:0 0 7px;font-size:20px}nav p{margin:0 0 8px;font-size:13px;opacity:.85}.sheets{display:flex;gap:7px;overflow:auto}.sheets a{color:#17364d;background:#fff;border-radius:10px;padding:5px 9px;text-decoration:none;font-weight:800;white-space:nowrap}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;padding:14px;max-width:1500px;margin:auto}article{overflow:hidden;border-radius:18px;background:#fff;box-shadow:0 7px 22px #18324a20;border:1px solid #c9dbe5}article header{min-height:62px;display:flex;gap:8px;align-items:center;padding:8px 10px}article header b{background:#17364d;color:white;border-radius:9px;padding:5px 7px}article header span{font-size:13px;font-weight:800;line-height:1.15}article a{display:block;background:#dcecf4}article img{display:block;width:100%;height:auto}</style></head><body><nav><h1>3. Sınıf Matematik · W01–W30</h1><p>Her görüntü 390 × 844 px. Büyütmek için oyuna dokunun.</p><div class="sheets">${links}</div></nav><main>${cards}</main></body></html>`;
+  return `<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>3. Sınıf Matematik · ${FIRST.toUpperCase()}–${LAST.toUpperCase()}</title><style>*{box-sizing:border-box}body{margin:0;background:#edf4f8;color:#18324a;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}nav{position:sticky;top:0;z-index:5;padding:12px 16px;background:#17364d;color:white;box-shadow:0 3px 15px #17364d55}nav h1{margin:0 0 7px;font-size:20px}nav p{margin:0 0 8px;font-size:13px;opacity:.85}.sheets{display:flex;gap:7px;overflow:auto}.sheets a{color:#17364d;background:#fff;border-radius:10px;padding:5px 9px;text-decoration:none;font-weight:800;white-space:nowrap}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;padding:14px;max-width:1500px;margin:auto}article{overflow:hidden;border-radius:18px;background:#fff;box-shadow:0 7px 22px #18324a20;border:1px solid #c9dbe5}article header{min-height:62px;display:flex;gap:8px;align-items:center;padding:8px 10px}article header b{background:#17364d;color:white;border-radius:9px;padding:5px 7px}article header span{font-size:13px;font-weight:800;line-height:1.15}article a{display:block;background:#dcecf4}article img{display:block;width:100%;height:auto}</style></head><body><nav><h1>3. Sınıf Matematik · ${FIRST.toUpperCase()}–${LAST.toUpperCase()}</h1><p>Her görüntü 390 × 844 px. Büyütmek için oyuna dokunun.</p><div class="sheets">${links}</div></nav><main>${cards}</main></body></html>`;
 }
 
 (async () => {

@@ -372,7 +372,7 @@ async function tur2(W){
     case 'ayna': {
       const ix = JSON.parse(W.eval('JSON.stringify(state.secenekler.findIndex(s=>s.dogru))'));
       await tikla(W, '[data-sec="' + ix + '"]'); await bekle(80);
-      await tikla(W, '#aynaOk');
+      await tikla(W, '[data-ayna-hedef]');
       break;
     }
     case 'kilim': {
