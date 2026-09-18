@@ -23,6 +23,7 @@ __pycache__/
 web/api/config.local.php
 .tools/
 test-results/
+/artifacts/
 tools/audio/ses/
 tools/audio/gunluk/
 

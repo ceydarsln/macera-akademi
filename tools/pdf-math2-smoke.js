@@ -19,6 +19,18 @@ async function drag(page, pieceId, targetId) {
   const piece = page.locator(`[data-piece="${pieceId}"]`);
   const target = page.locator(`[data-target="${targetId}"]`);
   if (!await piece.count() || !await target.count()) throw new Error(`Sürükleme bulunamadı: ${pieceId} → ${targetId}`);
+  if (process.env.REAL_DRAG) {
+    await piece.scrollIntoViewIfNeeded();
+    const from = await piece.boundingBox();
+    const to = await target.boundingBox();
+    if (!from || !to) throw new Error(`Sürükleme koordinatı bulunamadı: ${pieceId} → ${targetId}`);
+    await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2, { steps: 12 });
+    await page.mouse.up();
+    await page.waitForTimeout(35);
+    return;
+  }
   /* Mobil erişilebilirlik için motorun sunduğu dokun-seç/dokun-bırak yolu. */
   await piece.click();
   await target.click();
