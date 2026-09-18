@@ -827,7 +827,10 @@ async function tur5(W){
       }
       break;
     case 'serit':
-      for (const c of r.cards){ await tikla(W,'[data-bin="'+c.bin+'"]'); await bekle(80); }
+      for (const c of r.cards){
+        if (r.sceneBins) await tikla(W,'[data-serit-kart]');
+        await tikla(W,(r.sceneBins?'[data-scene-bin="':'[data-bin="')+c.bin+'"]'); await bekle(80);
+      }
       break;
     case 'kule': {
       const dolu = new Set((r.preset||[]).map(x=>x[0]));
@@ -1101,7 +1104,10 @@ async function tur8(W){
       for (const id of r.sequence){ await tikla(W,'[data-action="'+r.actions.findIndex(x=>x.id===id)+'"]'); await bekle(60); }
       break;
     case 'serit':
-      for (const c of r.cards){ await tikla(W,'[data-bin="'+c.bin+'"]'); await bekle(90); }
+      for (const c of r.cards){
+        if (r.sceneBins) await tikla(W,'[data-serit-kart]');
+        await tikla(W,(r.sceneBins?'[data-scene-bin="':'[data-bin="')+c.bin+'"]'); await bekle(90);
+      }
       break;
     case 'kule': {
       const dolu = new Set((r.preset||[]).map(x=>x[0]));

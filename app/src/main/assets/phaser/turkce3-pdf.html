@@ -330,6 +330,17 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .bin small{display:block;font-size:11px;font-weight:800;line-height:1.15;color:#52708b}
 .bin.bad{border-color:var(--bad);background:#ffecef}
 .bin.ok{border-color:var(--ok);background:#e7f8ee}
+/* Sınıflandırma kartı, yalnız metin düğmesine değil sahnedeki gerçek hedefe gider. */
+.t3-scene-bins{display:flex;gap:7px;width:100%;justify-content:center;align-items:stretch}
+.t3-scene-bin{position:relative;flex:1 1 0;min-width:0;min-height:76px;border:4px solid #6e9db9;border-radius:15px;background:rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:7px 4px;text-align:center;font-weight:950;font-size:13px;line-height:1.08;transition:.15s transform,.15s background}
+.t3-scene-bin b{font-size:24px}.t3-scene-bin small{font-size:9px;color:#52708b}.t3-scene-bin .landed{font-size:11px;background:#e7f8ee;border:2px solid #68c398;border-radius:8px;padding:3px 5px;margin-top:2px}
+.t3-stands .t3-scene-bin{padding-top:17px;border-radius:5px 5px 16px 16px;border-top:10px solid var(--gold);background:repeating-linear-gradient(90deg,#fff 0 18px,#edf7fb 18px 36px)}
+.t3-stands .t3-scene-bin:before{content:'';position:absolute;left:4px;right:4px;top:-13px;height:9px;border-radius:6px;background:repeating-linear-gradient(90deg,#e8636f 0 15px,#fff 15px 30px)}
+.t3-balance{position:relative;padding-top:29px;align-items:flex-start}
+.t3-balance:before{content:'';position:absolute;left:9%;right:9%;top:13px;height:7px;background:#d6a13b;border-radius:8px}
+.t3-balance:after{content:'';position:absolute;left:50%;top:13px;width:8px;height:31px;transform:translateX(-50%);background:#b77c27;border-radius:5px}
+.t3-balance .t3-scene-bin{border-radius:7px 7px 28px 28px;border-top-width:7px;background:#fffdf7;min-height:86px}
+.belt-card[data-serit-kart]{touch-action:none;cursor:grab;outline-offset:3px}.belt-card[data-serit-kart].secili{outline:4px solid var(--gold)}
 /* sıra kulesi: sabit yuvalar, kart hareket etmez */
 .tower-slots{display:flex;flex-direction:column-reverse;gap:4px;align-items:center;width:100%}
 .tower-slot{width:min(280px,92%);min-height:44px;border:3px dashed #6e9db9;border-radius:13px;background:rgba(255,255,255,.72);display:flex;align-items:center;justify-content:center;font-weight:1000;font-size:19px;position:relative}
@@ -794,23 +805,34 @@ function renderKonus(r){
 
 
 /* ===== çekirdekten devralınan genel oynatıcılar ===== */
+function seritSahneHedefleri(r,c){
+ const tip=r.sceneBins==='scale'?'t3-balance':r.sceneBins==='stands'?'t3-stands':'';
+ return `<div class="t3-scene-bins ${tip}">${r.bins.map(b=>`<div class="t3-scene-bin" data-scene-bin="${b.id}" role="button" tabindex="0"><b>${b.emoji||''}</b><span>${esc(b.label)}</span>${b.sub?`<small>${esc(b.sub)}</small>`:''}${state.gecis&&c&&b.id===c.bin?`<div class="landed">${c.html}</div>`:''}</div>`).join('')}</div>`}
 function renderSerit(r){
  state.i=0;state.gecis=false;
  const ciz=()=>{
   const c=r.cards[state.i];
   $('#stage').innerHTML=`${typeof r.scene==='function'?r.scene(state):r.scene||''}
-   <div class="belt-rail"><div class="belt-card">${c?c.html:'Bant boşaldı ✅'}${c&&c.sub?`<small>${c.sub}</small>`:''}</div></div>
+   <div class="belt-rail"><div class="belt-card" ${r.sceneBins&&c?'data-serit-kart role="button" tabindex="0"':''}>${c?c.html:'Bant boşaldı ✅'}${c&&c.sub?`<small>${c.sub}</small>`:''}</div></div>
+   ${r.sceneBins&&c?seritSahneHedefleri(r,c):''}
    <div class="belt-progress">${r.cards.map((_,i)=>`<i class="${i<state.i?'on':''}"></i>`).join('')}</div>
    ${state.kanit?`<div class="note">${state.kanit}</div>`:''}`;
   if(!c)return;
   if(c.say&&!state.gecis)ertele(()=>speak(c.say),120);
-  $('#task').innerHTML=`<div class="bins">${r.bins.map(b=>`<button class="bin" data-bin="${b.id}"><b>${b.emoji||''}</b><span>${esc(b.label)}</span>${b.sub?`<small>${esc(b.sub)}</small>`:''}</button>`).join('')}</div>`;
-  $$('[data-bin]').forEach(b=>b.onclick=()=>{
+  $('#task').innerHTML=r.sceneBins?'<div class="note">Kartı tutup sahnedeki gerçek yerine sürükle. Dokunmatik yedek: kartı seç, sonra hedefe dokun.</div>':`<div class="bins">${r.bins.map(b=>`<button class="bin" data-bin="${b.id}"><b>${b.emoji||''}</b><span>${esc(b.label)}</span>${b.sub?`<small>${esc(b.sub)}</small>`:''}</button>`).join('')}</div>`;
+  const sinifla=b=>{
    if(state.gecis)return;
-   if(b.dataset.bin!==c.bin){b.classList.add('bad');state.kanit=c.why||'';ciz();return wrong(c.why||r.hint)}
+   const id=b.dataset.sceneBin||b.dataset.bin;
+   if(id!==c.bin){b.classList.add('bad');state.kanit=c.why||'';ciz();return wrong(c.why||r.hint)}
    state.gecis=true;state.kanit=c.proof||'';
    b.classList.add('ok');ciz();
-   ertele(()=>{state.i++;state.gecis=false;state.kanit='';if(state.i===r.cards.length)bitirTur(r);else ciz()},FAST?20:620)})};
+   ertele(()=>{state.i++;state.gecis=false;state.kanit='';if(state.i===r.cards.length)bitirTur(r);else ciz()},FAST?20:620)};
+  if(r.sceneBins){
+   const kart=$('[data-serit-kart]');
+   kart.onclick=()=>kart.classList.toggle('secili');
+   $$('[data-scene-bin]').forEach(b=>{b.onclick=()=>{if(!kart.classList.contains('secili'))return wrong('Önce sahnedeki kartı seç veya kartı doğrudan hedefe sürükle.');sinifla(b)}});
+   baglaSurukle('[data-serit-kart]','[data-scene-bin]',(_,b)=>sinifla(b));
+  }else $$('[data-bin]').forEach(b=>b.onclick=()=>sinifla(b))};
  ciz()}
 function renderKule(r){
  state.slots=Array(r.order.length).fill(null);
@@ -2180,12 +2202,13 @@ GAMES.y33={title:'Sanat Atölyesi Siparişi',theme:'workshop',finish:'Malzemeyi 
 ]};
 
 /* y34 — Yetenek Ayırma Bandı · hangi alana ait?
-   Şartname: bant hızı kaldırıldı, kartlar sabit. İkinci turda birden çok alana uyan
+   Şartname: bant hızı kaldırıldı, kart gerçek festival standına sürükleniyor. İkinci turda birden çok alana uyan
    etkinlikler var; çocuk ölçüt seçip savunuyor. */
 function senlik(){return '<div class="caption">🎪 Yetenek şenliği · üç stant</div>'}
 GAMES.y34={title:'Yetenek Ayırma Bandı',theme:'garden',finish:'Etkinlikleri alanlarına ayırdın, birden çok alana uyanları ölçütle savundun ve kendi yeteneğini sınıfladın.',rounds:[
  {kind:'serit',prompt:'Bu etkinlik hangi stanta ait?',
   scene:senlik,
+  sceneBins:'stands',
   bins:[{id:'sanat',label:'SANAT',emoji:'🎨'},{id:'spor',label:'SPOR',emoji:'⚽'},{id:'bilim',label:'BİLİM',emoji:'🔬'}],
   hint:'Etkinlikte ne öne çıkıyor: bedensel güç mü, yaratıcı üretim mi, gözlem ve deney mi?',
   cards:[
@@ -3028,14 +3051,15 @@ GAMES.y56={title:'Kültür Diktesi',theme:'workshop',finish:'Kültür sözcükle
 
 
 /* ---- Tema 8 · Hak ve Sorumluluklarımız ---- */
-function terazi2(){return '<div class="caption">⚖️ Adalet terazisi · kart karar sonrası kefeye konur</div>'}
+function terazi2(){return '<div class="caption">⚖️ Adalet terazisi · kartı uygun kefeye sürükle</div>'}
 
 /* y57 — Hak mı Sorumluluk mu?
-   Şartname: bant kaldırıldı; ifade kartı sabit okunuyor, aynı konunun hak-sorumluluk
+   Şartname: bant kaldırıldı; ifade kartı gerçek terazi kefesine sürükleniyor, aynı konunun hak-sorumluluk
    çifti ikinci turda birlikte veriliyor. */
 GAMES.y57={title:'Hak mı Sorumluluk mu?',theme:'city',finish:'Hak ile sorumluluğu ayırdın, aynı konunun iki yüzünü gördün ve kendi hak-sorumluluk cümleni yazdın.',rounds:[
  {kind:'serit',prompt:'Bu ifade bir hak mı, sorumluluk mu?',
   scene:terazi2,
+  sceneBins:'scale',
   bins:[{id:'hak',label:'HAK',emoji:'🙋',sub:'bana sağlanan'},{id:'sorumluluk',label:'SORUMLULUK',emoji:'🤲',sub:'benim yapmam gereken'}],
   hint:'Sor: bu bana verilen bir imkân mı, yoksa benden beklenen bir davranış mı?',
   cards:[
@@ -3049,6 +3073,7 @@ GAMES.y57={title:'Hak mı Sorumluluk mu?',theme:'city',finish:'Hak ile sorumlulu
     say:'Çöpleri kutuya atmak.',why:'Çevreyi korumak için benim yapmam gereken davranış.',proof:'Sorumluluk.'}]},
  {kind:'serit',prompt:'Bu turda her konu iki yüzüyle geliyor. Dikkatli oku.',
   scene:()=>`${terazi2()}<div class="note">Her hakkın yanında bir sorumluluk vardır.</div>`,
+  sceneBins:'scale',
   bins:[{id:'hak',label:'HAK',emoji:'🙋'},{id:'sorumluluk',label:'SORUMLULUK',emoji:'🤲'}],
   hint:'“…-mak hakkımdır” mı diyorsun, “…-malıyım” mı?',
   cards:[

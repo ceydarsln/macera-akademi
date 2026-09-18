@@ -28,7 +28,9 @@ async function drag(page, from, to) {
     { id: 'y07', from: '[data-k="0"]', to: '[data-cumle-serit]', value: 'state.dizi[0]', expected: 0 },
     { id: 'y09', from: '[data-card="a"]', to: '[data-slot="0"]', value: 'state.slots[0]', expected: 'a' },
     { id: 'y18', from: '[data-y="y3"]', to: '[data-yonerge-serit]', value: 'state.prog[0]', expected: 'y3' },
-    { id: 'y25', from: '[data-add="masal"]', to: '[data-tepsi]', value: 'state.tray[0]', expected: 'masal' }
+    { id: 'y25', from: '[data-add="masal"]', to: '[data-tepsi]', value: 'state.tray[0]', expected: 'masal' },
+    { id: 'y34', from: '[data-serit-kart]', to: '[data-scene-bin="sanat"]', value: 'state.gecis', expected: true },
+    { id: 'y57', from: '[data-serit-kart]', to: '[data-scene-bin="hak"]', value: 'state.gecis', expected: true }
   ];
 
   for (const check of checks) {
