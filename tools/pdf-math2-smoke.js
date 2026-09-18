@@ -15,6 +15,16 @@ const IDS = process.env.MATH2_IDS
 const FILE = path.resolve('app/src/main/assets/phaser/matematik2-pdf.html');
 const BASE = process.env.MATH2_URL || pathToFileURL(FILE).href;
 
+async function clickFirst(page, selector) {
+  const target = page.locator(selector).first();
+  if (!await target.count()) throw new Error(`Etkileşim hedefi bulunamadı: ${selector}`);
+  if (await target.evaluate(el => el instanceof SVGElement)) {
+    await target.evaluate(el => el.dispatchEvent(new MouseEvent('click', { bubbles: true })));
+  } else {
+    await target.click();
+  }
+}
+
 async function drag(page, pieceId, targetId) {
   const piece = page.locator(`[data-piece="${pieceId}"]`);
   const target = page.locator(`[data-target="${targetId}"]`);
@@ -62,10 +72,16 @@ async function finishRound(page) {
   });
   switch (r.kind) {
     case 'choice':
-      await page.locator(`[data-choice="${r.choices.findIndex(x => x.correct)}"]`).click();
+      {
+        const i = r.choices.findIndex(x => x.correct);
+        await clickFirst(page, `[data-scene-choice="${i}"], [data-choice="${i}"]`);
+      }
       break;
     case 'estimate':
-      await page.locator(`[data-est="${r.choices.findIndex(x => x.correct)}"]`).click();
+      {
+        const i = r.choices.findIndex(x => x.correct);
+        await clickFirst(page, `[data-scene-estimate="${i}"], [data-est="${i}"]`);
+      }
       break;
     case 'multi':
       for (let i = 0; i < r.items.length; i++) if (r.items[i].correct) await page.locator(`[data-item="${i}"]`).click();
@@ -73,7 +89,7 @@ async function finishRound(page) {
     case 'order':
       for (const id of r.order) {
         const i = r.items.findIndex(x => x.id === id);
-        await page.locator(`[data-order="${i}"]`).click();
+        await clickFirst(page, `[data-scene-order="${id}"], [data-order="${i}"]`);
       }
       break;
     case 'drag':
@@ -82,7 +98,7 @@ async function finishRound(page) {
     case 'process':
       for (const id of r.sequence) {
         const i = r.actions.findIndex(x => x.id === id);
-        await page.locator(`[data-action="${i}"]`).click();
+        await clickFirst(page, `[data-scene-action="${id}"], [data-action="${i}"]`);
       }
       break;
     case 'route': {
@@ -162,7 +178,7 @@ async function finishRound(page) {
     }
   }
   await browser.close();
-  console.log(`\n${IDS.length - failures.length}/42 oyun, ${(IDS.length - failures.length) * 3}/126 tur geçti.`);
+  console.log(`\n${IDS.length - failures.length}/${IDS.length} oyun, ${(IDS.length - failures.length) * 3}/${IDS.length * 3} tur geçti.`);
   if (failures.length) console.error(failures.join('\n'));
   if (browserErrors.length) console.error('Tarayıcı hataları:', [...new Set(browserErrors)]);
   if (failures.length || browserErrors.length) process.exitCode = 1;
