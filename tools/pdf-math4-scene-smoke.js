@@ -30,7 +30,12 @@ async function drag(page, from, to) {
     { id: 'p12', from: '[data-card="u2"]', to: '[data-slot="0"]', value: 'state.slots[0]', expected: 'u2' },
     { id: 'p15', from: '[data-add="kasa"]', to: '[data-tepsi]', value: 'state.tray[0]', expected: 'kasa' },
     { id: 'p21', from: '[data-piece="a"]', to: '[data-target="k1"]', value: 'state.placed.k1', expected: 1 },
-    { id: 'p24', from: '[data-item="0"]', to: '[data-multi-target]', value: 'state.selected[0]', expected: 'a' }
+    { id: 'p24', from: '[data-item="0"]', to: '[data-multi-target]', value: 'state.selected[0]', expected: 'a' },
+    { id: 'p48', from: '[data-card="s1"]', to: '[data-slot="0"]', value: 'state.slots[0]', expected: 's1' },
+    { id: 'p51', from: '[data-action="0"]', to: '[data-process-target]', value: 'state.steps[0]', expected: 'grup' },
+    { id: 'p52', from: '[data-tally-source]', to: '[data-tally-target="yaz"]', value: 'state.counts.yaz', expected: 1 },
+    { id: 'p53', from: '[data-graph-source]', to: '[data-graph-target="futbol"]', value: 'state.counts.futbol', expected: 1 },
+    { id: 'p55', from: '[data-tally-source]', to: '[data-tally-target="futbol"]', value: 'state.counts.futbol', expected: 1 }
   ];
 
   for (const check of checks) {
