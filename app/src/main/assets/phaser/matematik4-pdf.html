@@ -406,6 +406,8 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .m4-sutun{position:relative;width:62px;display:flex;align-items:flex-end}
 .m4-sutun b{display:block;width:100%;border-radius:9px 9px 0 0;box-shadow:inset 0 0 0 2px rgba(255,255,255,.45)}
 .m4-sutun small{position:absolute;top:100%;left:-9px;right:-9px;padding-top:5px;font-size:11px;font-weight:900;line-height:1.15;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ui-dragging{position:relative!important;z-index:999!important;pointer-events:none!important;opacity:.94;box-shadow:0 10px 25px rgba(0,0,0,.28)!important}
+.drop-hot,[data-target].hot{filter:drop-shadow(0 0 9px #f1b53a)!important;outline:4px solid #f1b53a!important;outline-offset:3px}
 
 </style>
 </head>
@@ -478,6 +480,12 @@ function Q(prompt,scene,choices,result,hint,extra={}){return{kind:'choice',promp
 function D(prompt,scene,pieces,targets,result,hint,extra={}){return{kind:'drag',prompt,scene,pieces,targets,result,hint,...extra}}
 function renderRound(){const r=round();if(!r)return;updateStage();const fn={choice:renderChoice,multi:renderMulti,order:renderOrder,drag:renderDrag,process:renderProcess,estimate:renderEstimate,memory:renderMemory,tally:renderTally,graph:renderGraph,slider:renderSlider,basamak:renderBasamak,numpad:renderNumpad,serit:renderSerit,kule:renderKule,sayidogru:renderSayidogru,asansor:renderAsansor,tepsi:renderTepsi,terazi:renderTerazi,ayna:renderAyna,ciz:renderCiz,tara:renderTara,kod:renderKod,ip:renderIp,aci:renderAci}[r.kind];(fn||renderChoice)(r)}
 function renderChoice(r){$('#task').innerHTML=`<div class="choices">${r.choices.map((c,i)=>`<button class="choice" data-choice="${i}">${c.html||esc(c.label)}</button>`).join('')}</div>`;$$('[data-choice]').forEach(b=>b.onclick=()=>{const c=r.choices[+b.dataset.choice];if(c.correct)good(c.message);else wrong(c.hint||r.hint)})}
+function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
+ k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
+ k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
+ const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit)birak(k,hit)}};
+ k.onpointerup=bitir;k.onpointercancel=bitir})}
 
 /* ===== 4. sınıf ortak yardımcılar ===== */
 const PLACES=[['yb','yüz binler'],['ob','on binler'],['bn','binler'],['yz','yüzler'],['on','onlar'],['br','birler']];
@@ -576,13 +584,15 @@ function renderKule(r){
   $$('[data-slot]').forEach(s=>s.onclick=()=>{
    const i=+s.dataset.slot;if(state.slots[i])return;
    if(state.pick===null)return wrong('Önce alttaki kartlardan birini seç.');
-   if(r.order[i]!==state.pick){const gerek=r.cards.find(x=>x.id===r.order[i]),secilen=r.cards.find(x=>x.id===state.pick);
-    return wrong(r.karsilastir?r.karsilastir(secilen,gerek):r.hint)}
-   state.slots[i]=state.pick;state.pick=null;ciz();
-   if(state.slots.every(Boolean))bitirTur(r)});
+   kuleYerlestir(r,state.pick,i,ciz)});
   $('#task').innerHTML=`<div class="chip-row">${kalan().map(c=>`<button class="choice" data-card="${c.id}" style="${state.pick===c.id?'outline:4px solid var(--gold)':''}">${c.label}</button>`).join('')||'<span class="note">Bütün kartlar yerleşti</span>'}</div>`;
-  $$('[data-card]').forEach(b=>b.onclick=()=>{state.pick=b.dataset.card;ciz()})};
+  $$('[data-card]').forEach(b=>b.onclick=()=>{state.pick=b.dataset.card;ciz()});
+  baglaSurukle('[data-card]','[data-slot]',(k,s)=>kuleYerlestir(r,k.dataset.card,+s.dataset.slot,ciz))};
  ciz()}
+function kuleYerlestir(r,id,i,ciz){if(state.slots[i])return;
+ if(r.order[i]!==id){const gerek=r.cards.find(x=>x.id===r.order[i]),secilen=r.cards.find(x=>x.id===id);
+  return wrong(r.karsilastir?r.karsilastir(secilen,gerek):r.hint)}
+ state.slots[i]=id;state.pick=null;ciz();if(state.slots.every(Boolean))bitirTur(r)}
 
 /* --- gerçek sayı doğrusu: uzaklıklar ölçekli çizilir, sürgü tarafsız başlar --- */
 function nlHtml(r,v){
@@ -636,16 +646,18 @@ function renderTepsi(r){
   return k.length===Object.keys(m).length&&k.every(x=>m[x]===n[x])};
  const ciz=()=>{
   $('#stage').innerHTML=`${typeof r.scene==='function'?r.scene(state):r.scene||''}
-   <div class="m4-tray">${state.tray.length?state.tray.map((id,i)=>{const p=r.pool.find(x=>x.id===id);
+   <div class="m4-tray" data-tepsi>${state.tray.length?state.tray.map((id,i)=>{const p=r.pool.find(x=>x.id===id);
     return `<button class="slotted" data-rm="${i}">${p.label} ✕</button>`}).join(''):`<span class="tray-empty">${esc(r.emptyLabel||'Tepsi boş')}</span>`}</div>
    ${state.note?`<div class="note">${state.note}</div>`:''}`;
   $$('[data-rm]').forEach(b=>b.onclick=()=>{state.tray.splice(+b.dataset.rm,1);state.note='';ciz()});
   $('#task').innerHTML=`<div class="chip-row">${r.pool.map(p=>`<button class="choice" data-add="${p.id}">${p.label}</button>`).join('')}</div>
    <div class="actions"><button class="action" data-serve>${esc(r.serveLabel||'🍽️ Siparişi ver')}</button></div>`;
-  $$('[data-add]').forEach(b=>b.onclick=()=>{
-   const p=r.pool.find(x=>x.id===b.dataset.add);
+  const tepsiyeEkle=id=>{
+   const p=r.pool.find(x=>x.id===id);
    if(r.need[p.id]===undefined&&r.strict){state.note=p.why||'';ciz();return wrong(p.why||r.hint)}
-   state.tray.push(p.id);state.note='';ciz()});
+   state.tray.push(p.id);state.note='';ciz()};
+  $$('[data-add]').forEach(b=>b.onclick=()=>tepsiyeEkle(b.dataset.add));
+  baglaSurukle('[data-add]','[data-tepsi]',k=>tepsiyeEkle(k.dataset.add));
   $('[data-serve]').onclick=()=>{
    if(!state.tray.length)return wrong('Tepsi boş; önce parçaları seç.');
    if(!tamam()){state.note=r.wrongNote||'';ciz();return wrong(r.hint)}
@@ -887,14 +899,18 @@ function renderAci(r){
 
 
 /* ===== çekirdekten devralınan genel oynatıcılar ===== */
-function renderMulti(r){state.selected=[];$('#task').innerHTML=`<div class="actions">${r.items.map((x,i)=>`<button class="action" data-item="${i}">${x.html||esc(x.label)}</button>`).join('')}</div>`;$$('[data-item]').forEach(b=>b.onclick=()=>{const x=r.items[+b.dataset.item];if(!x.correct)return wrong(r.hint);if(state.selected.includes(x.id))return;state.selected.push(x.id);b.style.background='#b9f0d4';if(r.onSelect){r.onSelect(state,x);updateStage()}if(state.selected.length===r.items.filter(x=>x.correct).length)bitirTur(r)})}
+function renderMulti(r){state.selected=[];$('#task').innerHTML=`<div class="actions">${r.items.map((x,i)=>`<button class="action" data-item="${i}">${x.html||esc(x.label)}</button>`).join('')}</div>${r.sceneDrop?'<div class="note">İşlem kartlarını sahnedeki gerçek sağ kefeye sürükle. Dokunarak seçim de kullanılabilir.</div>':''}`;
+ const sec=(x,b)=>{if(!x.correct)return wrong(r.hint);if(state.selected.includes(x.id))return;state.selected.push(x.id);b.style.background='#b9f0d4';b.disabled=true;if(r.onSelect){r.onSelect(state,x);updateStage()}if(state.selected.length===r.items.filter(x=>x.correct).length)bitirTur(r)};
+ $$('[data-item]').forEach(b=>b.onclick=()=>sec(r.items[+b.dataset.item],b));
+ if(r.sceneDrop)baglaSurukle('[data-item]','[data-multi-target]',k=>sec(r.items[+k.dataset.item],k))}
 function renderOrder(r){state.pos=0;$('#task').innerHTML=`<div class="actions">${r.items.map((x,i)=>`<button class="action" data-order="${i}">${x.html||esc(x.label)}</button>`).join('')}</div>`;$$('[data-order]').forEach(b=>b.onclick=()=>{const x=r.items[+b.dataset.order],want=r.order[state.pos];if(x.id!==want)return wrong(r.hint);b.disabled=true;b.style.background='#b9f0d4';state.pos++;if(r.onStep){r.onStep(state,x);updateStage()}if(state.pos===r.order.length)bitirTur(r)})}
+function dragHedefleriniBagla(r){$$('[data-target]').forEach(t=>t.onclick=()=>{if(!state.tapPiece)return;dropPiece(r,state.tapPiece,t.dataset.target)})}
 function renderDrag(r){state.placed={};state.done=0;state.toplam=0;state.dilimler=[];state.y=state.o=state.b=0;const pieces=`<div class="pieces">${r.pieces.map(p=>`<div class="piece" data-piece="${p.id}" role="button">${p.html}</div>`).join('')}</div>`;const targets=`<div class="targets">${r.targets.map(t=>`<div class="target" data-target="${t.id}">${t.html}<div class="placed"></div></div>`).join('')}</div>`;/* 3. sınıfta havuzlar kalabalık (20 modüle kadar); hedef kutusu parçaların ALTINDA kalınca telefonda görünmüyordu. Hedef üstte, havuz altta. */
-  $('#task').innerHTML=targets+pieces;$$('[data-piece]').forEach(el=>{el.onpointerdown=e=>startDrag(e,el,r);el.onclick=()=>{if(state.tapPiece===el.dataset.piece){state.tapPiece=null;el.style.outline=''}else{state.tapPiece=el.dataset.piece;$$('[data-piece]').forEach(x=>x.style.outline='');el.style.outline='4px solid #f1b53a'}}});$$('[data-target]').forEach(t=>t.onclick=()=>{if(!state.tapPiece)return;dropPiece(r,state.tapPiece,t.dataset.target)})}
+  $('#task').innerHTML=(r.sceneTargets?'':targets)+pieces+(r.sceneTargets?'<div class="note">Paketi sahnedeki gerçek kutuya sürükle. Dokunmatik yedek: paketi seç, sonra kutuya dokun.</div>':'');$$('[data-piece]').forEach(el=>{el.onpointerdown=e=>startDrag(e,el,r);el.onclick=()=>{if(state.tapPiece===el.dataset.piece){state.tapPiece=null;el.style.outline=''}else{state.tapPiece=el.dataset.piece;$$('[data-piece]').forEach(x=>x.style.outline='');el.style.outline='4px solid #f1b53a'}}});dragHedefleriniBagla(r)}
 function startDrag(e,el,r){if(el.classList.contains('done'))return;e.preventDefault();const box=el.getBoundingClientRect();drag={el,r,id:el.dataset.piece,offX:e.clientX-box.left,offY:e.clientY-box.top,parent:el.parentNode,next:el.nextSibling};el.setPointerCapture?.(e.pointerId);el.classList.add('dragging');moveDrag(e);el.onpointermove=moveDrag;el.onpointerup=endDrag;el.onpointercancel=endDrag}
 function moveDrag(e){if(!drag)return;drag.el.style.left=(e.clientX-drag.offX)+'px';drag.el.style.top=(e.clientY-drag.offY)+'px';$$('[data-target]').forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})}
 function endDrag(e){if(!drag)return;const d=drag;let hit=null;$$('[data-target]').forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t});d.el.releasePointerCapture?.(e.pointerId);d.el.classList.remove('dragging');d.el.style.left=d.el.style.top='';$$('[data-target]').forEach(t=>t.classList.remove('hot'));drag=null;if(hit)dropPiece(d.r,d.id,hit.dataset.target)}
-function dropPiece(r,pid,tid){const p=r.pieces.find(x=>x.id===pid),t=r.targets.find(x=>x.id===tid),el=$(`[data-piece="${pid}"]`);if(!p||!t||!el||el.classList.contains('done'))return;if(p.target!==tid)return wrong(r.hint);el.classList.add('done');state.tapPiece=null;state.placed[tid]=(state.placed[tid]||0)+1;const pl=$(`[data-target="${tid}"] .placed`);if(pl)pl.insertAdjacentHTML('beforeend',`<span>${p.placed||p.html}</span>`);state.done++;if(r.onDrop){r.onDrop(state,p,t);updateStage()}if(state.done===r.pieces.filter(x=>x.target).length)bitirTur(r)}
+function dropPiece(r,pid,tid){const p=r.pieces.find(x=>x.id===pid),t=r.targets.find(x=>x.id===tid),el=$(`[data-piece="${pid}"]`);if(!p||!t||!el||el.classList.contains('done'))return;if(p.target!==tid)return wrong(r.hint);el.classList.add('done');state.tapPiece=null;state.placed[tid]=(state.placed[tid]||0)+1;const pl=$(`[data-target="${tid}"] .placed`);if(pl)pl.insertAdjacentHTML('beforeend',`<span>${p.placed||p.html}</span>`);state.done++;if(r.onDrop)r.onDrop(state,p,t);if(r.onDrop||r.sceneTargets){updateStage();dragHedefleriniBagla(r)}if(state.done===r.pieces.filter(x=>x.target).length)bitirTur(r)}
 function renderProcess(r){state.steps=[];state.counts={};$('#task').innerHTML=`<div class="actions">${r.actions.map((a,i)=>`<button class="action" data-action="${i}">${a.html||esc(a.label)}</button>`).join('')}</div>`;$$('[data-action]').forEach(b=>b.onclick=()=>{const a=r.actions[+b.dataset.action],expected=r.sequence[state.steps.length];if(expected!=null&&a.id!==expected)return wrong(r.hint);state.steps.push(a.id);state.counts[a.id]=(state.counts[a.id]||0)+1;if(r.onStep)r.onStep(state,a);updateStage();if(state.steps.length===r.sequence.length)bitirTur(r)})}
 function renderEstimate(r){state.revealed=false;$('#task').innerHTML=`<div class="choices">${r.choices.map((c,i)=>`<button class="choice" data-est="${i}">${esc(c.label)}</button>`).join('')}</div>`;$$('[data-est]').forEach(b=>b.onclick=()=>{const c=r.choices[+b.dataset.est];if(!c.correct)return wrong(r.hint);state.revealed=true;updateStage();setTimeout(()=>good(),FAST?20:900)})}
 function renderMemory(r){state.open=[];state.matched=new Set;const cards=r.cards.map((c,i)=>({...c,key:i})).sort((a,b)=>((a.key*7+r.seed)%11)-((b.key*7+r.seed)%11));state.cards=cards;$('#task').innerHTML=`<div class="actions">${cards.map((c,i)=>`<button class="action" data-card="${i}" style="font-size:29px">❓</button>`).join('')}</div>`;$$('[data-card]').forEach(b=>b.onclick=()=>flipCard(r,+b.dataset.card))}
@@ -1447,7 +1463,7 @@ GAMES.p15={title:'Çokluk Ölçeri',theme:'market',finish:'Bir çokluğun kesir 
  {kind:'tepsi',prompt:'24 elmanın 3/4’ünü bul: dört eş kasadan kaç tanesini alırsın?',
   scene:kasaSahne(24,4,6,'🍎'),
   pool:[{id:'kasa',label:'📦 Bir kasa al (6 elma)'}],need:{kasa:3},
-  serveLabel:'✅ Seçimi onayla',emptyLabel:'Henüz kasa seçmedin',
+  serveLabel:'✅ Seçimi onayla',emptyLabel:'🛒 Seçtiğin kasaları buraya sürükle',
   hint:'Payda 4: sepet dört eş gruba bölünür. Pay 3: bu gruplardan üçü alınır.',
   wrongNote:'Payda kaç ise o kadar eş grup vardır; pay kaç ise o kadar grup alınır.',
   okNote:'3 grup × 6 elma = <b>18</b> elma · 24’ün 3/4’ü 18’dir.',
@@ -1455,7 +1471,7 @@ GAMES.p15={title:'Çokluk Ölçeri',theme:'market',finish:'Bir çokluğun kesir 
  {kind:'tepsi',prompt:'20 kalemin 2/5’ini bul.',
   scene:kasaSahne(20,5,4,'✏️'),
   pool:[{id:'kasa',label:'📦 Bir kutu al (4 kalem)'}],need:{kasa:2},
-  serveLabel:'✅ Seçimi onayla',emptyLabel:'Henüz kutu seçmedin',
+  serveLabel:'✅ Seçimi onayla',emptyLabel:'🛒 Seçtiğin kutuları buraya sürükle',
   hint:'20 kalem beş eş kutuya bölündü: 20 : 5 = 4. Pay 2 olduğu için iki kutu alınır.',
   wrongNote:'Önce bir grupta kaç nesne olduğunu bul, sonra pay kadar grup al.',
   okNote:'2 grup × 4 kalem = <b>8</b> kalem · 20’nin 2/5’i 8’dir.',
@@ -1675,13 +1691,13 @@ GAMES.p20={title:'Kısa Yol Bandı',theme:'factory',finish:'10 ve 100 ile çarpm
 function dizi(grup,her,ikon){return(st)=>{
  const dolu=Object.keys(st.placed||{}).length;
  return `<div class="caption">🤖 ${grup} kutu · her pakette ${her} robot</div>
-  <div class="row" style="gap:5px">${Array.from({length:grup},(_,i)=>
-   `<div class="stack" style="border:3px solid ${i<dolu?'#2f8f63':'#9db4c4'};border-radius:11px;padding:5px;min-width:56px;background:${i<dolu?'#e7f8ee':'#fff'}">
-    <div style="font-size:13px;max-width:52px;line-height:1">${i<dolu?ikon.repeat(her):'📦'}</div><small style="font-weight:900">${i<dolu?her:'boş'}</small></div>`).join('')}</div>
+  <div class="row" style="gap:5px">${Array.from({length:grup},(_,i)=>{const id='k'+(i+1),secili=!!(st.placed||{})[id];return `<div class="stack" data-target="${id}" role="button" style="border:3px solid ${secili?'#2f8f63':'#9db4c4'};border-radius:11px;padding:5px;min-width:56px;background:${secili?'#e7f8ee':'#fff'}">
+    <div style="font-size:13px;max-width:52px;line-height:1">${secili?ikon.repeat(her):'📦'}</div><small style="font-weight:900">Kutu ${i+1}<br>${secili?her+' robot':'boş'}</small><div class="placed"></div></div>`}).join('')}</div>
   <div class="note">Yerleşen paket: <b>${dolu}</b> · toplam robot: <b>${dolu*her}</b></div>`}}
 GAMES.p21={title:'Robot Paketleme Bandı',theme:'factory',finish:'Aynı dizi üzerinde çarpmayı ve iki ters bölme işlemini birlikte kurdun.',rounds:[
  {kind:'drag',prompt:'Altı kutuya 7’şerlik paketleri yerleştir.',
   scene:dizi(6,7,'🤖'),
+  sceneTargets:true,
   hint:'Her paket 7 robot taşıyor. Altı kutu dolduğunda toplam kaç robot olur?',
   pieces:[P('a','📦<small>7 robot</small>','k1'),P('b','📦<small>7 robot</small>','k2'),P('c','📦<small>7 robot</small>','k3'),
           P('d','📦<small>7 robot</small>','k4'),P('e','📦<small>7 robot</small>','k5'),P('f','📦<small>7 robot</small>','k6')],
@@ -1694,6 +1710,7 @@ GAMES.p21={title:'Robot Paketleme Bandı',theme:'factory',finish:'Aynı dizi üz
   result:'6 × 7 = 42 · 42 ÷ 6 = 7 · 42 ÷ 7 = 6'},
  {kind:'drag',prompt:'Beş kutuya 8’erlik paketleri yerleştir.',
   scene:dizi(5,8,'🤖'),
+  sceneTargets:true,
   hint:'Beş grup, her grupta 8 robot.',
   pieces:[P('a','📦<small>8 robot</small>','k1'),P('b','📦<small>8 robot</small>','k2'),P('c','📦<small>8 robot</small>','k3'),
           P('d','📦<small>8 robot</small>','k4'),P('e','📦<small>8 robot</small>','k5')],
@@ -1706,6 +1723,7 @@ GAMES.p21={title:'Robot Paketleme Bandı',theme:'factory',finish:'Aynı dizi üz
   result:'5 × 8 = 40 · 40 ÷ 5 = 8 · 40 ÷ 8 = 5'},
  {kind:'drag',prompt:'Toplam 36 robot var ve paketler 6’şarlık. Kaç kutu gerekir?',
   scene:dizi(6,6,'🤖'),
+  sceneTargets:true,
   hint:'36 robotu 6’şarlı paketlere ayırırsan kaç paket olur? 36 ÷ 6 işlemini kur.',
   pieces:[P('a','📦<small>6 robot</small>','k1'),P('b','📦<small>6 robot</small>','k2'),P('c','📦<small>6 robot</small>','k3'),
           P('d','📦<small>6 robot</small>','k4'),P('e','📦<small>6 robot</small>','k5'),P('f','📦<small>6 robot</small>','k6')],
@@ -1803,12 +1821,13 @@ function kefeSahne(sol,solEtiket){return(st)=>{
   <div class="m4-scale"><div class="m4-pan"><b>${esc(solEtiket)}</b><div style="font-size:23px;font-weight:1000">${sol}</div>
    <div class="units">${Array.from({length:Math.min(sol,40)},()=>'<i></i>').join('')}</div></div>
   <div class="scale-mid">=</div>
-  <div class="m4-pan"><b>SAĞ KEFE</b><div style="font-size:15px;font-weight:900">${secilen.length?secilen.join(' · '):'boş'}</div>
+  <div class="m4-pan" data-multi-target role="button"><b>SAĞ KEFE</b><div style="font-size:15px;font-weight:900">${secilen.length?secilen.join(' · '):'kartları buraya sürükle'}</div>
    <div class="units">${Array.from({length:Math.min(secilen.length?sol:0,40)},()=>'<i class="red"></i>').join('')}</div></div></div>
   <div class="note">Bulunan eşit ifade: <b>${secilen.length}</b></div>`}}
 GAMES.p24={title:'Eşitlik Terazisi',theme:'market',finish:'Aynı değeri farklı işlemlerle kurdun; eşitliğin iki tarafının her zaman aynı değeri taşıdığını gördün.',rounds:[
  {kind:'multi',prompt:'Sol kefe 12 × 4 = 48. Sağ kefeye konabilecek BÜTÜN ifadeleri seç.',
   scene:kefeSahne(48,'12 × 4'),
+  sceneDrop:true,
   hint:'Her ifadeyi hesapla: 48 çıkanlar terazi dengede tutar.',
   items:[{id:'a',label:'6 × 8',correct:true},{id:'b',label:'96 ÷ 2',correct:true},{id:'c',label:'50 − 2',correct:true},
          {id:'d',label:'40 + 4'},{id:'e',label:'8 × 7'}],
@@ -1816,6 +1835,7 @@ GAMES.p24={title:'Eşitlik Terazisi',theme:'market',finish:'Aynı değeri farkl�
   result:'12 × 4 = 6 × 8 = 96 ÷ 2 = 50 − 2 = 48'},
  {kind:'multi',prompt:'72 eşitlik zinciri: sağ kefeye konabilecek ifadeleri seç.',
   scene:kefeSahne(72,'72'),
+  sceneDrop:true,
   hint:'80 − 8 ve 36 + 36 işlemlerini yap; ikisi de aynı değeri veriyor mu?',
   items:[{id:'a',label:'80 − 8',correct:true},{id:'b',label:'36 + 36',correct:true},{id:'c',label:'9 × 8',correct:true},
          {id:'d',label:'70 + 2 + 1'},{id:'e',label:'144 ÷ 3'}],
