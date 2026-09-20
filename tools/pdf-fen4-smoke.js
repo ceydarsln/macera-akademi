@@ -21,6 +21,26 @@ async function click(page, selector) {
   await pause(page);
 }
 
+function shortestPlanPath(r) {
+  const moves = [
+    { key: 'U', dx: 0, dy: -1 }, { key: 'D', dx: 0, dy: 1 },
+    { key: 'L', dx: -1, dy: 0 }, { key: 'R', dx: 1, dy: 0 }
+  ];
+  const queue = [{ x: r.basla.x, y: r.basla.y, path: [] }];
+  const seen = new Set([`${r.basla.x},${r.basla.y}`]);
+  while (queue.length) {
+    const current = queue.shift();
+    if (current.x === r.hedef.x && current.y === r.hedef.y) return current.path;
+    for (const move of moves) {
+      const x = current.x + move.dx, y = current.y + move.dy, mark = `${x},${y}`;
+      if (x < 0 || y < 0 || x >= r.genislik || y >= r.yukseklik || r.plan[y][x] === '#' || seen.has(mark)) continue;
+      seen.add(mark);
+      queue.push({ x, y, path: current.path.concat(move.key) });
+    }
+  }
+  throw new Error('Güvenli bisiklet rotası bulunamadı');
+}
+
 async function solveRound(page, r) {
   if (r.kind === 'sinifla') {
     for (let n = 0; n < r.kartlar.length; n++) {
@@ -92,6 +112,28 @@ async function solveRound(page, r) {
       isitCiz(round());
     });
     await click(page, '#durBtn');
+  } else if (r.kind === 'grafik') {
+    for (let i = 0; i < r.kategoriler.length; i++) {
+      for (let n = 0; n < r.kategoriler[i].hedef; n++) await click(page, `[data-sut="${i}"]`);
+    }
+    await click(page, '#onayBtn');
+  } else if (r.kind === 'deney') {
+    let step = 0;
+    while (await page.evaluate(() => (state.denenen || []).length < (round().enAzDeneme || 3))) {
+      await click(page, `[data-a="${r.anahtarlar[step % r.anahtarlar.length].id}"]`);
+      step++;
+    }
+    for (const q of r.sorular) {
+      const answer = q.secenekler.findIndex(x => x.dogru);
+      await click(page, `[data-sec="${answer}"]`);
+    }
+  } else if (r.kind === 'plan') {
+    for (const direction of shortestPlanPath(r)) await click(page, `[data-yon="${direction}"]`);
+    await click(page, '#calisBtn');
+    if (r.gerekce) {
+      const answer = r.gerekce.secenekler.findIndex(x => x.dogru);
+      await click(page, `[data-ger="${answer}"]`);
+    }
   } else if (r.kind === 'yaz') {
     await page.locator('#yaziAlan').fill(r.ornekCevap);
     await page.locator('#yaziAlan').dispatchEvent('input');

@@ -39,7 +39,23 @@ async function drag(page, from, to) {
     { id: 'f25', kind: 'sinif' },
     { id: 'f26', kind: 'sinif' },
     { id: 'f29', kind: 'sira' },
-    { id: 'f30', kind: 'kur' }
+    { id: 'f30', kind: 'kur' },
+    { id: 'f31', kind: 'esle' },
+    { id: 'f32', kind: 'sira' },
+    { id: 'f33', kind: 'sinif' },
+    { id: 'f34', kind: 'kur' },
+    { id: 'f36', kind: 'grafik' },
+    { id: 'f37', kind: 'sinif' },
+    { id: 'f38', kind: 'sira' },
+    { id: 'f39', kind: 'deney' },
+    { id: 'f40', kind: 'esle' },
+    { id: 'f41', kind: 'kur' },
+    { id: 'f43', kind: 'sinif' },
+    { id: 'f44', kind: 'kur' },
+    { id: 'f45', kind: 'sira' },
+    { id: 'f46', kind: 'esle' },
+    { id: 'f47', kind: 'grafik' },
+    { id: 'f48', kind: 'plan' }
   ];
   for (const check of checks) {
     await page.goto(`${FILE}?scene-smoke=${check.id}#oyun=${check.id}`, { waitUntil: 'domcontentloaded' });
@@ -71,9 +87,22 @@ async function drag(page, from, to) {
       await drag(page, `[data-soz="${first}"]`, '[data-soz-hedef]');
       const actual = await page.evaluate(() => state.dizi[0]);
       if (actual !== first) throw new Error(`${check.id}: sözcük cümle yuvasına yerleşmedi`);
+    } else if (check.kind === 'grafik') {
+      await drag(page, '[data-grafik-blok]', '[data-sut="0"]');
+      const actual = await page.evaluate(() => state.dolu[0]);
+      if (actual !== 1) throw new Error(`${check.id}: veri bloğu grafik sütununa yerleşmedi`);
+    } else if (check.kind === 'deney') {
+      const first = await page.evaluate(() => round().anahtarlar[0].id);
+      await page.locator(`[data-a="${first}"]`).click();
+      const actual = await page.evaluate(() => state.denenen.length);
+      if (actual < 2) throw new Error(`${check.id}: deney anahtarı yeni gözlem üretmedi`);
+    } else if (check.kind === 'plan') {
+      await page.locator('[data-yon="D"]').click();
+      const actual = await page.evaluate(() => state.program[0]);
+      if (actual !== 'D') throw new Error(`${check.id}: yön komutu programa eklenmedi`);
     }
-    console.log(`✓ ${check.id} gerçek sahne sürüklemesi`);
+    console.log(`✓ ${check.id} gerçek sahne etkileşimi`);
   }
   await browser.close();
-  console.log(`\n${checks.length}/${checks.length} Fen 4 sahne hedefi gerçek işaretçi sürüklemesiyle geçti.`);
+  console.log(`\n${checks.length}/${checks.length} Fen 4 sahne etkileşimi geçti.`);
 })().catch(error => { console.error(error); process.exitCode = 1; });
