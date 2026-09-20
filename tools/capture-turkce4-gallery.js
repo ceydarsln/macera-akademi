@@ -22,15 +22,16 @@ function xml(value) {
 
 async function contactSheet(items, file) {
   const cellW = 236, cellH = 535, thumbW = 220, thumbH = 476;
+  const cols = Math.min(5, items.length), rows = Math.ceil(items.length / cols);
   const composites = [];
   for (let i = 0; i < items.length; i++) {
-    const col = i % 5, row = Math.floor(i / 5), left = col * cellW + 8, top = row * cellH + 45;
+    const col = i % cols, row = Math.floor(i / cols), left = col * cellW + 8, top = row * cellH + 45;
     const shot = await sharp(path.join(SHOTS, `${items[i].id}.png`)).resize(thumbW, thumbH, { fit: 'fill' }).png().toBuffer();
     composites.push({ input: shot, left, top });
     const label = `<svg width="${thumbW}" height="38"><rect width="100%" height="100%" rx="9" fill="#17364d"/><text x="10" y="17" fill="white" font-family="Arial,sans-serif" font-size="15" font-weight="700">${items[i].id.toUpperCase()}</text><text x="10" y="32" fill="white" font-family="Arial,sans-serif" font-size="11">${xml(items[i].title.slice(0, 31))}</text></svg>`;
     composites.push({ input: Buffer.from(label), left, top: row * cellH + 5 });
   }
-  await sharp({ create: { width: cellW * 5, height: cellH * 2, channels: 4, background: '#dcecf4' } })
+  await sharp({ create: { width: cellW * cols, height: cellH * rows, channels: 4, background: '#dcecf4' } })
     .composite(composites).png().toFile(path.join(OUT, file));
 }
 

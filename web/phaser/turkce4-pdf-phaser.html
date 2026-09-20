@@ -126,6 +126,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .cetele-satir .ad{flex:0 0 100px;font-size:12px;font-weight:950;line-height:1.15;overflow-wrap:break-word}
 .cetele-satir .isaret{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:26px}
 .cetele-satir.vurgu{border-color:var(--ok);background:#e9f7f0}
+.oy-karti{touch-action:none;cursor:grab;border-color:var(--gold);background:#fffaf0;box-shadow:0 4px 0 rgba(154,110,18,.22)}
+.oy-karti:active{cursor:grabbing}
+.oy-karti small{display:block;margin-top:5px;color:var(--muted);font-size:11px;font-weight:850}
 /* dinleme — metin görünmez, tekrar dinleme cezasız */
 .ses-kart{width:min(310px,94%);min-height:88px;border:3px solid var(--line);border-radius:16px;background:#eef6fc;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px}
 .ses-dalga{display:flex;gap:3px;align-items:flex-end;height:30px}
@@ -691,21 +694,22 @@ function ceteleSvg(n){
 function ceteleCiz(r){
  const i=state.ix||0,o=r.oylar[i],say=state.say||r.satirlar.map(()=>0);
  $('#stage').innerHTML=sahneHtml(r)+
-  (o?`<div class="konus-balon">${esc(o.t)}</div>`:'')+
+  (o?`<button class="konus-balon oy-karti" data-oy-karti="1">${esc(o.t)}<small>Oy kartını adayın çetele satırına sürükle.</small></button>`:'')+
   ilerleme(r.oylar.length,i)+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
- $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+ $('#task').innerHTML='<div class="caption soru">Oy kartını doğru adayın çetele satırına sürükle.</div>'+
   `<div class="cetele-tablo">${r.satirlar.map((sa,j)=>
     `<button class="cetele-satir ${state.sonSatir===j?'vurgu':''}" data-satir="${j}">`+
     `<span class="ad">${esc(sa)}</span><span class="isaret">${ceteleSvg(say[j])}</span></button>`).join('')}</div>`+
   `<div class="hint">${esc(r.ipucu||'Beşinci çizgi dördünü keser.')}</div>`;
- $$('[data-satir]').forEach(b=>b.onclick=()=>{
+ const oyEkle=j=>{
   if(locked||state.gecis||!o)return;
-  const j=+b.dataset.satir;
   if(j!==o.dogru){state.not=o.hint||'Söylenene yeniden bak.';ceteleCiz(r);return wrong(state.not)}
   state.say=say.slice();state.say[j]++;state.sonSatir=j;state.ix=i+1;state.not=o.neden||'';
   if(state.ix>=r.oylar.length){ceteleCiz(r);return good()}
-  feedback('İşlendi');gecisBasla(()=>ceteleCiz(r),FAST?30:460)})}
+  feedback('İşlendi');gecisBasla(()=>ceteleCiz(r),FAST?30:460)};
+ $$('[data-satir]').forEach(b=>b.onclick=()=>oyEkle(+b.dataset.satir));
+ baglaSurukle('[data-oy-karti]','[data-satir]',(_k,h)=>oyEkle(+h.dataset.satir))}
 function renderCetele(r){state.ix=0;state.say=r.satirlar.map(()=>0);state.not='';state.sonSatir=null;ceteleCiz(r)}
 
 /* ===== TAHMIN: tahmin ekrandaki bilgi metnine dayanır; tahmin, gerçek değer
