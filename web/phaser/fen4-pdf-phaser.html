@@ -52,10 +52,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .ilerleme i.ok{background:var(--ok);border-color:#0a6349}
 .ilerleme i.simdi{background:var(--gold);border-color:#a4750f}
 .dizi{display:flex;flex-direction:column;gap:6px;width:100%;align-items:center}
-.sirakart{flex:0 0 auto;width:min(326px,95%);min-height:50px;border:3px solid var(--line);border-radius:14px;background:#fff;padding:8px 11px;font-weight:870;font-size:clamp(12px,3.3vw,15px);line-height:1.3;text-align:left;overflow-wrap:break-word;display:flex;align-items:center;gap:8px}
+.sirakart{flex:0 0 auto;width:min(326px,95%);min-height:50px;border:3px solid var(--line);border-radius:14px;background:#fff;padding:8px 11px;font-weight:870;font-size:clamp(12px,3.3vw,15px);line-height:1.3;text-align:left;overflow-wrap:break-word;display:flex;align-items:center;gap:8px;touch-action:none}
 .sirakart .no{flex:0 0 24px;height:24px;border-radius:50%;background:#e5edf4;color:var(--muted);font-size:12px;font-weight:950;display:flex;align-items:center;justify-content:center}
 .sirakart.secili{border-color:var(--ok);background:#e8f6ef}
 .sirakart.secili .no{background:var(--ok);color:#fff}
+.sira-hedef{width:min(330px,96%);min-height:72px;border:3px dashed #6e9bb9;border-radius:16px;background:rgba(255,255,255,.8);padding:7px;display:flex;flex-direction:column;gap:5px;justify-content:center}
+.sira-hedef .sira-bos{text-align:center;color:var(--muted);font-size:12px;font-weight:900;line-height:1.3}
+.sira-hedef .sira-adim{display:flex;align-items:flex-start;gap:6px;border:2px solid #91c8ae;border-radius:10px;background:#e8f6ef;padding:4px 7px;font-size:12px;font-weight:850;line-height:1.25;text-align:left}
+.sira-hedef .sira-adim b{flex:0 0 21px;height:21px;border-radius:50%;display:grid;place-items:center;background:var(--ok);color:#fff;font-size:11px}
 /* ölçüt 4: parça yazısı çipe tam sığar, hiçbir sözcük kesilmez */
 .esle-alan{display:flex;flex-direction:column;gap:7px;width:100%;align-items:center}
 .yuva{flex:0 0 auto;width:min(330px,96%);min-height:58px;border:3px dashed #6e9bb9;border-radius:15px;background:rgba(255,255,255,.74);padding:7px 9px;display:flex;align-items:center;gap:9px;text-align:left}
@@ -63,10 +67,13 @@ button{font:inherit;color:inherit;cursor:pointer}
 .yuva .hedef{flex:1 1 auto;font-weight:880;font-size:clamp(12px,3.2vw,14px);line-height:1.3;overflow-wrap:break-word}
 .yuva .kondu{flex:0 0 auto;max-width:46%;font-weight:900;font-size:12px;color:#0a6349;line-height:1.22;overflow-wrap:break-word}
 .etiketler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.etiket{min-height:46px;min-width:48px;max-width:100%;flex:0 1 auto;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(30,72,104,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;white-space:normal;text-align:center}
+.etiket{min-height:46px;min-width:48px;max-width:100%;flex:0 1 auto;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(30,72,104,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;white-space:normal;text-align:center;touch-action:none}
 .etiket.secili{border-color:var(--gold);background:#fff7e4}
 .etiket.bitti{visibility:hidden}
 .etiket.yok{display:none}
+.ui-dragging{position:relative!important;z-index:999!important;pointer-events:none!important;opacity:.94;box-shadow:0 10px 25px rgba(0,0,0,.28)!important}
+.drop-hot{filter:drop-shadow(0 0 9px #f1b53a)!important;outline:4px solid #f1b53a!important;outline-offset:3px}
+[data-sinif-kart]{touch-action:none;cursor:grab}
 .feedback{position:absolute;left:50%;top:46%;z-index:150;transform:translate(-50%,-50%) scale(.7);opacity:0;pointer-events:none;background:#fff;border:4px solid var(--ok);border-radius:22px;padding:14px 19px;min-width:200px;text-align:center;font-size:clamp(17px,4.6vw,25px);font-weight:1000;box-shadow:0 12px 38px rgba(0,0,0,.27)}
 .feedback.show{animation:pop .95s ease both}
 .feedback.bad{border-color:var(--bad)}
@@ -80,6 +87,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .big{font-size:clamp(38px,11vw,64px)}
 /* kur — seçilen öge ekranda gerçekten bir şey inşa eder (ölçüt 5) */
 .kap{width:min(330px,96%);border:3px solid #8aa9c0;border-radius:16px;background:#fff;padding:9px;display:flex;flex-direction:column;gap:7px}
+.kur-hedef{width:100%;display:flex;justify-content:center}
+.kur-hedef>.kap{width:min(330px,96%)}
 .kap .kap-ad{font-size:12px;font-weight:950;color:var(--muted);text-align:center}
 .kap-icerik{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:46px}
 .kap-cip{border:2px solid #9dbdd2;border-radius:11px;background:#eef7fd;padding:5px 8px;font-size:12px;font-weight:900;line-height:1.2;max-width:100%;overflow-wrap:break-word}
@@ -99,7 +108,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .dizim{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;width:min(330px,96%);min-height:52px;padding:7px;border:3px dashed #9db0c2;border-radius:13px;background:#fff}
 .dizim span{font-size:15px;font-weight:900;line-height:1.3}
 .sozler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.soz{min-height:46px;min-width:48px;border:3px solid #fff;border-radius:13px;background:var(--panel);box-shadow:0 3px 0 rgba(30,72,104,.2);padding:6px 10px;font-size:15px;font-weight:900}
+.soz{min-height:46px;min-width:48px;border:3px solid #fff;border-radius:13px;background:var(--panel);box-shadow:0 3px 0 rgba(30,72,104,.2);padding:6px 10px;font-size:15px;font-weight:900;touch-action:none}
 .soz.bitti{visibility:hidden}
 /* gözlem — ölçülen olgu ekranda canlanır */
 .gozlem-dugme{min-height:50px;min-width:190px;border:3px solid #fff;border-radius:16px;background:var(--blue);color:#fff;font-weight:950;font-size:16px;box-shadow:0 4px 0 #1c5580}
@@ -223,6 +232,14 @@ function sadelestir(s){return String(s||'').toLocaleLowerCase('tr').replace(/[^\
 function kelimeSay(s){const t=sadelestir(s);return t?t.split(' ').length:0}
 function ilerleme(n,i){return `<div class="ilerleme">${Array.from({length:n},(_,k)=>`<i class="${k<i?'ok':(k===i?'simdi':'')}"></i>`).join('')}</div>`}
 function sahneHtml(r,ek){return typeof r.sahne==='function'?r.sahne(state,ek):(r.sahne||'')}
+/* Sürükleme ana etkileşimdir; dokunarak seçme/koyma küçük ekranlar için
+   erişilebilir yedek olarak korunur. */
+function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
+ k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
+ k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
+ const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit)birak(k,hit)}};
+ k.onpointerup=bitir;k.onpointercancel=bitir})}
 /* Cihaz klavyesinde Türkçe harf bulunmayabilir; ölçütler yazıma bakıyor. */
 const TRKUCUK=['ç','ğ','ı','i','ö','ş','ü',"'"];
 const TRBUYUK=['Ç','Ğ','I','İ','Ö','Ş','Ü',"'"];
@@ -704,22 +721,23 @@ function siniflaCiz(r){
  if(!k)return;
  $('#stage').innerHTML=sahneHtml(r,k.sahneEk)+
   ilerleme(r.kartlar.length,i)+
-  `<div class="kart vurgu">${esc(k.t)}</div>`+
+  `<div class="kart vurgu" data-sinif-kart="1">${esc(k.t)}</div>`+
   (k.gozlem?`<div class="sahne-not">${esc(k.gozlem)}</div>`:'')+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
   `<div class="kutular">${r.kutular.map((b,j)=>`<button class="kutu" data-kutu="${j}">${esc(b)}<span class="sayac">${(state.sayim||[])[j]||0}</span></button>`).join('')}</div>`+
   (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
- $$('[data-kutu]').forEach(b=>b.onclick=()=>{
+ const yerlestir=j=>{
   if(state.gecis||locked)return;
-  const j=+b.dataset.kutu;
   if(j!==k.dogru)return wrong(k.hint||'Kartı yeniden oku: elinde kanıt var mı?');
   state.sayim=state.sayim||r.kutular.map(()=>0);state.sayim[j]++;
   /* vurgu ancak karar verildikten SONRA çizilir: önce çizilse cevabı söylerdi */
   state.vurgu=k.vurgu||'';
   state.ix=i+1;state.not=k.neden||'';
   if(state.ix>=r.kartlar.length)return good();
-  feedback('Doğru');gecisBasla(()=>siniflaCiz(r),FAST?30:520)})}
+  feedback('Doğru');gecisBasla(()=>siniflaCiz(r),FAST?30:520)};
+ $$('[data-kutu]').forEach(b=>b.onclick=()=>yerlestir(+b.dataset.kutu));
+ baglaSurukle('[data-sinif-kart]','[data-kutu]',(_k,h)=>yerlestir(+h.dataset.kutu))}
 function renderSinifla(r){state.ix=0;state.not='';state.vurgu='';state.sayim=r.kutular.map(()=>0);siniflaCiz(r)}
 
 /* ===== KARAR: seçenekler sabit durur, düşmez. Her kartın künyesi (yazar,
@@ -759,18 +777,21 @@ function renderKarar(r){state.ix=0;state.faz=0;state.not='';state.dizilim=null;k
    Yanlışta dizi silinmez, yalnız son seçim geri alınır. Kartlar veri
    sırasında çizilirse doğru cevap ekrandan okunur — tohumlu karıştırma. ===== */
 function siraCiz(r){
- state.defter=(state.dizi||[]).map((i,n)=>(n+1)+'. '+r.kartlar[i].t.replace(/^[^\wÇĞİÖŞÜçğıöşü]+/,''));
+ const d=state.dizi||[];
+ state.defter=d.map((i,n)=>(n+1)+'. '+r.kartlar[i].t.replace(/^[^\wÇĞİÖŞÜçğıöşü]+/,''));
  $('#stage').innerHTML=sahneHtml(r)+
   (r.gorev?`<div class="kart">${esc(r.gorev)}</div>`:'')+
+  `<div class="sira-hedef" data-sira-hedef="1">${d.length
+   ?d.map((i,p)=>`<div class="sira-adim"><b>${p+1}</b><span>${esc(r.kartlar[i].t)}</span></div>`).join('')
+   :'<div class="sira-bos">İlk kartı buraya sürükle; doğru adımlar burada sırayla oluşacak.</div>'}</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
- const d=state.dizi||[];
  if(!state.dizilim)state.dizilim=dizilimUret(r.kartlar.length,tohum('sira'),r.dogru);
  $('#task').innerHTML=
   `<div class="dizi">${state.dizilim.map(i=>{
    const k=r.kartlar[i],p=d.indexOf(i);
    return `<button class="sirakart ${p>=0?'secili':''}" data-kart="${i}"><span class="no">${p>=0?p+1:''}</span><span>${esc(k.t)}</span></button>`}).join('')}</div>`+
   `<div class="hint">${d.length}/${r.kartlar.length} adım yazıldı. ${esc(r.ipucu||'')}</div>`;
- $$('[data-kart]').forEach(b=>b.onclick=()=>{
+ const ekle=b=>{
   if(state.gecis||locked)return;
   const i=+b.dataset.kart;
   if(d.indexOf(i)>=0)return uyar('Bu adımı zaten yazdın');
@@ -779,7 +800,9 @@ function siraCiz(r){
    siraCiz(r);return wrong(state.not)}
   state.dizi=d.concat(i);state.not=r.kartlar[i].neden||'';
   if(state.dizi.length>=r.dogru.length){siraCiz(r);return good()}
-  siraCiz(r)})}
+  siraCiz(r)};
+ $$('[data-kart]').forEach(b=>b.onclick=()=>ekle(b));
+ baglaSurukle('[data-kart]:not(.secili)','[data-sira-hedef]',k=>ekle(k))}
 function renderSira(r){state.dizi=[];state.not='';state.dizilim=null;siraCiz(r)}
 
 /* ===== ESLE: parça yazısı çipe tam sığar (white-space:normal, kesme yok);
@@ -815,12 +838,10 @@ function esleCiz(r){
   const j=+b.dataset.parca;
   if((state.yerlesen||[]).indexOf(j)>=0)return;
   state.secParca=state.secParca===j?null:j;esleCiz(r)});
- $$('[data-yuva]').forEach(b=>b.onclick=()=>{
+ const yerlestir=(j,i)=>{
   if(locked||state.gerekce)return;
-  const i=+b.dataset.yuva;
   if(state.yerlesen[i]!=null)return uyar('Bu satır doldu');
-  if(state.secParca==null)return uyar('Önce bir parça seç');
-  const j=state.secParca;
+  if(j==null)return uyar('Önce bir parça seç');
   if(r.parcalar[j].yuva!==i){state.secParca=null;esleCiz(r);
    return wrong(r.parcalar[j].hint||'Bu parça buraya uymuyor; ilişkiyi yeniden oku.')}
   state.yerlesen[i]=j;state.secParca=null;state.not=r.yuvalar[i].neden||'';
@@ -829,7 +850,9 @@ function esleCiz(r){
    if(state.canlan)state.kurulan=(state.kurulan||[]).concat(state.canlan);
    if(state.yerlesen.every(v=>v!=null)){esleCiz(r);return good()}
    feedback('Doğru')}
-  esleCiz(r)})}
+  esleCiz(r)};
+ $$('[data-yuva]').forEach(b=>b.onclick=()=>yerlestir(state.secParca,+b.dataset.yuva));
+ baglaSurukle('[data-parca]:not(.bitti)','[data-yuva]',(k,h)=>yerlestir(+k.dataset.parca,+h.dataset.yuva))}
 function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secParca=null;state.not='';state.kurulan=[];
  state.gerekce=null;state.canlan='';state.dizilim=null;esleCiz(r)}
 
@@ -838,8 +861,8 @@ function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secParca=nul
    tek başına başarı sayılmaz (ölçüt 5). ===== */
 function kapHtml(r){
  const kap=r.kap||{},ic=state.icerik||[];
- if(kap.ciz)return kap.ciz(ic.map(j=>r.havuz[j]),state);
- return `<div class="kap"><div class="kap-ad">${esc(kap.ad||'Tepsi')}</div>`+
+ if(kap.ciz)return `<div class="kur-hedef" data-kur-hedef="1">${kap.ciz(ic.map(j=>r.havuz[j]),state)}</div>`;
+ return `<div class="kap" data-kur-hedef="1"><div class="kap-ad">${esc(kap.ad||'Tepsi')}</div>`+
   `<div class="kap-icerik">${ic.length?ic.map(j=>{const h=r.havuz[j];
     return `<span class="kap-cip">${esc(h.ad)}${h.ic?`<span class="ic">${esc(h.ic)}</span>`:''}</span>`}).join('')
    :'<span class="kap-bos">Henüz boş</span>'}</div></div>`}
@@ -854,7 +877,7 @@ function kurCiz(r){
   `<div class="etiketler">${state.dizilim.map(j=>{const h=r.havuz[j];
     return `<button class="etiket ${(state.icerik||[]).indexOf(j)>=0?'yok':''}" data-h="${j}">${esc(h.ad)}</button>`}).join('')}</div>`+
   (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
- $$('[data-h]').forEach(b=>b.onclick=()=>{
+ const ekle=b=>{
   if(state.gecis||locked)return;
   const j=+b.dataset.h,h=r.havuz[j];
   if((state.icerik||[]).indexOf(j)>=0)return;
@@ -867,7 +890,9 @@ function kurCiz(r){
    if(state.ix>=r.istekler.length){kurCiz(r);return good()}
    if(!r.kapKalsin)state.icerik=[];
    feedback('Hazır');return gecisBasla(()=>kurCiz(r),FAST?30:560)}
-  feedback('Kondu');kurCiz(r)})}
+  feedback('Kondu');kurCiz(r)};
+ $$('[data-h]').forEach(b=>b.onclick=()=>ekle(b));
+ baglaSurukle('[data-h]:not(.yok)','[data-kur-hedef]',k=>ekle(k))}
 function renderKur(r){state.ix=0;state.icerik=[];state.not='';state.canlan='';state.dizilim=null;kurCiz(r)}
 
 /* ===== SOZDIZ: kartlar KÜÇÜK harfle gelir; baş harfi büyütmek ve
@@ -880,7 +905,7 @@ function sozdizCiz(r){
   return (n===0&&bas)?w.charAt(0).toLocaleUpperCase('tr')+w.slice(1):w}).join(' ')+(state.nokta||'');
  $('#stage').innerHTML=sahneHtml(r)+
   (r.gorev?`<div class="kart">${esc(r.gorev)}</div>`:'')+
-  `<div class="dizim"><span>${esc(metin)||'…'}</span></div>`+
+  `<div class="dizim" data-soz-hedef="1"><span>${esc(metin)||'İlk sözcüğü buraya sürükle'}</span></div>`+
   (r.olcutler?`<div class="olcut">${r.olcutler.map(o=>`<div>◻ ${esc(o)}</div>`).join('')}</div>`:'')+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  if(!state.dizilim)state.dizilim=dizilimUret(r.sozcukler.length,tohum('soz'));
@@ -893,13 +918,15 @@ function sozdizCiz(r){
      `<button class="choice kisa ${state.nokta===n?'secili':''}" data-nk="${n}">${n}</button>`).join('')}</div>`+
    `<button class="choice" id="onayBtn">Deftere yaz</button>`
    :`<div class="hint">${esc(r.ipucu||'Sözcüklere sırayla dokun.')}</div>`);
- $$('[data-soz]').forEach(b=>b.onclick=()=>{
+ const ekle=b=>{
   if(locked)return;const j=+b.dataset.soz;
   if(d.indexOf(j)>=0)return;
   const aday=d.concat(j);
   if(!(r.dogruDiziler||[]).some(dz=>aday.every((v,k)=>dz[k]===v)))
    return wrong(r.hint||'Bu sözcük buraya gelirse cümle anlamlı olmuyor.');
-  state.dizi=aday;state.not='';sozdizCiz(r)});
+  state.dizi=aday;state.not='';sozdizCiz(r)};
+ $$('[data-soz]').forEach(b=>b.onclick=()=>ekle(b));
+ baglaSurukle('[data-soz]:not(.bitti)','[data-soz-hedef]',k=>ekle(k));
  const gb=$('#geriBtn');if(gb)gb.onclick=()=>{state.dizi=(state.dizi||[]).slice(0,-1);sozdizCiz(r)};
  const bb=$('#buyukBtn');if(bb)bb.onclick=()=>{state.buyuk=!state.buyuk;sozdizCiz(r)};
  $$('[data-nk]').forEach(b=>b.onclick=()=>{state.nokta=b.dataset.nk;sozdizCiz(r)});
