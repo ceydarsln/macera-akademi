@@ -55,10 +55,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .metin-kart{flex:0 0 auto;width:min(330px,96%);overflow:visible;background:#fffdf6;border:3px solid #d8c9a4;border-radius:14px;padding:10px 12px;font-size:clamp(13px,3.4vw,15px);line-height:1.5;text-align:left;overflow-wrap:break-word}
 .metin-kart .baslik{font-weight:950;font-size:13px;color:#8a6a2c;margin-bottom:5px}
 .dizi{display:flex;flex-direction:column;gap:6px;width:100%;align-items:center}
-.sirakart{flex:0 0 auto;width:min(324px,95%);min-height:50px;border:3px solid var(--line);border-radius:14px;background:#fff;padding:8px 11px;font-weight:870;font-size:clamp(12px,3.3vw,15px);line-height:1.3;text-align:left;overflow-wrap:break-word;display:flex;align-items:center;gap:8px}
+.sirakart{flex:0 0 auto;width:min(324px,95%);min-height:50px;border:3px solid var(--line);border-radius:14px;background:#fff;padding:8px 11px;font-weight:870;font-size:clamp(12px,3.3vw,15px);line-height:1.3;text-align:left;overflow-wrap:break-word;display:flex;align-items:center;gap:8px;touch-action:none}
 .sirakart .no{flex:0 0 24px;height:24px;border-radius:50%;background:#e6eef5;color:var(--muted);font-size:12px;font-weight:950;display:flex;align-items:center;justify-content:center}
 .sirakart.secili{border-color:var(--ok);background:#e9f7f0}
 .sirakart.secili .no{background:var(--ok);color:#fff}
+.sira-hedef{width:min(330px,96%);min-height:72px;border:3px dashed #6f9cba;border-radius:16px;background:rgba(255,255,255,.78);padding:7px;display:flex;flex-direction:column;gap:5px;justify-content:center}
+.sira-hedef .sira-bos{text-align:center;color:var(--muted);font-size:12px;font-weight:900;line-height:1.3}
+.sira-hedef .sira-adim{display:flex;align-items:flex-start;gap:6px;border:2px solid #91c8ae;border-radius:10px;background:#e9f7f0;padding:4px 7px;font-size:12px;font-weight:850;line-height:1.25;text-align:left}
+.sira-hedef .sira-adim b{flex:0 0 21px;height:21px;border-radius:50%;display:grid;place-items:center;background:var(--ok);color:#fff;font-size:11px}
 .esle-alan{display:flex;flex-direction:column;gap:7px;width:100%;align-items:center}
 .yuva{flex:0 0 auto;width:min(330px,96%);min-height:58px;border:3px dashed #6f9cba;border-radius:15px;background:rgba(255,255,255,.72);padding:7px 9px;display:flex;align-items:center;gap:9px;text-align:left}
 .yuva.dolu{border-style:solid;border-color:var(--ok);background:#e9f7f0}
@@ -66,9 +70,12 @@ button{font:inherit;color:inherit;cursor:pointer}
 .yuva .kondu{flex:0 0 auto;max-width:44%;font-weight:900;font-size:12px;color:#0b6a48;line-height:1.2;overflow-wrap:break-word}
 /* parça yazısı çipe TAM sığar: kesme yok, sarma var (ölçüt: dragMatch) */
 .etiketler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.etiket{min-height:46px;min-width:46px;max-width:200px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;white-space:normal}
+.etiket{min-height:46px;min-width:46px;max-width:200px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;white-space:normal;touch-action:none}
 .etiket.secili{border-color:var(--gold);background:#fff7e2}
 .etiket.bitti{visibility:hidden}
+.ui-dragging{position:relative!important;z-index:999!important;pointer-events:none!important;opacity:.94;box-shadow:0 10px 25px rgba(0,0,0,.28)!important}
+.drop-hot{filter:drop-shadow(0 0 9px #f1b53a)!important;outline:4px solid #f1b53a!important;outline-offset:3px}
+[data-sinif-kart]{touch-action:none;cursor:grab}
 .feedback{position:absolute;left:50%;top:46%;z-index:150;transform:translate(-50%,-50%) scale(.7);opacity:0;pointer-events:none;background:#fff;border:4px solid var(--ok);border-radius:22px;padding:14px 19px;min-width:200px;text-align:center;font-size:clamp(17px,4.6vw,25px);font-weight:1000;box-shadow:0 12px 38px rgba(0,0,0,.27)}
 .feedback.show{animation:pop .95s ease both}
 .feedback.bad{border-color:var(--bad)}
@@ -82,13 +89,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .big{font-size:clamp(38px,11vw,64px)}
 /* TOPLA — çanta/plan/pano gerçekten dolar; seçilen şey ekranda görünür */
 .depo{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.depo button{min-height:48px;min-width:48px;max-width:200px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word}
+.depo button{min-height:48px;min-width:48px;max-width:200px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:880;font-size:clamp(11px,3vw,13px);line-height:1.25;overflow-wrap:break-word;touch-action:none}
 .depo button.bitti{visibility:hidden}
 .canta{width:min(330px,96%);min-height:96px;border:3px solid var(--toprak);border-radius:16px 16px 20px 20px;background:#fdf3e6;padding:8px 9px;display:flex;flex-direction:column;gap:5px}
 .canta .bas{font-size:12px;font-weight:950;color:#7a4e2c;text-align:center}
 .canta .icerik{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:44px;align-content:flex-start}
 .canta .icerik span{background:#fff;border:2px solid #d3b28c;border-radius:10px;padding:4px 7px;font-size:11.5px;font-weight:900;line-height:1.2;max-width:150px}
 .canta .bos{font-size:11.5px;font-weight:800;color:#a78460;align-self:center}
+.grafik-blok{min-width:150px;min-height:48px;border:3px solid #fff;border-radius:14px;background:var(--blue);color:#fff;box-shadow:0 3px 0 #1b5a88;font-weight:950;touch-action:none}
 /* HAFIZA — kart yerleri her açılışta karışır, can standardı 3 */
 .hafiza-alan{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(330px,96%)}
 .hkart{min-height:62px;border:3px solid var(--line);border-radius:13px;background:#eef6fc;padding:5px 6px;font-size:11px;font-weight:880;line-height:1.2;display:flex;align-items:center;justify-content:center;text-align:center;overflow-wrap:break-word}
@@ -233,6 +241,14 @@ function kelimeSay(s){const t=sadelestir(s);return t?t.split(' ').length:0}
 const kesmeDuz=t=>String(t||'').replace(/[‘’ʼ´`]/g,"'");
 function ilerleme(n,i){return `<div class="ilerleme">${Array.from({length:n},(_,k)=>`<i class="${k<i?'ok':(k===i?'simdi':'')}"></i>`).join('')}</div>`}
 function sahneHtml(r){return typeof r.sahne==='function'?r.sahne(state):(r.sahne||'')}
+/* Gerçek sürükleme ana etkileşimdir; kısa dokunma küçük ekranlar için
+   erişilebilir seç-koy yedeği olarak çalışmayı sürdürür. */
+function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
+ k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
+ k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
+ const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit)birak(k,hit)}};
+ k.onpointerup=bitir;k.onpointercancel=bitir})}
 const TRKUCUK=['ç','ğ','ı','i','ö','ş','ü',"'"];
 const TRBUYUK=['Ç','Ğ','I','İ','Ö','Ş','Ü',"'"];
 function trSerit(){const b=!!state.trBuyuk;
@@ -461,7 +477,7 @@ function sinifCiz(r){
  if(!k)return;
  $('#stage').innerHTML=sahneHtml(r)+
   ilerleme(r.kartlar.length,i)+
-  `<div class="kart vurgu">${esc(k.t)}</div>`+
+  `<div class="kart vurgu" data-sinif-kart="1">${esc(k.t)}</div>`+
   (k.sahne?`<div class="sahne-not">${esc(k.sahne)}</div>`:'')+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
@@ -471,14 +487,15 @@ function sinifCiz(r){
      (alt?`<span class="alt">${esc(alt)}</span>`:'')+
      `<span class="sayac">${(state.sayim||[])[j]||0}</span></button>`}).join('')}</div>`+
   (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
- $$('[data-kutu]').forEach(b=>b.onclick=()=>{
+ const yerlestir=j=>{
   if(state.gecis||locked)return;
-  const j=+b.dataset.kutu;
   if(j!==k.dogru)return wrong(k.hint||'Kartı yeniden oku: hangi özelliği söylüyor?');
   state.sayim=state.sayim||r.kutular.map(()=>0);state.sayim[j]++;
   state.ix=i+1;state.not=k.neden||'';
   if(state.ix>=r.kartlar.length)return good();
-  feedback('Doğru');gecisBasla(()=>sinifCiz(r),FAST?30:520)})}
+  feedback('Doğru');gecisBasla(()=>sinifCiz(r),FAST?30:520)};
+ $$('[data-kutu]').forEach(b=>b.onclick=()=>yerlestir(+b.dataset.kutu));
+ baglaSurukle('[data-sinif-kart]','[data-kutu]',(_k,h)=>yerlestir(+h.dataset.kutu))}
 function renderSinif(r){state.ix=0;state.not='';state.sayim=r.kutular.map(()=>0);sinifCiz(r)}
 
 /* ===== SIRA (eski orderSequence) =====
@@ -487,10 +504,13 @@ function renderSinif(r){state.ix=0;state.not='';state.sayim=r.kutular.map(()=>0)
    dizi silinmez, yalnız o adım geri alınır ve "bundan önce ne olmalı?"
    sorusu sorulur. Kartlar tohumlu karıştırmayla çizilir. ===== */
 function siraCiz(r){
+ const d=state.dizi||[];
  $('#stage').innerHTML=sahneHtml(r)+
   (r.gorev?`<div class="konus-balon">${esc(r.gorev)}</div>`:'')+
+  `<div class="sira-hedef" data-sira-hedef="1">${d.length
+   ?d.map((i,p)=>`<div class="sira-adim"><b>${p+1}</b><span>${esc(r.kartlar[i].t)}</span></div>`).join('')
+   :'<div class="sira-bos">İlk kartı buraya sürükle; doğru adımlar burada sırayla oluşacak.</div>'}</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
- const d=state.dizi||[];
  if(!state.dizilim){
   let idx=tohumlu(r.kartlar.length,turTohum('sira'));
   if(idx.every((v,i)=>v===r.dogru[i]))idx.push(idx.shift());
@@ -500,7 +520,7 @@ function siraCiz(r){
    const k=r.kartlar[i],p=d.indexOf(i);
    return `<button class="sirakart ${p>=0?'secili':''}" data-kart="${i}"><span class="no">${p>=0?p+1:''}</span><span>${esc(k.t)}</span></button>`}).join('')}</div>`+
   `<div class="hint">${d.length}/${r.kartlar.length} adım dizildi. ${esc(r.ipucu||'')}</div>`;
- $$('[data-kart]').forEach(b=>b.onclick=()=>{
+ const ekle=b=>{
   if(state.gecis||locked)return;
   const i=+b.dataset.kart;
   if(d.indexOf(i)>=0)return uyar('Bu adımı dizdin');
@@ -509,7 +529,9 @@ function siraCiz(r){
    siraCiz(r);return wrong(state.not)}
   state.dizi=d.concat(i);state.not=r.kartlar[i].neden||'';
   if(state.dizi.length>=r.dogru.length){siraCiz(r);return good()}
-  siraCiz(r)})}
+  siraCiz(r)};
+ $$('[data-kart]').forEach(b=>b.onclick=()=>ekle(b));
+ baglaSurukle('[data-kart]:not(.secili)','[data-sira-hedef]',k=>ekle(k))}
 function renderSira(r){state.dizi=[];state.not='';state.dizilim=null;siraCiz(r)}
 
 /* ===== ESLE (eski dragMatch) =====
@@ -528,19 +550,19 @@ function esleCiz(r){
   `<div class="etiketler">${r.etiketler.map((e,j)=>{
     const kondu=(state.yerlesen||[]).indexOf(j)>=0;
     return `<button class="etiket ${kondu?'bitti':''} ${state.secEt===j?'secili':''}" data-et="${j}">${esc(e.t)}</button>`}).join('')}</div>`+
-  `<div class="hint">${esc(r.ipucu||'Önce alttan bir kart seç, sonra ait olduğu satıra dokun.')}</div>`;
- $$('[data-et]').forEach(b=>b.onclick=()=>{if(locked)return;state.secEt=+b.dataset.et;esleCiz(r)});
- $$('[data-yuva]').forEach(b=>b.onclick=()=>{
-  if(locked)return;
-  if(state.secEt==null)return uyar('Önce alttan bir kart seç');
-  const i=+b.dataset.yuva;
+  `<div class="hint">${esc(r.ipucu||'Kartı doğrudan sahnedeki ait olduğu hedefe sürükle.')}</div>`;
+ const yerlestir=(j,i)=>{
+  if(locked||j==null)return;
   if((state.yerlesen||[])[i]!=null)return uyar('Bu satır dolu');
-  if(state.secEt!==r.yuvalar[i].dogru){
+  if(j!==r.yuvalar[i].dogru){
    state.not=r.yuvalar[i].hint||'Bu kart bu satıra uymuyor; aradaki ilişkiyi yeniden düşün.';
    state.secEt=null;esleCiz(r);return wrong(state.not)}
-  state.yerlesen[i]=state.secEt;state.not=r.yuvalar[i].neden||'';
+  state.yerlesen[i]=j;state.not=r.yuvalar[i].neden||'';
   state.secEt=null;esleCiz(r);
-  if(state.yerlesen.every(v=>v!=null))good()})}
+  if(state.yerlesen.every(v=>v!=null))good()};
+ $$('[data-et]').forEach(b=>b.onclick=()=>{if(locked)return;state.secEt=+b.dataset.et;esleCiz(r)});
+ $$('[data-yuva]').forEach(b=>b.onclick=()=>{if(locked||state.secEt==null)return uyar('Önce alttan bir kart seç');yerlestir(state.secEt,+b.dataset.yuva)});
+ baglaSurukle('[data-et]:not(.bitti)','[data-yuva]',(k,h)=>yerlestir(+k.dataset.et,+h.dataset.yuva))}
 function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secEt=null;state.not='';esleCiz(r)}
 
 /* ===== KARAR (eski catchDrop/radar) =====
@@ -575,7 +597,7 @@ function renderKarar(r){state.faz=0;state.not='';kararCiz(r)}
    okunur ve kartın neden uymadığı görevin amacı üzerinden sorulur. ===== */
 function cantaHtml(r){
  const alinan=state.alinan||[];
- return `<div class="canta"><div class="bas">${esc(r.cantaAd||'ÇANTA')} — ${alinan.length}/${r.gerekli.length}</div>`+
+ return `<div class="canta" data-canta="1"><div class="bas">${esc(r.cantaAd||'ÇANTA')} — ${alinan.length}/${r.gerekli.length}</div>`+
   `<div class="icerik">${alinan.length?alinan.map(i=>`<span>${esc(r.ogeler[i].t)}</span>`).join('')
     :`<span class="bos">${esc(r.bosMetin||'Henüz hiçbir şey toplamadın.')}</span>`}</div></div>`}
 function toplaCiz(r){
@@ -587,7 +609,7 @@ function toplaCiz(r){
   `<div class="depo">${r.ogeler.map((o,j)=>
     `<button class="${(state.alinan||[]).indexOf(j)>=0?'bitti':''}" data-oge="${j}">${esc(o.t)}</button>`).join('')}</div>`+
   (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
- $$('[data-oge]').forEach(b=>b.onclick=()=>{
+ const ekle=b=>{
   if(state.gecis||locked)return;
   const j=+b.dataset.oge,o=r.ogeler[j];
   if((state.alinan||[]).indexOf(j)>=0)return uyar('Bunu çantaya koydun');
@@ -597,7 +619,9 @@ function toplaCiz(r){
   state.alinan=(state.alinan||[]).concat(j);state.not=o.neden||'';
   toplaCiz(r);
   if(state.alinan.length>=r.gerekli.length)return good();
-  feedback('Çantaya girdi')})}
+  feedback('Çantaya girdi')};
+ $$('[data-oge]').forEach(b=>b.onclick=()=>ekle(b));
+ baglaSurukle('[data-oge]:not(.bitti)','[data-canta]',k=>ekle(k))}
 function renderTopla(r){state.alinan=[];state.not='';toplaCiz(r)}
 
 /* ===== HAFIZA (eski memoryPairs) =====
@@ -670,16 +694,18 @@ function grafikCiz(r){
    `<span class="ad">${esc(g.ad)}</span></button>`).join('')}</div></div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
-  `<div class="hint">Blok deposu: ${kalan} blok kaldı. ${esc(r.ipucu||'Bir gruba blok koymak için sütununa dokun.')}</div>`;
- $$('[data-sut]').forEach(b=>b.onclick=()=>{
+  `<button class="grafik-blok" data-grafik-blok="1">VERİ BLOĞU</button>`+
+  `<div class="hint">Blok deposu: ${kalan} blok kaldı. ${esc(r.ipucu||'Bloğu ait olduğu sütuna sürükle.')}</div>`;
+ const ekle=i=>{
   if(state.gecis||locked)return;
-  const i=+b.dataset.sut;
   if(kondu[i]>=r.gruplar[i].sayi){
    state.not=r.gruplar[i].hint||'Veri satırını yeniden oku: bu grupta kaç tane var?';
    grafikCiz(r);return wrong(state.not)}
   state.kondu=kondu.slice();state.kondu[i]++;state.not='';
   grafikCiz(r);
-  if(r.gruplar.every((g,j)=>state.kondu[j]===g.sayi))return good()})}
+  if(r.gruplar.every((g,j)=>state.kondu[j]===g.sayi))return good()};
+ $$('[data-sut]').forEach(b=>b.onclick=()=>ekle(+b.dataset.sut));
+ baglaSurukle('[data-grafik-blok]','[data-sut]',(_k,h)=>ekle(+h.dataset.sut))}
 function renderGrafik(r){state.kondu=r.gruplar.map(()=>0);state.not='';grafikCiz(r)}
 
 /* ===== OLCUM (eski dragSlider/tren-tünel) =====
@@ -1066,7 +1092,7 @@ GAMES.g02={title:'Keşif Adımları',theme:'defter',
 GAMES.g03={title:'Bilim Becerisi Köprüsü',theme:'lab',
  finish:'Bilim becerilerini anlamlarıyla eşledin, birbirine yakın becerileri ayırdın ve kendi gözlemini anlattın.',rounds:[
  {kind:'esle',prompt:'Her beceriyi yaptığı işle eşle.',sahne:SAHNE.lab,
-  soru:'Önce alttan bir beceri seç, sonra anlattığı işe dokun.',
+  soru:'Alttaki beceriyi sahnedeki anlattığı işe sürükle.',
   ipucu:'Masadaki araçlara bak: hangi araç hangi işi yapar?',
   yuvalar:[
    {hedef:'Büyüteçle yaprağın damarlarını dikkatle incelemek',dogru:0,
@@ -1335,7 +1361,7 @@ GAMES.g07={title:'Canlı Sınıflama Masası',theme:'doga',
 GAMES.g08={title:'Duyu Organı Köprüsü',theme:'doga',
  finish:'Duyu organlarını görevleriyle eşledin, birlikte çalıştıkları durumları çözdün ve bir organın görevini kendi cümlenle anlattın.',rounds:[
  {kind:'esle',prompt:'Her organı görevine eşle.',sahne:SAHNE.duyu,
-  soru:'Önce alttan bir organ seç, sonra görevine dokun.',
+  soru:'Alttaki organı sahnedeki görevine sürükle.',
   ipucu:'Görev satırını oku: hangi organ bu işi yapar?',
   yuvalar:[
    {hedef:'Işığı, renkleri ve biçimleri algılar',dogru:0,
@@ -1700,7 +1726,7 @@ GAMES.g14={title:'Fosil Nasıl Oluşur?',theme:'kazi',
 GAMES.g15={title:'Maden Köprüsü',theme:'kayac',
  finish:'Madenleri kullanım alanlarıyla eşledin, bir madenin birden çok işte kullanıldığını gördün ve evindeki bir madeni buldun.',rounds:[
  {kind:'esle',prompt:'Her madeni kullanım alanıyla eşle.',sahne:SAHNE.kayac,
-  soru:'Önce alttan bir maden seç, sonra kullanıldığı işe dokun.',
+  soru:'Alttaki madeni sahnedeki kullanıldığı işe sürükle.',
   ipucu:'Madenin sertliği, iletkenliği ya da tadı hangi işe uygun?',
   yuvalar:[
    {hedef:'Bina ve köprü iskeletinde kullanılan çelik yapılır',dogru:0,
@@ -1990,7 +2016,7 @@ GAMES.g19={title:'Maddenin Hâlleri',theme:'atolye',
 GAMES.g20={title:'Ayırma Yöntemi Köprüsü',theme:'atolye',
  finish:'Karışımları uygun yöntemlerle eşledin, birden çok yöntemin işe yaradığı durumları tartıştın ve kendi yöntemini önerdin.',rounds:[
  {kind:'esle',prompt:'Her karışımı uygun ayırma yöntemiyle eşle.',sahne:SAHNE.atolye,
-  soru:'Önce alttan bir karışım seç, sonra ona uyan yönteme dokun.',
+  soru:'Alttaki karışımı sahnedeki uygun ayırma yöntemine sürükle.',
   ipucu:'Karışımın parçaları neyle ayrılır: tane boyu mu, ağırlık mı, mıknatıs mı?',
   yuvalar:[
    {hedef:'ELEME — iri taneleri ince tanelerden ayırır',dogru:0,
@@ -2182,7 +2208,7 @@ GAMES.g24={title:'Okul Atık Grafiği',theme:'bahce',
  finish:'Sayım verilerini grafiğe döktün, grafiği okuyup farkları buldun ve okulun için bir azaltma önerisi yazdın.',rounds:[
  {kind:'grafik',prompt:'Sayım verilerini grafiğe dök.',sahne:SAHNE.bahce,
   soru:'Her atık türü için sütununa o kadar blok koy.',
-  ipucu:'Veri satırını oku, sonra o sütuna dokun.',
+  ipucu:'Veri satırını oku, sonra bloğu o sütuna sürükle.',
   veri:{bas:'Okulda bir haftada toplanan atık (kutu sayısı)',
    satirlar:[{ad:'Kâğıt',deger:6},{ad:'Plastik',deger:4},{ad:'Organik',deger:5},{ad:'Cam',deger:2}]},
   gruplar:[
@@ -2284,7 +2310,7 @@ GAMES.g25={title:'Hareket Türleri',theme:'park',
 GAMES.g26={title:'Kuvvet Köprüsü',theme:'park',
  finish:'Kuvvetin etkilerini olaylarla eşledin, tek olayda birden çok etkiyi ayırdın ve bir olayda kuvvetin ne yaptığını anlattın.',rounds:[
  {kind:'esle',prompt:'Her olayı kuvvetin oradaki etkisiyle eşle.',sahne:SAHNE.park,
-  soru:'Önce alttan bir olay seç, sonra kuvvetin oradaki etkisine dokun.',
+  soru:'Alttaki olayı sahnedeki kuvvet etkisine sürükle.',
   ipucu:'Sor: cisim yakınlaştı mı, uzaklaştı mı, durdu mu, biçimi mi bozuldu?',
   yuvalar:[
    {hedef:'İTME — cismi kendinden uzaklaştırma',dogru:0,
@@ -2586,7 +2612,7 @@ GAMES.g31={title:'Elektrikle mi Çalışıyor?',theme:'ev',
 GAMES.g32={title:'Elektrikli Araç Köprüsü',theme:'ev',
  finish:'Elektrikli araçları yaptıkları işle eşledin, benzer işleri yapan araçları ayırdın ve bir aracın hayatı nasıl kolaylaştırdığını anlattın.',rounds:[
  {kind:'esle',prompt:'Her aracı yaptığı işle eşle.',sahne:SAHNE.ev,
-  soru:'Önce alttan bir araç seç, sonra yaptığı işe dokun.',
+  soru:'Alttaki aracı sahnedeki yaptığı işe sürükle.',
   ipucu:'Aracın hangi işi kolaylaştırdığını düşün.',
   yuvalar:[
    {hedef:'Yiyecekleri soğuk tutarak bozulmalarını geciktirir',dogru:0,
@@ -2907,7 +2933,7 @@ GAMES.g38={title:'Tohumdan Hasada',theme:'tarla',
 GAMES.g39={title:'Toprak Köprüsü',theme:'tarla',
  finish:'Toprağın ögelerini görevleriyle eşledin, toprağın nasıl oluştuğunu sıraladın ve süreci kendi sözcüklerinle anlattın.',rounds:[
  {kind:'esle',prompt:'Toprağın her ögesini görevine eşle.',sahne:SAHNE.toprak,
-  soru:'Önce alttan bir öge seç, sonra görevine dokun.',
+  soru:'Alttaki ögeyi sahnedeki görevine sürükle.',
   ipucu:'Kesite bak: hangi öge nerede duruyor ve ne işe yarıyor?',
   yuvalar:[
    {hedef:'En üstte durur, çürümüş bitki ve canlı artıklarından oluşur, bitkiye besin verir',dogru:0,
@@ -3156,7 +3182,7 @@ GAMES.g44={title:'Canlı Çeşitliliği Sayımı',theme:'bahce',
  finish:'Sayım verilerini grafiğe döktün, hangi grubun daha çeşitli olduğunu yorumladın ve bahçe için bir gözlem notu yazdın.',rounds:[
  {kind:'grafik',prompt:'Bahçe sayımını grafiğe dök.',sahne:SAHNE.bahce,
   soru:'Her grup için sütununa o kadar blok koy.',
-  ipucu:'Veri satırını oku, sonra o sütuna dokun.',
+  ipucu:'Veri satırını oku, sonra bloğu o sütuna sürükle.',
   veri:{bas:'Okul bahçesinde bulunan farklı canlı türü sayısı',
    satirlar:[{ad:'Bitkiler',deger:7},{ad:'Böcekler',deger:5},{ad:'Kuşlar',deger:3},{ad:'Mantarlar',deger:2}]},
   gruplar:[
@@ -3203,7 +3229,7 @@ GAMES.g44={title:'Canlı Çeşitliliği Sayımı',theme:'bahce',
 GAMES.g45={title:'Yaşam Alanı Köprüsü',theme:'golet',
  finish:'Yaşam alanlarını özellikleriyle eşledin, benzer görünen alanları ayırdın ve bir alanı özellikleriyle tanıttın.',rounds:[
  {kind:'esle',prompt:'Her alanı özelliğiyle eşle.',sahne:SAHNE.golet,
-  soru:'Önce alttan bir yaşam alanı seç, sonra özelliğine dokun.',
+  soru:'Alttaki yaşam alanını sahnedeki özelliğine sürükle.',
   ipucu:'Üç şeye bak: sıcaklık, yağış ve bitki örtüsü.',
   yuvalar:[
    {hedef:'Yağış çok az, gündüz çok sıcak, bitkiler seyrek ve dikenli',dogru:0,
