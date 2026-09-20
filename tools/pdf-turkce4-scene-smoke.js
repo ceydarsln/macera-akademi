@@ -30,7 +30,16 @@ async function drag(page, from, to) {
     { id: 'z15', from: '[data-et="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 },
     { id: 'z18', from: '[data-kart="0"]', to: '[data-sira-hedef]', value: 'state.dizi[0]', expected: 0 },
     { id: 'z21', from: '[data-kart="0"]', to: '[data-sira-hedef]', value: 'state.dizi[0]', expected: 0 },
-    { id: 'z25', from: '[data-et="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 }
+    { id: 'z25', from: '[data-et="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 },
+    { id: 'z32', from: '[data-kart="0"]', to: '[data-sira-hedef]', value: 'state.dizi[0]', expected: 0 },
+    { id: 'z34', from: '[data-et="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 },
+    { id: 'z43', from: '[data-kart="0"]', to: '[data-sira-hedef]', value: 'state.dizi[0]', expected: 0 },
+    { id: 'z44', from: '[data-et="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 },
+    { id: 'z48', from: '[data-kart="0"]', to: '[data-sira-hedef]', value: 'state.dizi[0]', expected: 0 },
+    { id: 'z49', from: '[data-et="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 },
+    { id: 'z53', from: '[data-kart="0"]', to: '[data-sira-hedef]', value: 'state.dizi[0]', expected: 0 },
+    { id: 'z58', from: '[data-et="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 },
+    { id: 'z60', from: '[data-et="0"]', to: '[data-yuva="0"]', value: 'state.yerlesen[0]', expected: 0 }
   ];
 
   for (const check of checks) {

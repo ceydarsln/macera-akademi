@@ -5,8 +5,15 @@ const { pathToFileURL } = require('url');
 const { chromium } = require('playwright');
 
 const ROOT = path.resolve(__dirname, '..');
-const DEFAULT_IDS = Array.from({ length: 30 }, (_, i) => `z${String(i + 1).padStart(2, '0')}`);
-const ids = process.argv.slice(2).length ? process.argv.slice(2) : DEFAULT_IDS;
+const args = process.argv.slice(2);
+let ids;
+if (args.length && args.length <= 2 && args.every(x => /^\d+$/.test(x))) {
+  const start = Math.max(1, Number(args[0]));
+  const end = Math.min(64, Number(args[1] || args[0]));
+  ids = Array.from({ length: Math.max(0, end - start + 1) }, (_, i) => `z${String(start + i).padStart(2, '0')}`);
+} else {
+  ids = args.length ? args : Array.from({ length: 30 }, (_, i) => `z${String(i + 1).padStart(2, '0')}`);
+}
 
 (async () => {
   const browser = await chromium.launch({

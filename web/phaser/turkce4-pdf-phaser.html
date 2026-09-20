@@ -425,11 +425,11 @@ function esleCiz(r){
      `<span class="hedef">${esc(y.hedef)}</span>`+
      (v!=null?`<span class="kondu">${esc(r.etiketler[v].t)}</span>`:'')+`</button>`}).join('')}</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
- $('#task').innerHTML='<div class="caption soru">Kartı doğrudan sahnedeki ait olduğu hedefe sürükle.</div>'+
+ $('#task').innerHTML=`<div class="caption soru">${esc(r.soru||'Kartı doğrudan sahnedeki ait olduğu hedefe sürükle.')}</div>`+
   `<div class="etiketler">${r.etiketler.map((e,j)=>{
     const kondu=(state.yerlesen||[]).indexOf(j)>=0;
     return `<button class="etiket ${kondu?'bitti':''} ${state.secEt===j?'secili':''}" data-et="${j}">${esc(e.t)}</button>`}).join('')}</div>`+
-  `<div class="hint">${esc(r.ipucu||'Önce alttan bir kart seç, sonra ait olduğu satıra dokun.')}</div>`;
+  `<div class="hint">${esc(r.ipucu||'Kartı doğrudan sahnedeki ait olduğu hedefe sürükle.')}</div>`;
  const yerlestir=(j,i)=>{
   if(locked||j==null)return;
   if((state.yerlesen||[])[i]!=null)return feedback('Bu satır dolu');
@@ -819,7 +819,7 @@ GAMES.z01={title:'Tartışma Çemberi',theme:'kutuphane',
 GAMES.z02={title:'Yayınevi Masası',theme:'masa',
  finish:'Konu, ana fikir ve yaşam bağlantısını aday cümlelerden ayırdın, ayrıntıyı eledin ve kendi ana fikrini yazdın.',rounds:[
  {kind:'esle',prompt:'Her kartı ait olduğu satıra koy.',sahne:SAHNE.masa,
-  soru:'Önce alttan bir cümle seç, sonra ait olduğu satıra dokun.',
+  soru:'Alttaki cümleyi sahnedeki ait olduğu satıra sürükle.',
   ipucu:'Metin yukarıda duruyor; kararını ona bakarak ver.',
   yuvalar:[
    {hedef:'KONU — metin neyden söz ediyor?',dogru:0,neden:'Konu, metnin neden söz ettiğidir; tek sözcük ya da kısa öbekle söylenir.',
@@ -931,7 +931,7 @@ GAMES.z04={title:'Kurallı Cümle Makinesi',theme:'atolye',
 GAMES.z05={title:'Erdem Sözlüğü',theme:'kutuphane',
  finish:'Erdemleri tanımlarıyla eşledin, yakın anlamlı erdemleri ayırt ettin ve kendi tanımını örnekle yazdın.',rounds:[
  {kind:'esle',prompt:'Her madde başını tanımıyla eşle.',sahne:SAHNE.sozluk,
-  soru:'Önce alttan bir tanım seç, sonra ait olduğu madde başına dokun.',
+  soru:'Alttaki tanımı sahnedeki ait olduğu madde başına sürükle.',
   ipucu:'Tanımdaki ayırt edici sözcüğe dikkat et.',
   yuvalar:[
    {hedef:'hoşgörü',dogru:0,neden:'Hoşgörü, katlanmak değil; farklılığı anlayışla karşılamaktır.',
@@ -1164,7 +1164,7 @@ GAMES.z10={title:'Sözcük Tasnifi',theme:'kutuphane',
 GAMES.z11={title:'Sesteş Köprüsü',theme:'doga',
  finish:'Sesteş sözcüğün anlamını bağlamdan buldun, üç ayrı anlamı ayırdın ve kendi cümlelerinde kullandın.',rounds:[
  {kind:'esle',prompt:'Her cümledeki "yüz" hangi anlamda?',sahne:SAHNE.basamak,
-  soru:'Önce alttan bir anlam seç, sonra ait olduğu cümleye dokun.',
+  soru:'Alttaki anlamı sahnedeki ait olduğu cümleye sürükle.',
   ipucu:'Cümlenin geri kalanı hangi anlamı gerektiriyor?',
   yuvalar:[
    {hedef:'Havuzda yarım saat yüz, sonra çık.',dogru:0,neden:'Havuz ve süre, yüzme eylemini gösteriyor.',
@@ -1283,7 +1283,7 @@ GAMES.z13={title:'Bilgi Denetimi',theme:'lab',
 GAMES.z14={title:'Mektup Masası',theme:'masa',
  finish:'Mektubun bölümlerini kâğıttaki yerlerine yerleştirdin, uygun üslubu seçtin ve kendi mektubunu yazdın.',rounds:[
  {kind:'esle',prompt:'Her cümleyi mektuptaki yerine koy.',sahne:SAHNE.masa,
-  soru:'Önce alttan bir cümle seç, sonra ait olduğu bölüme dokun.',
+  soru:'Alttaki cümleyi sahnedeki ait olduğu bölüme sürükle.',
   ipucu:'Mektup yukarıdan aşağıya: tarih, hitap, gövde, kapanış, imza.',
   yuvalar:[
    {hedef:'1. satır — TARİH',dogru:0,neden:'Mektup tarihle başlar; sağ üst köşeye yazılır.',hint:'Bu satır ne zaman yazıldığını gösterir.'},
@@ -1324,7 +1324,7 @@ GAMES.z14={title:'Mektup Masası',theme:'masa',
 GAMES.z15={title:'Zıt Anlam Terazisi',theme:'atolye',
  finish:'Zıt çiftleri eşledin, aynı sözcüğün bağlama göre farklı zıddı olduğunu gördün ve karşılaştırma cümleni yazdın.',rounds:[
  {kind:'esle',prompt:'Her sözcüğü zıddıyla eşle.',sahne:SAHNE.matbaa,
-  soru:'Önce alttan bir sözcük seç, sonra zıddına dokun.',
+  soru:'Alttaki sözcüğü sahnedeki zıddına sürükle.',
   ipucu:'Terazinin iki kefesi karşıt anlamları taşır.',
   yuvalar:[
    {hedef:'cesur',dogru:0,neden:'Cesaretin karşıtı korkaklıktır.',hint:'Bu sözcük korkuyla ilgili.'},
@@ -1466,7 +1466,7 @@ GAMES.z18={title:'Afet Robotu',theme:'lab',
 GAMES.z19={title:'Eş Anlam Ormanı',theme:'doga',
  finish:'Eş anlamlı çiftleri eşledin, her bağlamda değiştirilemeyeceklerini gördün ve iki üyeyle ayrı cümleler yazdın.',rounds:[
  {kind:'esle',prompt:'Her sözcüğü eş anlamlısıyla eşle.',sahne:SAHNE.basamak,sesliSoyle:true,
-  soru:'Önce alttan bir sözcük seç, sonra eş anlamlısına dokun.',
+  soru:'Alttaki sözcüğü sahnedeki eş anlamlısına sürükle.',
   ipucu:'Eş anlamlı sözcükler aynı anlamı taşır, yazılışları farklıdır.',
   yuvalar:[
    {hedef:'konuk',dogru:0,neden:'İkisi de eve gelen kişiyi anlatır.',hint:'Bu sözcük eve gelen kişiyle ilgili.'},
@@ -1647,7 +1647,7 @@ GAMES.z23={title:'Tasarruf Ölçer',theme:'lab',
 GAMES.z24={title:'Doğa Dergisi Masası',theme:'masa',
  finish:'Yazı planının bölümlerini yerlerine yerleştirdin, amaca göre planın değiştiğini gördün ve kendi planını yazdın.',rounds:[
  {kind:'esle',prompt:'Her bölümü taslak sayfadaki yerine koy.',sahne:SAHNE.masa,
-  soru:'Önce alttan bir içerik seç, sonra ait olduğu bölüme dokun.',
+  soru:'Alttaki içeriği sahnedeki ait olduğu bölüme sürükle.',
   ipucu:'Yazı planı: başlık, giriş, gelişme, sonuç.',
   yuvalar:[
    {hedef:'BAŞLIK',dogru:0,neden:'Başlık konuyu kısaca duyurur.',hint:'Bu bölüm en kısa olanıdır.'},
@@ -1687,7 +1687,7 @@ GAMES.z24={title:'Doğa Dergisi Masası',theme:'masa',
 GAMES.z25={title:'Kütüphane Görevlisi',theme:'kutuphane',
  finish:'Okurun amacına uygun kaynağı çıkarımla buldun, aynı konuda türleri karşılaştırdın ve kendi seçimini gerekçelendirdin.',rounds:[
  {kind:'esle',prompt:'Okurun amacına uygun kaynağı ver.',sahne:SAHNE.sozluk,
-  soru:'Önce alttan bir kaynak seç, sonra ait olduğu okura dokun.',
+  soru:'Alttaki kaynağı sahnedeki uygun okura sürükle.',
   ipucu:'Okur türün adını söylemiyor; ne yapmak istediğine bak.',
   yuvalar:[
    {hedef:'"Kelebeklerin kanat yapısını maddeler hâlinde öğrenmem gerek."',dogru:0,
@@ -1736,7 +1736,7 @@ GAMES.z26={title:'Anlam Laboratuvarı',theme:'lab',
    {t:'Onun sözleri yaralı yüreğime «tuz» oldu.',dogru:1,neden:'Söz gerçekten tuz olmaz; acıyı artırmak anlatılıyor.'},
    {t:'Fen dersinde «çözelti» hazırladık.',dogru:2,neden:'"Çözelti" fen bilimlerine ait bir terimdir.'}]},
  {kind:'esle',prompt:'Aynı sözcük, üç ayrı anlam.',sahne:SAHNE.kalem,
-  soru:'Önce alttan bir anlam türü seç, sonra ait olduğu cümleye dokun.',
+  soru:'Alttaki anlam türünü sahnedeki ait olduğu cümleye sürükle.',
   ipucu:'Cümlenin konusu hangi alana ait?',
   yuvalar:[
    {hedef:'Masanın «yüzeyi» tozlanmış.',dogru:0,neden:'Masanın üst yüzü: gerçek anlam.',hint:'Burada elle dokunulan bir yer anlatılıyor.'},
@@ -1756,7 +1756,7 @@ GAMES.z26={title:'Anlam Laboratuvarı',theme:'lab',
 GAMES.z27={title:'Atasözü Köprüsü',theme:'kutuphane',
  finish:'Atasözlerini anlattıkları durumla eşledin, yakın anlamlıları ayırdın ve bir atasözünü kendi yaşam durumuna bağladın.',rounds:[
  {kind:'esle',prompt:'Her atasözünü anlattığı durumla eşle.',sahne:SAHNE.sozluk,
-  soru:'Önce alttan bir durum seç, sonra anlattığı atasözüne dokun.',
+  soru:'Alttaki durumu sahnedeki anlattığı atasözüne sürükle.',
   ipucu:'Sözcüklere değil, anlattığı duruma bak.',
   yuvalar:[
    {hedef:'Damlaya damlaya göl olur.',dogru:0,
@@ -2045,7 +2045,7 @@ GAMES.z33={title:'Bağlaç Ayırma',theme:'atolye',
 GAMES.z34={title:'Bağlaç Makinesi',theme:'atolye',
  finish:'Bağlacın işlevini ayırdın, yanlış bağlacın anlamı nasıl bozduğunu gördün ve neden-sonucu iki yönde yazdın.',rounds:[
  {kind:'esle',prompt:'Her bağlacı işleviyle eşle.',sahne:SAHNE.matbaa,
-  soru:'Önce alttan bir işlev seç, sonra ait olduğu bağlaca dokun.',
+  soru:'Alttaki işlevi sahnedeki ait olduğu bağlaca sürükle.',
   ipucu:'Bağlaç iki cümleyi nasıl birleştiriyor?',
   yuvalar:[
    {hedef:'ve',dogru:0,neden:'İki bilgiyi yan yana ekler.',hint:'Bu bağlaç ekleme yapar.'},
@@ -2120,7 +2120,7 @@ GAMES.z35={title:'Arasöz Atölyesi',theme:'sahne',
 GAMES.z36={title:'Neden-Sonuç Köprüsü',theme:'doga',
  finish:'Nedenleri sonuçlarıyla eşledin, bir nedenin birden çok sonucu olabildiğini gördün ve kendi cümleni iki yönde yazdın.',rounds:[
  {kind:'esle',prompt:'Her nedeni sonucuyla eşle.',sahne:SAHNE.basamak,
-  soru:'Önce alttan bir sonuç seç, sonra nedenine dokun.',
+  soru:'Alttaki sonucu sahnedeki nedenine sürükle.',
   ipucu:'Hangisi önce oldu, hangisi ondan doğdu?',
   yuvalar:[
    {hedef:'NEDEN: Bütün gece kar yağdı.',dogru:0,neden:'Kar yağışı yolları kapattı.',hint:'Kar yağınca ne olur?'},
@@ -2160,7 +2160,7 @@ GAMES.z36={title:'Neden-Sonuç Köprüsü',theme:'doga',
 GAMES.z37={title:'Eş Anlam Sahnesi',theme:'sahne',
  finish:'Eş anlamlı çiftleri repliklerde eşledin, konuşma diline uygun olanı seçtin ve kendi repliğini söyledin.',rounds:[
  {kind:'esle',prompt:'Repliği eş anlamlısıyla eşle.',sahne:SAHNE.sozluk,sesliSoyle:true,
-  soru:'Önce alttan bir sözcük seç, sonra aynı anlamı taşıyan repliğe dokun.',
+  soru:'Alttaki sözcüğü sahnedeki aynı anlamı taşıyan repliğe sürükle.',
   ipucu:'Seçtiğin sözcük replikte sesli okunacak.',
   yuvalar:[
    {hedef:'"Bu haber beni çok mutlu etti."',dogru:0,neden:'"Sevindirdi" ile "mutlu etti" aynı anlamı taşır.',hint:'Bu replik sevinçle ilgili.'},
@@ -2231,7 +2231,7 @@ GAMES.z38={title:'Mecaz mı, Gerçek mi?',theme:'kutuphane',
 GAMES.z39={title:'Sunum Masası',theme:'sahne',
  finish:'Sunum planını amaca göre kurdun, dinleyici değişince planın değiştiğini gördün ve sunumunu yapıp değerlendirdin.',rounds:[
  {kind:'esle',prompt:'Sunum planının bölümlerini yerleştir.',sahne:SAHNE.masa,
-  soru:'Önce alttan bir not kartı seç, sonra ait olduğu bölüme dokun.',
+  soru:'Alttaki not kartını sahnedeki ait olduğu bölüme sürükle.',
   ipucu:'Sunum da yazı gibi giriş, gelişme ve sonuçtan oluşur.',
   yuvalar:[
    {hedef:'AÇILIŞ — dinleyiciyi konuya çek',dogru:0,neden:'Açılış merak uyandırır.',hint:'Bu bölüm dinleyiciyi karşılar.'},
@@ -2445,7 +2445,7 @@ GAMES.z43={title:'Kodlama Laboratuvarı',theme:'lab',
 GAMES.z44={title:'Mucit Atölyesi',theme:'lab',
  finish:'Amaca uygun araçları seçtin, uymayanı gerekçesiyle eledin ve bir deneyin adımlarını örnekle yazdın.',rounds:[
  {kind:'esle',prompt:'Her amaca uygun aracı ver.',sahne:SAHNE.kalem,
-  soru:'Önce alttan bir araç seç, sonra ait olduğu amaca dokun.',
+  soru:'Alttaki aracı sahnedeki ait olduğu amaca sürükle.',
   ipucu:'Aracın adına değil, ne işe yaradığına bak.',
   yuvalar:[
    {hedef:'AMAÇ: Sıvının ne kadar olduğunu ölçmek',dogru:0,neden:'Dereceli silindir hacim ölçer.',hint:'Bu amaç miktarla ilgili.'},
@@ -2517,7 +2517,7 @@ GAMES.z45={title:'Deney Raporu Dizgisi',theme:'lab',
 GAMES.z46={title:'Terim Köprüsü',theme:'lab',
  finish:'Terimleri tanımlarıyla eşledin, günlük anlamla terim anlamı ayırdın ve bir terimi kendi cümlende kullandın.',rounds:[
  {kind:'esle',prompt:'Her terimi tanımıyla eşle.',sahne:SAHNE.kalem,
-  soru:'Önce alttan bir tanım seç, sonra ait olduğu terime dokun.',
+  soru:'Alttaki tanımı sahnedeki ait olduğu terime sürükle.',
   ipucu:'Terimler bir bilim dalına aittir.',
   yuvalar:[
    {hedef:'kütle',dogru:0,neden:'Kütle, bir cismin madde miktarıdır.',hint:'Bu terim madde miktarıyla ilgili.'},
@@ -2626,7 +2626,7 @@ GAMES.z48={title:'Bilimsel Araştırma',theme:'lab',
 GAMES.z49={title:'Müze Rehberi',theme:'muze',
  finish:'Ziyaretçinin isteğinden hangi eseri aradığını çıkardın, somut ve somut olmayan mirası ayırdın ve bir mirası tanıttın.',rounds:[
  {kind:'esle',prompt:'Ziyaretçinin aradığı eseri bul.',sahne:SAHNE.sozluk,
-  soru:'Önce alttan bir eser seç, sonra isteyen ziyaretçiye dokun.',
+  soru:'Alttaki eseri sahnedeki onu isteyen ziyaretçiye sürükle.',
   ipucu:'Ziyaretçi eserin adını söylemiyor; ne aradığına bak.',
   yuvalar:[
    {hedef:'"Yüzlerce yıl önce yazılmış, elle süslenmiş sayfaları görmek istiyorum."',dogru:0,
@@ -2735,7 +2735,7 @@ GAMES.z51={title:'Miras Panosu Dizgisi',theme:'muze',
 GAMES.z52={title:'Miras Haritası',theme:'muze',
  finish:'Mirasları şehirleriyle eşledin, benzer örnekleri ayırdın ve bildiğin bir mirası tanıttın.',rounds:[
  {kind:'esle',prompt:'Her mirası şehriyle eşle.',sahne:SAHNE.sozluk,
-  soru:'Önce alttan bir şehir seç, sonra ait olduğu mirasa dokun.',
+  soru:'Alttaki şehri sahnedeki ait olduğu mirasa sürükle.',
   ipucu:'Bilgi cümlesindeki ipucuna bak.',
   yuvalar:[
    {hedef:'Selimiye Camisi — Mimar Sinan\'ın ustalık eseri sayılır.',dogru:0,
@@ -2843,7 +2843,7 @@ GAMES.z54={title:'Eş Anlam Makinesi',theme:'atolye',
 GAMES.z55={title:'Türkçe Karşılık',theme:'kutuphane',
  finish:'Yabancı sözcüklerin Türkçe karşılıklarını buldun, bağlama uygun olanı seçtin ve cümleyi Türkçesiyle yeniden yazdın.',rounds:[
  {kind:'esle',prompt:'Her sözcüğü Türkçe karşılığıyla eşle.',sahne:SAHNE.sozluk,
-  soru:'Önce alttan bir Türkçe karşılık seç, sonra ait olduğu sözcüğe dokun.',
+  soru:'Alttaki Türkçe karşılığı sahnedeki ait olduğu sözcüğe sürükle.',
   ipucu:'Karşılığı olan sözcükleri Türkçesiyle kullanmak dilimizi güçlendirir.',
   yuvalar:[
    {hedef:'ekip (takım anlamında kullanılan sözcük: "team")',dogru:0,neden:'"Takım" yaygın Türkçe karşılıktır.',hint:'Bu sözcük birlikte çalışan grupla ilgili.'},
@@ -2961,7 +2961,7 @@ GAMES.z57={title:'Demokrasi Panosu',theme:'meydan',
 GAMES.z58={title:'Dilekçe Masası',theme:'masa',
  finish:'Dilekçenin bölümlerini yerlerine yerleştirdin, uygun üslubu seçtin ve kendi dilekçeni yazdın.',rounds:[
  {kind:'esle',prompt:'Her bölümü şablondaki yerine koy.',sahne:SAHNE.masa,
-  soru:'Önce alttan bir içerik seç, sonra ait olduğu bölüme dokun.',
+  soru:'Alttaki içeriği sahnedeki ait olduğu bölüme sürükle.',
   ipucu:'Dilekçe yukarıdan aşağıya: makam, istek, tarih, ad-soyad.',
   yuvalar:[
    {hedef:'1. satır — MAKAM (kime yazılıyor)',dogru:0,neden:'Dilekçe hangi makama yazıldığıyla başlar.',hint:'Bu satır muhatabı gösterir.'},
@@ -3039,7 +3039,7 @@ GAMES.z59={title:'Bildiri Dizgisi',theme:'meydan',
 GAMES.z60={title:'Denge Köprüsü',theme:'meydan',
  finish:'Hakları sorumluluklarıyla dengeledin, bir hakka birden çok sorumluluk bağlanabildiğini gördün ve kendi çiftini yazdın.',rounds:[
  {kind:'esle',prompt:'Her hakkı onu sürdüren sorumlulukla eşle.',sahne:SAHNE.cember,
-  soru:'Önce alttan bir sorumluluk seç, sonra ait olduğu hakka dokun.',
+  soru:'Alttaki sorumluluğu sahnedeki ait olduğu hakka sürükle.',
   ipucu:'Bu hakkın sürmesi için ne yapılmalı?',
   yuvalar:[
    {hedef:'HAK: Temiz bir sınıfta ders görmek',dogru:0,neden:'Temizlik ancak herkes çöpünü toplarsa sürer.',hint:'Bu hak temizlikle ilgili.'},
