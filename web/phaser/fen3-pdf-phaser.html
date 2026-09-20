@@ -162,7 +162,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .cumle-yuva{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;width:min(330px,96%);min-height:56px;padding:7px;border:3px dashed #9fb0c4;border-radius:13px;background:#fff;align-items:center}
 .cumle-yuva span{min-height:40px;display:flex;align-items:center;padding:4px 8px;border-radius:9px;background:#eef6fc;border:2px solid var(--line);font-size:14px;font-weight:900}
 .kelimeler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.kelime{min-height:46px;min-width:46px;border:3px solid #fff;border-radius:13px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:6px 11px;font-size:14px;font-weight:900}
+.kelime{min-height:46px;min-width:46px;border:3px solid #fff;border-radius:13px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:6px 11px;font-size:14px;font-weight:900;touch-action:none}
 .kelime.bitti{visibility:hidden}
 /* YAZ — gerçek üretim; hazır kart dizmek başarı sayılmaz */
 .yazi-alan{flex:0 0 auto;width:min(330px,96%);min-height:92px;border:3px solid #8fb4cd;border-radius:15px;padding:9px 11px;font:inherit;font-size:15px;font-weight:800;line-height:1.4;resize:none;background:#fff}
@@ -811,8 +811,8 @@ function cumleCiz(r){
  const d=state.dizi||[];
  $('#stage').innerHTML=sahneHtml(r)+
   `<div class="konus-balon">${esc(r.gorev)}</div>`+
-  `<div class="cumle-yuva">${d.length?d.map(i=>`<span>${esc(r.kelimeler[i])}</span>`).join('')
-    :'<span class="bos" style="border:0;background:none">Sözcükleri sırayla seç</span>'}</div>`+
+  `<div class="cumle-yuva" data-cumle-yuva="1">${d.length?d.map(i=>`<span>${esc(r.kelimeler[i])}</span>`).join('')
+    :'<span class="bos" style="border:0;background:none">İlk sözcüğü buraya sürükle</span>'}</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  if(state.faz===1){
   $('#task').innerHTML=`<div class="caption soru">Cümlenin başı ve sonu nasıl olmalı?</div>`+
@@ -836,7 +836,7 @@ function cumleCiz(r){
   (d.length?`<button class="choice" id="geriAl">Geri al</button>`:'');
  const ga=$('#geriAl');
  if(ga)ga.onclick=()=>{state.dizi=d.slice(0,-1);state.not='';cumleCiz(r)};
- $$('[data-kel]').forEach(b=>b.onclick=()=>{
+ const ekle=b=>{
   if(locked)return;
   const i=+b.dataset.kel;
   if(d.indexOf(i)>=0)return;
@@ -849,7 +849,9 @@ function cumleCiz(r){
   state.dizi=yeni;state.not='';
   if(yeni.length===r.kelimeler.length){state.faz=1;feedback('Sıra tamam');
    return gecisBasla(()=>cumleCiz(r),FAST?30:520)}
-  cumleCiz(r)})}
+  cumleCiz(r)};
+ $$('[data-kel]').forEach(b=>b.onclick=()=>ekle(b));
+ baglaSurukle('[data-kel]:not(.bitti)','[data-cumle-yuva]',k=>ekle(k))}
 function renderCumle(r){state.dizi=[];state.faz=0;state.not='';state.dizilim=null;cumleCiz(r)}
 
 /* ===== GOZLEM (eski codeGrid) =====

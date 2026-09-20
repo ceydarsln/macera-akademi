@@ -29,7 +29,17 @@ async function drag(page, from, to) {
     { id: 'g22', kind: 'topla' },
     { id: 'g23', kind: 'sinif' },
     { id: 'g24', kind: 'grafik' },
-    { id: 'g29', kind: 'sira' }
+    { id: 'g29', kind: 'sira' },
+    { id: 'g31', kind: 'sinif' },
+    { id: 'g32', kind: 'esle' },
+    { id: 'g35', kind: 'topla' },
+    { id: 'g36', kind: 'cumle' },
+    { id: 'g38', kind: 'sira' },
+    { id: 'g39', kind: 'esle' },
+    { id: 'g41', kind: 'topla' },
+    { id: 'g44', kind: 'grafik' },
+    { id: 'g45', kind: 'esle' },
+    { id: 'g47', kind: 'topla' }
   ];
   for (const check of checks) {
     await page.goto(`${FILE}?scene-smoke=${check.id}#oyun=${check.id}`, { waitUntil: 'domcontentloaded' });
@@ -57,6 +67,11 @@ async function drag(page, from, to) {
       await drag(page, '[data-grafik-blok]', '[data-sut="0"]');
       const actual = await page.evaluate(() => state.kondu[0]);
       if (actual !== 1) throw new Error(`${check.id}: grafik bloğu yerleşmedi`);
+    } else if (check.kind === 'cumle') {
+      const first = await page.evaluate(() => round().kabul[0][0]);
+      await drag(page, `[data-kel="${first}"]`, '[data-cumle-yuva]');
+      const actual = await page.evaluate(() => state.dizi[0]);
+      if (actual !== first) throw new Error(`${check.id}: sözcük cümle yuvasına yerleşmedi`);
     }
     console.log(`✓ ${check.id} gerçek sahne sürüklemesi`);
   }

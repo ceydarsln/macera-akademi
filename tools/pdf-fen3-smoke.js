@@ -21,6 +21,31 @@ async function click(page, selector) {
   await pause(page);
 }
 
+function shortestPath(r, from, to) {
+  const moves = [
+    { symbol: '⬆️', dx: 0, dy: -1 },
+    { symbol: '⬇️', dx: 0, dy: 1 },
+    { symbol: '⬅️', dx: -1, dy: 0 },
+    { symbol: '➡️', dx: 1, dy: 0 }
+  ];
+  const blocked = new Set(r.engeller.map(([x, y]) => `${x},${y}`));
+  const queue = [{ x: from[0], y: from[1], path: [] }];
+  const seen = new Set([`${from[0]},${from[1]}`]);
+  while (queue.length) {
+    const current = queue.shift();
+    if (current.x === to[0] && current.y === to[1]) return current.path;
+    for (const move of moves) {
+      const x = current.x + move.dx;
+      const y = current.y + move.dy;
+      const key = `${x},${y}`;
+      if (x < 0 || y < 0 || x >= r.en || y >= r.boy || blocked.has(key) || seen.has(key)) continue;
+      seen.add(key);
+      queue.push({ x, y, path: current.path.concat(move.symbol) });
+    }
+  }
+  throw new Error(`Gözlem yolu bulunamadı: ${from} -> ${to}`);
+}
+
 async function solveRound(page, r) {
   if (r.kind === 'sinifla') {
     for (let n = 0; n < r.kartlar.length; n++) {
@@ -57,6 +82,33 @@ async function solveRound(page, r) {
   } else if (r.kind === 'olcum') {
     await page.locator('#olcek').evaluate((el, value) => { el.value = value; el.dispatchEvent(new Event('input', { bubbles: true })); }, String(r.dogru));
     await click(page, '#olcOk');
+  } else if (r.kind === 'sula') {
+    await page.evaluate(value => {
+      state.verilen = value;
+      state.sonuc = '';
+      sulaCiz(round());
+    }, Math.ceil((r.uygunAlt + r.uygunUst) / 2));
+    await click(page, '#sulaOk');
+  } else if (r.kind === 'tus') {
+    for (const digit of String(r.dogru)) await click(page, `[data-tus="${digit}"]`);
+    await click(page, '[data-tus="ok"]');
+  } else if (r.kind === 'cumle') {
+    for (const i of r.kabul[0]) await click(page, `[data-kel="${i}"]`);
+    await page.waitForSelector('[data-bit]', { timeout: 2000 });
+    const correct = r.bitirme.findIndex(x => x.correct);
+    await click(page, `[data-bit="${correct}"]`);
+  } else if (r.kind === 'gozlem') {
+    for (let targetIndex = 0; targetIndex < r.noktalar.length; targetIndex++) {
+      const from = await page.evaluate(() => (state.pos || round().basla).slice());
+      const target = r.noktalar[targetIndex];
+      const path = shortestPath(r, from, [target.x, target.y]);
+      if (path.length > 10) throw new Error(`Gözlem yolu 10 adımı aşıyor: ${path.length}`);
+      for (const symbol of path) await click(page, `[data-yon="${symbol}"]`);
+      await page.locator('[data-yon="git"]').click();
+      await page.waitForFunction(() => state.soruNokta != null, null, { timeout: 3000 });
+      const correct = target.secenekler.findIndex(x => x.correct);
+      await click(page, `[data-gs="${correct}"]`);
+    }
   } else if (r.kind === 'yaz') {
     await page.locator('#yaziAlan').fill(r.ornekCevap);
     await page.locator('#yaziAlan').dispatchEvent('input');
