@@ -50,11 +50,15 @@ button{font:inherit;color:inherit;cursor:pointer}
 .ilerleme i.ok{background:var(--ok);border-color:#0d6444}
 .ilerleme i.simdi{background:var(--gold);border-color:#a97c14}
 .dizi{display:flex;flex-direction:column;gap:6px;width:100%;align-items:center}
-.sirakart{width:min(320px,94%);min-height:50px;border:3px solid var(--line);border-radius:14px;background:#fff;padding:8px 11px;font-weight:880;font-size:clamp(12px,3.3vw,15px);line-height:1.28;text-align:left;overflow-wrap:break-word;display:flex;align-items:center;gap:8px}
+.sirakart{width:min(320px,94%);min-height:50px;border:3px solid var(--line);border-radius:14px;background:#fff;padding:8px 11px;font-weight:880;font-size:clamp(12px,3.3vw,15px);line-height:1.28;text-align:left;overflow-wrap:break-word;display:flex;align-items:center;gap:8px;touch-action:none}
 .sirakart .no{flex:0 0 24px;height:24px;border-radius:50%;background:#e6eef5;color:var(--muted);font-size:12px;font-weight:950;display:flex;align-items:center;justify-content:center}
 .sirakart.secili{border-color:var(--ok);background:#eaf8f1}
 .sirakart.secili .no{background:var(--ok);color:#fff}
 .sirakart.olu{opacity:.4}
+.sira-hedef{width:min(330px,96%);min-height:72px;border:3px dashed #6f9cba;border-radius:16px;background:rgba(255,255,255,.8);padding:7px;display:flex;flex-direction:column;gap:5px;justify-content:center}
+.sira-hedef .sira-bos{text-align:center;color:var(--muted);font-size:12px;font-weight:900;line-height:1.3}
+.sira-hedef .sira-adim{display:flex;align-items:flex-start;gap:6px;border:2px solid #91c8ae;border-radius:10px;background:#eaf8f1;padding:4px 7px;font-size:12px;font-weight:850;line-height:1.25;text-align:left}
+.sira-hedef .sira-adim b{flex:0 0 21px;height:21px;border-radius:50%;display:grid;place-items:center;background:var(--ok);color:#fff;font-size:11px}
 .esle-alan{display:flex;flex-direction:column;gap:7px;width:100%;align-items:center}
 .yuva{width:min(330px,96%);min-height:60px;border:3px dashed #6f9cba;border-radius:15px;background:rgba(255,255,255,.7);padding:7px 9px;display:flex;align-items:center;gap:9px}
 .yuva.dolu{border-style:solid;border-color:var(--ok);background:#eaf8f1}
@@ -64,9 +68,12 @@ svg.mini{flex:0 0 74px;width:74px;height:auto;display:block}
 .yuva .hedef{flex:1 1 auto;font-weight:900;font-size:clamp(12px,3.2vw,15px);line-height:1.25;overflow-wrap:break-word}
 .yuva .kondu{flex:1 1 auto;font-weight:850;font-size:12px;color:#0d6444;line-height:1.2}
 .etiketler{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.etiket{min-height:46px;max-width:160px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:900;font-size:clamp(12px,3.2vw,14px);line-height:1.2;overflow-wrap:break-word}
+.etiket{min-height:46px;max-width:160px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:900;font-size:clamp(12px,3.2vw,14px);line-height:1.2;overflow-wrap:break-word;touch-action:none}
 .etiket.secili{border-color:var(--gold);background:#fff7e2}
 .etiket.bitti{visibility:hidden}
+.ui-dragging{position:relative!important;z-index:999!important;pointer-events:none!important;opacity:.94;box-shadow:0 10px 25px rgba(0,0,0,.28)!important}
+.drop-hot{filter:drop-shadow(0 0 9px #f1b53a)!important;outline:4px solid #f1b53a!important;outline-offset:3px}
+[data-sinif-kart],[data-cetele-kart]{touch-action:none;cursor:grab}
 .feedback{position:absolute;left:50%;top:46%;z-index:150;transform:translate(-50%,-50%) scale(.7);opacity:0;pointer-events:none;background:#fff;border:4px solid var(--ok);border-radius:22px;padding:14px 19px;min-width:200px;text-align:center;font-size:clamp(17px,4.6vw,25px);font-weight:1000;box-shadow:0 12px 38px rgba(0,0,0,.27)}
 .feedback.show{animation:pop .95s ease both}
 .feedback.bad{border-color:var(--bad)}
@@ -158,7 +165,7 @@ svg.sahne{width:min(330px,96%);height:auto;max-height:190px;display:block}
 .doluluk{width:min(320px,94%);height:14px;border-radius:8px;background:#dbe7ef;border:2px solid #a8bfd0;overflow:hidden}
 .doluluk i{display:block;height:100%;width:var(--w,0%);background:var(--ok);transition:width .3s}
 .esyalar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;width:100%}
-.esya{min-height:48px;max-width:158px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:900;font-size:clamp(12px,3.2vw,14px);line-height:1.2;overflow-wrap:break-word}
+.esya{min-height:48px;max-width:158px;border:3px solid #fff;border-radius:14px;background:var(--panel);box-shadow:0 3px 0 rgba(35,77,108,.2);padding:7px 10px;font-weight:900;font-size:clamp(12px,3.2vw,14px);line-height:1.2;overflow-wrap:break-word;touch-action:none}
 .esya.alindi{visibility:hidden}
 @media (max-height:640px){.stage{min-height:168px}.scene{gap:6px}.choice{min-height:48px}svg.sahne{max-height:150px}}
 </style>
@@ -222,6 +229,14 @@ function sadelestir(s){return String(s||'').toLocaleLowerCase('tr').replace(/[^\
 function kelimeSay(s){const t=sadelestir(s);return t?t.split(' ').length:0}
 function ilerleme(n,i){return `<div class="ilerleme">${Array.from({length:n},(_,k)=>`<i class="${k<i?'ok':(k===i?'simdi':'')}"></i>`).join('')}</div>`}
 function sahneHtml(r){return typeof r.sahne==='function'?r.sahne(state):(r.sahne||'')}
+/* Sürükleme ana etkileşimdir; dokunarak seçme/koyma erişilebilir
+   mobil yedek olarak korunur. */
+function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
+ k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
+ k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
+ const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit)birak(k,hit)}};
+ k.onpointerup=bitir;k.onpointercancel=bitir})}
 
 /* ===== SAHNELER — şartname ölçüt 1 ve 3: kavram sahnenin içinde, tanıma
    gerektiren kazanımlarda gerçek çizim (emoji değil). ===== */
@@ -431,20 +446,21 @@ function sinifCiz(r){
  $('#stage').innerHTML=sahneHtml(r)+
   ilerleme(r.kartlar.length,i)+
   (k.gorsel?`<div class="row">${k.gorsel}</div>`:'')+
-  `<div class="kart vurgu">${esc(k.t)}</div>`+
+  `<div class="kart vurgu" data-sinif-kart="1">${esc(k.t)}</div>`+
   (k.sahne?`<div class="sahne-not">${esc(k.sahne)}</div>`:'')+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
   `<div class="kutular">${r.kutular.map((b,j)=>`<button class="kutu" data-kutu="${j}">${esc(b)}<span class="sayac">${(state.sayim||[])[j]||0} kart</span></button>`).join('')}</div>`+
   (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
- $$('[data-kutu]').forEach(b=>b.onclick=()=>{
+ const yerlestir=j=>{
   if(state.gecis||locked)return;
-  const j=+b.dataset.kutu;
   if(j!==k.dogru)return wrong(k.hint||'Kartı yeniden oku: bu davranış hangi kutuya uyuyor?');
   state.sayim=state.sayim||r.kutular.map(()=>0);state.sayim[j]++;
   state.ix=i+1;state.not=k.neden||'';
   if(state.ix>=r.kartlar.length)return good();
-  feedback('Doğru');gecisBasla(()=>sinifCiz(r),FAST?30:520)})}
+  feedback('Doğru');gecisBasla(()=>sinifCiz(r),FAST?30:520)};
+ $$('[data-kutu]').forEach(b=>b.onclick=()=>yerlestir(+b.dataset.kutu));
+ baglaSurukle('[data-sinif-kart]','[data-kutu]',(_k,h)=>yerlestir(+h.dataset.kutu))}
 function renderSinif(r){state.ix=0;state.not='';state.sayim=r.kutular.map(()=>0);sinifCiz(r)}
 
 /* ===== SIRA: gerçek sahnede adım sıralama; roket-yakıt yok.
@@ -462,16 +478,19 @@ function siraTohum(){let h=0;const s=GAME_ID+':'+roundIndex;
  for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;
  return Math.abs(h)+1}
 function siraCiz(r){
+ const d=state.dizi||[];
  $('#stage').innerHTML=sahneHtml(r)+
   (r.gorev?`<div class="konus-balon">${esc(r.gorev)}</div>`:'')+
+  `<div class="sira-hedef" data-sira-hedef="1">${d.length
+   ?d.map((i,p)=>`<div class="sira-adim"><b>${p+1}</b><span>${esc(r.kartlar[i].t)}</span></div>`).join('')
+   :'<div class="sira-bos">İlk kartı buraya sürükle; doğru adımlar burada sırayla oluşacak.</div>'}</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
- const d=state.dizi||[];
  if(!state.dizilim)state.dizilim=siraDizilim(r,siraTohum());
  $('#task').innerHTML=`<div class="dizi">${state.dizilim.map(i=>{
    const k=r.kartlar[i],p=d.indexOf(i);
    return `<button class="sirakart ${p>=0?'secili':''}" data-kart="${i}"><span class="no">${p>=0?p+1:''}</span><span>${esc(k.t)}</span></button>`}).join('')}</div>`+
   `<div class="hint">${d.length}/${r.kartlar.length} adım dizildi. ${esc(r.ipucu||'')}</div>`;
- $$('[data-kart]').forEach(b=>b.onclick=()=>{
+ const ekle=b=>{
   if(state.gecis||locked)return;
   const i=+b.dataset.kart;
   if(d.indexOf(i)>=0)return feedback('Bunu dizdin');
@@ -480,7 +499,9 @@ function siraCiz(r){
    siraCiz(r);return wrong(state.not)}
   state.dizi=d.concat(i);state.not='';
   if(state.dizi.length>=r.dogru.length){siraCiz(r);return good()}
-  siraCiz(r)})}
+  siraCiz(r)};
+ $$('[data-kart]').forEach(b=>b.onclick=()=>ekle(b));
+ baglaSurukle('[data-kart]:not(.secili)','[data-sira-hedef]',k=>ekle(k))}
 function renderSira(r){state.dizi=[];state.not='';state.dizilim=null;siraCiz(r)}
 
 /* ===== ESLE: parça ile hedef arasında emoji/renk eşleşmesi YOK; karar bilgiye
@@ -501,18 +522,19 @@ function esleCiz(r){
     return `<button class="etiket ${kondu?'bitti':''} ${state.secEt===j?'secili':''}" data-et="${j}">${esc(e.t)}</button>`}).join('')}</div>`+
   `<div class="hint">${esc(r.ipucu||'Önce alttan bir kart seç, sonra ait olduğu satıra dokun.')}</div>`;
  $$('[data-et]').forEach(b=>b.onclick=()=>{if(locked)return;state.secEt=+b.dataset.et;esleCiz(r)});
- $$('[data-yuva]').forEach(b=>b.onclick=()=>{
-  if(locked||state.secEt==null)return;
-  const i=+b.dataset.yuva;
+ const yerlestir=(j,i)=>{
+  if(locked||j==null)return;
   if((state.yerlesen||[])[i]!=null)return feedback('Bu satır dolu');
-  if(state.secEt!==r.yuvalar[i].dogru){
+  if(j!==r.yuvalar[i].dogru){
    state.not=r.yuvalar[i].hint||'Bu kart bu satıra ait değil. Ne işe yaradığını düşün.';
    state.secEt=null;esleCiz(r);return wrong(state.not)}
-  state.yerlesen[i]=state.secEt;state.not=r.yuvalar[i].neden||'';
-  if(r.sesliSoyle)speak(r.etiketler[state.secEt].t);
+  state.yerlesen[i]=j;state.not=r.yuvalar[i].neden||'';
+  if(r.sesliSoyle)speak(r.etiketler[j].t);
   state.secEt=null;
   esleCiz(r);
-  if(state.yerlesen.every(v=>v!=null))good()})}
+  if(state.yerlesen.every(v=>v!=null))good()};
+ $$('[data-yuva]').forEach(b=>b.onclick=()=>yerlestir(state.secEt,+b.dataset.yuva));
+ baglaSurukle('[data-et]:not(.bitti)','[data-yuva]',(k,h)=>yerlestir(+k.dataset.et,+h.dataset.yuva))}
 function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secEt=null;state.not='';esleCiz(r)}
 
 /* ===== YAZ: gerçek üretim. Hazır cümle kopyalamak reddedilir; ölçütler
@@ -566,7 +588,7 @@ function konusCiz(r){
    `<div class="hint">${yeter?'Anlatımın kaydedildi.':'En az 1,2 saniye konuş.'} (${(sure/1000).toFixed(1)} sn)</div>`+
    (yeter?`<button class="choice" id="konusBitti">Anlattım</button>`:'');
   const b=$('#konusTut');
-  const bas=()=>{state.basili=true;state.bas=Date.now();konusCiz(r);
+  const bas=()=>{state.basili=true;state.bas=Date.now();b.classList.add('basili');
    state.sayac=setInterval(()=>{state.sure=Date.now()-state.bas;const c=$('.sure-cubuk i');
     if(c)c.style.setProperty('--w',Math.min(100,state.sure/2000*100)+'%')},80)};
   const birak=()=>{if(!state.basili)return;state.basili=false;clearInterval(state.sayac);
@@ -653,14 +675,14 @@ function cantaCiz(r){
  const dolu=Math.round(al.length/r.gerekenSayi*100);
  $('#stage').innerHTML=sahneHtml(r)+
   `<div class="konus-balon">${esc(r.gorev)}</div>`+
-  `<div class="canta-kutu">${al.length?al.map(j=>`<span class="icerik">${esc(r.esyalar[j].t)}</span>`).join(''):'<span class="icerik" style="opacity:.5">çanta boş</span>'}</div>`+
+  `<div class="canta-kutu" data-canta-hedef="1">${al.length?al.map(j=>`<span class="icerik">${esc(r.esyalar[j].t)}</span>`).join(''):'<span class="icerik" style="opacity:.5">çanta boş</span>'}</div>`+
   `<div class="doluluk"><i style="--w:${Math.min(100,dolu)}%"></i></div>`+
   `<div class="sahne-not">${al.length}/${r.gerekenSayi} malzeme kondu</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
   `<div class="esyalar">${r.esyalar.map((e,j)=>`<button class="esya ${al.indexOf(j)>=0?'alindi':''}" data-esya="${j}">${esc(e.t)}</button>`).join('')}</div>`+
   (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
- $$('[data-esya]').forEach(b=>b.onclick=()=>{
+ const ekle=b=>{
   if(locked||state.gecis)return;
   const j=+b.dataset.esya;
   if(al.indexOf(j)>=0)return;
@@ -668,7 +690,9 @@ function cantaCiz(r){
    cantaCiz(r);return wrong(state.not)}
   state.alinan=al.concat(j);state.not=r.esyalar[j].neden||'';
   cantaCiz(r);
-  if(state.alinan.length>=r.gerekenSayi)good()})}
+  if(state.alinan.length>=r.gerekenSayi)good()};
+ $$('[data-esya]').forEach(b=>b.onclick=()=>ekle(b));
+ baglaSurukle('[data-esya]:not(.alindi)','[data-canta-hedef]',k=>ekle(k))}
 function renderCanta(r){state.alinan=[];state.not='';cantaCiz(r)}
 
 /* ===== CETELE: rakam sayacı yok — işaretler çetele çizgisiyle birikir ve
@@ -684,7 +708,7 @@ function ceteleSvg(n){
 function ceteleCiz(r){
  const i=state.ix||0,o=r.oylar[i],say=state.say||r.satirlar.map(()=>0);
  $('#stage').innerHTML=sahneHtml(r)+
-  (o?`<div class="konus-balon">${esc(o.t)}</div>`:'')+
+  (o?`<div class="konus-balon" data-cetele-kart="1">${esc(o.t)}</div>`:'')+
   ilerleme(r.oylar.length,i)+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
@@ -692,14 +716,15 @@ function ceteleCiz(r){
     `<button class="cetele-satir ${state.sonSatir===j?'vurgu':''}" data-satir="${j}">`+
     `<span class="ad">${esc(sa)}</span><span class="isaret">${ceteleSvg(say[j])}</span></button>`).join('')}</div>`+
   `<div class="hint">${esc(r.ipucu||'Beşinci çizgi dördünü keser.')}</div>`;
- $$('[data-satir]').forEach(b=>b.onclick=()=>{
+ const isle=j=>{
   if(locked||state.gecis||!o)return;
-  const j=+b.dataset.satir;
   if(j!==o.dogru){state.not=o.hint||'Söylenene yeniden bak: hangi görevi anlatıyor?';
    ceteleCiz(r);return wrong(state.not)}
   state.say=say.slice();state.say[j]++;state.sonSatir=j;state.ix=i+1;state.not=o.neden||'';
   if(state.ix>=r.oylar.length){ceteleCiz(r);return good()}
-  feedback('İşlendi');gecisBasla(()=>ceteleCiz(r),FAST?30:480)})}
+  feedback('İşlendi');gecisBasla(()=>ceteleCiz(r),FAST?30:480)};
+ $$('[data-satir]').forEach(b=>b.onclick=()=>isle(+b.dataset.satir));
+ baglaSurukle('[data-cetele-kart]','[data-satir]',(_k,h)=>isle(+h.dataset.satir))}
 function renderCetele(r){state.ix=0;state.say=r.satirlar.map(()=>0);state.not='';state.sonSatir=null;ceteleCiz(r)}
 
 /* ===== YON: bloklar KUZEY/GÜNEY/DOĞU/BATI. Yön adının ekranda hangi yöne
@@ -786,7 +811,7 @@ function muslukCiz(r){
   `<button class="choice" id="muslukOk">Bu kadar yeter</button>`+
   `<div class="hint">${esc(r.ipucu||'Ne kadar gerektiğine işe bakarak sen karar ver.')}</div>`;
  const b=$('#musluk');
- const bas=()=>{if(locked||state.gecis)return;state.basili=true;state.bas=Date.now();state.baslangicYuzde=state.yuzde||0;muslukCiz(r);
+ const bas=()=>{if(locked||state.gecis)return;state.basili=true;state.bas=Date.now();state.baslangicYuzde=state.yuzde||0;b.classList.add('basili');const ak=$('.akis');if(ak){ak.classList.add('acik');ak.style.height='46px'};
   state.sayac=setInterval(()=>{const v=state.baslangicYuzde+(Date.now()-state.bas)/30;
    state.yuzde=Math.min(130,v);const c=$('.bardak i');if(c)c.style.setProperty('--su',Math.min(100,state.yuzde)+'%');
    const s2=$('.sure-cubuk i');if(s2)s2.style.setProperty('--w',Math.min(100,state.yuzde)+'%')},70)};
