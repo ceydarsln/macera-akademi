@@ -7,6 +7,8 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="scene-workshop.css?v=20260921">
 <script src="scene-workshop.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-discovery.css?v=20260921">
+<script src="scene-discovery.js?v=20260921"></script>
 <style>
 :root{--ink:#18324a;--muted:#53708a;--panel:rgba(255,255,255,.94);--ok:#159765;--bad:#d94655;--gold:#f1b53a;--blue:#2b83c6}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -3256,6 +3258,13 @@ GAMES.p56={title:'Grafik Hesap Makinesi',theme:'class',finish:'Toplamı, farkı 
 
 /* @@OYUNLAR@@ */
 
+// Yalnız bu paketin oyunları: ortak sürükle motoruna dokunmadan özgün sahneler.
+const discoveryMathDrag=renderDrag;
+renderDrag=function(r){if(GAME_ID==='p03'||GAME_ID==='p08')return SceneDiscovery.matching({id:GAME_ID,r:{...r,_round:roundIndex},state,finish:bitirTur,wrong});return discoveryMathDrag(r)};
+GAMES.p08.rounds[1].scene=()=>'<div class="reading-desk"><header>SAYI HAFIZASI</header><div class="reading-page"><b>103 | 020</b><span>Sıfır basamağın yerini tutar. Kartları çevirerek aynı sayının okunuşunu bul.</span></div></div>';
+GAMES.p08.rounds[2].scene=()=>'<div class="reading-desk"><header>DİNLEME KÖŞESİ</header><div class="reading-page"><b>♫</b><span>Otuz altı bin dokuz yüz sekiz</span><em>Yeniden dinlemek için hoparlöre dokun.</em></div></div>';
+const discoveryMathMemory=renderMemory;
+renderMemory=function(r){discoveryMathMemory(r);if(GAME_ID==='p08'){document.querySelector('.scene').classList.add('discovery-scene','discovery-reading');document.querySelectorAll('[data-card]').forEach(b=>{b.style.fontSize='18px';b.style.minHeight='85px';b.style.background='#fff8de';b.addEventListener('click',()=>{b.classList.remove('page-arrival');void b.offsetWidth;b.classList.add('page-arrival')})})}};
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Oyun bulunamadı</h2><p>${esc(GAME_ID)}</p></div></div>`}
 else if(game.rounds.length!==3){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Tur verisi eksik</h2><p>${esc(game.title)}</p></div></div>`}

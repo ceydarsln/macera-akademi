@@ -7,6 +7,8 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="scene-workshop.css?v=20260921">
 <script src="scene-workshop.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-discovery.css?v=20260921">
+<script src="scene-discovery.js?v=20260921"></script>
 <style>
 :root{--ink:#1a2d3d;--muted:#4d6a80;--panel:rgba(255,255,255,.95);--ok:#12805a;--bad:#c8443b;--gold:#d99b20;--blue:#2a75ad;--line:#aec7d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -869,6 +871,7 @@ function renderEsle(r){state.yerlesen=r.yuvalar.map(()=>null);state.secParca=nul
    tek başına başarı sayılmaz (ölçüt 5). ===== */
 function kapHtml(r){
  const kap=r.kap||{},ic=state.icerik||[];
+ if(GAME_ID==='f05')return SceneDiscovery.researchBag(ic.map(index=>({index,label:r.havuz[index].ad,detail:r.havuz[index].ic})),'ARAŞTIRMA ÇANTASI','data-kur-hedef="1"',state.freshSource);
  if(kap.ciz)return `<div class="kur-hedef" data-kur-hedef="1">${kap.ciz(ic.map(j=>r.havuz[j]),state)}</div>`;
  return `<div class="kap" data-kur-hedef="1"><div class="kap-ad">${esc(kap.ad||'Tepsi')}</div>`+
   `<div class="kap-icerik">${ic.length?ic.map(j=>{const h=r.havuz[j];
@@ -876,8 +879,9 @@ function kapHtml(r){
    :'<span class="kap-bos">Henüz boş</span>'}</div></div>`}
 function kurCiz(r){
  const i=state.ix||0,s=r.istekler[i];
- if(!s)return;
- $('#stage').innerHTML=sahneHtml(r,state.canlan)+
+ if(!s){if(GAME_ID==='f05')$('#stage').innerHTML=kapHtml(r);return}
+ if(GAME_ID==='f05')document.querySelector('.scene').classList.add('discovery-scene','discovery-research');
+ $('#stage').innerHTML=(GAME_ID==='f05'?'':sahneHtml(r,state.canlan))+
   ilerleme(r.istekler.length,i)+kapHtml(r)+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  if(!state.dizilim)state.dizilim=dizilimUret(r.havuz.length,tohum('kur'));
@@ -890,17 +894,21 @@ function kurCiz(r){
   const j=+b.dataset.h,h=r.havuz[j];
   if((state.icerik||[]).indexOf(j)>=0)return;
   if(s.gerekli.indexOf(h.id)<0)return wrong(h.hint||s.hint||'Bu öge isteğe uymuyor; isteği yeniden oku.');
-  state.icerik=(state.icerik||[]).concat(j);
+  state.icerik=(state.icerik||[]).concat(j);state.freshSource=j;
   state.canlan=h.canlan||state.canlan;state.not=h.neden||'';
   const kurulan=state.icerik.map(k=>r.havuz[k].id);
   if(s.gerekli.every(id=>kurulan.indexOf(id)>=0)){
    state.ix=i+1;state.not=s.tamam||s.neden||state.not;
    if(state.ix>=r.istekler.length){kurCiz(r);return good()}
+   if(GAME_ID==='f05')$('#stage').innerHTML=kapHtml(r);
    if(!r.kapKalsin)state.icerik=[];
    feedback('Hazır');return gecisBasla(()=>kurCiz(r),FAST?30:560)}
   feedback('Kondu');kurCiz(r)};
  $$('[data-h]').forEach(b=>b.onclick=()=>ekle(b));
- baglaSurukle('[data-h]:not(.yok)','[data-kur-hedef]',k=>ekle(k))}
+ if(GAME_ID==='f05'){
+  $$('[data-h]').forEach(b=>{const h=r.havuz[+b.dataset.h];b.innerHTML=SceneDiscovery.sourceBook(h.ad||h.t,h.ic);b.disabled=b.classList.contains('yok')});
+  SceneWorkshop.bindDrag('[data-h]:not(:disabled)','.satchel-mouth',k=>ekle(k));state.freshSource=null;
+ }else baglaSurukle('[data-h]:not(.yok)','[data-kur-hedef]',k=>ekle(k))}
 function renderKur(r){state.ix=0;state.icerik=[];state.not='';state.canlan='';state.dizilim=null;kurCiz(r)}
 
 /* ===== SOZDIZ: kartlar KÜÇÜK harfle gelir; baş harfi büyütmek ve

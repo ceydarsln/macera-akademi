@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>3. Sınıf Fen Bilimleri — Gözlem ve Kanıt Sahneleri</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="scene-workshop.css?v=20260921">
+<script src="scene-workshop.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-discovery.css?v=20260921">
+<script src="scene-discovery.js?v=20260921"></script>
 <style>
 :root{--ink:#1b2f45;--muted:#516d87;--panel:rgba(255,255,255,.95);--ok:#14855c;--bad:#cd463d;--gold:#dfa32a;--blue:#2c7cb6;--line:#b6cada;--toprak:#8b5e3c}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -597,11 +601,13 @@ function renderKarar(r){state.faz=0;state.not='';kararCiz(r)}
    okunur ve kartın neden uymadığı görevin amacı üzerinden sorulur. ===== */
 function cantaHtml(r){
  const alinan=state.alinan||[];
+ if(GAME_ID==='g05')return SceneDiscovery.researchBag(alinan.map(index=>({index,label:r.ogeler[index].t,detail:r.ogeler[index].neden})),r.cantaAd,'data-canta="1"',state.freshSource);
  return `<div class="canta" data-canta="1"><div class="bas">${esc(r.cantaAd||'ÇANTA')} — ${alinan.length}/${r.gerekli.length}</div>`+
   `<div class="icerik">${alinan.length?alinan.map(i=>`<span>${esc(r.ogeler[i].t)}</span>`).join('')
     :`<span class="bos">${esc(r.bosMetin||'Henüz hiçbir şey toplamadın.')}</span>`}</div></div>`}
 function toplaCiz(r){
- $('#stage').innerHTML=sahneHtml(r)+
+ if(GAME_ID==='g05')document.querySelector('.scene').classList.add('discovery-scene','discovery-research');
+ $('#stage').innerHTML=(GAME_ID==='g05'?'':sahneHtml(r))+
   (r.gorev?`<div class="konus-balon">${esc(r.gorev)}</div>`:'')+
   cantaHtml(r)+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
@@ -616,12 +622,15 @@ function toplaCiz(r){
   if(r.gerekli.indexOf(j)<0){
    state.not=o.hint||'Bu öge görevin amacına hizmet ediyor mu?';
    toplaCiz(r);return wrong(state.not)}
-  state.alinan=(state.alinan||[]).concat(j);state.not=o.neden||'';
+  state.alinan=(state.alinan||[]).concat(j);state.not=o.neden||'';state.freshSource=j;
   toplaCiz(r);
   if(state.alinan.length>=r.gerekli.length)return good();
   feedback('Çantaya girdi')};
  $$('[data-oge]').forEach(b=>b.onclick=()=>ekle(b));
- baglaSurukle('[data-oge]:not(.bitti)','[data-canta]',k=>ekle(k))}
+ if(GAME_ID==='g05'){
+  $$('[data-oge]').forEach(b=>{b.innerHTML=SceneDiscovery.sourceBook(r.ogeler[+b.dataset.oge].t);b.disabled=b.classList.contains('bitti')});
+  SceneWorkshop.bindDrag('[data-oge]:not(:disabled)','.satchel-mouth',k=>ekle(k));state.freshSource=null;
+ }else baglaSurukle('[data-oge]:not(.bitti)','[data-canta]',k=>ekle(k))}
 function renderTopla(r){state.alinan=[];state.not='';toplaCiz(r)}
 
 /* ===== HAFIZA (eski memoryPairs) =====
