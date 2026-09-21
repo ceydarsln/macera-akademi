@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>4. Sınıf Türkçe — Gerçek Üretim Sahneleri</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="scene-workshop.css?v=20260921">
+<script src="scene-workshop.js?v=20260921"></script>
 <style>
 :root{--ink:#1b2f45;--muted:#516d87;--panel:rgba(255,255,255,.95);--ok:#14855c;--bad:#cd463d;--gold:#dfa32a;--blue:#2c7cb6;--line:#b6cada}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -389,7 +391,12 @@ function siraTohum(){let h=0;const s=GAME_ID+':'+roundIndex;
  return Math.abs(h)+1}
 function siraCiz(r){
  const d=state.dizi||[];
- $('#stage').innerHTML=sahneHtml(r)+
+ if(GAME_ID==='z04'){
+  $('#stage').classList.add('workshop-stage');
+  $('#stage').innerHTML='<p class="scene-kicker">SÖZCÜKLER BASKIYA GİRİYOR</p>'+SceneWorkshop.press(d.map(i=>r.kartlar[i].t),true,!!state.yeniSoz)+
+   `<div class="scene-status">${esc(state.not||'Kartı matbaanın kağıdına sürükle.')}</div>`;
+  state.yeniSoz=false;
+ }else $('#stage').innerHTML=sahneHtml(r)+
   (r.gorev?`<div class="konus-balon">${esc(r.gorev)}</div>`:'')+
   `<div class="sira-hedef" data-sira-hedef="1">${d.length
    ?d.map((i,p)=>`<div class="sira-adim"><b>${p+1}</b><span>${esc(r.kartlar[i].t)}</span></div>`).join('')
@@ -411,11 +418,11 @@ function siraCiz(r){
   if(i!==r.dogru[d.length]){
    state.not=(r.ipucular&&r.ipucular[d.length])||'Önce hangisi olmalı?';
    siraCiz(r);return wrong(state.not)}
-  state.dizi=d.concat(i);state.not='';
+  state.dizi=d.concat(i);state.not='';state.yeniSoz=true;
   if(state.dizi.length>=r.dogru.length){siraCiz(r);return good()}
   siraCiz(r)};
  $$('[data-kart]').forEach(b=>b.onclick=()=>ekle(b));
- baglaSurukle('[data-kart]:not(.secili)','[data-sira-hedef]',k=>ekle(k))}
+ (GAME_ID==='z04'?SceneWorkshop.bindDrag:baglaSurukle)('[data-kart]:not(.secili)','[data-sira-hedef]',k=>ekle(k))}
 function renderSira(r){state.dizi=[];state.not='';state.dizilim=null;siraCiz(r)}
 
 /* ===== ESLE: parça ile hedef arasında simge/renk eşleşmesi YOK;
@@ -908,7 +915,7 @@ GAMES.z04={title:'Kurallı Cümle Makinesi',theme:'atolye',
   ipucular:['İşi kim yapıyor? Onunla başla.','Ne zaman olduğunu hangi kart söylüyor?','Neyi topladı?','Kurallı cümlede yüklem nerede olur?'],
   ipucu:'Özne → zaman → nesne → yüklem.',
   result:'"Küçük kardeşim akşam yemeğinden sonra masayı topladı." — yüklem sonda, yani cümle kurallı.'},
- {kind:'karar',prompt:'Hangisi kurallı cümle?',sahne:SAHNE.matbaa,
+ {kind:'karar',prompt:'Hangisi kurallı cümle?',sahne:()=>SceneWorkshop.press(state.faz?['Küçük kardeşim masayı topladı.']:['Yüklemin yerini bul.'],false,!!state.faz),
   durum:'A) "Topladı masayı küçük kardeşim."\nB) "Küçük kardeşim masayı topladı."',
   soru:'Hangisi kurallı cümledir?',
   secenekler:[
@@ -920,7 +927,7 @@ GAMES.z04={title:'Kurallı Cümle Makinesi',theme:'atolye',
    {label:'Cümlenin uzun olmasından',hint:'Uzunluk kurallılıkla ilgili değildir.'},
    {label:'Öznenin başta olmasından',hint:'Özne başta olabilir ama ölçüt yüklemin yeridir.'}]},
   result:'Kurallı cümlede yüklem sonda, devrik cümlede başka yerdedir.'},
- {kind:'yaz',prompt:'Kendi kurallı cümleni yaz.',sahne:SAHNE.matbaa,
+ {kind:'yaz',prompt:'Kendi kurallı cümleni yaz.',sahne:()=>SceneWorkshop.press([state.yazi||'Yeni cümlem…']),
   gorev:'"Sabah", "bahçede" ve "kuşlar" sözcüklerinden en az birini kullanarak kendi kurallı cümleni yaz. Yüklem sonda olsun.',
   enAzKelime:5,buyukHarf:true,bitis:'.',
   denetim:[{ad:'Verilen sözcüklerden en az birini kullan',desen:'sabah|bahçe|kuş',bayrak:'i'}],

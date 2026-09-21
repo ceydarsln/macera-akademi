@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>2. Sınıf Hayat Bilgisi — Gerçek Yaşam Sahneleri</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="scene-workshop.css?v=20260921">
+<script src="scene-workshop.js?v=20260921"></script>
 <style>
 :root{--ink:#1d3346;--muted:#56728a;--panel:rgba(255,255,255,.95);--ok:#158a5e;--bad:#d0483f;--gold:#e0a52c;--blue:#2f7fb8;--line:#b8ccdb}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -671,6 +673,7 @@ function renderTus(r){state.ix=0;state.giris='';state.not='';tusCiz(r)}
 /* ===== CANTA: seçilen malzeme çantaya gerçekten girer, doluluk görünür.
    Gereksiz ama cazip nesneler çeldirici (şartname h12). ===== */
 function cantaCiz(r){
+ if(GAME_ID==='h12')return afetCantasiCiz(r);
  const al=state.alinan||[];
  const dolu=Math.round(al.length/r.gerekenSayi*100);
  $('#stage').innerHTML=sahneHtml(r)+
@@ -694,6 +697,20 @@ function cantaCiz(r){
  $$('[data-esya]').forEach(b=>b.onclick=()=>ekle(b));
  baglaSurukle('[data-esya]:not(.alindi)','[data-canta-hedef]',k=>ekle(k))}
 function renderCanta(r){state.alinan=[];state.not='';cantaCiz(r)}
+
+function afetCantasiCiz(r){
+ const al=state.alinan||[],fresh=state.sonEsya;delete state.sonEsya;
+ $('#stage').classList.add('rescue-stage');
+ $('#stage').innerHTML='<p class="scene-kicker">HAZIRLIK KÖŞESİ</p>'+SceneWorkshop.bag(al.map(i=>({index:i,label:r.esyalar[i].t})),fresh)+
+  `<div class="scene-status" aria-live="polite">${al.length} / ${r.gerekenSayi} malzeme • ${esc(state.not||'Malzemeyi açık çantanın içine sürükle.')}</div>`;
+ $('#task').innerHTML=`<div class="rescue-shelf">${r.esyalar.map((e,i)=>`<button class="esya ${al.includes(i)?'alindi':''}" data-esya="${i}" ${al.includes(i)?'disabled':''} aria-label="${esc(e.t)}">${SceneWorkshop.object(e.t)}<span>${esc(e.t)}</span></button>`).join('')}</div><div class="hint">${esc(r.ipucu)}</div>`;
+ const ekle=el=>{if(locked||state.gecis)return;const i=+el.dataset.esya;if(al.includes(i))return;
+  if(!r.esyalar[i].gerekli){state.not=r.esyalar[i].hint;afetCantasiCiz(r);return wrong(state.not)}
+  state.alinan=al.concat(i);state.sonEsya=i;state.not=r.esyalar[i].neden;afetCantasiCiz(r);
+  if(state.alinan.length>=r.gerekenSayi){state.gecis=true;setTimeout(()=>{state.gecis=false;good()},FAST?20:700)}};
+ $$('[data-esya]:not(:disabled)').forEach(el=>el.onclick=()=>ekle(el));
+ SceneWorkshop.bindDrag('[data-esya]:not(:disabled)','.bag-mouth',(el)=>ekle(el));
+}
 
 /* ===== CETELE: rakam sayacı yok — işaretler çetele çizgisiyle birikir ve
    beşinci çizgi dördünü keser. Yanıt cümlesi satır adını birebir söylemez. ===== */
@@ -1284,7 +1301,7 @@ GAMES.h12={title:'Afet Çantası',theme:'ev',
    {t:'Kimlik fotokopisi',gerekli:true,neden:'Kim olduğunu göstermek ve ailene ulaşmak için gerekir.'},
    {t:'Kalın kitap',gerekli:false,hint:'Ağırdır ve acil bir işe yaramaz.'},
    {t:'Cam bardak',gerekli:false,hint:'Kırılır ve tehlike yaratır.'}]},
- {kind:'konus',prompt:'Kendi çantan için üç malzeme seç.',sahne:SAHNE.ev,
+ {kind:'konus',prompt:'Kendi çantan için üç malzeme seç.',sahne:()=>SceneWorkshop.bag([]),
   gorev:'Kendi afet çantana koyacağın üç malzemeyi söyle ve her biri için nedenini belirt.',
   ornek:'Örnek: Su alırım çünkü susuz kalınmaz. El feneri alırım çünkü elektrik kesilebilir. İlacımı alırım çünkü her gün kullanıyorum.',
   olcutler:['Üç malzeme söyledim.','Her biri için neden söyledim.','Anlaşılır konuştum.'],

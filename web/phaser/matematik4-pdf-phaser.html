@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>4. Sınıf Matematik — PDF Şartnamesi Sahneleri</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="scene-workshop.css?v=20260921">
+<script src="scene-workshop.js?v=20260921"></script>
 <style>
 :root{--ink:#18324a;--muted:#53708a;--panel:rgba(255,255,255,.94);--ok:#159765;--bad:#d94655;--gold:#f1b53a;--blue:#2b83c6}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -409,6 +411,8 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .ui-dragging{position:relative!important;z-index:999!important;pointer-events:none!important;opacity:.94;box-shadow:0 10px 25px rgba(0,0,0,.28)!important}
 .drop-hot,[data-target].hot{filter:drop-shadow(0 0 9px #f1b53a)!important;outline:4px solid #f1b53a!important;outline-offset:3px}
 
+/* Yönerge üçüncü satıra geçtiğinde de tamamı görünür. */
+.hud .prompt{max-height:none;overflow:visible;min-width:0;overflow-wrap:break-word}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -532,6 +536,8 @@ function renderBasamak(r){
 
 /* --- adım adım tuş takımı: ara basamak/strateji görünür (p14,p18,p29,p40,p56) --- */
 function renderNumpad(r){
+ if(GAME_ID==='p15')$('#stage').classList.add('market-stage');
+ if(GAME_ID==='p24')$('#stage').classList.add('balance-stage');
  state.i=0;state.buf='';
  const ciz=()=>{
   const s=r.steps[state.i];
@@ -640,6 +646,7 @@ function renderAsansor(r){
 
 /* --- tepsi: seçilen parçalar tepside KALIR, tek tek geri alınabilir (p10,p23,p32,p51) --- */
 function renderTepsi(r){
+ if(GAME_ID==='p15')return renderKasaPazari(r);
  state.tray=[];
  const say=()=>{const m={};state.tray.forEach(id=>m[id]=(m[id]||0)+1);return m};
  const tamam=()=>{const m=say(),n=r.need;const k=Object.keys(n);
@@ -899,7 +906,7 @@ function renderAci(r){
 
 
 /* ===== çekirdekten devralınan genel oynatıcılar ===== */
-function renderMulti(r){state.selected=[];$('#task').innerHTML=`<div class="actions">${r.items.map((x,i)=>`<button class="action" data-item="${i}">${x.html||esc(x.label)}</button>`).join('')}</div>${r.sceneDrop?'<div class="note">İşlem kartlarını sahnedeki gerçek sağ kefeye sürükle. Dokunarak seçim de kullanılabilir.</div>':''}`;
+function renderMulti(r){if(GAME_ID==='p24')return renderEsitlikAtolyesi(r);state.selected=[];$('#task').innerHTML=`<div class="actions">${r.items.map((x,i)=>`<button class="action" data-item="${i}">${x.html||esc(x.label)}</button>`).join('')}</div>${r.sceneDrop?'<div class="note">İşlem kartlarını sahnedeki gerçek sağ kefeye sürükle. Dokunarak seçim de kullanılabilir.</div>':''}`;
  const sec=(x,b)=>{if(!x.correct)return wrong(r.hint);if(state.selected.includes(x.id))return;state.selected.push(x.id);b.style.background='#b9f0d4';b.disabled=true;if(r.onSelect){r.onSelect(state,x);updateStage()}if(state.selected.length===r.items.filter(x=>x.correct).length)bitirTur(r)};
  $$('[data-item]').forEach(b=>b.onclick=()=>sec(r.items[+b.dataset.item],b));
  if(r.sceneDrop)baglaSurukle('[data-item]','[data-multi-target]',k=>sec(r.items[+k.dataset.item],k))}
@@ -1460,6 +1467,21 @@ GAMES.p14={title:'Kesir Hesap Makinesi',theme:'lab',finish:'Kesirlerle toplama v
 /* p15 — Çokluk Ölçeri · bir çokluğun kesir kadarını bul
    Şartname: tren/tünel sahnesi ve hazır açılan sürgü kaldırıldı. Sepet ve nesneler
    gerçekten görünüyor; çocuk eş gruplardan istenen sayıda grubu kendisi seçiyor. */
+function renderKasaPazari(r){
+ state.tray=[];state.kasalar=[];
+ const count=roundIndex===0?4:5,per=roundIndex===0?6:4,type=roundIndex===0?'apple':'pencil';
+ const ciz=(fresh=-1)=>{
+  $('#stage').classList.add('market-stage');
+  $('#stage').innerHTML=`<p class="scene-kicker">MAHALLE PAZARI • ${count} EŞ KASA</p><div class="market-crates">${Array.from({length:count},(_,i)=>state.kasalar.includes(i)?'<div class="produce-crate" style="opacity:.12" aria-hidden="true"></div>':`<button class="produce-crate" data-add="kasa" data-crate="${i}" aria-label="${per} ${type==='apple'?'elmalı':'kalemli'} kasa">${SceneWorkshop.crate(type,per)}</button>`).join('')}</div><div class="market-cart" data-tepsi aria-label="Pazar arabasının sepeti">${state.kasalar.length?state.kasalar.map((k,i)=>`<button class="produce-crate ${k===fresh?'crate-arrival':''}" data-rm="${i}" aria-label="Bu kasayı rafa geri koy">${SceneWorkshop.crate(type,per)}</button>`).join(''):'<span class="paper-guide">Seçtiğin kasaları arabaya taşı</span>'}</div><div class="scene-status" aria-live="polite">${state.kasalar.length} kasa × ${per} = ${state.kasalar.length*per} ${type==='apple'?'elma':'kalem'}</div>`;
+  $('#task').innerHTML=`<button class="action" data-serve>Seçimi onayla</button><div class="hint">Kasaya dokunarak da taşıyabilirsin. Geri koymak için arabadaki kasaya dokun.</div>${state.note?`<div class="note">${esc(state.note)}</div>`:''}`;
+  const ekle=el=>{if(locked)return;const i=+el.dataset.crate;if(state.kasalar.includes(i))return;state.kasalar.push(i);state.tray.push('kasa');state.note='';ciz(i)};
+  $$('[data-add]').forEach(el=>el.onclick=()=>ekle(el));
+  $$('[data-rm]').forEach(el=>el.onclick=()=>{if(locked)return;state.kasalar.splice(+el.dataset.rm,1);state.tray.splice(+el.dataset.rm,1);state.note='';ciz()});
+  SceneWorkshop.bindDrag('[data-add]','[data-tepsi]',el=>ekle(el));
+  $('[data-serve]').onclick=()=>{if(locked)return;if(state.tray.length!==r.need.kasa){state.note=r.hint;ciz();return wrong(r.hint)}bitirTur(r)};
+ };ciz();
+}
+
 function kasaSahne(toplam,grupSayisi,her,ikon){return(st)=>{
  const secilen=(st.tray||[]).length;
  return `<div class="caption">🧺 Sepette <b>${toplam}</b> ${ikon} var · ${grupSayisi} eş kasaya paylaştırıldı</div>
@@ -1485,9 +1507,8 @@ GAMES.p15={title:'Çokluk Ölçeri',theme:'market',finish:'Bir çokluğun kesir 
   okNote:'2 grup × 4 kalem = <b>8</b> kalem · 20’nin 2/5’i 8’dir.',
   result:'20’nin 2/5’i = 2 × 4 = 8'},
  {kind:'numpad',prompt:'Ters problem: bir çokluğun 3/4’ü 9 ise çokluğun tamamı kaçtır?',
-  scene:(st)=>`<div class="caption">🔁 Ters problem</div>
-   <div class="row">${Array.from({length:4},(_,i)=>`<div class="stack" style="border:3px dashed ${i<3?'#2f8f63':'#c0a06a'};border-radius:12px;padding:6px;min-width:54px">
-     <div style="font-size:15px">${i<3?'🍬🍬🍬':'❔'}</div><small style="font-weight:900">${i<3?'?':'boş grup'}</small></div>`).join('')}</div>
+  scene:(st)=>`<p class="scene-kicker">PAZARDA TERS PROBLEM</p>
+   <div class="market-crates" style="grid-template-columns:repeat(4,minmax(0,1fr))">${Array.from({length:4},(_,i)=>`<div class="produce-crate">${i<3||st.i>0?SceneWorkshop.crate('apple',3):'<span class="crate-produce" style="place-items:center;font-size:30px">?</span><span class="crate-front"></span>'}</div>`).join('')}</div>
    <div class="note">Üç grup birlikte 9 nesne ediyor. Bütün dört gruptan oluşuyor.</div>`,
   steps:[{ask:'Bir grupta kaç nesne var?',answer:3,hint:'Üç eş grup 9 nesne ediyorsa: 9 : 3 kaç eder?'},
          {ask:'Bütün (4 grup) kaç nesne eder?',answer:12,hint:'Bir grup bulundu; payda 4 olduğu için dört grup vardır.'}],
@@ -1832,6 +1853,22 @@ function kefeSahne(sol,solEtiket){return(st)=>{
   <div class="m4-pan" data-multi-target role="button"><b>SAĞ KEFE</b><div style="font-size:15px;font-weight:900">${secilen.length?secilen.join(' · '):'kartları buraya sürükle'}</div>
    <div class="units">${Array.from({length:Math.min(secilen.length?sol:0,40)},()=>'<i class="red"></i>').join('')}</div></div></div>
   <div class="note">Bulunan eşit ifade: <b>${secilen.length}</b></div>`}}
+function renderEsitlikAtolyesi(r){
+ state.selected=[];state.etiketler=[];state.currentWeight=null;
+ const total=roundIndex===0?48:72,values=roundIndex===0?[48,48,48,44,56]:[72,72,72,73,48];
+ const ciz=(fresh=false)=>{
+  const w=state.currentWeight,balanced=w!=null&&values[w]===total;
+  $('#stage').classList.add('balance-stage');
+  $('#stage').innerHTML='<p class="scene-kicker">DENGE ATÖLYESİ</p>'+SceneWorkshop.scale(`${roundIndex===0?'12 × 4':'72'}<small>${total} birim</small>`,w==null?'':`${esc(r.items[w].label)}<small>${values[w]} birim</small>`,{loaded:w!=null,tilt:w==null?12:balanced?0:values[w]<total?7:-7,fresh:fresh&&balanced})+
+   `<div class="scene-status" aria-live="polite">${w==null?'Bir işlem ağırlığını sağ kefeye bırak.':balanced?'Dengede: '+total+' = '+values[w]:'Denge olmadı: '+total+(values[w]<total?' > ':' < ')+values[w]}</div><div class="balance-records">${state.etiketler.map(x=>`<span>✓ ${esc(x)} = ${total}</span>`).join('')}</div><div class="hint">Her ağırlığı ayrı ayrı dene. Doğru eşitlikler aşağıda kaydedilir.</div>`;
+  $('#task').innerHTML=`<div class="actions">${r.items.map((x,i)=>`<button class="action operation-weight" data-item="${i}" ${state.selected.includes(x.id)?'disabled':''}>${esc(x.label)}</button>`).join('')}</div>`;
+  const weigh=el=>{if(locked||state.finished)return;const i=+el.dataset.item,x=r.items[i];if(state.selected.includes(x.id))return;state.currentWeight=i;
+   if(!x.correct){ciz();return wrong(r.hint)}state.selected.push(x.id);state.etiketler.push(x.label);ciz(true);
+   if(state.selected.length===r.items.filter(x=>x.correct).length){state.finished=true;setTimeout(()=>bitirTur(r),FAST?20:800)}};
+  $$('[data-item]:not(:disabled)').forEach(el=>el.onclick=()=>weigh(el));
+  SceneWorkshop.bindDrag('[data-item]:not(:disabled)','[data-multi-target]',el=>weigh(el));
+ };ciz();
+}
 GAMES.p24={title:'Eşitlik Terazisi',theme:'market',finish:'Aynı değeri farklı işlemlerle kurdun; eşitliğin iki tarafının her zaman aynı değeri taşıdığını gördün.',rounds:[
  {kind:'multi',prompt:'Sol kefe 12 × 4 = 48. Sağ kefeye konabilecek BÜTÜN ifadeleri seç.',
   scene:kefeSahne(48,'12 × 4'),
@@ -1855,9 +1892,7 @@ GAMES.p24={title:'Eşitlik Terazisi',theme:'market',finish:'Aynı değeri farkl�
    hint:'Terazinin iki kefesine aynı ağırlığı koyduğunda ne olur?'},
   result:'72 = 80 − 8 = 36 + 36 = 9 × 8'},
  {kind:'numpad',prompt:'Bilinmeyeni bul: 25 × 4 = ? + 35 ve 100 − 20 = 8 × ?',
-  scene:()=>`<div class="caption">⚖️ Bilinmeyen kutulu eşitlikler</div>
-   ${adimDefteri(['25 × 4 = <b>?</b> + 35','100 − 20 = 8 × <b>?</b>'])}
-   <div class="note">Önce bilinen tarafı hesapla, sonra eksik değeri bul.</div>`,
+  scene:(st)=>`<p class="scene-kicker">EKSİK AĞIRLIĞI BUL</p>${SceneWorkshop.scale(st.i<2?'25 × 4':'100 − 20',st.i<2?'? + 35':(st.i>3?'8 × 10':'8 × ?'),{loaded:true,tilt:0})}<div class="note">İki kefe eşit. Önce bilinen tarafı hesapla.</div>`,
   steps:[{ask:'25 × 4 kaçtır?',answer:100,hint:'25 dört kez toplanır: 25 + 25 + 25 + 25.'},
          {ask:'? + 35 = 100 ise ? kaçtır?',answer:65,hint:'100’den 35’i çıkar.'},
          {ask:'100 − 20 kaçtır?',answer:80,hint:'Yüzden yirmi çıkarsa kaç kalır?'},

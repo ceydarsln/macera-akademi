@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>4. Sınıf Fen Bilimleri — Gerçek Deney Sahneleri</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="scene-workshop.css?v=20260921">
+<script src="scene-workshop.js?v=20260921"></script>
 <style>
 :root{--ink:#1a2d3d;--muted:#4d6a80;--panel:rgba(255,255,255,.95);--ok:#12805a;--bad:#c8443b;--gold:#d99b20;--blue:#2a75ad;--line:#aec7d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -780,7 +782,12 @@ function renderKarar(r){state.ix=0;state.faz=0;state.not='';state.dizilim=null;k
 function siraCiz(r){
  const d=state.dizi||[];
  state.defter=d.map((i,n)=>(n+1)+'. '+r.kartlar[i].t.replace(/^[^\wÇĞİÖŞÜçğıöşü]+/,''));
- $('#stage').innerHTML=sahneHtml(r)+
+ if(GAME_ID==='f03'){
+  $('#stage').classList.add('workshop-stage');
+  $('#stage').innerHTML='<p class="scene-kicker">KEŞİF MASASI</p>'+SceneWorkshop.notebook(d.map(i=>r.kartlar[i].t),true,!!state.yeniAdim)+
+   `<div class="scene-status" aria-live="polite">${esc(state.not||'Kartı doğrudan defterin sayfasına bırak.')}</div>`;
+  state.yeniAdim=false;
+ }else $('#stage').innerHTML=sahneHtml(r)+
   (r.gorev?`<div class="kart">${esc(r.gorev)}</div>`:'')+
   `<div class="sira-hedef" data-sira-hedef="1">${d.length
    ?d.map((i,p)=>`<div class="sira-adim"><b>${p+1}</b><span>${esc(r.kartlar[i].t)}</span></div>`).join('')
@@ -799,11 +806,11 @@ function siraCiz(r){
   if(i!==r.dogru[d.length]){
    state.not=(r.ipucular&&r.ipucular[d.length])||'Bu adımdan önce neyi bilmemiz gerekir?';
    siraCiz(r);return wrong(state.not)}
-  state.dizi=d.concat(i);state.not=r.kartlar[i].neden||'';
+  state.dizi=d.concat(i);state.not=r.kartlar[i].neden||'';state.yeniAdim=true;
   if(state.dizi.length>=r.dogru.length){siraCiz(r);return good()}
   siraCiz(r)};
  $$('[data-kart]').forEach(b=>b.onclick=()=>ekle(b));
- baglaSurukle('[data-kart]:not(.secili)','[data-sira-hedef]',k=>ekle(k))}
+ (GAME_ID==='f03'?SceneWorkshop.bindDrag:baglaSurukle)('[data-kart]:not(.secili)','[data-sira-hedef]',k=>ekle(k))}
 function renderSira(r){state.dizi=[];state.not='';state.dizilim=null;siraCiz(r)}
 
 /* ===== ESLE: parça yazısı çipe tam sığar (white-space:normal, kesme yok);
@@ -1479,7 +1486,7 @@ GAMES.f03={title:'Araştırma Adımları',theme:'masa',
    'Veri toplamadan önce neyin cevabını aradığını yazmalısın.',
    'Sonuca varmadan önce elinde ne olmalı?',
    'Paylaşmadan önce verini incelemiş olmalısın.','']},
- {kind:'karar',prompt:'Bir adım atlanırsa ne olur?',sahne:SAHNE.masa,
+ {kind:'karar',prompt:'Bir adım atlanırsa ne olur?',sahne:()=>SceneWorkshop.notebook(['Araştırma sorusu','Veri toplama','Sonuç ve paylaşma']),
   sorular:[
    {durum:'Deniz, soru yazmadan doğruca ölçüm yapmaya başladı. Elinde 300 sayı var ama ne aradığını bilmiyor.',
     soru:'Deniz hangi adımı atladı ve sonuç ne oldu?',
@@ -1506,7 +1513,7 @@ GAMES.f03={title:'Araştırma Adımları',theme:'masa',
      {t:'Ölçüm adımı eksik'},
      {t:'Hiçbir eksik yok'}],
     neden:'Paylaşılmayan sonuç başkalarınca sınanamaz, bilgiye dönüşmez.'}]},
- {kind:'yaz',prompt:'Kendi araştırmanı adım adım planla.',sahne:SAHNE.defter,
+ {kind:'yaz',prompt:'Kendi araştırmanı adım adım planla.',sahne:()=>SceneWorkshop.notebook([state.yazi||'Benim araştırmam']),
   gorev:'Merak ettiğin bir konu seç. Önce araştırma sorunu yaz, sonra bu soruyu nasıl araştıracağını sırayla anlat.',
   ornek:'Kalıp: "… ? Önce … , sonra … , en son … "',
   yerTutucu:'Sorun ve adımların…',

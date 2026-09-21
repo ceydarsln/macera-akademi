@@ -28,6 +28,8 @@ for f in "$SABLONLAR"/*-phaser.html; do
   cp "$f" "$SABLONLAR/$ad.html"
 done
 cp "$SABLONLAR/svgciz.js" "$VARLIKLAR/phaser/svgciz.js"
+cp "$SABLONLAR/scene-workshop.js" "$VARLIKLAR/phaser/scene-workshop.js"
+cp "$SABLONLAR/scene-workshop.css" "$VARLIKLAR/phaser/scene-workshop.css"
 cp "$KAYNAK/macera-akademi.html" "$VARLIKLAR/macera-akademi.html"
 cp "$KAYNAK/api-client.js" "$VARLIKLAR/api-client.js"
 echo "kopyalandı: $(find "$VARLIKLAR/phaser" -maxdepth 1 -name '*.html' | wc -l | tr -d ' ') şablon · svgciz damgası $DAMGA"
