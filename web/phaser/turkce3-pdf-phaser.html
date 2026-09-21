@@ -9,6 +9,8 @@
 <script src="scene-workshop.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-discovery.css?v=20260921">
 <script src="scene-discovery.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-stories.css?v=20260921">
+<script src="scene-stories.js?v=20260921"></script>
 <style>
 :root{--ink:#18324a;--muted:#53708a;--panel:rgba(255,255,255,.94);--ok:#159765;--bad:#d94655;--gold:#f1b53a;--blue:#2b83c6}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -544,7 +546,7 @@ function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let ak
  k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
  k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
  k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
- const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit)birak(k,hit)}};
+ const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit&&e.type!=='pointercancel')birak(k,hit)}};
  k.onpointerup=bitir;k.onpointercancel=bitir})}
 
 /* ===== 4. sınıf ortak yardımcılar ===== */
@@ -897,7 +899,7 @@ function renderDrag(r){state.placed={};state.done=0;state.toplam=0;state.dilimle
   $('#task').innerHTML=targets+pieces;$$('[data-piece]').forEach(el=>{el.onpointerdown=e=>startDrag(e,el,r);el.onclick=()=>{if(state.tapPiece===el.dataset.piece){state.tapPiece=null;el.style.outline=''}else{state.tapPiece=el.dataset.piece;$$('[data-piece]').forEach(x=>x.style.outline='');el.style.outline='4px solid #f1b53a'}}});$$('[data-target]').forEach(t=>t.onclick=()=>{if(!state.tapPiece)return;dropPiece(r,state.tapPiece,t.dataset.target)})}
 function startDrag(e,el,r){if(el.classList.contains('done'))return;e.preventDefault();const box=el.getBoundingClientRect();drag={el,r,id:el.dataset.piece,offX:e.clientX-box.left,offY:e.clientY-box.top,parent:el.parentNode,next:el.nextSibling};el.setPointerCapture?.(e.pointerId);el.classList.add('dragging');moveDrag(e);el.onpointermove=moveDrag;el.onpointerup=endDrag;el.onpointercancel=endDrag}
 function moveDrag(e){if(!drag)return;drag.el.style.left=(e.clientX-drag.offX)+'px';drag.el.style.top=(e.clientY-drag.offY)+'px';$$('[data-target]').forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})}
-function endDrag(e){if(!drag)return;const d=drag;let hit=null;$$('[data-target]').forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t});d.el.releasePointerCapture?.(e.pointerId);d.el.classList.remove('dragging');d.el.style.left=d.el.style.top='';$$('[data-target]').forEach(t=>t.classList.remove('hot'));drag=null;if(hit)dropPiece(d.r,d.id,hit.dataset.target)}
+function endDrag(e){if(!drag)return;const d=drag;let hit=null;$$('[data-target]').forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t});d.el.releasePointerCapture?.(e.pointerId);d.el.classList.remove('dragging');d.el.style.left=d.el.style.top='';$$('[data-target]').forEach(t=>t.classList.remove('hot'));drag=null;if(hit&&e.type!=='pointercancel')dropPiece(d.r,d.id,hit.dataset.target)}
 function dropPiece(r,pid,tid){const p=r.pieces.find(x=>x.id===pid),t=r.targets.find(x=>x.id===tid),el=$(`[data-piece="${pid}"]`);if(!p||!t||!el||el.classList.contains('done'))return;if(p.target!==tid)return wrong(r.hint);el.classList.add('done');state.tapPiece=null;state.placed[tid]=(state.placed[tid]||0)+1;const pl=$(`[data-target="${tid}"] .placed`);if(pl)pl.insertAdjacentHTML('beforeend',`<span>${p.placed||p.html}</span>`);state.done++;if(r.onDrop){r.onDrop(state,p,t);updateStage()}if(state.done===r.pieces.filter(x=>x.target).length)bitirTur(r)}
 function renderProcess(r){state.steps=[];state.counts={};$('#task').innerHTML=`<div class="actions">${r.actions.map((a,i)=>`<button class="action" data-action="${i}">${a.html||esc(a.label)}</button>`).join('')}</div>`;$$('[data-action]').forEach(b=>b.onclick=()=>{const a=r.actions[+b.dataset.action],expected=r.sequence[state.steps.length];if(expected!=null&&a.id!==expected)return wrong(r.hint);state.steps.push(a.id);state.counts[a.id]=(state.counts[a.id]||0)+1;if(r.onStep)r.onStep(state,a);updateStage();if(state.steps.length===r.sequence.length)bitirTur(r)})}
 function renderMemory(r){state.open=[];state.matched=new Set;const cards=r.cards.map((c,i)=>({...c,key:i})).sort((a,b)=>((a.key*7+r.seed)%11)-((b.key*7+r.seed)%11));state.cards=cards;$('#task').innerHTML=`<div class="actions">${cards.map((c,i)=>`<button class="action" data-card="${i}" style="font-size:29px">❓</button>`).join('')}</div>`;$$('[data-card]').forEach(b=>b.onclick=()=>flipCard(r,+b.dataset.card))}
@@ -3352,7 +3354,8 @@ GAMES.y64={title:'Gizlilik Kalkanı',theme:'class',finish:'Paylaşılabilir bilg
 /* @@OYUNLAR@@ */
 
 const discoveryTurkishDrag=renderDrag;
-renderDrag=function(r){if(GAME_ID==='y10')return SceneDiscovery.matching({id:GAME_ID,r,state,finish:bitirTur,wrong});return discoveryTurkishDrag(r)};
+renderDrag=function(r){if(['y02','y12'].includes(GAME_ID))return SceneStories.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750)});if(GAME_ID==='y10')return SceneDiscovery.matching({id:GAME_ID,r,state,finish:bitirTur,wrong});return discoveryTurkishDrag(r)};
+GAMES.y12.rounds[0].prompt='Her nedeni, sonucunun yaşandığı sahneye yerleştir.';
 GAMES.y10.rounds[2].scene=()=>'<div class="mirror-room"><header>KENDİ KARŞILAŞTIRMANI YAZ</header><div class="mirror-grid"><div class="opposite-mirror"><span class="mirror-glass">'+SceneDiscovery.picture(1,false)+'<b>uzun</b></span></div><div class="opposite-mirror"><span class="mirror-glass">'+SceneDiscovery.picture(1,true)+'<b>kısa</b></span></div></div></div>';
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Oyun bulunamadı</h2><p>${esc(GAME_ID)}</p></div></div>`}

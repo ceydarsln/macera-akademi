@@ -143,7 +143,7 @@ async function solveRound(page, r) {
   }
 }
 
-(async () => {
+if (require.main === module) (async () => {
   const browser = await chromium.launch({ headless: true, executablePath: process.env.SMOKE_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--allow-file-access-from-files', '--disable-speech-api'] });
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const passed = [];
@@ -163,3 +163,4 @@ async function solveRound(page, r) {
   await browser.close();
   console.log(`\n${passed.length}/${ids.length} oyun, ${passed.length * 3}/${ids.length * 3} tur geçti.`);
 })().catch(error => { console.error(error); process.exitCode = 1; });
+module.exports = { solveRound };

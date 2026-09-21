@@ -50,5 +50,29 @@ window.SceneMeasure=(()=>{
    if(state.done===r.pieces.length){state.measureComplete=true;finish(r)}
   };draw();
  }
- return {render,object};
+ function angleRanges({r,index,state,finish,wrong}){
+  const degrees=[[45,90,135],[180,360,90],[30,70,100,160]][index];
+  const bands=[[[0,90],[90,90],[90,180]],[[180,180],[360,360],[90,90]],[[0,90],[90,180]]][index];
+  state.rangePlaced={};state.done=0;state.placed={};const stage=document.querySelector('#stage'),task=document.querySelector('#task');document.querySelector('.scene').classList.add('measure-scene','range-scene');
+  const dial=(a,b,deg,fresh)=>{
+   const pt=d=>[85+61*Math.cos(d*Math.PI/180),80-61*Math.sin(d*Math.PI/180)];
+   const aa=pt(a),bb=pt(b);
+   return svg(`<circle cx="85" cy="80" r="62" fill="#fcfae9" stroke="#91adb0" stroke-width="2"/>${a!==b?`<path d="M85 80L${aa.join(' ')}A61 61 0 0 0 ${bb.join(' ')}Z" fill="#b4d6c0"/>`:''}${Array.from({length:24},(_,i)=>{const d=i*15,x=85+57*Math.cos(d*Math.PI/180),y=80-57*Math.sin(d*Math.PI/180),q=pt(d);return `<path d="M${x} ${y}L${q.join(' ')}" stroke="#88a0a0"/>`}).join('')}<path d="M85 80h61" stroke="#697e88" stroke-width="3"/>${deg===360?'<circle cx="85" cy="80" r="48" fill="none" stroke="#c67b40" stroke-width="3"/><path d="M130 64l3 16 10-12" fill="none" stroke="#c67b40" stroke-width="3"/>':''}${deg!=null?`<g class="range-arm ${fresh?'range-turn':''}" style="transform-origin:85px 80px;--angle:${-deg}deg"><path d="M85 80h59" stroke="#c67b40" stroke-width="5"/></g><circle cx="85" cy="80" r="4" fill="#395863"/>`:''}<text x="85" y="162" text-anchor="middle" font-size="12" fill="#345360">${deg==null?'Açıyı bu ölçere bırak':deg+'°'}</text>`,'0 0 170 173');
+  };
+  const draw=()=>{
+   stage.innerHTML=`<div class="measure-bench"><h2>AÇI ARALIKLARI ATÖLYESİ</h2><p>Kol döndüğünde hangi derece aralığında kalıyor?</p><div class="range-docks">${r.targets.map((t,i)=>{
+    const ids=Object.keys(state.rangePlaced).filter(pid=>state.rangePlaced[pid]===t.id),last=ids.at(-1),deg=last?degrees[r.pieces.findIndex(p=>p.id===last)]:null;
+    const titles=index===0?['DAR AÇI','DİK AÇI','GENİŞ AÇI']:index===1?['DOĞRU AÇI','TAM AÇI','DİK AÇI']:['DAR AÇI','GENİŞ AÇI'];
+    const[a,b]=bands[i];return `<button data-target="${t.id}" class="range-dock"><strong>${titles[i]}</strong><small>${a===b?`açı = ${a}°`:`${a}° < açı < ${b}°`}</small>${dial(a,b,deg,state.rangeFresh===t.id)}<span class="range-history">${ids.map(pid=>degrees[r.pieces.findIndex(p=>p.id===pid)]+'°').join(' · ')||'Henüz açı yerleşmedi'}</span></button>`;
+   }).join('')}</div><small class="measure-foot">${state.done} / ${r.pieces.length} açı · dar ve geniş aralıkların sınırları dahil değildir.</small></div>`;
+   task.innerHTML=`<div class="measure-sources range-sources">${(r.pieces.length===4?[2,0,3,1]:[2,0,1]).map(i=>`<button class="measure-source" data-piece="${r.pieces[i].id}" ${state.rangePlaced[r.pieces[i].id]?'disabled':''}>${dial(0,0,degrees[i],false)}</button>`).join('')}</div><p class="measure-help">Açıyı ölçere sürükle veya seçip ölçere dokun.</p>`;
+   task.querySelectorAll('[data-piece]').forEach(b=>b.onclick=()=>{state.tapPiece=b.dataset.piece;task.querySelectorAll('[data-piece]').forEach(x=>x.classList.toggle('selected',x===b))});
+   stage.querySelectorAll('[data-target]').forEach(b=>b.onclick=()=>{if(state.tapPiece)place(state.tapPiece,b.dataset.target)});
+   SceneWorkshop.bindDrag('[data-piece]:not(:disabled)','[data-target]',(a,b)=>place(a.dataset.piece,b.dataset.target));state.rangeFresh=null;
+  };
+  const place=(pid,tid)=>{const p=r.pieces.find(p=>p.id===pid);if(!p||state.rangeComplete||state.rangePlaced[pid])return;if(p.target!==tid)return wrong(r.hint);
+   state.rangePlaced[pid]=tid;state.placed[tid]=(state.placed[tid]||0)+1;state.done++;state.tapPiece=null;state.rangeFresh=tid;draw();if(state.done===r.pieces.length){state.rangeComplete=true;finish(r)}
+  };draw();
+ }
+ return {render,object,angleRanges};
 })();

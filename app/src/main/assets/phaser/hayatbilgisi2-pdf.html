@@ -7,6 +7,8 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="scene-workshop.css?v=20260921">
 <script src="scene-workshop.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-collections.css?v=20260921">
+<script src="scene-collections.js?v=20260921"></script>
 <style>
 :root{--ink:#1d3346;--muted:#56728a;--panel:rgba(255,255,255,.95);--ok:#158a5e;--bad:#d0483f;--gold:#e0a52c;--blue:#2f7fb8;--line:#b8ccdb}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -237,7 +239,7 @@ function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let ak
  k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
  k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
  k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
- const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit)birak(k,hit)}};
+ const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit&&e.type!=='pointercancel')birak(k,hit)}};
  k.onpointerup=bitir;k.onpointercancel=bitir})}
 
 /* ===== SAHNELER — şartname ölçüt 1 ve 3: kavram sahnenin içinde, tanıma
@@ -443,6 +445,7 @@ function renderKarar(r){state.faz=0;state.not='';kararCiz(r)}
 /* ===== SINIFLA: kart bantta akmaz, sabit durur ve hiçbir kenarda kırpılmaz.
    Kutularda emoji/renk ipucu yok (şartname ölçüt 4). ===== */
 function sinifCiz(r){
+ if(GAME_ID==='h07')return SceneCollections.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  const i=state.ix||0,k=r.kartlar[i];
  if(!k)return;
  $('#stage').innerHTML=sahneHtml(r)+

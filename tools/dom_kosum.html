@@ -100,6 +100,13 @@ async function gecisBekle(W){
 }
 async function tikla(W, sec){
   await gecisBekle(W);
+  // Sahne içi gerçek kontroller, eski alt panel düğmelerinin yerini alabilir.
+  const choice=sec.match(/^\[data-choice="(\d+)"\]$/),estimate=sec.match(/^\[data-est="(\d+)"\]$/),action=sec.match(/^\[data-action="(\d+)"\]$/);
+  if(choice)sec='[data-scene-choice="'+choice[1]+'"],'+sec;
+  if(estimate)sec='[data-scene-estimate="'+estimate[1]+'"],'+sec;
+  if(action){const a=turVerisi(W).actions?.[+action[1]];if(a)sec='[data-scene-action="'+a.id+'"],'+sec}
+  const order=sec.match(/^\[data-order="(\d+)"\]$/);
+  if(order){const item=turVerisi(W).items?.[+order[1]];if(item)sec='[data-scene-order="'+item.id+'"],'+sec}
   const el = await bekleyenSec(W, sec);
   /* SVG öğelerinde .click() yok; gerçek dokunuşun ürettiği olayı gönder. */
   if (typeof el.click === 'function') el.click();
@@ -720,7 +727,7 @@ async function tur1(W){
   const r = turVerisi(W);
   const tur = r.kind || 'choose';
   switch (tur){
-    case 'choose': case 'pattern': case 'estimate':
+    case 'choose': case 'pattern': case 'estimate': case 'plateChoice':
       await dogruyaBas(W, r.choices || []); break;
     case 'stages':
       /* Motorun kendi 650 ms geçişi gizli sekmede kısılıyor; sabit bekleme
@@ -733,6 +740,9 @@ async function tur1(W){
       }
       break;
     case 'drag':
+      if(W.eval('GAME_ID')==='m33'){
+        await surukle1(W,'[data-piece="candidate-'+r.pieces.find(p=>p.target).target+'"]','[data-target="patternSlot"]');break;
+      }
       for (const p of (r.pieces||[]).filter(x=>x.target))
         await surukle1(W, '[data-piece="'+p.id+'"]', '[data-target="'+p.target+'"]');
       break;
@@ -749,8 +759,14 @@ async function tur1(W){
     case 'count':
       for (let i=0;i<Math.abs((r.target||0)-(r.start||0));i++){ await tikla(W,'[data-delta]'); await bekle(45); }
       break;
-    case 'load':
+    case 'load': case 'sceneLoad': case 'balanceLoad': case 'massExperiment':
       for (let i=(r.start||0); i<r.targetCount; i++) await surukle1(W,'[data-piece="supply"]','[data-target="loadTarget"]');
+      break;
+    case 'countDrag': case 'sceneCountDrag':
+      for(let i=(r.start||0)-1;i>=r.target;i--)await surukle1(W,'[data-piece="n'+i+'"]','[data-target="countTarget"]');
+      break;
+    case 'selectCount':
+      for(let i=0;i<r.target;i++)await tikla(W,'[data-select="'+i+'"]');
       break;
     case 'remove':
       for (let i=0;i<r.removeCount;i++) await surukle1(W,'[data-piece]','[data-target="returnCart"]');
@@ -1442,6 +1458,7 @@ async function oyunuOyna(id){
   W.addEventListener('error', e => hatalar.push(String((e.error && e.error.stack) || e.message)));
 
   for (let n=1; n<=3; n++){
+    if (typeof window.__captureRound === 'function') await window.__captureRound({id,round:n});
     const gorunen = S(W,'.hud .round').textContent.trim();
     if (gorunen !== 'Tur ' + n + '/3') throw new Error('beklenen Tur '+n+'/3, görünen '+gorunen);
     if (id.slice(0,2)==='sb') await tur11(W);

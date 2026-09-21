@@ -1,0 +1,24 @@
+{
+  "scope": "21 Eylül 2026 denetimi sonrasında yapılan hedefli sahne düzeltmeleri. Katalog genelinde tasarım onayı değildir.",
+  "games": [
+    {"id":"p24","package":1,"rounds":[1,2,3],"scope":"İşlem ağırlığı gerçek kefeye bırakılır; terazi dengesi ve üçüncü tur bilinmeyenleri aynı sahnede gösterilir."},
+    {"id":"p15","package":1,"rounds":[1,2,3],"scope":"İlk iki tur kasayı raftan arabaya taşıma ve geri koyma; üçüncü tur ters problem aynı pazar görsellerinde."},
+    {"id":"z04","package":1,"rounds":[1,2,3],"scope":"Sözcükler matbaa bandına basılır; üçüncü tur yazılan cümle kağıtta görünür."},
+    {"id":"f03","package":1,"rounds":[1,2,3],"scope":"Sıralama hedefi defterin sayfası; diğer turlar aynı defter sahnesinde, kurallar korunur."},
+    {"id":"h12","package":1,"rounds":[1,2,3],"scope":"İlk iki tur nesneler açık çantaya yerleşir; üçüncü tur sözlü gerekçelendirme korunur."},
+    {"id":"p03","package":2,"rounds":[1,2,3],"scope":"Basamak parçaları köprünün eksik döşemelerine oturur; bisiklet tamamlanan köprüden geçer."},
+    {"id":"p08","package":2,"rounds":[1,2,3],"scope":"Sayı defteri, hafıza kartı çevirme ve dinleme köşesi; hafıza/dinleme kuralları korunur."},
+    {"id":"y10","package":2,"rounds":[1,2,3],"scope":"İlk iki tur karşıt resimler aynada açılır; yazma turunda uzun-kısa sahnesi."},
+    {"id":"g05","package":2,"rounds":[1,2],"scope":"Araştırma kaynakları açık çantaya yerleşir; üçüncü tur serbest yazma korunur."},
+    {"id":"f05","package":2,"rounds":[1],"scope":"Araştırma kaynakları künyeleriyle çantada görünür; karar/yazma turları korunur."},
+    {"id":"p11","package":3,"rounds":[1,2,3],"scope":"Denk kesir şeritleri eşit bütünlerde hizalanır; ikinci tur çarpan hedefleri ayrılır."},
+    {"id":"p16","package":3,"rounds":[1,2],"scope":"Uzunluk çubukları cetvelde sıfıra hizalanır; üçüncü tur kütle hafızası korunur."},
+    {"id":"p38","package":3,"rounds":[1,3],"scope":"Gerçek nesne çizimindeki açı modelle örtüşür; ikinci tur hafıza korunur."},
+    {"id":"g07","package":4,"rounds":[1,2],"scope":"Bitki/hayvan/mantar örnekleri koleksiyon çekmecelerine konur ve görünür kalır; üçüncü tur korunur."},
+    {"id":"z10","package":4,"rounds":[1,2],"scope":"Sözcük çiftleri kitap olarak ilgili rafa yerleşir; üçüncü tur korunur."},
+    {"id":"h07","package":4,"rounds":[1],"scope":"Resimli alışkanlık kartları panoya iğnelenir; sonraki turlar korunur."},
+    {"id":"y02","package":5,"rounds":[1,2],"scope":"Davranış kanıtları erdem günlüğünün sayfalarına yazılır ve damgalanır; yazma turu korunur."},
+    {"id":"y12","package":5,"rounds":[1],"scope":"Neden doğru sahneye bırakılınca yağmur/birikinti, sınav sonucu, uyanma veya solma görülür; sonraki turlar korunur."},
+    {"id":"p37","package":6,"rounds":[1,2,3],"scope":"Açı modelinin kolu gerçek dereceye döner; aralıklar, çoklu eşleşme ve 360 derece dönüş izi görünür."}
+  ]
+}
