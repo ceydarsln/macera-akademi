@@ -1,5 +1,9 @@
 # 635 oyun: teknik kontrol ve tasarım kabulü
 
+## Son ek: yedinci paket
+
+F25/F26'nın ilk turları gerçek mıknatıs deneyine dönüştürüldü. Hedefli sahne düzeltmesi kaydı **21 oyuna** ulaştı; güncel sahne dışı hedef sinyali **63 oyun**. Gözlem cevapları artık sürükleme hedefi sayılmıyor, gerçek mıknatıs hedefi ayrıca sayılıyor. Ayrıntılar: docs/SAHNE_DUZELTMELERI_7_2026-09-21.md. Aşağıdaki 19 oyun / 65 sinyal değerleri altıncı paket kontrol noktasının tarihsel kaydıdır.
+
 ## Gerçek durum
 
 İstenen ilk üç iş katalog genelinde tamamlanmış değildir. Üç tur teknik çözüm testi tamamlandı; sahne, arayüz ve eylem-sonuç animasyonu kabulü oyun bazında devam ediyor.

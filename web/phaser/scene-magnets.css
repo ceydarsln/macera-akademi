@@ -1,0 +1,37 @@
+.scene.magnet-scene[data-theme]{background:linear-gradient(140deg,#edf0e8,#c1d6d3);gap:12px}
+.magnet-scene #stage{background:transparent;border:0;box-shadow:none;justify-content:flex-start;flex:0 0 auto;min-height:0;padding:0}
+.magnet-workbench{width:100%;max-width:560px;margin:auto;background:#faf4df;border:5px solid #8d795d;border-radius:18px;box-shadow:0 7px 0 #6b6153;padding:14px 10px}
+.magnet-workbench>header{text-align:center;font-size:17px;letter-spacing:1px;font-weight:900}
+.magnet-workbench>header small{display:block;margin-top:7px;font-size:12px;letter-spacing:0;font-weight:600}
+.magnet-object-name{text-align:center;font-size:15px;min-height:40px;line-height:1.35;margin:20px 0 5px}
+.magnet-apparatus{height:215px;position:relative;overflow:hidden;border-radius:12px;background:repeating-linear-gradient(0deg,#e1e7dc 0 29px,#c9d6c8 30px 31px);border:1px solid #a7b9b2}
+.magnet-poles .magnet-apparatus{background:repeating-linear-gradient(90deg,#e4e7ed 0 29px,#cbd6de 30px 31px)}
+.magnet-track{position:absolute;top:118px;left:3%;right:3%;height:5px;background:#8b9e9e;border-radius:5px}
+.magnet-fixed,.magnet-sample{position:absolute;top:55px;width:34%;height:106px;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:8px;touch-action:none}
+.magnet-fixed{left:6%}.magnet-sample{left:60%}
+.magnet-fixed svg,.magnet-sample svg{width:100%;height:100%;display:block}
+.magnet-sample:disabled{opacity:1}
+.magnet-sample.selected,.magnet-fixed.drop-ready{outline:3px solid #c58a2a;outline-offset:1px}
+.magnet-fixed:focus-visible,.magnet-sample:focus-visible{outline:3px solid #266989}
+.magnet-fixed-note,.magnet-motion-note{position:absolute;bottom:16px;font-size:12px;font-weight:700}
+.magnet-fixed-note{left:6%}.magnet-motion-note{right:8%}
+.magnet-status{font-size:14px;min-height:54px;text-align:center;line-height:1.35;padding:8px 4px;margin:8px 0}
+.magnet-records{background:repeating-linear-gradient(#fffdf3 0 25px,#e2ddc6 26px 27px);border-left:3px solid #c98373;padding:8px 12px;font-size:12px;line-height:1.5}
+.magnet-records strong{font-size:11px;letter-spacing:1px}.magnet-records ol{margin:6px 0 0;padding-left:18px}.magnet-records li{margin:5px 0;overflow-wrap:anywhere}
+.magnet-scene #task{flex:0 0 auto;margin-top:8px}
+.magnet-observation{width:100%;max-width:560px;text-align:center}.magnet-observation>p{font-size:14px;margin:7px}
+.magnet-observation>div{display:flex;gap:10px}
+.magnet-observation button{flex:1;min-height:48px;border:2px solid #6e9196;background:#fff9e8;border-radius:12px;font-size:16px;font-weight:800}
+.magnet-observation button:disabled{opacity:.42;cursor:default}
+.magnet-observation .magnet-repeat{margin-top:8px;min-height:44px;font-size:13px;padding:4px 16px;background:transparent;border-width:1px}
+.magnet-help{max-width:540px;text-align:center;font-size:12px;line-height:1.4;margin:5px}
+.magnet-attract{transform:translateX(-56%);animation:magnet-attract .9s ease-in-out both}
+.magnet-repel{transform:translateX(13%);animation:magnet-repel .9s ease-in-out both}
+.magnet-still{transform:translateX(-24%);animation:magnet-still .9s ease-in-out both}
+.magnet-ink{animation:magnet-ink .5s ease-out}
+@keyframes magnet-attract{0%{transform:translateX(-24%)}40%{transform:translateX(-30%)}100%{transform:translateX(-56%)}}
+@keyframes magnet-repel{0%{transform:translateX(-24%)}100%{transform:translateX(13%)}}
+@keyframes magnet-still{0%,100%{transform:translateX(-24%)}}
+@keyframes magnet-ink{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.magnet-attract,.magnet-repel,.magnet-still,.magnet-ink{animation:none!important}}
+@media(max-height:650px){.magnet-workbench{margin:0 auto}.magnet-apparatus{height:175px}.magnet-fixed,.magnet-sample{top:25px}.magnet-track{top:88px}.magnet-object-name{margin:12px 0 3px}}

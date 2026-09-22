@@ -25,7 +25,8 @@ async function capture(page,context,g,n,result,iframe=false){
  const meta=await context.evaluate(()=>{
   const s=document.querySelector('#stage,#visual'),p=document.querySelector('.prompt');
   const visible=e=>{const b=e.getBoundingClientRect();return b.width&&b.height&&getComputedStyle(e).visibility!=='hidden'};
-  const targets=[...document.querySelectorAll('[data-target],[data-kutu],[data-yuva],[data-sira-hedef],[data-canta-hedef],[data-kur-hedef],[data-tepsi]')].filter(visible);
+  // Gözlem cevapları bırakma hedefi değildir; deneyde hedef mıknatısın kendisidir.
+  const targets=[...document.querySelectorAll('[data-target],[data-kutu],[data-yuva],[data-sira-hedef],[data-canta-hedef],[data-kur-hedef],[data-tepsi],[data-magnet-target]')].filter(e=>visible(e)&&!e.hasAttribute('data-observation-answer'));
   const r=round();return {actualId:GAME_ID,kind:r.kind||'choose',prompt:p?.textContent,promptClipped:p?p.scrollHeight>p.clientHeight+3:false,
    externalTargets:targets.filter(t=>!s?.contains(t)).map(t=>({text:t.textContent.trim().slice(0,100),class:t.getAttribute('class')})),
    horizontal:[...document.querySelectorAll('button,[data-piece]')].filter(visible).filter(e=>{const b=e.getBoundingClientRect();return b.left< -3||b.right>innerWidth+3}).map(e=>e.textContent.trim().slice(0,70)),

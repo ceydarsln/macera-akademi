@@ -9,6 +9,8 @@
 <script src="scene-workshop.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-discovery.css?v=20260921">
 <script src="scene-discovery.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-magnets.css?v=20260921">
+<script src="scene-magnets.js?v=20260921"></script>
 <style>
 :root{--ink:#1a2d3d;--muted:#4d6a80;--panel:rgba(255,255,255,.95);--ok:#12805a;--bad:#c8443b;--gold:#d99b20;--blue:#2a75ad;--line:#aec7d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -722,6 +724,7 @@ const SAHNE={
 /* ===== SINIFLA: bant yok. Karar verilecek kart sabit durur ve tam görünür.
    Yanlış ipucu doğru kutunun adını SÖYLEMEZ; ölçütü soruyla hatırlatır. ===== */
 function siniflaCiz(r){
+ if(['f25','f26'].includes(GAME_ID))return SceneMagnets.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  const i=state.ix||0,k=r.kartlar[i];
  if(!k)return;
  $('#stage').innerHTML=sahneHtml(r,k.sahneEk)+
@@ -2963,14 +2966,13 @@ GAMES.f24={title:'Deney Düzeneği',theme:'lab',
   ornekCevap:'Isıya dayanıklı kap, su, termometre, kayıt defteri ve güvenlik için koruyucu gözlük kullanırım.',
   result:'Listeni ölçüm ve güvenlik ölçütleriyle yazdın.'}]};
 
-/* ---- f25 Mıknatıs Kutusu (bant kaldırıldı: madde mıknatısa yaklaştırılınca
-        çekilip çekilmediği karardan SONRA canlanıyor) ---- */
+/* ---- f25 Mıknatıs Kutusu: nesneyi yaklaştır, gözle, sonucu kaydet. ---- */
 GAMES.f25={title:'Mıknatıs Kutusu',theme:'atolye',
  finish:'Mıknatısın hangi maddeleri çektiğini test ettin, "her metal çekilmez" kuralını kurdun ve kendi tahminini yazdın.',rounds:[
- {kind:'sinifla',prompt:'Mıknatıs bu maddeye ne yapar?',sahne:(st)=>SAHNE.miknatis(st),
+ {kind:'sinifla',prompt:'Nesneyi mıknatısa yaklaştır, gözlemini kaydet.',sahne:(st)=>SAHNE.miknatis(st),
   soru:'Mıknatıs bu maddeye ne yapar?',
   kutular:['ÇEKER','ÇEKMEZ'],
-  ipucu:'Karar verdikten sonra maddenin ne yaptığını göreceksin.',
+  ipucu:'Nesneyi mıknatısa yaklaştır; hareketini gözledikten sonra sonucu seç.',
   kartlar:[
    {t:'Demir çivi',dogru:0,vurgu:'ceker',neden:'Demir, mıknatısın çektiği maddelerdendir.',
     hint:'Bu madde neyden yapılmış?'},
@@ -3030,14 +3032,13 @@ GAMES.f25={title:'Mıknatıs Kutusu',theme:'atolye',
   ornekCevap:'Buzdolabı kapağındaki çelik tutamak çekilir diye tahmin ediyorum çünkü çelik demir içerir.',
   result:'Tahminini maddeye dayandırdın.'}]};
 
-/* ---- f26 Kutuplar (köprü kaldırıldı: kutuplar yaklaştırılınca itme/çekme
-        karardan SONRA ekranda gerçekleşiyor) ---- */
+/* ---- f26 Kutuplar: mıknatısları yaklaştır, itme/çekmeyi gözle. ---- */
 GAMES.f26={title:'Kutuplar',theme:'atolye',
  finish:'Aynı ve zıt kutupların ne yaptığını gözledin, örüntüyü fark ettin ve kuralı kendi cümlenle yazdın.',rounds:[
- {kind:'sinifla',prompt:'Bu iki kutup yaklaşınca ne olur?',sahne:(st,ek)=>SAHNE.kutup(st,ek),
+ {kind:'sinifla',prompt:'Mıknatısları yaklaştır, hareketlerini gözle.',sahne:(st,ek)=>SAHNE.kutup(st,ek),
   soru:'Bu iki kutup birbirine yaklaştırılırsa ne olur?',
   kutular:['İTER','ÇEKER'],
-  ipucu:'N kuzey kutup, S güney kutup. Karardan sonra ne olduğunu göreceksin.',
+  ipucu:'N kuzey, S güney kutup. Mıknatısları yaklaştırıp hareketlerini gözle.',
   kartlar:[
    {t:'Kuzey kutup (N) ile kuzey kutup (N) karşı karşıya',sahneEk:'NN',dogru:0,vurgu:'iter',
     neden:'İki kutup da aynı türden; birbirlerini uzaklaştırdılar.',
