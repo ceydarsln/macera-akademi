@@ -21,6 +21,8 @@
 <script src="scene-book-power.js?v=20260923"></script>
 <link rel="stylesheet" href="scene-simile-greenhouse.css?v=20260923">
 <script src="scene-simile-greenhouse.js?v=20260923"></script>
+<link rel="stylesheet" href="scene-mirror-matter.css?v=20260923">
+<script src="scene-mirror-matter.js?v=20260923"></script>
 <style>
 :root{--ink:#1b2f45;--muted:#516d87;--panel:rgba(255,255,255,.95);--ok:#14855c;--bad:#cd463d;--gold:#dfa32a;--blue:#2c7cb6;--line:#b6cada;--toprak:#8b5e3c}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -489,6 +491,7 @@ function saksi(oran,durum){
    yalnız karta yeniden bakmayı sağlayan bir soru sorar. Kart simgesi
    taşımaz — eşleştirme içeriğin okunmasıyla yapılır. ===== */
 function sinifCiz(r){
+ if(GAME_ID==='g19')return SceneMirrorMatter.matter({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g37')return SceneSimileGreenhouse.greenhouse({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g31')return SceneBookPower.power({r,index:roundIndex,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g25')return SceneBridgesMotion.motion({r,index:roundIndex,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});

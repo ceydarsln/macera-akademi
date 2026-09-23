@@ -33,6 +33,8 @@
     {"id":"y31","package":12,"rounds":[2],"scope":"Bölüm kartları işlevlerini anlatan gerçek kitap sayfalarına yerleşir ve sayfalarda kalır. Bölüm sıralama ve yazma turları korunur."},
     {"id":"g31","package":12,"rounds":[1,2],"scope":"Araçlar sahnedeki elektrikli/elektriksiz veya priz/pil/el gücü istasyonlarına sürüklenir ve istasyonlarda birikir. Yazma turu korunur."},
     {"id":"y37","package":13,"rounds":[1],"scope":"Benzeyen kartları makinenin benzetilen girişlerine sürüklenir; doğru çift yuvada kalır ve makine ortak özellikli benzetme çıktısını basar. Seçme ve yazma turları korunur."},
-    {"id":"g37","package":13,"rounds":[1],"scope":"Bitki için gerekli kaynak kartları doğrudan fide ve toprağa, gereksiz süs/nesne kartları sera yan rafına sürüklenir. Fide ihtiyaçlar karşılandıkça büyür; miktar kararı ve yazma turları korunur."}
+    {"id":"g37","package":13,"rounds":[1],"scope":"Bitki için gerekli kaynak kartları doğrudan fide ve toprağa, gereksiz süs/nesne kartları sera yan rafına sürüklenir. Fide ihtiyaçlar karşılandıkça büyür; miktar kararı ve yazma turları korunur."},
+    {"id":"y38","package":14,"rounds":[1,2],"scope":"Yüz ve beden ipucu kartları gerçek ayna yüzeylerine sürüklenir. Doğru ifadede aynadaki yüz ve duyguya göre değişen beden duruşu görünür; konuşma turu korunur."},
+    {"id":"g19","package":14,"rounds":[1,2],"scope":"Madde örnekleri sahnedeki katı tepsisine, sıvı deney kabına veya gaz balonuna sürüklenir ve ilgili düzeneğin içinde birikir. Gerekçeli yazma turu korunur."}
   ]
 }
