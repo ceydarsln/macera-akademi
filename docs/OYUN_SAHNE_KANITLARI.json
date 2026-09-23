@@ -35,6 +35,8 @@
     {"id":"y37","package":13,"rounds":[1],"scope":"Benzeyen kartları makinenin benzetilen girişlerine sürüklenir; doğru çift yuvada kalır ve makine ortak özellikli benzetme çıktısını basar. Seçme ve yazma turları korunur."},
     {"id":"g37","package":13,"rounds":[1],"scope":"Bitki için gerekli kaynak kartları doğrudan fide ve toprağa, gereksiz süs/nesne kartları sera yan rafına sürüklenir. Fide ihtiyaçlar karşılandıkça büyür; miktar kararı ve yazma turları korunur."},
     {"id":"y38","package":14,"rounds":[1,2],"scope":"Yüz ve beden ipucu kartları gerçek ayna yüzeylerine sürüklenir. Doğru ifadede aynadaki yüz ve duyguya göre değişen beden duruşu görünür; konuşma turu korunur."},
-    {"id":"g19","package":14,"rounds":[1,2],"scope":"Madde örnekleri sahnedeki katı tepsisine, sıvı deney kabına veya gaz balonuna sürüklenir ve ilgili düzeneğin içinde birikir. Gerekçeli yazma turu korunur."}
+    {"id":"g19","package":14,"rounds":[1,2],"scope":"Madde örnekleri sahnedeki katı tepsisine, sıvı deney kabına veya gaz balonuna sürüklenir ve ilgili düzeneğin içinde birikir. Gerekçeli yazma turu korunur."},
+    {"id":"y42","package":15,"rounds":[1],"scope":"Atasözü kartları birikim, saklama, bütçe ve ortak çalışma küçük yaşam sahnelerinin içine sürüklenir; doğru söz olayın içinde kalır ve sahneye hareket gelir. Karar ve yazma turları korunur."},
+    {"id":"g13","package":15,"rounds":[1],"scope":"Örnekler sahnedeki kristal büyüteci, kayaç tepsisi veya maden arabası istasyonuna sürüklenir ve her istasyonda birikir. Kayaç-mineral eşleme ve yazma turları korunur."}
   ]
 }

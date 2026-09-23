@@ -54,6 +54,8 @@ cp "$SABLONLAR/scene-simile-greenhouse.js" "$VARLIKLAR/phaser/scene-simile-green
 cp "$SABLONLAR/scene-simile-greenhouse.css" "$VARLIKLAR/phaser/scene-simile-greenhouse.css"
 cp "$SABLONLAR/scene-mirror-matter.js" "$VARLIKLAR/phaser/scene-mirror-matter.js"
 cp "$SABLONLAR/scene-mirror-matter.css" "$VARLIKLAR/phaser/scene-mirror-matter.css"
+cp "$SABLONLAR/scene-proverb-geology.js" "$VARLIKLAR/phaser/scene-proverb-geology.js"
+cp "$SABLONLAR/scene-proverb-geology.css" "$VARLIKLAR/phaser/scene-proverb-geology.css"
 cp "$KAYNAK/macera-akademi.html" "$VARLIKLAR/macera-akademi.html"
 cp "$KAYNAK/api-client.js" "$VARLIKLAR/api-client.js"
 echo "kopyalandı: $(find "$VARLIKLAR/phaser" -maxdepth 1 -name '*.html' | wc -l | tr -d ' ') şablon · svgciz damgası $DAMGA"

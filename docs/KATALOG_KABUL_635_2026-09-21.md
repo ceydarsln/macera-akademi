@@ -1,5 +1,9 @@
 # 635 oyun: teknik kontrol ve tasarım kabulü
 
+## Son ek: on beşinci paket
+
+Y42 Atasözü Köprüsü'nün ilk turunda sözler dört yaşam olayının içine, G13 Kayaç-Maden Masası'nın ilk turunda örnekler üç farklı inceleme istasyonuna taşınıyor. Hedefli sahne düzeltmesi kaydı **37 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **47 oyun**. Y41–Y43 ve G12–G14, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_15_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
+
 ## Son ek: on dördüncü paket
 
 Y38 Jest ve Mimik Aynası'nın ilk iki turunda kartlar yüz ve beden duruşunun belirdiği ayna yüzeylerine, G19 Maddenin Hâlleri'nin ilk iki turunda örnekler tepsiye, deney kabına veya balona taşınıyor. Hedefli sahne düzeltmesi kaydı **35 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **49 oyun**. Y37–Y39 ve G18–G20, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_14_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
