@@ -11,6 +11,8 @@
 <script src="scene-discovery.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-stories.css?v=20260921">
 <script src="scene-stories.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-pages.css?v=20260923">
+<script src="scene-pages.js?v=20260923"></script>
 <style>
 :root{--ink:#18324a;--muted:#53708a;--panel:rgba(255,255,255,.94);--ok:#159765;--bad:#d94655;--gold:#f1b53a;--blue:#2b83c6}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -843,6 +845,7 @@ function renderSerit(r){
   }else $$('[data-bin]').forEach(b=>b.onclick=()=>sinifla(b))};
  ciz()}
 function renderKule(r){
+ if(['y19','y58'].includes(GAME_ID))return ScenePages.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750),locked:()=>locked});
  state.slots=Array(r.order.length).fill(null);
  (r.preset||[]).forEach(([i,id])=>state.slots[i]=id);
  state.pick=null;
@@ -3114,11 +3117,11 @@ function dilekce(n){const b=['📅 tarih','🏛️ makam','✍️ istek metni','
   `<div style="width:100%;border:2px ${n>i?'solid #2f8f63':'dashed #9db4c4'};background:${n>i?'#e7f8ee':'#fff'};border-radius:8px;padding:3px 8px;font-weight:900;font-size:12px;text-align:left">${x}</div>`).join('')}</div>`}
 GAMES.y58={title:'Dilekçe Masası',theme:'class',finish:'Dilekçenin bölümlerini sıraladın, hangi bölümde ne yazıldığını eşledin ve kısa bir dilekçe yazdın.',rounds:[
  {kind:'kule',prompt:'Dilekçenin bölümlerini yukarıdan aşağıya sırala.',
-  yon:'⬆️ Aşağıdan yukarı: sayfanın altından üstüne',okText:'dilekçe şablonu',
+  yon:'Yukarıdan aşağıya: sayfanın başından sonuna',okText:'dilekçe şablonu',
   scene:(st)=>dilekce((st.slots||[]).filter(Boolean).length),
   cards:[{id:'d',label:'🖋️ Ad-soyad'},{id:'c',label:'✍️ İstek metni'},
          {id:'b',label:'🏛️ Makam (kime yazılıyor)'},{id:'a',label:'📅 Tarih'}],
-  order:['d','c','b','a'],
+  order:['a','b','c','d'],
   karsilastir:(s,g)=>`Bu sıraya “${g.label}” gelir. Sayfanın en üstünde ne yazar, en altta ne bulunur?`,
   hint:'Sayfanın en üstünde tarih, en altta imza vardır.',
   result:'Yukarıdan aşağıya: tarih → makam → istek metni → ad-soyad.'},
@@ -3354,7 +3357,7 @@ GAMES.y64={title:'Gizlilik Kalkanı',theme:'class',finish:'Paylaşılabilir bilg
 /* @@OYUNLAR@@ */
 
 const discoveryTurkishDrag=renderDrag;
-renderDrag=function(r){if(['y02','y12'].includes(GAME_ID))return SceneStories.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750)});if(GAME_ID==='y10')return SceneDiscovery.matching({id:GAME_ID,r,state,finish:bitirTur,wrong});return discoveryTurkishDrag(r)};
+renderDrag=function(r){if(['y19','y58'].includes(GAME_ID))return ScenePages.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750),locked:()=>locked});if(['y02','y12'].includes(GAME_ID))return SceneStories.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750)});if(GAME_ID==='y10')return SceneDiscovery.matching({id:GAME_ID,r,state,finish:bitirTur,wrong});return discoveryTurkishDrag(r)};
 GAMES.y12.rounds[0].prompt='Her nedeni, sonucunun yaşandığı sahneye yerleştir.';
 GAMES.y10.rounds[2].scene=()=>'<div class="mirror-room"><header>KENDİ KARŞILAŞTIRMANI YAZ</header><div class="mirror-grid"><div class="opposite-mirror"><span class="mirror-glass">'+SceneDiscovery.picture(1,false)+'<b>uzun</b></span></div><div class="opposite-mirror"><span class="mirror-glass">'+SceneDiscovery.picture(1,true)+'<b>kısa</b></span></div></div></div>';
 game=GAMES[GAME_ID];

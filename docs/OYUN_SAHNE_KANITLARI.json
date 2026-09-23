@@ -21,6 +21,8 @@
     {"id":"y12","package":5,"rounds":[1],"scope":"Neden doğru sahneye bırakılınca yağmur/birikinti, sınav sonucu, uyanma veya solma görülür; sonraki turlar korunur."},
     {"id":"p37","package":6,"rounds":[1,2,3],"scope":"Açı modelinin kolu gerçek dereceye döner; aralıklar, çoklu eşleşme ve 360 derece dönüş izi görünür."},
     {"id":"f25","package":7,"rounds":[1],"scope":"Sekiz nesne gerçek mıknatıs hedefine yaklaştırılır; hareketten sonra gözlem kaydedilir. Tekrar deney, dokunma/klavye alternatifi vardır. Karar ve yazma turları korunur."},
-    {"id":"f26","package":7,"rounds":[1],"scope":"Dört kutup eşleşmesinde ikinci mıknatıs sabit mıknatısa yaklaştırılır; itme/çekme gözlenip kaydedilir. Sonraki karar ve yazma turları korunur."}
+    {"id":"f26","package":7,"rounds":[1],"scope":"Dört kutup eşleşmesinde ikinci mıknatıs sabit mıknatısa yaklaştırılır; itme/çekme gözlenip kaydedilir. Sonraki karar ve yazma turları korunur."},
+    {"id":"y19","package":8,"rounds":[1,2],"scope":"Dergi bölümleri ve içerikleri doğrudan yayın sayfasına yerleşir; başlık, giriş, gelişme ve sonuç kendi konumunda görünür. Üçüncü yazma turu korunur."},
+    {"id":"y58","package":8,"rounds":[1,2],"scope":"Dilekçe bölümleri ve örnek içerikleri doğrudan kâğıda yerleşir. Yukarıdan aşağı sıra yönergesiyle veri düzeltildi; üçüncü yazma turu korunur."}
   ]
 }

@@ -1,5 +1,9 @@
 # 635 oyun: teknik kontrol ve tasarım kabulü
 
+## Son ek: sekizinci paket
+
+Y19/Y58 oyunlarının ilk iki turundaki parçalar doğrudan dergi ve dilekçe sayfalarına yerleşiyor. Hedefli sahne düzeltmesi kaydı **23 oyuna** ulaştı; güncel sahne dışı hedef sinyali **61 oyun**. Dilekçe sıralamasındaki yukarıdan aşağı yönergesiyle ters sıra çelişkisi giderildi. Ayrıntılar: docs/SAHNE_DUZELTMELERI_8_2026-09-23.md. Aşağıdaki eski sayılar önceki paketlerin tarihsel kayıtlarıdır.
+
 ## Son ek: yedinci paket
 
 F25/F26'nın ilk turları gerçek mıknatıs deneyine dönüştürüldü. Hedefli sahne düzeltmesi kaydı **21 oyuna** ulaştı; güncel sahne dışı hedef sinyali **63 oyun**. Gözlem cevapları artık sürükleme hedefi sayılmıyor, gerçek mıknatıs hedefi ayrıca sayılıyor. Ayrıntılar: docs/SAHNE_DUZELTMELERI_7_2026-09-21.md. Aşağıdaki 19 oyun / 65 sinyal değerleri altıncı paket kontrol noktasının tarihsel kaydıdır.
