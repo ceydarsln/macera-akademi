@@ -27,6 +27,8 @@
     {"id":"y52","package":9,"rounds":[1,2],"scope":"Eser kartları şematik harita üzerindeki şehir işaretlerine sürüklenir; İstanbul'un iki yapı hedefi ayrıdır. Üçüncü yazma turu korunur."},
     {"id":"g23","package":9,"rounds":[1],"scope":"Atık nesneleri sahnedeki gerçek renkli kutulara sürüklenir ve içeride birikir. İkinci karar ve üçüncü yazma turları korunur."},
     {"id":"y20","package":10,"rounds":[1],"scope":"Eş anlamlı sözcükler ormanın ağaç kovuklarına sürüklenir ve çift olarak görünür. Metin/kanıt ve yazma turları korunur."},
-    {"id":"g18","package":10,"rounds":[2],"scope":"Kazı aletleri kaba ve ince işin sahnedeki toprak bölgelerine sürüklenir, ilgili çalışma alanında birikir. Set kurma ve plan yazma turları korunur."}
+    {"id":"g18","package":10,"rounds":[2],"scope":"Kazı aletleri kaba ve ince işin sahnedeki toprak bölgelerine sürüklenir, ilgili çalışma alanında birikir. Set kurma ve plan yazma turları korunur."},
+    {"id":"y28","package":11,"rounds":[1],"scope":"Bağlam cümleleri doğru eş anlamlı sözcüğün köprü geçidine sürüklenir; her doğru cümle geçitte kalır. Karar ve konuşma turları korunur."},
+    {"id":"g25","package":11,"rounds":[1,2],"scope":"Hareketi izlenen nesneler park sahnesindeki dönme, sallanma, yön değiştirme veya ikinci tur birleşik hareket yollarına taşınır; nesneler yol üzerinde birikir. Yazma turu korunur."}
   ]
 }

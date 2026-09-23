@@ -1,5 +1,9 @@
 # 635 oyun: teknik kontrol ve tasarım kabulü
 
+## Son ek: on birinci paket
+
+Y28 Eş Anlam Köprüsü'nün ilk turunda cümleler gerçek köprü geçitlerini kuruyor; G25 Hareket Türleri'nin ilk iki turunda nesneler hareketleri gözlendikten sonra sahnedeki hareket yollarına taşınıyor. Hedefli sahne düzeltmesi kaydı **29 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **55 oyun**. Y27–Y29 ve G24–G26, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_11_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
+
 ## Son ek: onuncu paket
 
 Y20 Eş Anlam Ormanı'nın ilk turunda sözcükler ağaç kovuklarında; G18 Kazı Seti'nin ikinci turunda aletler kaba ve hassas toprak bölgelerinde birikiyor. Hedefli sahne düzeltmesi kaydı **27 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **57 oyun**. Y19–Y21 ve G17–G19, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_10_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
