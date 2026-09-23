@@ -13,6 +13,8 @@
 <script src="scene-discovery.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-destinations.css?v=20260923">
 <script src="scene-destinations.js?v=20260923"></script>
+<link rel="stylesheet" href="scene-forest-dig.css?v=20260923">
+<script src="scene-forest-dig.js?v=20260923"></script>
 <style>
 :root{--ink:#1b2f45;--muted:#516d87;--panel:rgba(255,255,255,.95);--ok:#14855c;--bad:#cd463d;--gold:#dfa32a;--blue:#2c7cb6;--line:#b6cada;--toprak:#8b5e3c}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -481,6 +483,7 @@ function saksi(oran,durum){
    yalnız karta yeniden bakmayı sağlayan bir soru sorar. Kart simgesi
    taşımaz — eşleştirme içeriğin okunmasıyla yapılır. ===== */
 function sinifCiz(r){
+ if(GAME_ID==='g18')return SceneForestDig.dig({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g23')return SceneDestinations.recycle({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g07')return SceneCollections.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  const i=state.ix||0,k=r.kartlar[i];

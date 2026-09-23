@@ -15,6 +15,8 @@
 <script src="scene-pages.js?v=20260923"></script>
 <link rel="stylesheet" href="scene-destinations.css?v=20260923">
 <script src="scene-destinations.js?v=20260923"></script>
+<link rel="stylesheet" href="scene-forest-dig.css?v=20260923">
+<script src="scene-forest-dig.js?v=20260923"></script>
 <style>
 :root{--ink:#18324a;--muted:#53708a;--panel:rgba(255,255,255,.94);--ok:#159765;--bad:#d94655;--gold:#f1b53a;--blue:#2b83c6}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -3359,7 +3361,7 @@ GAMES.y64={title:'Gizlilik Kalkanı',theme:'class',finish:'Paylaşılabilir bilg
 /* @@OYUNLAR@@ */
 
 const discoveryTurkishDrag=renderDrag;
-renderDrag=function(r){if(GAME_ID==='y52')return SceneDestinations.map({r,index:roundIndex,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:700),locked:()=>locked});if(['y19','y58'].includes(GAME_ID))return ScenePages.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750),locked:()=>locked});if(['y02','y12'].includes(GAME_ID))return SceneStories.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750)});if(GAME_ID==='y10')return SceneDiscovery.matching({id:GAME_ID,r,state,finish:bitirTur,wrong});return discoveryTurkishDrag(r)};
+renderDrag=function(r){if(GAME_ID==='y20')return SceneForestDig.forest({r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:700),locked:()=>locked});if(GAME_ID==='y52')return SceneDestinations.map({r,index:roundIndex,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:700),locked:()=>locked});if(['y19','y58'].includes(GAME_ID))return ScenePages.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750),locked:()=>locked});if(['y02','y12'].includes(GAME_ID))return SceneStories.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:750)});if(GAME_ID==='y10')return SceneDiscovery.matching({id:GAME_ID,r,state,finish:bitirTur,wrong});return discoveryTurkishDrag(r)};
 GAMES.y12.rounds[0].prompt='Her nedeni, sonucunun yaşandığı sahneye yerleştir.';
 GAMES.y10.rounds[2].scene=()=>'<div class="mirror-room"><header>KENDİ KARŞILAŞTIRMANI YAZ</header><div class="mirror-grid"><div class="opposite-mirror"><span class="mirror-glass">'+SceneDiscovery.picture(1,false)+'<b>uzun</b></span></div><div class="opposite-mirror"><span class="mirror-glass">'+SceneDiscovery.picture(1,true)+'<b>kısa</b></span></div></div></div>';
 game=GAMES[GAME_ID];

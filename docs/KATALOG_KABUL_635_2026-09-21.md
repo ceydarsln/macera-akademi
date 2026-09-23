@@ -1,5 +1,9 @@
 # 635 oyun: teknik kontrol ve tasarım kabulü
 
+## Son ek: onuncu paket
+
+Y20 Eş Anlam Ormanı'nın ilk turunda sözcükler ağaç kovuklarında; G18 Kazı Seti'nin ikinci turunda aletler kaba ve hassas toprak bölgelerinde birikiyor. Hedefli sahne düzeltmesi kaydı **27 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **57 oyun**. Y19–Y21 ve G17–G19, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_10_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
+
 ## Son ek: dokuzuncu paket
 
 Y52 Eser Haritası'nın ilk iki turunda eserler doğrudan şematik haritanın şehir işaretlerine; G23 Geri Dönüşüm Kutuları'nın ilk turunda nesneler sahnedeki kutuların içine bırakılıyor. Hedefli sahne düzeltmesi kaydı **25 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **59 oyun**. Her iki oyunun üç tur teknik regresyonu geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_9_2026-09-23.md. Aşağıdaki önceki sayılar tarihsel kontrol noktalarıdır.

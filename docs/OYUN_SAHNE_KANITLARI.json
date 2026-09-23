@@ -25,6 +25,8 @@
     {"id":"y19","package":8,"rounds":[1,2],"scope":"Dergi bölümleri ve içerikleri doğrudan yayın sayfasına yerleşir; başlık, giriş, gelişme ve sonuç kendi konumunda görünür. Üçüncü yazma turu korunur."},
     {"id":"y58","package":8,"rounds":[1,2],"scope":"Dilekçe bölümleri ve örnek içerikleri doğrudan kâğıda yerleşir. Yukarıdan aşağı sıra yönergesiyle veri düzeltildi; üçüncü yazma turu korunur."},
     {"id":"y52","package":9,"rounds":[1,2],"scope":"Eser kartları şematik harita üzerindeki şehir işaretlerine sürüklenir; İstanbul'un iki yapı hedefi ayrıdır. Üçüncü yazma turu korunur."},
-    {"id":"g23","package":9,"rounds":[1],"scope":"Atık nesneleri sahnedeki gerçek renkli kutulara sürüklenir ve içeride birikir. İkinci karar ve üçüncü yazma turları korunur."}
+    {"id":"g23","package":9,"rounds":[1],"scope":"Atık nesneleri sahnedeki gerçek renkli kutulara sürüklenir ve içeride birikir. İkinci karar ve üçüncü yazma turları korunur."},
+    {"id":"y20","package":10,"rounds":[1],"scope":"Eş anlamlı sözcükler ormanın ağaç kovuklarına sürüklenir ve çift olarak görünür. Metin/kanıt ve yazma turları korunur."},
+    {"id":"g18","package":10,"rounds":[2],"scope":"Kazı aletleri kaba ve ince işin sahnedeki toprak bölgelerine sürüklenir, ilgili çalışma alanında birikir. Set kurma ve plan yazma turları korunur."}
   ]
 }
