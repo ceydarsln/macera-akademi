@@ -1,5 +1,9 @@
 # 635 oyun: teknik kontrol ve tasarım kabulü
 
+## Son ek: dokuzuncu paket
+
+Y52 Eser Haritası'nın ilk iki turunda eserler doğrudan şematik haritanın şehir işaretlerine; G23 Geri Dönüşüm Kutuları'nın ilk turunda nesneler sahnedeki kutuların içine bırakılıyor. Hedefli sahne düzeltmesi kaydı **25 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **59 oyun**. Her iki oyunun üç tur teknik regresyonu geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_9_2026-09-23.md. Aşağıdaki önceki sayılar tarihsel kontrol noktalarıdır.
+
 ## Son ek: sekizinci paket
 
 Y19/Y58 oyunlarının ilk iki turundaki parçalar doğrudan dergi ve dilekçe sayfalarına yerleşiyor. Hedefli sahne düzeltmesi kaydı **23 oyuna** ulaştı; güncel sahne dışı hedef sinyali **61 oyun**. Dilekçe sıralamasındaki yukarıdan aşağı yönergesiyle ters sıra çelişkisi giderildi. Ayrıntılar: docs/SAHNE_DUZELTMELERI_8_2026-09-23.md. Aşağıdaki eski sayılar önceki paketlerin tarihsel kayıtlarıdır.

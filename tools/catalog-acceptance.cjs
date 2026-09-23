@@ -11,7 +11,7 @@ const prior=fs.existsSync(evidence)?JSON.parse(fs.readFileSync(evidence)):[];
 const records=new Map(prior.map(r=>[r.id,r]));
 const sceneEvidence=JSON.parse(fs.readFileSync(path.join(ROOT,'docs/OYUN_SAHNE_KANITLARI.json'))).games;
 const sceneById=new Map(sceneEvidence.map(g=>[g.id,g]));
-const packageLink=n=>'../sahne-duzeltmeleri'+(n===1?'':'-'+n)+'-2026-09-21/index.html';
+const packageLink=n=>'../sahne-duzeltmeleri'+(n===1?'':'-'+n)+'-'+(n>=8?'2026-09-23':'2026-09-21')+'/index.html';
 const {createHash}=require('crypto');
 function sourceHash(slug){
  const html=path.join(ROOT,'app/src/main/assets/phaser',slug+'-pdf.html'),body=fs.readFileSync(html,'utf8');

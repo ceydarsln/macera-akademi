@@ -50,6 +50,7 @@ async function solveRound(page, r) {
   if (r.kind === 'sinifla') {
     for (let n = 0; n < r.kartlar.length; n++) {
       const i = await page.evaluate(() => state.ix || 0);
+      if (await page.locator('[data-sinif-kart]').count()) await click(page, '[data-sinif-kart]');
       await click(page, `[data-kutu="${r.kartlar[i].dogru}"]`);
     }
   } else if (r.kind === 'sira') {
