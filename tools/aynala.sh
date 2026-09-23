@@ -50,6 +50,8 @@ cp "$SABLONLAR/scene-bridges-motion.js" "$VARLIKLAR/phaser/scene-bridges-motion.
 cp "$SABLONLAR/scene-bridges-motion.css" "$VARLIKLAR/phaser/scene-bridges-motion.css"
 cp "$SABLONLAR/scene-book-power.js" "$VARLIKLAR/phaser/scene-book-power.js"
 cp "$SABLONLAR/scene-book-power.css" "$VARLIKLAR/phaser/scene-book-power.css"
+cp "$SABLONLAR/scene-simile-greenhouse.js" "$VARLIKLAR/phaser/scene-simile-greenhouse.js"
+cp "$SABLONLAR/scene-simile-greenhouse.css" "$VARLIKLAR/phaser/scene-simile-greenhouse.css"
 cp "$KAYNAK/macera-akademi.html" "$VARLIKLAR/macera-akademi.html"
 cp "$KAYNAK/api-client.js" "$VARLIKLAR/api-client.js"
 echo "kopyalandı: $(find "$VARLIKLAR/phaser" -maxdepth 1 -name '*.html' | wc -l | tr -d ' ') şablon · svgciz damgası $DAMGA"

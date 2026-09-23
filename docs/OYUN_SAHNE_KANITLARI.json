@@ -31,6 +31,8 @@
     {"id":"y28","package":11,"rounds":[1],"scope":"Bağlam cümleleri doğru eş anlamlı sözcüğün köprü geçidine sürüklenir; her doğru cümle geçitte kalır. Karar ve konuşma turları korunur."},
     {"id":"g25","package":11,"rounds":[1,2],"scope":"Hareketi izlenen nesneler park sahnesindeki dönme, sallanma, yön değiştirme veya ikinci tur birleşik hareket yollarına taşınır; nesneler yol üzerinde birikir. Yazma turu korunur."},
     {"id":"y31","package":12,"rounds":[2],"scope":"Bölüm kartları işlevlerini anlatan gerçek kitap sayfalarına yerleşir ve sayfalarda kalır. Bölüm sıralama ve yazma turları korunur."},
-    {"id":"g31","package":12,"rounds":[1,2],"scope":"Araçlar sahnedeki elektrikli/elektriksiz veya priz/pil/el gücü istasyonlarına sürüklenir ve istasyonlarda birikir. Yazma turu korunur."}
+    {"id":"g31","package":12,"rounds":[1,2],"scope":"Araçlar sahnedeki elektrikli/elektriksiz veya priz/pil/el gücü istasyonlarına sürüklenir ve istasyonlarda birikir. Yazma turu korunur."},
+    {"id":"y37","package":13,"rounds":[1],"scope":"Benzeyen kartları makinenin benzetilen girişlerine sürüklenir; doğru çift yuvada kalır ve makine ortak özellikli benzetme çıktısını basar. Seçme ve yazma turları korunur."},
+    {"id":"g37","package":13,"rounds":[1],"scope":"Bitki için gerekli kaynak kartları doğrudan fide ve toprağa, gereksiz süs/nesne kartları sera yan rafına sürüklenir. Fide ihtiyaçlar karşılandıkça büyür; miktar kararı ve yazma turları korunur."}
   ]
 }

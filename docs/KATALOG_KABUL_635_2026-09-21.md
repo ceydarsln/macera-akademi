@@ -1,5 +1,9 @@
 # 635 oyun: teknik kontrol ve tasarım kabulü
 
+## Son ek: on üçüncü paket
+
+Y37 Benzetme Makinesi'nin ilk turunda kartlar makinenin eşleşme yuvalarına, G37 Bitki İhtiyaçları'nın ilk turunda kaynaklar doğrudan fideye veya yan rafa taşınıyor. Hedefli sahne düzeltmesi kaydı **33 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **51 oyun**. Y36–Y38 ve G36–G38, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_13_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
+
 ## Son ek: on ikinci paket
 
 Y31 Kitap Anatomisi'nin ikinci turunda bölümler kitap sayfalarına yerleşiyor; G31 Elektrikle mi Çalışıyor? oyununun ilk iki turunda araçlar uygun enerji istasyonlarına taşınıyor. Hedefli sahne düzeltmesi kaydı **31 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **53 oyun**. Y30–Y32 ve G30–G32, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_12_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
