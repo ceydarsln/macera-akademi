@@ -1,5 +1,9 @@
 # 635 oyun: teknik kontrol ve tasarım kabulü
 
+## Son ek: on ikinci paket
+
+Y31 Kitap Anatomisi'nin ikinci turunda bölümler kitap sayfalarına yerleşiyor; G31 Elektrikle mi Çalışıyor? oyununun ilk iki turunda araçlar uygun enerji istasyonlarına taşınıyor. Hedefli sahne düzeltmesi kaydı **31 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **53 oyun**. Y30–Y32 ve G30–G32, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_12_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
+
 ## Son ek: on birinci paket
 
 Y28 Eş Anlam Köprüsü'nün ilk turunda cümleler gerçek köprü geçitlerini kuruyor; G25 Hareket Türleri'nin ilk iki turunda nesneler hareketleri gözlendikten sonra sahnedeki hareket yollarına taşınıyor. Hedefli sahne düzeltmesi kaydı **29 oyuna** ulaştı; güncel otomatik sahne dışı hedef sinyali **55 oyun**. Y27–Y29 ve G24–G26, toplam 6 oyun / 18 tur teknik regresyondan geçti. Ayrıntılar: docs/SAHNE_DUZELTMELERI_11_2026-09-23.md. Aşağıdaki sayılar tarihsel kontrol noktalarıdır.
