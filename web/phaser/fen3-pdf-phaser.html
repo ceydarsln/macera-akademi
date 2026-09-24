@@ -25,6 +25,8 @@
 <script src="scene-mirror-matter.js?v=20260923"></script>
 <link rel="stylesheet" href="scene-proverb-geology.css?v=20260923">
 <script src="scene-proverb-geology.js?v=20260923"></script>
+<link rel="stylesheet" href="scene-habitat-seasons.css?v=20260924">
+<script src="scene-habitat-seasons.js?v=20260924"></script>
 <style>
 :root{--ink:#1b2f45;--muted:#516d87;--panel:rgba(255,255,255,.95);--ok:#14855c;--bad:#cd463d;--gold:#dfa32a;--blue:#2c7cb6;--line:#b6cada;--toprak:#8b5e3c}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -493,6 +495,7 @@ function saksi(oran,durum){
    yalnız karta yeniden bakmayı sağlayan bir soru sorar. Kart simgesi
    taşımaz — eşleştirme içeriğin okunmasıyla yapılır. ===== */
 function sinifCiz(r){
+ if(GAME_ID==='g43')return SceneHabitatSeasons.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g13')return SceneProverbGeology.geology({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g19')return SceneMirrorMatter.matter({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g37')return SceneSimileGreenhouse.greenhouse({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});

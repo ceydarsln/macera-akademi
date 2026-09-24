@@ -728,6 +728,10 @@ async function tur1(W){
   const tur = r.kind || 'choose';
   switch (tur){
     case 'choose': case 'pattern': case 'estimate': case 'plateChoice':
+      if(W.eval('GAME_ID')==='m38'){
+        await tikla(W,'.apple-experiment button');
+        await kosul(()=>!S(W,'[data-choice="0"]')?.disabled,15000,'elma hareketi');
+      }
       await dogruyaBas(W, r.choices || []); break;
     case 'stages':
       /* Motorun kendi 650 ms geçişi gizli sekmede kısılıyor; sabit bekleme
@@ -960,6 +964,7 @@ async function tur7(W){
     case 'sinifla':
       for (let i = 0; i < r.kartlar.length; i++){
         await kosul(() => Number(W.eval('String(state.ix)')) === i, 15000, 'kart ' + i);
+        if(W.eval('String(GAME_ID)')==='h26') await tikla(W, '[data-sinif-kart]');
         await tikla(W, '[data-kutu="' + r.kartlar[i].dogru + '"]');
         await bekle(60);
       }
@@ -1227,6 +1232,7 @@ async function tur9(W){
     case 'sinifla':
       for (let i = 0; i < r.kartlar.length; i++){
         await kosul(() => Number(W.eval('String(state.ix)')) === i, 15000, 'kart ' + i);
+        if(W.eval('String(GAME_ID)')==='z01') await tikla(W, '[data-sinif-kart]');
         await tikla(W, '[data-kutu="' + r.kartlar[i].dogru + '"]'); await bekle(60);
       }
       break;

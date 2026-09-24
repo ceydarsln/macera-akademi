@@ -9,6 +9,8 @@
 <script src="scene-workshop.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-collections.css?v=20260921">
 <script src="scene-collections.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-habitat-seasons.css?v=20260924">
+<script src="scene-habitat-seasons.js?v=20260924"></script>
 <style>
 :root{--ink:#1d3346;--muted:#56728a;--panel:rgba(255,255,255,.95);--ok:#158a5e;--bad:#d0483f;--gold:#e0a52c;--blue:#2f7fb8;--line:#b8ccdb}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -445,6 +447,7 @@ function renderKarar(r){state.faz=0;state.not='';kararCiz(r)}
 /* ===== SINIFLA: kart bantta akmaz, sabit durur ve hiçbir kenarda kırpılmaz.
    Kutularda emoji/renk ipucu yok (şartname ölçüt 4). ===== */
 function sinifCiz(r){
+ if(GAME_ID==='h26'&&roundIndex===0)return SceneHabitatSeasons.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='h07')return SceneCollections.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  const i=state.ix||0,k=r.kartlar[i];
  if(!k)return;
