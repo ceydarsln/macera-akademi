@@ -747,7 +747,7 @@ async function tur1(W){
       if(W.eval('GAME_ID')==='m33'){
         await surukle1(W,'[data-piece="candidate-'+r.pieces.find(p=>p.target).target+'"]','[data-target="patternSlot"]');break;
       }
-      for (const p of (r.pieces||[]).filter(x=>x.target))
+      for (const p of (r.pieces||[]).filter(x=>x.target).sort((a,b)=>W.eval('GAME_ID')==='m18'?Number(a.target.slice(1))-Number(b.target.slice(1)):0))
         await surukle1(W, '[data-piece="'+p.id+'"]', '[data-target="'+p.target+'"]');
       break;
     case 'grid': {

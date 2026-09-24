@@ -40,7 +40,7 @@ Durumlar: **Geçti**, **Düzeltildi · yeniden testte**, **Cihaz sesi bekliyor**
 | m15 | Şipşak Hafıza | Meyvelerin kısa gösterimi Phaser’da hiç uygulanmıyor; cevaplar hafıza yerine hareketli hedef vurmayı ölçüyordu. | `flashMs/flashContent` desteği eklendi; 3 elma + 2 armut 1,6 saniye gösteriliyor ve cevaplar sabitleniyor. | **Geçti** · geçici kartın açılıp kapanması, 5 ve “3 ve 2” cevaplarıyla iki tur doğrulandı. |
 | m16 | Orman Maratonu | Belirgin bir mantık veya etkileşim hatası görülmedi. | Değişiklik gerekmedi. | **Geçti** · 2. sıradaki tavşan için yanlış uyarısı, 3. sıradaki kaplumbağa ile tamamlama doğrulandı. |
 | m17 | Uzaylı Apartmanı | Katlar yukarıdan aşağı 1–5 metin satırıydı; bina ve uzaylı yoktu. | Gerçek beş katlı binada 1. kat alta, 5. kat üste yerleştirildi; kargo sürükleme eklendi. | **Geçti** · 3. kata yanlış bırakma uyarısı ve 4. kata doğru teslim doğrulandı. |
-| m18 | Dondurma Kulesi | Külah yerine metin satırları vardı; top sırası ve dondurma kulesi görünmüyordu. | Gerçek külah, aşağıdan yukarı 1–2–3 yuvaları ve aroma topları yapıldı; işlem sırası zorunlu tutuldu. | **Geçti** · 2. topu önce koyma uyarısı; çilek, vanilya, çikolata sırasıyla tamamlandı. |
+| m18 | Dondurma Kulesi | Külah yerine metin satırları vardı; top sırası ve dondurma kulesi görünmüyordu. | 24 Eylül'de çakışan hedefler yeniden çizildi: toplar gerçek külah üstündeki yuvalara, alttan üste doğru yerleşiyor. | **Düzeltildi · manuel yeniden testte** · eski sürüm elle geçmişti; yeni sürümün 18 otomatik ekran/tur ve gerçek sürükleme senaryosu geçti, fakat insan gözüyle yeniden onay verilmedi. |
 | m19 | Otobüs Durakları | Belirgin bir mantık veya etkileşim hatası görülmedi. | Değişiklik gerekmedi. | **Geçti** · 1. durak için yanlış uyarısı, otobüsten sayılan 2. durak ile tamamlama doğrulandı. |
 | m20 | Şampiyonlar Kürsüsü | Kürsü yerine aynı biçimli 1/2/3 metin satırları vardı. | 1. ortada/en yüksek, 2. solda, 3. sağda olacak gerçek kürsü yapıldı. | **Geçti** · yanlış basamak geri bildirimi; çita 1., tavşan 2., kaplumbağa 3. yerleştirilerek tamamlandı. |
 | m21 | Vagon Ekspresi | Yatay sıra kazanımına rağmen vagonlar dikey metin satırlarıydı; lokomotif yoktu. | Lokomotif solda, arkasında soldan sağa dört gerçek vagon çizildi. | **Geçti** · 2. vagon için yanlış uyarısı, lokomotiften 3. vagona zürafa bırakılarak tamamlama doğrulandı. |
@@ -61,8 +61,8 @@ Durumlar: **Geçti**, **Düzeltildi · yeniden testte**, **Cihaz sesi bekliyor**
 ## İlerleme
 
 - Toplam katalog: **658 oyun**
-- Bu yeni, elle oynanan kabul turunda tamamen geçen: **31 oyun**
-- Düzeltildi, son yeniden testi süren: **1 oyun**
+- Bu yeni, elle oynanan kabul turunda güncel sürümü tamamen geçen: **30 oyun**
+- Düzeltildi, son yeniden testi süren: **2 oyun** (M18 ve M30)
 - Oynanışı geçen, fiziksel cihaz sesi bekleyen: **2 oyun**
 - Kalan oyunlar sınıf ve ders sırasıyla bu belgeye eklenecek; otomatik test
   sonucu manuel kabul yerine kullanılmayacak.

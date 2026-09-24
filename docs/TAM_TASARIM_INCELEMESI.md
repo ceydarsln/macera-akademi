@@ -16,7 +16,7 @@
 1. M17: apartmanın katları sahne altından kesiliyor; hedeflerin gerçek pencerelerde ve tamamen görünür olması gerekiyor.
 2. M38: elma grupları/araba dar ekranda taşmış. Yönerge hareketi izlemeyi istiyor ama sahne statik işlem işareti göstererek cevabı veriyor.
 3. Sayı çizme oyunları: çizim alanı geniş sahnede küçük kalıyor. Harf çizme oyunlarında başlıktan bağımsız tekrar eden uçak/gökyüzü teması var.
-4. M18: dondurma hedefleri ve yazılar çakışıyor. M36: ölçülen gerçek nesne yerine yazılı kart görünüyor.
+4. M18'in çakışan dondurma hedefleri ve M36'nın ölçülen nesne yerine yazılı kart gösterimi bu turda düzeltildi. Üç tur ve üç ekran boyutundaki hedefli testler geçti; kullanıcı görsel onayı ve gerçek cihaz kontrolü bekliyor.
 5. M41, M42, M45, M47, M49: büyük boşluk ve küçük işlem/emoji; eylem-sonuç gösterimi ayrıca incelenmeli.
 6. M51: iade kamyonu küçük simge ve büyük kutu. M54: hedef sınırları çakışıyor. M58: gölge kontrastı zayıf.
 7. T04,T06,T07,T09,T14,T21,T22,T30,T38,T46,T47,T48,T51,T54,T64: kelime yuvaları çizilmiş makine/vagondan kopuk; gerçek nesne üzerinde birleşme ve çıktı incelenmeli.
@@ -51,3 +51,9 @@ Güncel dış hedef sayısı 26'dır ve hepsi kavramsal karar olarak açıklanm�
 
 - F07'nin ilk turunda besin örneği yalnızca fiziksel analiz kabının ağzına bırakılabiliyor; yanındaki yazı bırakma hedefi değil. Yerleştirme sonrasında kaptaki sıvı seviyesi değişiyor, numune içeride görünüyor. F13'te gözlem Dünya modelindeki dört görünür bölgeden birine bırakılıyor ve seçilen bölgede beliriyor. İki oyunun ikinci ve üçüncü turları bu düzenlemede değiştirilmedi.
 - `artifacts/besin-dunya-denetimi/index.html`: 320×568, 390×844 ve 844×390 ekranları; altışar gerçek sürükleme, yanlış hedef ve iptal denetimi. `artifacts/katalog-kabul-635` üç turun teknik çözümünü kaydeder. Bunlar insan eliyle verilmiş tam tasarım onayı değildir.
+
+## Sonraki tasarım kabul paketi — M18 ve M36
+
+- M18'de dondurma topları artık gerçek külahın üzerindeki üç veya dört fiziksel yuvaya giriyor. Külaha en yakın alttaki yuvadan başlamadan üst kat kabul edilmiyor; doğru top iniş animasyonuyla kulede kalıyor. Önceki ekran görüntüsündeki hedef/yazı çakışması giderildi.
+- M36'da kalem, silgi ve defter kenarı ayrı şekil ve uzunlukta çiziliyor. Ataşlar nesnenin altındaki aynı uzunluktaki ölçüm çizgisine birer birer diziliyor; çizgi dışına bırakmak ilerletmiyor ve dolan ataşlar görünür biçimde işaretleniyor.
+- [Üç ekran boyutu ve üç tur karşılaştırması](../artifacts/dondurma-olcum-denetimi/index.html): 18 ekran/tur senaryosu, gerçek fare sürüklemesi, yanlış hedef, tur bitişi ve yeniden başlatma kontrolü. `catalog-acceptance` iki oyunun üçer turunu ayrıca geçti. Bu hedefli kanıt, diğer 633 oyunun ya da gerçek telefon/WebView ses ve dokunma davranışının kabulü değildir.
