@@ -11,6 +11,10 @@
 <script src="scene-collections.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-habitat-seasons.css?v=20260924">
 <script src="scene-habitat-seasons.js?v=20260924"></script>
+<link rel="stylesheet" href="scene-physical-classification.css?v=20260924">
+<script src="scene-physical-classification.js?v=20260924"></script>
+<link rel="stylesheet" href="scene-conjunction-press.css?v=20260924">
+<script src="scene-conjunction-press.js?v=20260924"></script>
 <style>
 :root{--ink:#1b2f45;--muted:#516d87;--panel:rgba(255,255,255,.95);--ok:#14855c;--bad:#cd463d;--gold:#dfa32a;--blue:#2c7cb6;--line:#b6cada}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -360,6 +364,8 @@ function renderKarar(r){state.faz=0;state.not='';state.kaynakAcik=false;kararCiz
 /* ===== SINIFLA: cümle kartı sabit ve TAM görünür; bant akışı yok.
    Kutu etiketleri kutu içinde kalır, simge ipucu vermez. ===== */
 function sinifCiz(r){
+ if(GAME_ID==='z33')return SceneConjunctionPress.render({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
+ if(['z17','z49'].includes(GAME_ID))return ScenePhysicalClassification.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='z01')return SceneHabitatSeasons.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='z10')return SceneCollections.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  const i=state.ix||0,k=r.kartlar[i];

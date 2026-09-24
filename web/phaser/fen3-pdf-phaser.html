@@ -7,6 +7,8 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="scene-workshop.css?v=20260921">
 <script src="scene-workshop.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-physical-classification.css?v=20260924">
+<script src="scene-physical-classification.js?v=20260924"></script>
 <link rel="stylesheet" href="scene-collections.css?v=20260921">
 <script src="scene-collections.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-discovery.css?v=20260921">
@@ -495,6 +497,7 @@ function saksi(oran,durum){
    yalnız karta yeniden bakmayı sağlayan bir soru sorar. Kart simgesi
    taşımaz — eşleştirme içeriğin okunmasıyla yapılır. ===== */
 function sinifCiz(r){
+ if(['g15','g16','g26','g30','g42'].includes(GAME_ID))return ScenePhysicalClassification.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g43')return SceneHabitatSeasons.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g13')return SceneProverbGeology.geology({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='g19')return SceneMirrorMatter.matter({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});

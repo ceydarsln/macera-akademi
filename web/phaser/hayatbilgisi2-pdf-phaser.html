@@ -7,6 +7,8 @@
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="scene-workshop.css?v=20260921">
 <script src="scene-workshop.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-physical-classification.css?v=20260924">
+<script src="scene-physical-classification.js?v=20260924"></script>
 <link rel="stylesheet" href="scene-collections.css?v=20260921">
 <script src="scene-collections.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-habitat-seasons.css?v=20260924">
@@ -449,6 +451,7 @@ function renderKarar(r){state.faz=0;state.not='';kararCiz(r)}
 /* ===== SINIFLA: kart bantta akmaz, sabit durur ve hiçbir kenarda kırpılmaz.
    Kutularda emoji/renk ipucu yok (şartname ölçüt 4). ===== */
 function sinifCiz(r){
+ if(GAME_ID==='h24')return ScenePhysicalClassification.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='h05'&&roundIndex===0)return SceneVoting.render({r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='h26'&&roundIndex===0)return SceneHabitatSeasons.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(GAME_ID==='h07')return SceneCollections.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});

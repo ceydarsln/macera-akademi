@@ -1,0 +1,46 @@
+.scene.world-scene[data-theme]{--world-ink:#263d48;--world-edge:#627a81;--world-paper:#f8f5e9;--world-accent:#dba64f;background:linear-gradient(160deg,#cfdfdf,#829ea3);gap:7px}
+.world-scene #stage{flex:1 1 auto;min-height:0;padding:0;background:transparent;border:0;box-shadow:none;justify-content:flex-start}
+.world-scene #task{flex:0 0 auto;gap:3px;margin:0}
+.world-field{width:min(100%,620px);height:100%;margin:auto;padding:8px;border:3px solid var(--world-edge);border-radius:21px;background:var(--world-paper);box-shadow:0 5px 0 #172a2c44;display:flex;flex-direction:column;gap:5px;overflow:hidden;color:var(--world-ink)}
+.world-field>header{display:flex;align-items:center;justify-content:space-between;gap:5px;font-size:clamp(11px,2.8vw,15px);font-weight:950;letter-spacing:.04em;line-height:1.1}
+.world-field>header span{white-space:nowrap;font-size:11px}
+.world-zones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:6px;flex:1 1 auto;min-height:0}
+.world-zones.zones-2,.world-zones.zones-3{grid-template-columns:1fr}
+.world-zones.zones-3>.world-zone:last-child{grid-column:auto}
+.world-zone{display:flex;flex-direction:column;min-width:0;min-height:0;gap:3px;align-items:stretch}
+.world-zone-name{font-size:clamp(10px,2.8vw,14px);line-height:1.12;font-weight:950;min-height:24px;text-align:center;display:grid;place-items:center}
+.world-destination{position:relative;display:block;width:100%;flex:1 1 auto;min-height:63px;padding:0;overflow:hidden;border:3px solid var(--world-edge);border-radius:12px;background:#dce8e2;touch-action:none;box-shadow:inset 0 0 0 2px #fff9}
+.world-destination svg{width:100%;height:100%;display:block;object-fit:contain}
+.world-destination.drop-ready{outline:4px solid #f6bb47;outline-offset:-5px;filter:brightness(1.13)}
+.world-destination.world-placed{border-color:#18865e;box-shadow:inset 0 0 0 4px #4eb889}
+.world-arrival{position:absolute;left:7%;right:7%;top:50%;transform:translateY(-50%);border-radius:9px;background:#fff8dc;color:#213a43;border:2px solid #d8aa53;padding:4px 5px;max-height:80%;font-size:clamp(9px,2.5vw,12px);font-weight:950;line-height:1.14;overflow:hidden;overflow-wrap:anywhere;text-align:center;animation:world-land .48s ease both}
+.world-arrival:empty{display:none}
+.world-arrival-icon{display:block;font-size:clamp(20px,5vw,30px);line-height:1.05;margin-bottom:2px}
+.world-zone-hint{font-size:clamp(9px,2.4vw,11px);line-height:1.1;text-align:center;font-weight:800;color:#49636a;min-height:14px}
+.world-result{margin:0;min-height:18px;font-size:11px;font-weight:850;text-align:center;line-height:1.18}
+.world-source{width:min(100%,620px);min-height:55px;border:3px solid var(--world-edge);border-radius:15px;background:#fffdf5;box-shadow:0 3px 0 #142d3344;padding:6px 10px;display:flex;align-items:center;gap:8px;text-align:left;font-size:clamp(12px,3vw,15px);font-weight:900;line-height:1.18;touch-action:none}
+.world-source>span:nth-child(2){flex:1}.world-source small{display:block;font-size:10px;color:#526979;margin-top:2px}
+.world-source-mark{font-size:34px;line-height:1;color:var(--world-accent)}.world-grip{font-size:20px;color:#738185}
+.world-source.selected{outline:4px solid var(--world-accent);outline-offset:2px}.world-source[hidden]{display:none}
+.world-help{margin:0;text-align:center;font-size:10px;line-height:1.2;font-weight:750;color:#263d48}
+/* Her konu kendi fiziksel çevresini taşır: ortak olan yalnız sürükleme motorudur. */
+.world-energy-book{--world-paper:#f7efce;--world-edge:#7b6850;--world-ink:#4b4738;--world-accent:#d09b3b;background:repeating-linear-gradient(#f7efce 0 25px,#e7dbaa 26px 27px)}
+.world-museum{--world-paper:#f1e9d9;--world-edge:#846c59;--world-ink:#533f3a;--world-accent:#c37765;background:linear-gradient(#f4ecdb 0 88%,#af8663 88%)}
+.world-museum .world-destination{border-width:6px;border-color:#a27d5b;border-radius:4px}
+.world-metal{--world-paper:#e9eff0;--world-edge:#617782;--world-ink:#2d4858;--world-accent:#b8824c;background:repeating-linear-gradient(90deg,#e7edef 0 37px,#d8e1e3 38px 39px)}
+.world-geology{--world-paper:#f1e7cc;--world-edge:#8a7355;--world-ink:#544b38;--world-accent:#9d803e;background:linear-gradient(#f4ecd6 0 83%,#a5805b 83%)}
+.world-force-park{--world-paper:#e0f0d8;--world-edge:#608563;--world-ink:#28513c;--world-accent:#da8e45;background:linear-gradient(#d6ebf4 0 65%,#9fc17e 65%)}
+.world-force-home{--world-paper:#f6ede4;--world-edge:#866b64;--world-ink:#513e43;--world-accent:#c87e59;background:repeating-linear-gradient(0deg,#f7eee4 0 34px,#f0dfd3 35px 36px)}
+.world-garden{--world-paper:#dff1d1;--world-edge:#5f854f;--world-ink:#2e5436;--world-accent:#e2a657;background:linear-gradient(#c6e6ef 0 28%,#79a96b 28% 56%,#7d593e 56%)}
+.world-garden .world-zones{grid-template-columns:1fr;gap:4px}.world-garden .world-zones.zones-3>.world-zone:last-child{grid-column:auto}.world-garden .world-zone{display:grid;grid-template-columns:80px minmax(44px,1fr) 105px;grid-template-rows:1fr;align-items:center}.world-garden .world-zone-name{font-size:11px;text-align:left}.world-garden .world-zone-hint{font-size:9px;text-align:left}.world-garden .world-destination{height:100%}
+.world-phase{--world-paper:#e9f2f6;--world-edge:#66899b;--world-ink:#2c5063;--world-accent:#df9f55;background:repeating-linear-gradient(90deg,#e8f1f5 0 31px,#d3e4e9 32px 33px)}
+.world-heat{--world-paper:#f0f2ed;--world-edge:#788891;--world-ink:#3a4e5d;--world-accent:#de9454;background:linear-gradient(90deg,#f9e6d9 0 50%,#e1f0f4 50%)}
+.world-energy-city{--world-paper:#d9e6eb;--world-edge:#4b6a7a;--world-ink:#254158;--world-accent:#d8ae4e;background:linear-gradient(#aacbd6 0 73%,#829c93 73%)}
+.world-light{--world-paper:#1e3554;--world-edge:#8ebcd5;--world-ink:#f4f5dd;--world-accent:#f1cd6a;background:linear-gradient(#152742,#264262);box-shadow:0 0 19px #8fceef55}
+.world-light .world-zone-hint,.world-light .world-result{color:#e0eaf1}.world-light .world-destination{border-color:#aec9d8}
+.world-holiday{--world-paper:#fff1d8;--world-edge:#c2745b;--world-ink:#643f3b;--world-accent:#d45c50;background:linear-gradient(#c5e7f4 0 62%,#efcfa9 62%)}
+.world-holiday .world-destination{border-radius:23px 23px 8px 8px}
+@keyframes world-land{from{opacity:0;transform:translateY(-26px) scale(1.07)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+@media(max-width:350px){.world-garden .world-zone{grid-template-columns:67px 1fr 78px}.world-garden .world-zone-name{font-size:9px}.world-garden .world-zone-hint{font-size:8px}.world-field{padding:5px}}
+@media(max-height:650px) and (orientation:landscape){.scene.world-scene[data-theme]{display:grid;grid-template-columns:minmax(0,1fr) 195px;align-items:stretch;gap:7px}.world-scene #task{align-self:center}.world-field{height:100%}.world-zones{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.world-zones.zones-2{grid-template-columns:repeat(2,minmax(0,1fr))}.world-zones.zones-3{grid-template-columns:repeat(3,minmax(0,1fr))}.world-zones.zones-3>.world-zone:last-child{grid-column:auto}.world-zone-name{font-size:10px;min-height:23px}.world-zone-hint{font-size:9px}.world-garden .world-zones{grid-template-columns:repeat(3,minmax(0,1fr))}.world-garden .world-zone{display:flex}.world-source{min-height:86px;flex-wrap:wrap;justify-content:center}.world-help{line-height:1.25}}
+@media(prefers-reduced-motion:reduce){.world-arrival{animation:none}}

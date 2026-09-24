@@ -13,6 +13,8 @@
 <script src="scene-magnets.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-nutrition-earth.css?v=20260924">
 <script src="scene-nutrition-earth.js?v=20260924"></script>
+<link rel="stylesheet" href="scene-physical-classification.css?v=20260924">
+<script src="scene-physical-classification.js?v=20260924"></script>
 <style>
 :root{--ink:#1a2d3d;--muted:#4d6a80;--panel:rgba(255,255,255,.95);--ok:#12805a;--bad:#c8443b;--gold:#d99b20;--blue:#2a75ad;--line:#aec7d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -726,6 +728,7 @@ const SAHNE={
 /* ===== SINIFLA: bant yok. Karar verilecek kart sabit durur ve tam görünür.
    Yanlış ipucu doğru kutunun adını SÖYLEMEZ; ölçütü soruyla hatırlatır. ===== */
 function siniflaCiz(r){
+ if(['f19','f20','f33','f37'].includes(GAME_ID))return ScenePhysicalClassification.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(['f25','f26'].includes(GAME_ID))return SceneMagnets.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  if(['f07','f13'].includes(GAME_ID))return SceneNutritionEarth.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  const i=state.ix||0,k=r.kartlar[i];
