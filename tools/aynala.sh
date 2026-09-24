@@ -58,6 +58,8 @@ cp "$SABLONLAR/scene-proverb-geology.js" "$VARLIKLAR/phaser/scene-proverb-geolog
 cp "$SABLONLAR/scene-proverb-geology.css" "$VARLIKLAR/phaser/scene-proverb-geology.css"
 cp "$SABLONLAR/scene-habitat-seasons.js" "$VARLIKLAR/phaser/scene-habitat-seasons.js"
 cp "$SABLONLAR/scene-habitat-seasons.css" "$VARLIKLAR/phaser/scene-habitat-seasons.css"
+cp "$SABLONLAR/scene-voting.js" "$VARLIKLAR/phaser/scene-voting.js"
+cp "$SABLONLAR/scene-voting.css" "$VARLIKLAR/phaser/scene-voting.css"
 cp "$SABLONLAR/scene-idiom-rights.js" "$VARLIKLAR/phaser/scene-idiom-rights.js"
 cp "$SABLONLAR/scene-idiom-rights.css" "$VARLIKLAR/phaser/scene-idiom-rights.css"
 cp "$KAYNAK/macera-akademi.html" "$VARLIKLAR/macera-akademi.html"

@@ -7,7 +7,7 @@
 
 - `artifacts/tam-tasarim-incelemesi/sheets.json`: 106 pafta, 635 oyun, oyun başına üç tur görüntüsü.
 - Pafta 001–106'nın tamamı ilk görünüm açısından incelendi: 635 oyun, 1905 başlangıç görünümü. Bu, üç turun oynanıp onaylandığı anlamına gelmez.
-- 47 dış hedef sinyalinden Y47, Y62, Z01, G43 ve H26'nın işaretlenen turları sahneye bağlandı; güncel teknik taramada 42 sinyal açık. Kalan 42 sinyalin tamamı `sinifla` türünde; kimisi somut yerleştirme, kimisi kavramsal karar olduğundan tek şablonla topluca dönüştürülmemelidir.
+- 47 dış hedef sinyalinden Y47, Y62, Z01, G43, H26 ve H05'in işaretlenen turları sahneye bağlandı; güncel teknik taramada 41 sinyal açık. Kalan 41 sinyalin tamamı `sinifla` türünde; kimisi somut yerleştirme, kimisi kavramsal karar olduğundan tek şablonla topluca dönüştürülmemelidir.
 - Görüntüler önceki katalog testlerinden gelir; yeni bir çalıştırma veya animasyon kanıtı değildir.
 - `definitions.json` oyun tanımlarını içerir. İlk görünüm incelemesi, gerçek sürükleme ve sonuç animasyonu testinden ayrı tutulur.
 
@@ -35,7 +35,14 @@
 20. Z01–Z64: Z01'in başlangıç görünümünde fikir seçenekleri çemberin altındaydı (düzeltildi); Z12/Z13 düzeltme-karar düğmeleri çizili masadan ayrı. Z17, Z26, Z29, Z31, Z33, Z40–Z42, Z49–Z51, Z56/Z57/Z62 benzer dış karar/sınıflandırma sinyali taşıyor. Bu oyunların hepsini tek bir sahne şablonuna dönüştürmek doğru değil. Metin düzeltme ve üretme turları ayrıca içerik/klavye denetimi gerektiriyor.
 21. G01–G48: G13 kayaç, G19 hâl, G23 geri dönüşüm, G25 hareket, G31 elektrik, G37 bitki gibi özelleştirilmiş fiziksel sahneler var. G43'ün başlangıçta gölet resminin altına giden yaşam alanı hedefleri düzeltildi; G45 habitat eşleştirmesinin görsel sonucu ayrıca incelenmeli. G15–G17 kayaç/fosil grupları, G26/G30 kuvvet ve G33 elektrik güvenliği sınıflandırmalarında sahne-sonuç ilişkisi zayıf.
 22. F01–F48: F13 Dünya kesiti ve F15–F17 hareket modelleri sahneli; F21 ısıtma, F25 mıknatıs, F39 görme koşulları gerçek deneye daha yakın. F01/F07/F13/F19/F20/F33/F37/F43 dış sınıflandırma sinyalleri açık. F30 pusula, F32/F34 devre başlangıçta çalışmamış taslağı gösteriyor; sürüklenen parçaların devreyi gerçekten tamamlaması test edilmeli. F40/F41 ışık kirliliğinde maket müdahalesi sahnede görünmeli.
-23. H01–H30: H08 kişisel alanı kaydırıcıyla, H10 telefonu tuşlarla, H12 afet çantasını nesnelerle, H27 yön bulmayı haritayla işliyor. H01/H02/H05/H14/H16/H24 dış sınıflandırma sinyalleri açık. H26'nın ayrı mevsim butonları ilk turda bahçe hedeflerine dönüştürüldü; H29 su deneyinde musluğun akış/depo tepkisi ayrıca izlenmeli. H05 oylamada seçimin çeteleye yansıması, H13 nezakette sözün gerçek sahne sonucu görsel kabul gerektiriyor.
-24. Z01'in iki sınıflandırma turunda görüş kartı çocukların konuşma balonlarına, G43'ün iki turunda canlı kartı ilgili yaşam alanına, H26'nın ilk turunda hava kartı mevsim bahçesine sürükleniyor. Hedefte bırakılan son kart görünür kalıyor; yanlış/iptal/telefon-yatay ekran denetimi `artifacts/sinif-sahneleri-denetimi` klasöründe 9 senaryo ile geçti. Bunlar oyunların bütün turlarına tasarım onayı değildir.
+23. H01–H30: H08 kişisel alanı kaydırıcıyla, H10 telefonu tuşlarla, H12 afet çantasını nesnelerle, H27 yön bulmayı haritayla işliyor. H01/H02/H14/H16/H24 dış sınıflandırma sinyalleri açık. H26'nın ayrı mevsim butonları ilk turda bahçe hedeflerine dönüştürüldü; H29 su deneyinde musluğun akış/depo tepkisi ayrıca izlenmeli. H05 oylama oy pusulasının sandığa girmesiyle düzeltildi; H13 nezakette sözün gerçek sahne sonucu görsel kabul gerektiriyor.
+24. Z01'in iki sınıflandırma turunda görüş kartı çocukların konuşma balonlarına, G43'ün iki turunda canlı kartı ilgili yaşam alanına, H26'nın ilk turunda hava kartı mevsim bahçesine sürükleniyor. H05'in ilk turunda oy kartı sınıf sandıklarına giriyor ve sayım sandığın içinde görünür. Yanlış/iptal/telefon-yatay ekran denetimi `artifacts/sinif-sahneleri-denetimi` klasöründe 12 senaryo ile geçti. Bunlar oyunların bütün turlarına tasarım onayı değildir.
+
+## Kalan 42 dış hedef sinyalinin ayrımı
+
+Bu sinyal yalnız `data-kutu` hedefinin `#stage` dışında olduğunu gösterir; tek başına kullanıcıya sürükleme zorlandığı veya oyun bozuk olduğu anlamına gelmez. Aşağıdaki iki kümenin ikisi de tasarım onayı bekler:
+
+- **Somut sahneye yerleşmesi öncelikli (14):** Z17 enerji kaynağı, Z49 miras örneği; G15 maden/eşya, G16 örnek sınıflama, G26/G30 kuvvet etkisi, G42 ürün yetişme yeri; F07 besin içeriği, F13 Dünya küreleri, F19 hâl değişimi, F20 ısı akışı, F33 enerji kaynağı, F37 ışık kaynağı; H24 bayram sahnesi. Nesne, örnek veya olay gerçekten sahnede karşılık bulmalı; yalnız etiket kutusunu içeri taşımak yeterli değil. H05 oy pusulası bu gruptan çıkarıldı: sandık ve sayımı sahnede.
+- **Kavramsal karar/okuma olarak ayrıca incelenecek (27):** Z12/Z13/Z26/Z29/Z31/Z33/Z40/Z41/Z42/Z50/Z51/Z56/Z57/Z62; G01/G04/G10/G17/G33/G35/G46; F01/F43; H01/H02/H14/H16. Bu turlarda doğrudan karar düğmesi pedagojik olarak uygun olabilir, fakat sahnedeki kanıt ile seçimin bağı ve sonuç geri bildirimi oyun oyun doğrulanmalı.
 
 Bu liste ilk bakış bulgularıdır; listelenmeyen oyunlar otomatik olarak onaylanmış değildir.

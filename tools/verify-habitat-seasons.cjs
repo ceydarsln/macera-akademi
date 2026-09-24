@@ -1,7 +1,7 @@
 'use strict';
 const fs=require('fs'),path=require('path'),assert=require('assert'),{pathToFileURL}=require('url'),{chromium}=require('playwright');
 const ROOT=path.resolve(__dirname,'..'),OUT=path.join(ROOT,'artifacts/sinif-sahneleri-denetimi');
-const games=[{id:'z01',file:'turkce4-pdf.html',rounds:2},{id:'g43',file:'fen3-pdf.html',rounds:2},{id:'h26',file:'hayatbilgisi2-pdf.html',rounds:1}];
+const games=[{id:'z01',file:'turkce4-pdf.html',rounds:2},{id:'g43',file:'fen3-pdf.html',rounds:2},{id:'h26',file:'hayatbilgisi2-pdf.html',rounds:1},{id:'h05',file:'hayatbilgisi2-pdf.html',rounds:1}];
 const sizes=[{width:320,height:568},{width:390,height:844},{width:844,height:390}];
 async function main(){fs.mkdirSync(OUT,{recursive:true});const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--allow-file-access-from-files','--disable-speech-api']});const report=[],errors=[];
 try{for(const game of games)for(const size of sizes){const page=await browser.newPage({viewport:size});page.on('pageerror',e=>errors.push(game.id+': '+e.message));
@@ -30,6 +30,6 @@ try{for(const game of games)for(const size of sizes){const page=await browser.ne
  const m=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth+1,visible:[...document.querySelectorAll('[data-kutu],[data-sinif-kart]')].every(el=>{const b=el.getBoundingClientRect();return b.width>0&&b.height>0&&b.left>=0&&b.right<=innerWidth+1&&b.top>=0&&b.bottom<=innerHeight+1})}));assert(!m.overflow&&m.visible,JSON.stringify({game:game.id,size,m}));report.push({game:game.id,size,...m});
  if(size.width!==390)await page.screenshot({path:path.join(OUT,game.id+'-'+size.width+'x'+size.height+'.png'),fullPage:true});await page.close();
  }assert.deepEqual(errors,[]);fs.writeFileSync(path.join(OUT,'verification.json'),JSON.stringify({report,errors},null,2));console.log(JSON.stringify({passed:report.length,errors}));
- fs.writeFileSync(path.join(OUT,'index.html'),'<!doctype html><html lang="tr"><meta charset="utf-8"><title>Üç farklı sınıflandırma sahnesi</title><style>body{font:17px system-ui;background:#eaf0f1;margin:20px}section{display:flex;flex-wrap:wrap;gap:12px}img{width:300px;max-width:100%}</style><h1>Tartışma, yaşam alanı ve mevsim sahneleri</h1>'+games.map(g=>`<h2>${g.id.toUpperCase()}</h2><section><img src="${g.id}-ilk.png"><img src="${g.id}-sonraki-tur.png"><img src="${g.id}-320x568.png"><img src="${g.id}-844x390.png"></section>`).join(''));
+ fs.writeFileSync(path.join(OUT,'index.html'),'<!doctype html><html lang="tr"><meta charset="utf-8"><title>Dört farklı etkileşim sahnesi</title><style>body{font:17px system-ui;background:#eaf0f1;margin:20px}section{display:flex;flex-wrap:wrap;gap:12px}img{width:300px;max-width:100%}</style><h1>Tartışma, yaşam alanı, mevsim ve oylama sahneleri</h1>'+games.map(g=>`<h2>${g.id.toUpperCase()}</h2><section><img src="${g.id}-ilk.png"><img src="${g.id}-sonraki-tur.png"><img src="${g.id}-320x568.png"><img src="${g.id}-844x390.png"></section>`).join(''));
 }finally{await browser.close()}}
 main().catch(e=>{console.error(e);process.exitCode=1});

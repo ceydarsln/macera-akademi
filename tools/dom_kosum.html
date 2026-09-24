@@ -964,7 +964,7 @@ async function tur7(W){
     case 'sinifla':
       for (let i = 0; i < r.kartlar.length; i++){
         await kosul(() => Number(W.eval('String(state.ix)')) === i, 15000, 'kart ' + i);
-        if(W.eval('String(GAME_ID)')==='h26') await tikla(W, '[data-sinif-kart]');
+        if(['h05','h26'].includes(W.eval('String(GAME_ID)'))) await tikla(W, '[data-sinif-kart]');
         await tikla(W, '[data-kutu="' + r.kartlar[i].dogru + '"]');
         await bekle(60);
       }
