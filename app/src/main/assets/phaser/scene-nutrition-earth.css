@@ -1,0 +1,54 @@
+.scene.nutrition-scene[data-theme]{background:linear-gradient(155deg,#f7e8d9 0 64%,#b97857 64%)}
+.scene.earth-scene[data-theme]{background:radial-gradient(circle at 50% 12%,#275083,#0b203f 72%)}
+.nutrition-scene #stage,.earth-scene #stage{flex:1 1 auto;min-height:0;padding:0;border:0;box-shadow:none;background:transparent;justify-content:flex-start}
+.nutrition-scene #task,.earth-scene #task{flex:0 0 auto;margin-top:0;gap:4px}
+.nutrition-lab,.earth-observatory{width:min(100%,580px);height:100%;margin:auto;display:flex;flex-direction:column;gap:5px;border-radius:22px;overflow:hidden;box-shadow:0 5px 0 #0002}
+.nutrition-lab{background:#fff9e8;border:3px solid #774b36;padding:7px}
+.nutrition-lab header,.earth-observatory header{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:clamp(10px,2.7vw,14px);letter-spacing:.04em;font-weight:900}
+.nutrition-lab header{color:#70452d}.nutrition-lab header span,.earth-observatory header span{white-space:nowrap;font-size:11px}
+.nutrition-sample{display:flex;align-items:center;gap:8px;min-height:64px}
+.nutrition-plate{width:68px;height:62px;flex:0 0 68px;border-radius:50%;background:radial-gradient(circle,#fff 0 55%,#e9d2b9 56% 61%,#fff 62%);border:2px solid #cda68c;display:grid;place-items:center;box-shadow:0 3px 3px #7549}
+.nutrition-plate span{font-size:33px;filter:drop-shadow(1px 3px 2px #0004)}
+.nutrition-label{flex:1;background:#fff;border-left:5px solid #c48359;padding:4px 7px;border-radius:5px;min-width:0}
+.nutrition-label small{display:block;font-size:9px;font-weight:900;color:#95694c;letter-spacing:.07em}
+.nutrition-label strong{display:block;font-size:clamp(12px,3.4vw,16px);line-height:1.15}
+.nutrition-label p{margin:2px 0 0;font-size:clamp(10px,2.7vw,12px);line-height:1.2;font-weight:750}
+.nutrition-instruction{text-align:center;font-size:11px;font-weight:850;color:#7b5037}
+.nutrition-apparatus{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;flex:1 1 auto;min-height:180px}
+.nutrition-vessel{position:relative;min-width:0;min-height:80px;border:2px solid #a77d67;border-radius:12px;background:linear-gradient(#fff,#f3e6cc);display:grid;grid-template-columns:minmax(0,1fr) 76px;grid-template-rows:auto 1fr auto;align-items:center;gap:0 3px;padding:4px 6px;text-align:left;overflow:hidden}
+.nutrition-vessel-name{grid-column:1;align-self:end;font-weight:950;font-size:clamp(10px,2.8vw,13px);line-height:1.08;overflow-wrap:anywhere}
+.nutrition-vessel-foot{grid-column:1;font-size:10px;font-weight:750;line-height:1.1;color:#6a5646}
+.nutrition-count{grid-column:1;font-size:9px;color:#795c4c;font-weight:750}
+.nutrition-glass{grid-column:2;grid-row:1/4;position:relative;width:70px;height:94px;border:4px solid #7d9eb0;border-top:0;border-radius:4px 4px 19px 19px;background:#f9fdfeaf;display:grid;place-items:center;overflow:hidden;touch-action:none}
+.nutrition-glass:before{content:'';position:absolute;top:0;width:60px;height:4px;background:#7193a4;border-radius:4px}
+.nutrition-liquid{position:absolute;bottom:0;left:0;right:0;height:35%;background:#c96a64aa;transition:height .55s}
+.nutrition-vessel.carb .nutrition-liquid{background:#dfb74bbb}.nutrition-vessel.fat .nutrition-liquid{background:#e9b951cc}.nutrition-vessel.vitamin .nutrition-liquid{background:#8cb66bbb}
+.nutrition-symbol{z-index:1;font-size:32px;color:#5b4240;text-shadow:0 1px white}
+.nutrition-arrival{position:absolute;z-index:2;top:3px;left:3px;font-size:27px;animation:sample-drop .55s ease both}
+.nutrition-reacting{border-color:#12805a;box-shadow:inset 0 0 0 2px #7ccaa4}.nutrition-reacting .nutrition-liquid{height:70%}
+.nutrition-result,.earth-result{margin:0;min-height:18px;text-align:center;font-size:11px;font-weight:850;line-height:1.18}
+.nutrition-result{color:#5d513d}
+.scene-source{width:min(100%,580px);min-height:51px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:7px;padding:5px 10px;font-size:clamp(12px,3.2vw,15px);font-weight:950;box-shadow:0 3px 0 #0003;text-align:left}
+.food-source{background:#fff;border:3px solid #bb7854}.food-source-icon{font-size:29px;line-height:1}
+.source-grip{margin-left:auto;color:#846d5e;font-size:21px}
+.scene-source.selected{outline:4px solid #eaaa2c;outline-offset:2px}
+.scene-source-help{margin:0;text-align:center;font-size:10px;font-weight:750;line-height:1.15;color:#463b37}
+.earth-observatory{background:#152e56;border:3px solid #73a9d7;padding:7px;color:#fff}
+.earth-observatory header{color:#e6f6ff}
+.earth-model{position:relative;flex:1 1 auto;min-height:245px;display:grid;place-items:center;overflow:hidden}
+.earth-halo{position:absolute;width:min(96%,365px);aspect-ratio:1;border:10px solid #7dd8ed88;border-radius:50%;box-shadow:0 0 25px #61d8fc66, inset 0 0 20px #9ce5ff88;pointer-events:none}
+.earth-globe{position:relative;width:min(86%,310px);aspect-ratio:1;border:5px solid #a8d8e8;border-radius:50%;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;box-shadow:inset 0 0 25px #05132d,0 4px 15px #0007;transform:rotate(-10deg)}
+.earth-region{min-width:0;min-height:0;position:relative;border:1px solid #c4e9efaa;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;text-align:center;overflow:hidden;transform:rotate(10deg);font-size:clamp(9px,2.6vw,13px);font-weight:900;text-shadow:0 2px 3px #102039}
+.earth-region.air{background:linear-gradient(145deg,#75bce4,#236fa4)}.earth-region.water{background:linear-gradient(145deg,#358dc1,#155482)}.earth-region.rock{background:linear-gradient(145deg,#a16f4b,#5b4b3d)}.earth-region.life{background:linear-gradient(145deg,#76aa58,#2d754a)}
+.earth-region-icon{font-size:clamp(20px,6vw,34px);line-height:1}
+.earth-region strong{line-height:1.05;max-width:100%}.earth-region small{position:absolute;bottom:3px;right:9px;font-size:10px}
+.earth-region.earth-lit{box-shadow:inset 0 0 0 5px #f4c65f,inset 0 0 22px #fff8a1}
+.earth-arrival{position:absolute;top:51%;left:13%;right:13%;z-index:2;background:#fff9dc;border:2px solid #e3b95e;color:#213847;text-shadow:none;border-radius:8px;padding:3px;font-size:clamp(8px,2.1vw,11px);line-height:1.1;max-height:43px;overflow:hidden;overflow-wrap:anywhere;animation:sample-drop .55s ease both}
+.earth-result{color:#daedf8}
+.observation-source{background:#f9ecd0;border:3px solid #d5b579;color:#1c3853}.earth-source-mark{font-size:24px;color:#288bbc}
+.earth-scene .scene-source-help{color:#e3effa}
+.nutrition-glass.drop-ready,.earth-region.drop-ready{outline:4px solid #f4bb43;outline-offset:-4px;filter:brightness(1.16)}
+@keyframes sample-drop{from{opacity:0;transform:translateY(-22px) scale(1.2)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:350px){.earth-model{min-height:215px}.earth-globe{width:min(88%,270px)}.nutrition-vessel{grid-template-columns:minmax(0,1fr) 51px}.nutrition-glass{width:48px;height:73px}.nutrition-glass:before{width:40px}}
+@media(max-height:650px) and (orientation:landscape){.nutrition-scene.scene,.earth-scene.scene{display:grid;grid-template-columns:minmax(0,1fr) 165px;align-items:stretch;gap:6px}.nutrition-scene #task,.earth-scene #task{align-self:center}.nutrition-lab,.earth-observatory{height:100%}.nutrition-sample{min-height:50px}.nutrition-plate{width:51px;height:48px;flex-basis:51px}.nutrition-plate span{font-size:27px}.nutrition-apparatus{min-height:120px}.nutrition-vessel{min-height:55px;grid-template-columns:minmax(0,1fr) 48px}.nutrition-glass{width:44px;height:54px}.nutrition-glass:before{width:38px}.nutrition-symbol{font-size:21px}.earth-model{min-height:190px}.earth-globe{width:min(65%,195px)}.earth-halo{width:min(70%,220px)}.scene-source{min-height:90px;flex-wrap:wrap;justify-content:center}.scene-source-help{line-height:1.25}}
+@media(prefers-reduced-motion:reduce){.nutrition-arrival,.earth-arrival{animation:none}.nutrition-liquid{transition:none}}

@@ -11,6 +11,8 @@
 <script src="scene-discovery.js?v=20260921"></script>
 <link rel="stylesheet" href="scene-magnets.css?v=20260921">
 <script src="scene-magnets.js?v=20260921"></script>
+<link rel="stylesheet" href="scene-nutrition-earth.css?v=20260924">
+<script src="scene-nutrition-earth.js?v=20260924"></script>
 <style>
 :root{--ink:#1a2d3d;--muted:#4d6a80;--panel:rgba(255,255,255,.95);--ok:#12805a;--bad:#c8443b;--gold:#d99b20;--blue:#2a75ad;--line:#aec7d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -725,6 +727,7 @@ const SAHNE={
    Yanlış ipucu doğru kutunun adını SÖYLEMEZ; ölçütü soruyla hatırlatır. ===== */
 function siniflaCiz(r){
  if(['f25','f26'].includes(GAME_ID))return SceneMagnets.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
+ if(['f07','f13'].includes(GAME_ID))return SceneNutritionEarth.render({id:GAME_ID,r,state,wrong,finish:good,next:gecisBasla,fast:FAST,locked:()=>locked});
  const i=state.ix||0,k=r.kartlar[i];
  if(!k)return;
  $('#stage').innerHTML=sahneHtml(r,k.sahneEk)+
@@ -1724,15 +1727,14 @@ GAMES.f06={title:'Araştırma Sorusu Defteri',theme:'masa',
   ornekCevap:'Sınıfın hangi köşesi gün içinde en çok ışık alır?',
   result:'Kendi araştırma sorunu kurdun.'}]};
 
-/* ---- f07 Besin İçeriği Masası (bant kaldırıldı: besin tabakta durur,
-        içerik etiketi ekranda okunur) ---- */
+/* ---- f07 Besin İçeriği Masası: numune analiz kabına bırakılır. ---- */
 GAMES.f07={title:'Besin İçeriği Masası',theme:'mutfak',
  finish:'Besinlerde baskın içeriği etikete bakarak buldun, birden çok içerik taşıyanları karşılaştırdın ve kendi öğününü değerlendirdin.',rounds:[
- {kind:'sinifla',prompt:'Masadaki besinde en çok hangi içerik var?',
+ {kind:'sinifla',prompt:'Masadaki besinin öne çıkan içeriği nedir?',
   sahne:(st,ek)=>SAHNE.besin({tabakta:ek||''}),
-  soru:'Bu besinde baskın olan içerik hangisidir?',
+  soru:'Bu besinin öne çıkan içeriği hangisidir?',
   kutular:['PROTEİN','KARBONHİDRAT','YAĞ','VİTAMİN ve MİNERAL'],
-  ipucu:'Besin tabakta duruyor; acele etme.',
+  ipucu:'Örneği kabın içine bırakmadan önce etiketi incele.',
   kartlar:[
    {t:'Haşlanmış yumurta',sahneEk:'Yumurta',dogru:0,
     gozlem:'Etikette: 13 g protein · 1 g karbonhidrat · 11 g yağ (100 g)',
@@ -2192,15 +2194,14 @@ GAMES.f12={title:'Beslenme ve Sağlık',theme:'mutfak',
   ornekCevap:'Her gün kahvaltı yaparsam derste dikkatim artar çünkü beynim sabah boyunca enerjisiz kalmaz.',
   result:'Neden-sonuç ilişkisini kendi örneğinle kurdun.'}]};
 
-/* ---- f13 Küre Kesiti (bant kaldırıldı: öge kesitin üzerinde vurgulanıyor,
-        dört kutu etiketi kutunun içinde kalıyor) ---- */
+/* ---- f13 Küre Kesiti: gözlem Dünya modelinin bölgesine bırakılır. ---- */
 GAMES.f13={title:'Küre Kesiti',theme:'dunya',
  finish:'Dünya\'nın dört küresini ayırt ettin, birden çok küreye ait olabilen ögeleri gerekçeyle yerleştirdin ve çevrenden bir örneği açıkladın.',rounds:[
  {kind:'sinifla',prompt:'Bu öge Dünya\'nın hangi küresine ait?',
   sahne:(st,ek)=>SAHNE.kure(st,ek),
   soru:'Bu öge hangi küreye aittir?',
   kutular:['HAVA KÜRE','SU KÜRE','TAŞ KÜRE','CANLI KÜRE'],
-  ipucu:'Öge kesitin üzerinde işaretleniyor.',
+  ipucu:'Gözlem kartını Dünya modelindeki bölgeye bırak.',
   kartlar:[
    {t:'Soluduğumuz oksijen ve azot',sahneEk:'hava',dogru:0,
     neden:'Gazlar Dünya\'yı saran gaz katmanında bulunur.',

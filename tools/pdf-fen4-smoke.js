@@ -50,6 +50,7 @@ async function solveRound(page, r) {
         await click(page,'[data-magnet-target]');
         await page.waitForFunction(()=>state.magnetPhase==='observed');
       }
+      if (await page.locator('[data-scene-source]').count()) await click(page, '[data-scene-source]');
       await click(page, `[data-kutu="${r.kartlar[i].dogru}"]`);
     }
   } else if (r.kind === 'karar') {
