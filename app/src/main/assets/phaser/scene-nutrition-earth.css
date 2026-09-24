@@ -32,6 +32,7 @@
 .food-source{background:#fff;border:3px solid #bb7854}.food-source-icon{font-size:29px;line-height:1}
 .source-grip{margin-left:auto;color:#846d5e;font-size:21px}
 .scene-source.selected{outline:4px solid #eaaa2c;outline-offset:2px}
+.scene-source[hidden]{display:none}
 .scene-source-help{margin:0;text-align:center;font-size:10px;font-weight:750;line-height:1.15;color:#463b37}
 .earth-observatory{background:#152e56;border:3px solid #73a9d7;padding:7px;color:#fff}
 .earth-observatory header{color:#e6f6ff}

@@ -20,7 +20,7 @@ window.SceneNutritionEarth = (() => {
   function nutrition(k, state, i, total) {
     const seen = state.scenePlaced;
     return `<div class="nutrition-lab"><header><b>BESİN ANALİZ TEZGÂHI</b><span>Numune ${i+1} / ${total}</span></header>
-      <div class="nutrition-sample"><div class="nutrition-plate" aria-hidden="true"><span>${foods[k.t]||'🍽'}</span></div>
+      <div class="nutrition-sample"><div class="nutrition-plate" aria-hidden="true"><span>${seen===null?(foods[k.t]||'🍽'):''}</span></div>
         <div class="nutrition-label"><small>PAKET / GÖZLEM ETİKETİ</small><strong>${esc(k.t)}</strong><p>${esc(k.gozlem||'İçerik etiketini incele.')}</p></div></div>
       <div class="nutrition-instruction">Numuneyi baskın içeriğin analiz kabına bırak.</div>
       <div class="nutrition-apparatus">${vessels.map((v,j)=>`<div class="nutrition-vessel ${v.tone}${seen===j?' nutrition-reacting':''}"><span class="nutrition-vessel-name">${esc(v.label)}</span><button class="nutrition-glass" data-kutu="${j}" aria-label="${esc(v.label)} analiz kabının içine bırak"><span class="nutrition-liquid"></span><span class="nutrition-symbol">${v.icon}</span>${seen===j?`<span class="nutrition-arrival">${foods[k.t]||'●'}</span>`:''}</button><span class="nutrition-vessel-foot">${v.apparatus}</span><span class="nutrition-count">${(state.sayim||[])[j]||0} analiz</span></div>`).join('')}</div>
@@ -48,7 +48,7 @@ window.SceneNutritionEarth = (() => {
       state.scenePlaced=j;state.sceneSelected=false;
       state.sayim=state.sayim||r.kutular.map(()=>0);state.sayim[j]++;
       state.ix=i+1;state.not=k.neden||'';
-      source.disabled=true;source.classList.remove('selected');
+      source.disabled=true;source.classList.remove('selected');source.hidden=true;
       stage.innerHTML=nutritionScene?nutrition(k,state,i,r.kartlar.length):earth(k,state,i,r.kartlar.length);
       if(state.ix>=r.kartlar.length)next(finish,fast?30:850);
       else next(()=>render({id,r,state,wrong,finish,next,fast,locked}),fast?30:850);
