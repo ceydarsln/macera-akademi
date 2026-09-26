@@ -1,0 +1,503 @@
+.connected-turkish .prompt{
+max-height:none;
+overflow:visible}
+.connected-turkish .stage{
+min-height:230px;
+padding:10px}
+.connected-turkish .feedback{
+top:12%;
+font-size:17px;
+padding:8px;
+min-width:160px}
+.assembly-world,.typewriter-world,.sound-basket-world,.sound-position-board{
+width:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:12px;
+padding:12px 4px;
+color:#18324a}
+.assembly-world header,.typewriter-world header,.sound-basket-world header,.sound-position-board header{
+font-size:14px;
+font-weight:950;
+letter-spacing:.7px;
+text-align:center}
+.assembly-machine{
+width:100%;
+display:flex;
+align-items:flex-end;
+justify-content:center;
+gap:8px;
+position:relative;
+padding:10px 0 24px}
+.assembly-line{
+display:flex;
+align-items:stretch;
+gap:8px;
+flex:1;
+max-width:600px;
+min-width:0}
+.assembly-unit{
+flex:1;
+min-width:0;
+position:relative;
+display:flex;
+align-items:stretch}
+.scene-unit-slot{
+width:100%;
+min-height:64px;
+border:4px solid #357690;
+background:#fff8d4;
+border-radius:12px;
+display:grid;
+place-items:center;
+font-size:clamp(17px,4vw,28px);
+font-weight:950;
+overflow-wrap:anywhere;
+padding:6px;
+text-align:center}
+.scene-unit-slot.filled{
+background:#d9f5de;
+animation:assembly-seat .35s ease-out}
+.assembly-output{
+min-height:32px;
+max-width:100%;
+font-size:clamp(18px,4vw,28px);
+font-weight:950;
+text-align:center;
+border-radius:9px;
+overflow-wrap:anywhere}
+.assembled .assembly-output{
+background:#e4ffd5;
+padding:6px 14px;
+animation:assembly-seat .5s ease-out}
+.assembly-sample{
+font-size:42px;
+text-align:center}
+.assembly-sample small{
+display:block;
+font-size:14px}
+.assembly-context{
+background:#fff;
+padding:8px;
+border-radius:10px;
+font-size:18px;
+text-align:center}
+.assembly-ghost{
+position:fixed;
+transform:translate(-50%,-50%);
+padding:12px 20px;
+border:3px solid #2e7895;
+background:#fff5cd;
+border-radius:12px;
+color:#18324a;
+font-size:24px;
+font-weight:900;
+z-index:1000;
+pointer-events:none}
+.train-assembly{
+background:linear-gradient(#d8effa 70%,#c9ddb8 70%);
+border-radius:16px}
+.train-assembly .assembly-machine:after{
+content:'';
+position:absolute;
+bottom:0;
+left:0;
+right:0;
+height:10px;
+background:repeating-linear-gradient(90deg,#6c5345 0 5px,transparent 5px 18px);
+border-block:3px solid #435463}
+.train-assembly .scene-unit-slot{
+border:6px solid var(--train,#c9623e);
+border-radius:8px 8px 2px 2px;
+background:#fff3cf;
+min-height:86px}
+.train-assembly .assembly-unit:after,.assembly-engine:after{
+content:'';
+position:absolute;
+bottom:-14px;
+left:8%;
+right:8%;
+height:22px;
+background:radial-gradient(circle at 15% 50%,#1e3548 0 10px,transparent 11px),radial-gradient(circle at 85% 50%,#1e3548 0 10px,transparent 11px)}
+.assembly-engine{
+position:relative;
+width:54px;
+height:64px;
+background:#347891;
+border-radius:4px 12px 2px 2px;
+flex:none}
+.engine-window{
+position:absolute;
+left:5px;
+top:5px;
+width:22px;
+height:23px;
+background:#c1edfa;
+border:3px solid #1d4b61}
+.engine-chimney{
+position:absolute;
+right:5px;
+top:-16px;
+width:12px;
+height:20px;
+background:#25465a}
+.assembly-t14{
+--train:#3d8c7a}
+.assembly-t21{
+--train:#a55c99}
+.assembly-t30{
+--train:#b87533;
+background:linear-gradient(150deg,#c7d7db,#d2e2b9)}
+.assembly-t38{
+--train:#5267ab;
+background:#d5dff4}
+.assembly-t46{
+--train:#1b8399}
+.space-assembly{
+background:radial-gradient(circle at 15% 20%,#5363a2,#15294e);
+color:#fff;
+border-radius:20px}
+.space-assembly .assembly-machine{
+align-items:center;
+background:#8599ae;
+border:5px solid #cedfed;
+border-radius:60px;
+padding:16px 10px;
+box-shadow:inset 0 -12px #64758f}
+.space-assembly .scene-unit-slot{
+border-radius:50%;
+border:6px solid #183852;
+box-shadow:0 0 0 3px #e4f2ff;
+background:#ccefff;
+min-height:80px}
+.capsule-nose{
+width:24px;
+height:52px;
+background:#e3f2f8;
+border-radius:100% 0 0 100%;
+flex:none}
+.capsule-thruster{
+width:20px;
+height:46px;
+background:#334e66;
+flex:none}
+.assembled .capsule-thruster{
+background:#ffc654;
+box-shadow:12px 0 18px #ff9250;
+animation:assembly-flame .5s infinite alternate}
+.assembly-t22 .assembly-machine{
+background:#94c4b7}
+.assembly-t48 .assembly-machine{
+background:#b6a9d4}
+.factory-assembly{
+background:linear-gradient(#edf3ec 60%,#b7c9cc 60%);
+border-radius:18px}
+.factory-assembly .assembly-machine{
+border:9px solid #617e87;
+border-top-width:20px;
+background:#294b59;
+border-radius:12px;
+padding:12px 8px 22px}
+.factory-assembly .assembly-machine:after{
+content:'';
+position:absolute;
+bottom:2px;
+left:8px;
+right:8px;
+height:14px;
+background:repeating-linear-gradient(90deg,#aec5cd 0 14px,#3b6476 14px 19px);
+border-radius:10px}
+.factory-assembly .scene-unit-slot{
+border:4px solid #91652f;
+background:repeating-linear-gradient(#fff3cd 0 14px,#f4dfae 14px 15px);
+border-radius:3px;
+min-height:68px}
+.assembly-t47{
+background:linear-gradient(#ffe6b9,#e7c8a3)}
+.assembly-t47 .assembly-machine{
+border-color:#65925b;
+background:#72956e}
+.assembly-t54 .assembly-machine{
+border-color:#716291;
+background:#463c67}
+.assembly-t54 .scene-unit-slot{
+background:#fff;
+border-color:#9d8abb}
+.assembly-t64{
+background:linear-gradient(#cbe9fc 55%,#b5d8a4 55%)}
+.assembly-t64 .assembly-machine{
+border-color:#487955;
+background:#af895b;
+border-radius:12px 12px 30px 30px}
+.assembly-t64 .scene-unit-slot{
+background:#e9ffda;
+border-color:#578440}
+.typewriter-paper{
+width:90%;
+min-height:95px;
+background:repeating-linear-gradient(#fff 0 26px,#d7e7f0 26px 27px);
+border:2px solid #bdcfd7;
+padding:16px 8px 28px;
+box-shadow:0 3px 8px #0002}
+.typewriter-body{
+width:100%;
+background:#3d687c;
+border:5px solid #254658;
+border-radius:14px 14px 24px 24px;
+padding:15px 8px;
+position:relative;
+margin-top:-22px}
+.typewriter-roller{
+position:absolute;
+left:5%;
+right:5%;
+top:-8px;
+height:12px;
+border-radius:10px;
+background:#1e3546}
+.typewriter-keys{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:7px}
+.typewriter-keys button{
+min-width:44px;
+min-height:44px;
+border-radius:50%;
+background:#fff8e3;
+border:3px solid #c4d2db;
+font-weight:900;
+font-size:20px;
+box-shadow:0 3px #162f3e}
+.typewriter-world .dikte-yuva{
+flex-wrap:wrap;
+gap:4px}
+.typewriter-world .dikte-yuva span{
+min-width:24px;
+min-height:36px;
+width:auto;
+font-size:23px}
+.typewriter-preview{
+font-weight:900;
+text-align:center}
+.sound-object-table{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:8px;
+width:100%}
+.sound-object-table .resim-kart{
+flex:1 1 60px;
+min-width:60px;
+max-width:100px;
+padding:5px;
+min-height:64px}
+.sound-object-table .resim-kart .im{
+font-size:30px}
+.sound-real-baskets{
+display:flex;
+justify-content:center;
+gap:12px;
+width:100%;
+padding-top:15px}
+.sound-real-basket{
+position:relative;
+flex:1;
+min-width:0;
+min-height:110px;
+border:5px solid #986332;
+border-radius:5px 5px 35px 35px;
+background:repeating-linear-gradient(0deg,#dfb875 0 8px,#bb8c50 8px 10px);
+padding:10px 5px;
+font-weight:900}
+.basket-handle{
+position:absolute;
+left:20%;
+right:20%;
+top:-24px;
+height:40px;
+border:6px solid #986332;
+border-radius:50%;
+z-index:-1}
+.basket-content{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+font-size:28px;
+min-height:45px;
+background:#fff8dc;
+border-radius:8px}
+.sound-real-basket small{
+display:block;
+background:#fff4d8;
+border-radius:4px;
+margin-top:4px}
+.sound-position-board .serit{
+display:flex;
+width:100%}
+.sound-position-board .serit button{
+min-height:48px;
+flex:1}
+.reading-illustration{
+width:100%;
+max-width:700px}
+.reading-picture{
+width:100%;
+display:block;
+border:5px solid #a4773f;
+border-radius:14px;
+background:#fff}
+.connected-turkish .reading-t62{
+width:100%;
+background:none;
+min-height:0;
+padding:5px;
+gap:9px}
+.connected-turkish .reading-t62 .scene-keys{
+position:static}
+.connected-turkish .reading-t62 .world-title{
+position:static}
+.connected-turkish .reading-t62 .resim-kart{
+min-height:50px}
+.connected-turkish .reading-t62 .resim-kart .im{
+font-size:28px}
+@keyframes assembly-seat{
+from{
+transform:translateY(-12px);
+opacity:.4}
+to{
+transform:translateY(0);
+opacity:1}
+}
+@keyframes assembly-flame{
+to{
+box-shadow:20px 0 22px #ffcf57}
+}
+@media(orientation:landscape) and (max-height:500px){
+.connected-turkish .scene{
+display:grid;
+grid-template-columns:minmax(0,1.35fr) minmax(250px,1fr);
+align-items:start;
+overflow:auto}
+.connected-turkish .stage{
+min-height:0;
+height:auto}
+.connected-turkish .task{
+margin:0}
+.assembly-world,.typewriter-world,.sound-basket-world{
+gap:7px;
+padding:6px 2px}
+.assembly-world .caption,.typewriter-world .caption{
+font-size:12px}
+.assembly-machine{
+padding-top:6px}
+.assembly-sample{
+font-size:28px}
+.assembly-sample small{
+font-size:12px}
+.connected-turkish .ses-yok{
+grid-column:1/-1}
+.connected-turkish .reading-t62 .scene-keys{
+display:flex}
+.typewriter-paper{
+min-height:72px}
+.connected-turkish .actions{
+gap:5px}
+.connected-turkish .action,.connected-turkish .choice{
+min-height:44px;
+font-size:14px;
+padding:6px}
+.sound-real-basket{
+min-height:90px}
+}
+@media(prefers-reduced-motion:reduce){
+.assembled *,.scene-unit-slot.filled{
+animation:none!important}
+}
+.connected-turkish .stage{
+flex-shrink:0;
+height:auto}
+html.connected-turkish-root,body.connected-turkish,.connected-turkish .scene{
+touch-action:pan-y}
+.assembly-output:empty{
+display:none}
+.assembly-sample{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+font-size:32px}
+.assembly-sample small{
+display:inline}
+.scene-unit-slot.next-slot{
+outline:3px solid #f3ad22;
+outline-offset:2px}
+.sentence-insert{
+background:#def6c9;
+border-bottom:3px solid #319358;
+padding:1px 3px;
+font-weight:950;
+animation:assembly-seat .35s ease}
+.sentence-gap{
+border-bottom:3px dashed #697a90;
+padding:1px 4px}
+.assembled.train-assembly .assembly-line{
+animation:assembly-couple .6s ease-out}
+.assembled.factory-assembly .assembly-machine:after{
+animation:assembly-belt .6s linear}
+.basket-handle{
+z-index:0;
+pointer-events:none}
+.sound-real-basket .basket-content,.sound-real-basket small{
+position:relative;
+z-index:1}
+@keyframes assembly-couple{
+from{
+transform:translateX(8px)}
+to{
+transform:translateX(0)}
+}
+@keyframes assembly-belt{
+to{
+background-position:38px 0}
+}
+/* Letters stay legible throughout arrival, rather than fading with the crate. */
+@keyframes assembly-seat{
+from{
+transform:translateY(-12px)}
+to{
+transform:translateY(0)}
+}
+@media(max-height:650px) and (orientation:portrait){
+ .connected-turkish .scene{
+gap:6px;
+padding:7px}
+ .connected-turkish .stage{
+padding:6px;
+min-height:220px}
+ .assembly-world,.typewriter-world,.sound-basket-world{
+gap:6px;
+padding:6px 2px}
+ .assembly-world .caption,.typewriter-world .caption,.sound-basket-world .caption{
+font-size:12px}
+ .assembly-sample{
+font-size:26px}
+.assembly-sample small{
+font-size:12px}
+ .connected-turkish .action,.connected-turkish .choice{
+min-height:44px;
+padding:5px;
+font-size:14px}
+ .connected-turkish .ses-yok{
+font-size:12px;
+padding:5px}
+ .typewriter-paper{
+min-height:75px;
+padding-top:9px;
+padding-bottom:23px}
+ .typewriter-body{
+padding:12px 6px}
+ .train-assembly .scene-unit-slot{
+min-height:72px}
+}
