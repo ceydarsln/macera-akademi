@@ -295,7 +295,12 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .asama span{font-size:11px;font-weight:900;padding:2px 6px;border-radius:7px;background:#eef3f7;color:#5b7185}
 .asama span.aktif{background:#ffd873;color:#6b4a10}
 .asama span.bitti{background:#e7f7ec;color:#1f7a45}
-.iz-svg{touch-action:none;width:min(330px,98%);height:auto;background:transparent}
+.iz-svg{touch-action:none;width:min(330px,98%);height:auto;background:transparent;display:block;margin:auto}
+.hud .prompt{max-height:none;overflow:visible;min-width:0;overflow-wrap:break-word}
+.stage:has(#izKatman)>.stack{width:100%}
+.stage:has(#izKatman) .sahne-katman{width:min(680px,100%)}
+.stage:has(#izKatman) .iz-svg{width:100%}
+@media(orientation:landscape){.scene:has(#izKatman){display:grid;grid-template-columns:minmax(0,1fr) 200px;align-items:stretch}.scene:has(#izKatman) .stage{min-height:0}.scene:has(#izKatman) .task{align-self:center;margin:0;flex-direction:column}.stage:has(#izKatman) .iz-svg{max-height:calc(100vh - 200px)}.stage:has(#izKatman) .stack{gap:3px}.stage:has(#izKatman) .stack:has(.yuva) .iz-svg{max-height:calc(100vh - 230px)}.stage:has(#izKatman) .yuva .kutu{width:40px;height:44px;font-size:28px}}
 .kilavuz{fill:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round}
 .murekkep{fill:none;stroke-width:13;stroke-linecap:round;stroke-linejoin:round;transition:stroke-dashoffset .12s linear}
 .basla-top{filter:drop-shadow(0 0 6px rgba(255,214,58,.9))}
@@ -490,7 +495,8 @@ function izKur(r){const rk=r.rakam,yollar=RAKAM[rk];
  state.yollar=yollar.map(d=>({d,nokta:yolNoktalari(d,d.length>90?9:6),uz:izUzunluk(d)}));
  state.kilavuz=r.kilavuz;state.faz=0;state.sayilan=0}
 function izUzunluk(d){const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);return p.getTotalLength()}
-function izIc(r){const OX=115,OY=44;let ic=`<g transform="translate(${OX},${OY})">`;
+function izPointer(sv,e){const point=sv.createSVGPoint();point.x=e.clientX;point.y=e.clientY;return point.matrixTransform(sv.querySelector('.trace-ink-layer').getScreenCTM().inverse())}
+function izIc(r){let ic='<g class="trace-ink-layer" transform="translate(100,23) scale(1.3)">';
  state.yollar.forEach((y,i)=>{const bitti=i<state.hamle;
   const gorunur=state.kilavuz===0||(state.kilavuz===1&&i>=state.hamle);
   if(gorunur&&!bitti)ic+=`<path class="kilavuz" d="${y.d}" stroke="rgba(255,255,255,${state.kilavuz===0?0.85:0.32})" stroke-dasharray="${state.kilavuz===0?'0':'10 12'}"/>`;
@@ -507,8 +513,7 @@ function izCiz(r){
   <div class="caption">${esc(state.not||r.gorev)}</div>
   <div class="caption">${esc(['Kılavuz açık','Kılavuz soluk','Kılavuz yok'][state.kilavuz])} · hamle ${Math.min(state.hamle+1,state.yollar.length)}/${state.yollar.length}</div></div>`;
  const sv=$('#izKatman svg');if(!sv)return;
- const cev=e=>{const b=sv.getBoundingClientRect();
-  return [(e.clientX-b.left)/b.width*330-115,(e.clientY-b.top)/b.height*230-44]};
+ const cev=e=>{const p=izPointer(sv,e);return [p.x,p.y]};
  const dokun=e=>{if(!state.basli||!sv.isConnected)return;const p=cev(e),y=state.yollar[state.hamle];if(!y)return;
   const h=y.nokta[state.adim];
   if(Math.hypot(p[0]-h[0],p[1]-h[1])<IZ_TOL)izIlerle(r)};
@@ -560,8 +565,8 @@ function renderIzOyun(r){izKur(r);state.not='';izCiz(r);
 /* koşum yardımcıları */
 function izNoktaEkran(){const sv=$('#izKatman svg');if(!sv)return null;
  const y=state.yollar[state.hamle];if(!y)return null;
- const b=sv.getBoundingClientRect(),h=y.nokta[state.adim];
- return [b.left+(h[0]+115)/330*b.width, b.top+(h[1]+44)/230*b.height]}
+ const h=y.nokta[state.adim],p=sv.createSVGPoint();p.x=h[0];p.y=h[1];
+ const screen=p.matrixTransform(sv.querySelector('.trace-ink-layer').getScreenCTM());return [screen.x,screen.y]}
 
 /* ===================== YAZ: iki basamaklı sayı (n1–n9) ===================== */
 function yazKur(r){state.hedef=r.sayilar[Math.floor(Math.random()*r.sayilar.length)];
@@ -595,7 +600,7 @@ function yazIz(r){
   ${yazSlotlar()}
   <div class="caption">${esc(state.not||'')} · ${esc(['Kılavuz açık','Kılavuz soluk','Kılavuz yok'][state.kilavuz])}</div></div>`;
  const sv=$('#izKatman svg');if(!sv)return;
- const cev=e=>{const b=sv.getBoundingClientRect();return [(e.clientX-b.left)/b.width*330-115,(e.clientY-b.top)/b.height*230-44]};
+ const cev=e=>{const p=izPointer(sv,e);return [p.x,p.y]};
  const ilerle=()=>{const y=state.yollar[state.hamle];
   if(state.adim<y.nokta.length-1){state.adim++;izGuncelle();
    if(state.adim===y.nokta.length-1){state.hamle++;state.adim=0;
