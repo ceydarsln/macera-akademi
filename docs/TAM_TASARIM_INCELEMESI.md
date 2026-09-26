@@ -17,7 +17,7 @@
 2. M38: elma grupları/araba dar ekranda taşmış. Yönerge hareketi izlemeyi istiyor ama sahne statik işlem işareti göstererek cevabı veriyor.
 3. Sayı çizme oyunları: çizim alanı geniş sahnede küçük kalıyor. Harf çizme oyunlarında başlıktan bağımsız tekrar eden uçak/gökyüzü teması var.
 4. M18'in çakışan dondurma hedefleri ve M36'nın ölçülen nesne yerine yazılı kart gösterimi bu turda düzeltildi. Üç tur ve üç ekran boyutundaki hedefli testler geçti; kullanıcı görsel onayı ve gerçek cihaz kontrolü bekliyor.
-5. M41, M42, M45, M47, M49: büyük boşluk ve küçük işlem/emoji; eylem-sonuç gösterimi ayrıca incelenmeli.
+5. M41, M45, M47: büyük boşluk ve küçük işlem/emoji; eylem-sonuç gösterimi ayrıca incelenmeli. M42 ve M49'un üç turu deney sahnesine dönüştürüldü; kapsamı aşağıda kayıtlıdır.
 6. M51: iade kamyonu küçük simge ve büyük kutu. M54: hedef sınırları çakışıyor. M58: gölge kontrastı zayıf.
 7. T04,T06,T07,T09,T14,T21,T22,T30,T38,T46,T47,T48,T51,T54,T64: kelime yuvaları çizilmiş makine/vagondan kopuk; gerçek nesne üzerinde birleşme ve çıktı incelenmeli.
 8. T02: sahne ve alt hedefler yineleniyor. T62: görsel okuma görevinde gerçek resim yerine metin var.
@@ -57,3 +57,10 @@ Güncel dış hedef sayısı 26'dır ve hepsi kavramsal karar olarak açıklanm�
 - M18'de dondurma topları artık gerçek külahın üzerindeki üç veya dört fiziksel yuvaya giriyor. Külaha en yakın alttaki yuvadan başlamadan üst kat kabul edilmiyor; doğru top iniş animasyonuyla kulede kalıyor. Önceki ekran görüntüsündeki hedef/yazı çakışması giderildi.
 - M36'da kalem, silgi ve defter kenarı ayrı şekil ve uzunlukta çiziliyor. Ataşlar nesnenin altındaki aynı uzunluktaki ölçüm çizgisine birer birer diziliyor; çizgi dışına bırakmak ilerletmiyor ve dolan ataşlar görünür biçimde işaretleniyor.
 - [Üç ekran boyutu ve üç tur karşılaştırması](../artifacts/dondurma-olcum-denetimi/index.html): 18 ekran/tur senaryosu, gerçek fare sürüklemesi, yanlış hedef, tur bitişi ve yeniden başlatma kontrolü. `catalog-acceptance` iki oyunun üçer turunu ayrıca geçti. Bu hedefli kanıt, diğer 633 oyunun ya da gerçek telefon/WebView ses ve dokunma davranışının kabulü değildir.
+
+## 26 Eylül — M42 ve M49 laboratuvarları
+
+- M42: iki şişedeki damlalar görünür. Çocuk her şişenin dökme kontrolüne dokunur; şişe eğilir, içi boşalır ve damlalar kazanda birleşir. İki şişe dökülmeden cevap verilemez. Bu mekanikte sürükleme zorlanmadı: eylem, şişeyi kazana dökmektir.
+- M49: iki işlem gerçek, aynı ölçekli tüplerde birim dolulukla temsil edilir. Doğru kararda eşitlik/fark işareti ve seviye vurgusu sahnede görünür; başarı mesajı tüpleri kapatmaz.
+- [Başlangıç ve sonuç paftası](../artifacts/iksir-denetimi/index.html): 320×568, 390×844 ve 844×390 ekranlarda üçer tur, 18 senaryo; iki şişenin birleşme sayısı, tüp seviyeleri, yanlış/doğru seçim, doğal tur geçişi ve yeniden başlatma doğrulandı. Bu otomatik tarayıcı kanıtıdır; insan görsel onayı ve fiziksel WebView/ses testi yerine geçmez.
+- M41, M45 ve M47 bu turda değiştirilmedi; sıra bunların konuya bağlı eylem-sonuç tasarımındadır. 635 oyunun tam tasarım kabulü açık kalır.

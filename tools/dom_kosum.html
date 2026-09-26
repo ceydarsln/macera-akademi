@@ -732,6 +732,12 @@ async function tur1(W){
         await tikla(W,'.apple-experiment button');
         await kosul(()=>!S(W,'[data-choice="0"]')?.disabled,15000,'elma hareketi');
       }
+      if(W.eval('GAME_ID')==='m42'){
+        await tikla(W,'[data-pour="0"]');
+        await kosul(()=>!W.eval('state.pouring'),6000,'ilk şişe');
+        await tikla(W,'[data-pour="1"]');
+        await kosul(()=>!S(W,'[data-choice="0"]')?.disabled,6000,'ikinci şişe');
+      }
       await dogruyaBas(W, r.choices || []); break;
     case 'stages':
       /* Motorun kendi 650 ms geçişi gizli sekmede kısılıyor; sabit bekleme
