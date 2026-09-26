@@ -418,6 +418,7 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 /* Yönerge üçüncü satıra geçtiğinde de tamamı görünür. */
 .hud .prompt{max-height:none;overflow:visible;min-width:0;overflow-wrap:break-word}
 </style>
+<link rel="stylesheet" href="scene-upper-stage.css">
 </head>
 <body><div id="app" class="app"></div>
 <script>
@@ -3271,6 +3272,10 @@ const measureDrag=renderDrag;
 renderDrag=function(r){if(GAME_ID==='p37')return SceneMeasure.angleRanges({r,index:roundIndex,state,finish:r=>ertele(()=>bitirTur(r),FAST?0:700),wrong});if(['p11','p16','p38'].includes(GAME_ID))return SceneMeasure.render({id:GAME_ID,r,index:roundIndex,state,finish:r=>ertele(()=>bitirTur(r),FAST?0:700),wrong});return measureDrag(r)};
 GAMES.p11.rounds[1].prompt='Denk şeritleri yerleştir; ×2 ve ×3 çarpanlarına da dikkat et.';
 GAMES.p11.rounds[1].targets[0].html=kKart(1,3)+'<small>×2 ile</small>';
+</script>
+<script src="scene-upper-math.js"></script>
+<script src="scene-upper-stage.js"></script>
+<script>
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Oyun bulunamadı</h2><p>${esc(GAME_ID)}</p></div></div>`}
 else if(game.rounds.length!==3){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Tur verisi eksik</h2><p>${esc(game.title)}</p></div></div>`}

@@ -490,6 +490,7 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 /* Yönerge üçüncü satıra geçtiğinde de tamamı görünür. */
 .hud .prompt{max-height:none;overflow:visible;min-width:0;overflow-wrap:break-word}
 </style>
+<link rel="stylesheet" href="scene-upper-stage.css">
 </head>
 <body><div id="app" class="app"></div>
 <script>
@@ -3382,6 +3383,10 @@ const civicRoutedDrag=renderDrag;
 renderDrag=function(r){if(['y47','y62'].includes(GAME_ID))return SceneIdiomRights.render({id:GAME_ID,r,state,wrong,finish:r=>ertele(()=>bitirTur(r),FAST?0:850),locked:()=>locked});return civicRoutedDrag(r)};
 GAMES.y12.rounds[0].prompt='Her nedeni, sonucunun yaşandığı sahneye yerleştir.';
 GAMES.y10.rounds[2].scene=()=>'<div class="mirror-room"><header>KENDİ KARŞILAŞTIRMANI YAZ</header><div class="mirror-grid"><div class="opposite-mirror"><span class="mirror-glass">'+SceneDiscovery.picture(1,false)+'<b>uzun</b></span></div><div class="opposite-mirror"><span class="mirror-glass">'+SceneDiscovery.picture(1,true)+'<b>kısa</b></span></div></div></div>';
+</script>
+<script src="scene-upper-turkish.js"></script>
+<script src="scene-upper-stage.js"></script>
+<script>
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Oyun bulunamadı</h2><p>${esc(GAME_ID)}</p></div></div>`}
 else if(game.rounds.length!==3){document.getElementById('app').innerHTML=`<div class="overlay"><div class="overlay-card"><h2>Tur verisi eksik</h2><p>${esc(game.title)}</p></div></div>`}

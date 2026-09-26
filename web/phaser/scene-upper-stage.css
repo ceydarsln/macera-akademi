@@ -1,0 +1,121 @@
+/* Shared accessibility/layout corrections, not a shared game skin. */
+html.upper-stage,body.upper-stage{touch-action:pan-y}
+.upper-stage .prompt{max-height:none!important;overflow:visible!important}
+.upper-stage .scene{overflow:auto;touch-action:pan-y}
+.upper-stage .stage{flex:1 0 auto;min-height:230px;overflow:visible;align-content:center}
+.upper-stage .stage>*{max-width:100%;min-width:0}
+.upper-stage .stage>*{flex-shrink:0}
+.upper-stage .stage{min-height:min-content;max-height:none;height:auto}
+.upper-stage .stage>.choice{flex:0 0 auto}
+.upper-stage .stage.success-motion{animation:none}
+.upper-stage .saw-kol{left:22%;right:22%}
+.upper-y28 .bridge-world .bridge-spans{height:auto;grid-template-rows:none;grid-auto-rows:minmax(64px,auto)}
+.upper-stage .choice svg{max-width:100%;height:auto}
+.upper-stage .choice>span{max-width:100%}
+.upper-v02 .stage,.upper-v07 .stage,.upper-v10 .stage,.upper-v18 .stage,.upper-v26 .stage,.upper-v28 .stage{flex:0 0 auto;min-height:240px;align-content:flex-start;justify-content:flex-start}
+.upper-v02 .task,.upper-v07 .task,.upper-v10 .task,.upper-v18 .task,.upper-v26 .task,.upper-v28 .task{margin-top:8px}
+.upper-v07 .senior-polaroid .animal,.upper-v07 .senior-camera-roll .animal{font-size:46px;display:flex;flex-direction:column;align-items:center;min-width:45px;min-height:76px}
+.upper-v07 .senior-polaroid .jersey,.upper-v07 .senior-camera-roll .jersey{position:static;transform:none;font-size:14px;background:#fff;padding:3px 6px}
+.upper-y22 .stage [style*="nowrap"]{white-space:normal!important;flex-wrap:wrap!important;gap:5px}
+.upper-stage .stage .stack{max-width:100%;min-width:0}
+.upper-stage .stage svg{max-width:100%;height:auto}
+.upper-stage .stage .row{max-width:100%;min-width:0}
+.upper-stage .stage .row{flex-wrap:wrap}
+.upper-stage .rail-line .choice{min-width:44px;padding:7px;font-size:17px;width:100%}
+.upper-stage .rail-line .tunnel{min-width:64px;max-width:95px;flex:1;font-size:18px}
+.upper-stage .rail-line .train-on-rail{min-width:0;font-size:32px}
+.upper-stage .bar-col .action{max-width:100%;min-width:44px;padding:7px;font-size:13px}
+.upper-stage .bar-col{min-width:0;flex:1}
+.upper-stage .stage .row>.stack{flex:1;min-width:0}
+.upper-stage .choice,.upper-stage .action{overflow-wrap:anywhere;min-height:44px}
+.upper-stage .board,.upper-stage .m4-board,.upper-stage .talk{max-width:100%;overflow-wrap:anywhere}
+.upper-stage .u-world{min-height:0!important;width:100%;max-width:100%;padding-bottom:16px}
+.upper-stage .u-world .vagon-dizi{width:100%;max-width:100%}
+.upper-stage .vagon-dizi,.upper-stage .tower-slots{flex-wrap:wrap}
+.upper-stage .yuvakart{min-width:0;overflow-wrap:anywhere}
+.upper-stage .feedback{top:8%;padding:8px 12px;font-size:17px;min-width:160px}
+.upper-stage .pv-table{max-width:100%;gap:3px}
+.upper-stage .pv-col{flex:1;min-width:0}
+.upper-result{width:100%;padding:10px;background:#e9f7df;border:2px solid #83b467;border-radius:12px;color:#214627;font-weight:850;text-align:center;white-space:pre-wrap}
+.upper-recorded{animation:upper-record .45s ease-out}
+.upper-result,.upper-paper{overflow-wrap:anywhere}
+.upper-memory-desk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:100%;padding:12px;background:#d6bf97;border:8px solid #977149;border-radius:14px}.upper-memory-desk button{min-width:0;min-height:80px;font-size:24px}.upper-memory-desk svg{width:100%;height:60px}
+.senior-tool svg{width:90px;height:50px;display:block}.senior-tool-bench{width:min(390px,100%);padding:12px;background:#e7d5b2;border:6px solid #9b8059;border-radius:12px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px}.senior-tool-bench>svg{width:140px}.senior-tool-bench button{flex:1;min-width:90px}
+.upper-p31 .m4-board,.upper-p33 .m4-board{width:min(560px,100%)}
+.upper-holiday-steps{padding:14px;border-left:10px solid #ae7055;background:#fff3db;border-radius:10px}.upper-holiday-steps .dolu{animation:upper-record .35s ease-out}
+.upper-stage .rail-line{width:100%;min-height:150px;justify-content:space-between;gap:8px;border-bottom:9px double #4b6170;padding:15px 0}
+.upper-stage .tunnel{min-width:70px;min-height:65px;display:grid;place-items:center;border:8px solid #9a8270;border-radius:45px 45px 0 0;font-size:22px}
+.upper-stage .train-on-rail{font-size:50px}
+.upper-stage .beanstalk{width:100%;justify-content:center;flex-wrap:wrap;gap:8px}
+.upper-stage .leaf{min-width:60px;min-height:48px;font-size:22px}
+.upper-stage .lab-card{width:100%;padding:15px;gap:12px}
+.upper-stage .tower-row{width:100%;gap:8px;align-items:flex-end}
+.upper-stage .tower{flex:1;min-width:0}
+.upper-stage .tower .blocks{display:flex;flex-wrap:wrap;align-content:flex-end;justify-content:center;gap:3px;min-height:130px}
+.upper-stage .tower .block{width:17px;height:17px;margin:0}
+.senior-train{width:100%;padding:15px 8px;background:linear-gradient(#d9eff9 80%,#b5c998 80%);border-radius:20px}
+.senior-train-body{display:flex;align-items:flex-end;gap:12px;border-bottom:10px double #426071;padding:14px 0 20px}
+.senior-engine{width:60px;font-size:45px;flex:none}
+.senior-wagon{position:relative;flex:1;min-width:0;min-height:125px;border:9px solid #ae494b;border-top:5px solid #f28b80;border-radius:8px 8px 18px 18px;background:#fff0db;padding:9px;display:flex;flex-wrap:wrap;justify-content:center;gap:7px}
+.senior-wagon:after{content:'';position:absolute;bottom:-25px;left:9%;right:9%;height:24px;background:radial-gradient(circle at 10% 50%,#253b49 0 11px,transparent 12px),radial-gradient(circle at 90% 50%,#253b49 0 11px,transparent 12px)}
+.senior-wagon .placed{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;gap:6px;max-width:100%}
+.senior-wagon .placed>span{display:flex;max-width:100%;flex-wrap:wrap}
+.senior-wagon .ten-rod{width:17px;height:65px}.senior-wagon .one-cube{width:21px;height:21px}
+.senior-wagon small{font-size:12px}.senior-wagon .row .unit{font-size:14px;min-width:14px}
+.senior-load{padding:7px;font-size:17px;font-weight:950;text-align:center}
+.senior-train.departing{animation:upper-depart .65s ease-out}
+.senior-photo-world{width:100%;background:#e8efd6;border:7px solid #6f965e;border-radius:20px;padding:12px}
+.senior-photo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.senior-polaroid{min-width:0;min-height:104px;background:#fff;border:4px solid #d1dad0;padding:7px;font-size:25px;box-shadow:0 3px 7px #2433}
+.senior-polaroid small{display:block;font-size:13px}.senior-polaroid.done{background:#d9f4d5}
+.senior-camera-roll{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:60px;margin:10px 0;border-block:8px dotted #344a3e;background:#faf8e8;padding:8px}
+.senior-camera-roll span{font-size:22px;animation:upper-record .4s ease}
+.senior-checkout{width:100%;background:#f5e3c9;border-radius:16px;padding:16px 8px}
+.senior-register{background:#496c73;border:6px solid #284951;border-radius:15px;padding:10px;margin-top:12px}
+.senior-register-screen{padding:12px;background:#dbf5d9;border:5px solid #243e46;border-radius:7px;font-weight:900;text-align:center}
+.senior-drawers{display:flex;gap:10px;margin-top:12px}.senior-drawer{flex:1;min-width:0;background:#e4eced;border:6px solid #243e46;border-radius:3px 3px 15px 15px;padding:8px;min-height:105px}
+.senior-drawer b{display:block;font-size:12px;text-align:center}.senior-drawer .placed{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;min-height:40px;background:#657c85;margin-top:8px;padding:6px}
+.senior-drawer .banknote{font-size:13px;padding:4px;min-width:0}.senior-delivery{display:flex;justify-content:space-around;font-size:40px}.senior-delivery.delivered{animation:upper-depart .6s ease}
+.senior-packing{width:100%;background:#e0ebed;border:6px solid #546f7c;border-radius:16px;padding:12px}
+.senior-conveyor{padding:12px;border-block:9px solid #425b65;background:repeating-linear-gradient(90deg,#9aafb5 0 25px,#647f88 25px 31px);font-size:32px;text-align:center}
+.senior-conveyor small{display:block;font-size:13px;background:#fff8;font-weight:850}
+.senior-crates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 0}
+.senior-crate{min-width:0;min-height:90px;border:5px solid #976438;border-radius:3px 3px 14px 14px;background:repeating-linear-gradient(#f0d19c 0 16px,#d3af75 16px 19px);padding:5px;font-weight:900}
+.senior-crate b{display:block;font-size:12px}.senior-crate .packed{display:flex;flex-wrap:wrap;justify-content:center;font-size:22px;gap:3px}
+.senior-crate.fresh .packed span:last-child{animation:upper-record .45s ease}
+.senior-liquid{width:100%;background:#f4f4da;border-radius:18px;padding:15px;text-align:center}
+.senior-liquid-apparatus{display:flex;justify-content:center;gap:20px;align-items:flex-end;padding:15px 0}
+.senior-cup{border:5px solid #628c9f;border-top:0;border-radius:0 0 16px 16px;width:70px;height:80px;background:linear-gradient(transparent 25%,#efd258 25%);position:relative;font-size:28px;flex:none;transform-origin:50% 95%}
+.senior-cup.poured{animation:upper-pour .5s ease}
+.senior-cup.poured:after{content:'';position:absolute;width:6px;height:70px;right:-25px;top:20px;background:#e5c94d;transform:rotate(-35deg);animation:upper-stream .5s ease}
+.senior-measure-vessel{width:145px;height:160px;border:7px solid #6c8d9e;border-top-width:3px;border-radius:12px 12px 24px 24px;background:#eefcff;position:relative;overflow:hidden}
+.senior-measure-vessel.pool-vessel{width:210px;height:100px;border-radius:12px}.senior-fluid{position:absolute;bottom:0;left:0;right:0;height:var(--level);background:#edce52;transition:height .35s ease}
+.pool-vessel .senior-fluid{background:#45a8d3}.senior-vessel-marks{position:absolute;inset:0;display:flex;flex-direction:column-reverse;justify-content:space-between;padding:5px;color:#294d60;font-size:11px;font-weight:950;pointer-events:none}.senior-vessel-marks span{border-bottom:2px solid #547789;text-align:right}
+.senior-stopwatch{position:relative;width:160px;height:160px;border:10px solid #698c9e;border-radius:50%;background:repeating-conic-gradient(#3d6177 0deg 1deg,transparent 1deg 30deg),#fff;display:grid;place-items:center;margin:15px auto;color:#193c51}
+.senior-stopwatch:before{content:'';position:absolute;width:36px;height:17px;background:#587c91;top:-25px;border-radius:7px}
+.senior-stopwatch .digital{font-size:23px;background:#fff8e5;padding:9px;border-radius:8px;z-index:1}
+.senior-second-hand{position:absolute;top:10px;left:calc(50% - 2px);width:4px;height:60px;background:#d77642;transform-origin:50% 60px}
+.senior-cargo-belt{width:100%;padding:18px 8px;border:8px solid #355579;border-radius:15px;background:linear-gradient(#d9e9fa,#b8d1e5)}
+.senior-cargo-belt .pv-table{padding:12px 3px;border-block:12px solid #4c688a;background:repeating-linear-gradient(90deg,#93a9b6 0 30px,#557389 30px 35px)}
+.senior-cargo-belt .pv-cell.yeni{animation:upper-record .45s ease}
+.senior-cargo-controls{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:12px}
+.senior-oven{width:100%;background:#ffedcf;border:8px solid #bc8052;border-radius:18px;padding:14px 8px}
+.senior-oven-door{border:8px solid #795338;background:#654331;border-radius:12px;padding:12px;text-align:center;color:#fff;font-weight:950}
+.senior-oven .row,.senior-oven .tekler{padding:10px;margin:10px 0;background:#d9b382;border-radius:6px}
+.senior-oven .tepsi{max-width:100%;flex-wrap:wrap}.senior-oven .tepsi span{font-size:22px}
+.senior-oven-stock{display:flex;gap:10px;justify-content:center;margin-top:12px}.senior-oven-stock button{background:#fff5dd;min-height:65px;border:5px solid #95623a;border-radius:12px;flex:1;font-size:16px;font-weight:900}
+.upper-paper{width:100%;padding:13px 10px;border:3px solid #c4aa77;border-left:9px solid #967047;border-radius:4px 10px 10px 4px;background:repeating-linear-gradient(#fffdf4 0 29px,#e0e8ef 29px 30px);color:#17354a;box-shadow:0 5px 14px #1232}
+.upper-paper header{font-size:13px;font-weight:950;letter-spacing:.5px;padding-bottom:10px}.upper-paper textarea,.upper-paper input{width:100%;max-width:100%;font-size:16px;min-height:110px;background:#fffffff0;border:2px solid #a4b8c8;border-radius:7px;padding:10px;color:#19394d;touch-action:pan-y}.upper-paper input{min-height:44px}
+.upper-proof-paper{border-left-color:#c96654;background:#fff8ee}.upper-proof-paper header{color:#a24436}.upper-film{width:100%;padding:10px;border-block:10px dotted #2b3e53;background:#192f46;border-radius:8px}.upper-film .yuvakart{background:#fff9e8;border:4px solid #8695a1;min-height:70px;color:#19374a}.upper-film .vagon-dizi{display:flex;flex-wrap:wrap;gap:8px}
+.upper-note-board{padding:14px;border:8px solid #9c7750;background:#e0cba3;border-radius:10px;width:100%}.upper-note-board .yuvakart{background:#fff8c9;box-shadow:0 3px 5px #1232}
+.upper-recycle-line{width:100%;background:#d8e9e5;border:6px solid #5c857b;border-radius:15px;padding:12px}.upper-recycle-bins{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.upper-recycle-bin{min-width:0;padding:10px;background:#f4dfb8;border:6px solid #b08749;border-top:12px solid #678779;border-radius:8px 8px 30px 30px;min-height:110px;display:flex;flex-direction:column;gap:8px;color:#193c3b;font-weight:850}.upper-recycle-bin b{font-size:17px;overflow-wrap:anywhere}.upper-recycle-bin .bin-load{display:block;padding:8px;background:#e9f2da;min-height:44px;border-radius:5px}
+.upper-meter{width:100%;padding:12px;background:#edf4e9;border:5px solid #769980;border-radius:15px;color:#244b37}.upper-meter progress{width:100%;height:25px;accent-color:#398c5b}.upper-meter small{display:block;font-size:12px}
+@keyframes upper-record{from{transform:translateY(-8px) scale(.93)}to{transform:none}}
+@keyframes upper-depart{from{transform:translateX(0)}to{transform:translateX(14px)}}
+@keyframes upper-pour{45%{transform:rotate(35deg)}}
+@keyframes upper-stream{0%,100%{opacity:0}30%,70%{opacity:1}}
+@media(max-width:370px){.upper-stage .stage{padding:9px}.senior-train{padding:10px 2px}.senior-engine{width:42px;font-size:36px}.senior-wagon{border-width:6px;padding:5px}.senior-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.senior-crates{grid-template-columns:repeat(2,minmax(0,1fr))}.upper-stage .bar-col{min-width:0}.upper-stage .chart{gap:7px}.upper-stage .bar{width:38px}.upper-stage .nl-board{max-width:100%}.upper-stage .m4-board{width:100%!important}.upper-stage .scene-drop{max-width:100%}}
+@media(orientation:landscape) and (max-height:500px){.upper-stage .scene{display:block}.upper-stage .stage{min-height:0;padding:12px}.upper-stage .task{margin-top:12px}.upper-stage .u-world{min-height:0!important}.upper-stage .upper-paper{max-width:780px}.senior-photo-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.senior-crates{grid-template-columns:repeat(5,minmax(0,1fr))}.senior-train,.senior-checkout,.senior-liquid,.senior-packing,.senior-oven{max-width:680px}}
+@media(prefers-reduced-motion:reduce){.upper-recorded,.upper-result,.senior-train.departing,.senior-camera-roll span,.senior-crate.fresh .packed span,.senior-cup.poured,.senior-cup.poured:after,.senior-cargo-belt .pv-cell.yeni{animation:none!important;transition:none!important}}
+.upper-stage .senior-symmetry-preview{width:min(500px,100%);border:3px solid #77958a;border-radius:12px;overflow:hidden;background:#f6f5e4}
+.upper-stage .senior-symmetry-preview svg{display:block;width:100%;height:auto;aspect-ratio:240/140}
