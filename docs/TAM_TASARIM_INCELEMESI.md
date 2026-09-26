@@ -17,7 +17,7 @@
 2. M38: elma grupları/araba dar ekranda taşmış. Yönerge hareketi izlemeyi istiyor ama sahne statik işlem işareti göstererek cevabı veriyor.
 3. Sayı çizme oyunları: çizim alanı geniş sahnede küçük kalıyor. Harf çizme oyunlarında başlıktan bağımsız tekrar eden uçak/gökyüzü teması var.
 4. M18'in çakışan dondurma hedefleri ve M36'nın ölçülen nesne yerine yazılı kart gösterimi bu turda düzeltildi. Üç tur ve üç ekran boyutundaki hedefli testler geçti; kullanıcı görsel onayı ve gerçek cihaz kontrolü bekliyor.
-5. M41, M45, M47: büyük boşluk ve küçük işlem/emoji; eylem-sonuç gösterimi ayrıca incelenmeli. M42 ve M49'un üç turu deney sahnesine dönüştürüldü; kapsamı aşağıda kayıtlıdır.
+5. M41, M45, M47'nin üç turu konuya özgü, sahneye dokunarak işleyen eylem-sonuç tasarımına dönüştürüldü. M42 ve M49'un üç turu da deney sahnesidir. Hedefli testler ve kullanıcı/cihaz kabulü ayrımı aşağıda kayıtlıdır.
 6. M51: iade kamyonu küçük simge ve büyük kutu. M54: hedef sınırları çakışıyor. M58: gölge kontrastı zayıf.
 7. T04,T06,T07,T09,T14,T21,T22,T30,T38,T46,T47,T48,T51,T54,T64: kelime yuvaları çizilmiş makine/vagondan kopuk; gerçek nesne üzerinde birleşme ve çıktı incelenmeli.
 8. T02: sahne ve alt hedefler yineleniyor. T62: görsel okuma görevinde gerçek resim yerine metin var.
@@ -64,3 +64,12 @@ Güncel dış hedef sayısı 26'dır ve hepsi kavramsal karar olarak açıklanm�
 - M49: iki işlem gerçek, aynı ölçekli tüplerde birim dolulukla temsil edilir. Doğru kararda eşitlik/fark işareti ve seviye vurgusu sahnede görünür; başarı mesajı tüpleri kapatmaz.
 - [Başlangıç ve sonuç paftası](../artifacts/iksir-denetimi/index.html): 320×568, 390×844 ve 844×390 ekranlarda üçer tur, 18 senaryo; iki şişenin birleşme sayısı, tüp seviyeleri, yanlış/doğru seçim, doğal tur geçişi ve yeniden başlatma doğrulandı. Bu otomatik tarayıcı kanıtıdır; insan görsel onayı ve fiziksel WebView/ses testi yerine geçmez.
 - M41, M45 ve M47 bu turda değiştirilmedi; sıra bunların konuya bağlı eylem-sonuç tasarımındadır. 635 oyunun tam tasarım kabulü açık kalır.
+
+## 26 Eylül — M41 M45 M47 devam paketi
+
+- M41: iki büyüklük taşı fırtına vadisinin içinde gerçek dokunma hedefidir. İlk aşamada doğru taşı şimşek işaretler; ikinci aşamada kesin sonuç seçilir ve sonucun birimleri sahnede görünür. 10 ile karşılaştırma ve kesin hesap sırası korunur.
+- M45: referans ve aday işlemler robotların gövdelerindedir. Aynı sonucu veren robota dokununca robot referansın yanına gelir; iki sonuç ayrı nokta sıralarıyla eşitlik olarak gösterilir. Yanlış aday buluşma oluşturmaz.
+- M47: takımlar 7/7, 8/9 ve 7/6 kişidir. Doğru kararda halatın kurdelesi ve takımlar birlikte hareket eder; beraberlikte kurdele merkezde kalır. Sola/sağa hareket için sahne içinde pay bırakılmıştır. Başarı metni sahnededir; tekrar eden açılır başarı kutusu sonucu örtmez.
+- `tools/verify-storm-twins-tug.cjs`: 320×568, 390×844, 844×390 ekranlarda 27 tur/ekran senaryosu; her tur yanlış kararın reddi ve doğru kararın sayısal/görsel sonucu, doğal tur geçişi, bitiş ve yeniden başlatma. Testte yanlışlar üç turda da denenebilsin diye her tur sonunda can test tarafından yenilenir; üretim oyun kuralı değiştirilmez. Katalog çözüm testi üç oyunun üçer turunu geçti.
+- [Başlangıç ve sonuç incelemesi](../artifacts/tahmin-ikizler-halat-denetimi/index.html). Otomatik fare/düğme etkileşimleri ve ekran incelemesi fiziksel dokunma/WebView, ses ve kullanıcı görsel onayı yerine geçmez.
+- Sıradaki paket: M51 iade kamyonu, M54 büyüteç hedefleri, M58 gölge kontrastı; ardından Türkçe kelime/sahne bağları ve üst sınıf denetimleri. Bu turnede yalnız M41/M45/M47 değiştirildi; kalan maddeler topluca tamamlandı sayılmadı.

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>1. Sınıf Matematik — Özel Oyun Sahneleri</title>
 <link rel="icon" href="data:,">
+<link rel="stylesheet" href="scene-storm-twins-tug.css">
 <style>
 :root{--ink:#17324d;--soft:#52708b;--green:#20a36a;--red:#db4e57;--gold:#f2b83f;--panel:rgba(255,255,255,.94)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -812,6 +813,9 @@ RENDERERS.choose=(r,v,t)=>{
   t.innerHTML=chooseButtons(r.choices);bindChoice(r,c=>{if(!c.correct)return wrong(r.hint);const board=v.querySelector('.tube-board'),equal=data[2]===data[3];board.classList.add('resolved');board.classList.toggle('equal',equal);v.querySelector('.tube-compare-mark').textContent=equal?'=':'≠';v.querySelector('.potion-caption').textContent=equal?'Tüpler aynı seviyede: sonuçlar eşit.':'Tüpler farklı seviyede: sonuçlar eşit değil.';success(r.story)});
  }
 };
+</script>
+<script src="scene-storm-twins-tug.js"></script>
+<script>
 game=GAMES[GAME_ID];
 if(!game){document.getElementById('app').innerHTML='<div class="overlay"><div class="overlay-card"><h2>Oyun bulunamadı</h2><p>'+esc(GAME_ID)+'</p></div></div>'}
 else if(game.rounds.length!==GAME_COUNT){document.getElementById('app').innerHTML='<div class="overlay"><div class="overlay-card"><h2>Tur verisi eksik</h2><p>'+esc(game.title)+'</p></div></div>'}
