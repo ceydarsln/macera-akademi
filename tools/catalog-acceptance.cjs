@@ -57,6 +57,7 @@ async function main(){
  try{await Promise.all([0,1,2,3].map(async()=>{
   while(next<jobs.length){
    const g=jobs[next++];if(process.argv.includes('--resume')&&records.has(g.id))continue;
+   if(process.argv.includes('--refresh-stale')&&records.get(g.id)?.solve==='passed'&&records.get(g.id)?.sourceHash===sourceHash(g.slug))continue;
    const fen=g.slug==='fen3'||g.slug==='fen4';
    const result={id:g.id,slug:g.slug,title:g.title,commit,sourceHash:sourceHash(g.slug),date:new Date().toISOString(),solve:'running',design:'pending',rounds:[],errors:[]};
    const page=await browser.newPage({viewport:{width:fen?390:810,height:844}});page.setDefaultTimeout(12000);

@@ -1,0 +1,15 @@
+/* Let short screens scroll rather than crop their interactive scene. No theme replacement. */
+.hud .prompt{max-height:none!important;overflow:visible!important}
+.scene{overflow:auto}
+.scene>.stage,.scene>.visual:not(.dwarf-visual){flex:1 0 auto;min-height:min-content;max-height:none;overflow:visible}
+.scene>.stage>*,.scene>.visual:not(.dwarf-visual)>*{flex-shrink:0;max-width:100%;min-width:0}
+.scene>.task{flex-shrink:0}
+.game-m13 .sheep-field{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:minmax(54px,1fr);gap:7px;align-items:center;justify-items:center}
+.game-m13 .sheep-field .select-token{position:static;width:100%;max-width:66px;height:54px;font-size:31px;min-height:44px}
+.stage .grafik .sutunlar,.stage .grafik .gsutun{min-width:0}
+.stage .grafik .gsutun .ad{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.stage .grafik button.ad{width:100%;padding:4px 2px}
+@media(orientation:landscape) and (max-height:500px){.scene:not(.dwarf-game){display:block}.scene>.stage,.scene>.visual:not(.dwarf-visual){min-height:min-content;height:auto}.scene>.task{margin-top:12px}}
+@media(orientation:landscape) and (max-height:500px){.game-m41 .storm-world,.game-m51 .cargo-world{min-height:260px;height:260px}}
+@media(orientation:landscape) and (max-height:500px){.scene.game-m13>.visual{min-height:300px;height:300px}}
+@media(orientation:landscape) and (max-height:500px){body.connected-turkish .scene{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(250px,1fr);align-items:start}body.connected-turkish .scene>.task{margin-top:0}}

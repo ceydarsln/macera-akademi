@@ -1,0 +1,46 @@
+# Sekiz aşamanın gerçek kabul durumu
+
+27 Eylül 2026. Teknik testin geçmesi, oyunun bütün etkileşimlerinin veya görsel tasarımının kabul edildiği anlamına gelmez. Bu belge önceki kapsamlı “bitti” ifadelerinin yerine geçer.
+
+| Aşama | Kanıtlanan kapsam | Tam kapsam durumu |
+| --- | --- | --- |
+| 1 — M41/M45/M47 | Üç oyunun üç turu, üç boyutta 27 gerçek seçim/sonuç senaryosu; yanlış, geçiş, bitiş ve yeniden başlatma geçti. | Hedefli uygulama ve tarayıcı doğrulaması tamamlandı; fiziksel cihaz ve insan onayı ayrıca bekler. |
+| 2 — Diğer matematik sahneleri | M51/M54/M58/M59/M60 için 45 senaryo; önceki ölçüm/dondurma/sayı çizimi paketleri. Bu tur M13 seçim geri alma yarışı, küçük hedefler ve W32 mozaik düzeltildi. | Bütün matematik oyunlarının tüm davranışları ve estetik/pedagojik kalitesi ayrı ayrı kabul edilmedi. |
+| 3 — Türkçe sahne bağlantıları | 17 T oyununun üç tur/üç boyutta 153 senaryosu geçti. Yatay üretim bandında hedef/palet yan yana düzeni korundu. | Diğer Türkçe oyunlarında oyun özelinde tam kabul bekler. |
+| 4 — Üst sınıflar | Önceki 364 oyunluk başlangıç taraması, 27 hedefli oyun/243 tur-ekran kaydı; bunların 27 kaydı yalnız başlangıçtır, hepsi tamamlanmış oynanış değildir. W32'nin gerçek yerleştirme ve dış çevre akışı bu tur ayrıca doğrulandı. | Bütün 364 oyunun ayrı ayrı animasyon, yazma, yanlış işlem, geri alma ve son durum kabulü tamamlanmadı. |
+| 5 — Fen/hayat deneyleri | F30/F32/F34/F40/F41/G45/H13/H29 için 72 tur-ekran senaryosu, 258 doğru işlem, 201 görüntü; sekiz ayrı üretim can sıfırlama/dokunma/klavye kaydı. | Sekiz oyunluk kanıt, bütün 126 fen/hayat oyununun tam kabulü değildir. Önceki hedefli paketler de korunur. |
+| 6 — 635 oyunun tam oynanış kabulü | 635 oyunun 1905 tur teknik çözüm kaydı ve kaynak parmak izi; 5715 başlangıç yerleşimi kontrolü. Hedefli doğal tur oynanışları ayrı kaydedilir. | **Açık.** Teknik çözücüler bazı türlerde durum/eşleştirme yardımcıları kullanır; hepsi gerçek işaretçi/dokunma testi değildir. Her oyunda doğru/yanlış/iptal/can bitişi/yeniden başlatma/doğal geçiş/oyun sonu kanıtı henüz yok. |
+| 7 — Gerçek telefon ve ses | ADB ve devicectl cihaz listeleri okundu; bağlı Android/iPhone yok. Chromium mobil dokunması fiziksel telefon değildir. | **Cihaz bekliyor.** Android/iPhone/WebView, oynarken yön değiştirme, ekran klavyesi, sesli yönerge ve gerçek performans kabulü yapılmadı. |
+| 8 — Kullanıcı görsel onayı | Hedefli galeriler ve kabul takibi hazırlanır. | **Sizin onayınız bekliyor.** Otomatik test, sizin beğeni/onayınız olarak kaydedilmez. |
+
+## Bu turda yapılan değişiklikler
+
+- Pusulanın iğnesi kuzey işaretine oturur. Malzeme, başlığa değil gerçek deney SVG'sine bırakılır.
+- F32'de pil/kablo/ampul/anahtar eksikleri ve açık anahtar sahnede görünür. İlk kurulumda ampul yalnız son test adımıyla yanar.
+- F34'te yalıtkan çubuk, aynı yönde seri bağlanmış iki ayrı pil ve son devre görüntüsü gösterilir. Yeni soruda önceki sorunun açıklaması kalmaz.
+- F41'de konu dışı park maketi yerine lamba siperi, aşağı yönlendirme, zamanlayıcı, sensör, parlaklık ve perde işlemleri gece aydınlatma sahnesini değiştirir. Doğru malzeme kimlikleri/öğrenme doğrulayıcısı korunur; adlar ve yazı ölçütü konuya uygun hale getirilir.
+- H29'da musluk kolu lavabonun üzerinde gerçek kontroldür. Basılı tutma suyu artırır; bırakma/iptal durdurur. Enter/Space desteği ve odak kaybında durma vardır. Eski hata açıklaması yeni su akıtma işleminde kaldırılır.
+- G45'in hedefleri farklı yaşam alanı çizimleridir; yerleştirilen etiket alanda kalır.
+- Kurulumun son parçası eklendiğinde de model yeniden çizilir. Bitmiş deneyde eski işlem düğmeleri temizlenir; sonuç sahnede görünür.
+- Kısa ekranlarda içerik kesilmek yerine kaydırılabilir. Cüce Adımı'nın özel görsel düzeni ortak sahne boyutu kuralına sokulmaz; Türkçe'nin özel yatay yan yana düzeni korunur.
+- 13 oyundaki küçük hedef sinyalleri giderildi: M02/M17/M26/M33/M38/V05/V09/V23/W32/W44/Z01/G25/H05. Genel estetik kalite iddiası değil, tarayıcıda ölçülen hedef boyutu düzeltmesidir.
+- M13'te hedef sayıya ulaşıp hemen seçim geri alınırsa bekleyen başarı artık geçersiz olur; üç tur ve üç boyutta dokuz senaryo geçti.
+- W32'de mozaik tüm parçaların sınırlarına göre ölçeklenip ortalanır. Negatif koordinatlar da çerçevede kalır. Yatayda palet yan taraftadır; sürüklenen parçanın paleti çökertip hedefi kaydırması önlenir. Dokuz senaryoda bütün parçalar, yanlış parça, iptal, dış kenarların sayılması, doğal geçiş, bitiş ve yeniden başlatma geçti. Negatif denemeler üçüncü turda üretim can sıfırlamasını tetikleyebilir; test gerçek sıfırlama süresini bekler, can/cevap enjekte etmez.
+
+## Kanıtları yeniden üretmek
+
+Yerel Node yolu: `/Users/ceyda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node`.
+Playwright için `NODE_PATH=/Users/ceyda/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules` gerekir.
+
+- `tools/catalog-acceptance.cjs --refresh-stale`: yalnız değişmiş kaynağa ait eski teknik kayıtları yeniler. `--resume` eski kaynağı yenilemenin yerine geçmez.
+- `tools/audit-all-round-layouts.cjs`: 635 × 3 tur × 3 boyut; başlangıç taşma/kesilme ve küçük kontrol sinyalleri. Bu araç oyunu oynamaz.
+- `tools/verify-science-completion.cjs`: sekiz deney için doğal üç tur. Negatif denemeleri ayırmak için her turda test canını yeniler; 25/30 ms hızlı test geçişleri görüntü alınabilsin diye uzatılır. Ses oynatma kapalıdır.
+- `tools/verify-science-native-input.cjs`: üretim süreleriyle can sıfırlaması, Chromium yerel dokunması/iptali ve musluk klavyesi; cevap veya can enjekte etmez.
+- `tools/verify-sheep-selection.cjs`: seçim geri alma ve bekleyen başarı iptali.
+- `tools/verify-mosaic-native.cjs`: mozaik parçaları ve dış çevre; doğal üç tur.
+- `tools/render-completion-ledger.cjs`: eski kaynaklı teknik kayıt veya eksik/başarısız kanıt varsa raporu yayımlamaz.
+- `tools/release_static_check.cjs`: HTML betikleri ve yerel dosya bağlantıları.
+
+İnceleme: `artifacts/fen-hayat-tamamlama/index.html`.
+635 oyunluk ayrı kabul takibi: `artifacts/tam-kabul-takibi/index.html` ve `ledger.json`.
+Ekran görüntüleri/statik ölçüm sonuçları otomatik estetik, gerçek cihaz, ses veya kullanıcı onayı değildir.

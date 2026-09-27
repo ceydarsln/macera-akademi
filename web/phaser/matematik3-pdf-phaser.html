@@ -302,6 +302,7 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .hud .prompt{max-height:none;overflow:visible;min-width:0;overflow-wrap:break-word}
 </style>
 <link rel="stylesheet" href="scene-upper-stage.css">
+<link rel="stylesheet" href="scene-touch-targets.css">
 </head>
 <body><div id="app" class="app"></div>
 <script>
@@ -1317,7 +1318,10 @@ function mozaikKenar(parcalar){const say={},bilgi={};
  Object.keys(say).forEach(k=>(say[k]===1?dis:ic).push(bilgi[k]));
  return {dis,ic}}
 function mozaikSvg(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.indexOf(i)>=0);
- const sk=42,ox=18,oy=150;const X=p=>ox+p[0]*sk,Y=p=>oy-p[1]*sk;
+ const points=r.parcalar.flatMap(p=>p.nokta),xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
+ const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+ const sk=Math.min(276/(xmax-xmin||1),226/(ymax-ymin||1)),ox=150-(xmin+xmax)*sk/2,oy=125+(ymin+ymax)*sk/2;
+ const X=p=>ox+p[0]*sk,Y=p=>oy-p[1]*sk;
  let ic='';
  r.parcalar.forEach((p,i)=>{const var_=state.yerlesen.indexOf(i)>=0;
   const pts=p.nokta.map(q=>X(q).toFixed(1)+','+Y(q).toFixed(1)).join(' ');
@@ -1327,7 +1331,7 @@ function mozaikSvg(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.ind
   k.dis.forEach((e,i)=>{const iz=state.izli.indexOf(i)>=0;
    ic+=`<line x1="${X(e[0]).toFixed(1)}" y1="${Y(e[0]).toFixed(1)}" x2="${X(e[1]).toFixed(1)}" y2="${Y(e[1]).toFixed(1)}" stroke="${iz?'#e05555':'#33526b'}" stroke-width="${iz?7:4}" stroke-linecap="round"/>`;
    ic+=`<line data-dis="${i}" x1="${X(e[0]).toFixed(1)}" y1="${Y(e[0]).toFixed(1)}" x2="${X(e[1]).toFixed(1)}" y2="${Y(e[1]).toFixed(1)}" stroke="transparent" stroke-width="20" style="cursor:pointer"/>`})}
- return `<svg class="mozaik-svg" viewBox="0 0 300 190" width="290" height="184">${ic}</svg>`}
+ return `<svg class="mozaik-svg" viewBox="0 0 300 250" width="290" height="242">${ic}</svg>`}
 function mozaikCiz(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.indexOf(i)>=0);
  const k=state.faz>=1?mozaikKenar(yerlesen):null;
  $('#stage').innerHTML=`<div class="stack">${mozaikSvg(r)}
@@ -1336,6 +1340,8 @@ function mozaikCiz(r){const yerlesen=r.parcalar.filter((_,i)=>state.yerlesen.ind
   $('#task').innerHTML=`<div class="caption">Gerçek parçayı kesik çizgili yerine sürükle.</div><div class="actions">${r.parcalar.map((p,i)=>`<button class="parca-btn${state.secili===i?' secili':''}${state.yerlesen.indexOf(i)>=0?' bitti':''}" data-parca="${i}">${poliSvg(p.nokta,p.renk,null,52)}<small>${esc(p.ad)}</small></button>`).join('')}</div>`;
   $$('[data-parca]').forEach(b=>b.onclick=()=>{const i=+b.dataset.parca;
    if(state.yerlesen.indexOf(i)>=0)return;state.secili=i;mozaikCiz(r)});
+  // The floating piece must not collapse its palette and move the SVG target mid-drag.
+  const palette=$('#task .actions');palette.style.minHeight=palette.getBoundingClientRect().height+'px';
   $$('[data-yuva]').forEach(el=>el.onclick=()=>{const i=+el.dataset.yuva;
    if(state.secili==null)return feedback('Önce bir parça seç',true);
    mozaikYerlestir(r,state.secili,i)});
@@ -1358,7 +1364,7 @@ function mozaikYerlestir(r,parca,yuva){if(state.yerlesen.indexOf(parca)>=0)retur
  state.yerlesen.push(parca);state.secili=null;
  if(state.yerlesen.length>=r.parcalar.length){state.faz=1;state.izli=[];feedback('Mozaik kuruldu')}
  mozaikCiz(r)}
-function renderMozaik(r){state.faz=0;state.yerlesen=[];state.izli=[];state.secili=null;mozaikCiz(r)}
+function renderMozaik(r){$('.scene').classList.add('mozaik-game');state.faz=0;state.yerlesen=[];state.izli=[];state.secili=null;mozaikCiz(r)}
 
 /* ===== ortak: bir doğruya göre yansıma ===== */
 function yansitNokta(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],d=dx*dx+dy*dy;

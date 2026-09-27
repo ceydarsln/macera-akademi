@@ -1,0 +1,27 @@
+.science-finish .prompt{max-height:none!important;overflow:visible!important}
+.science-finish .scene{overflow:auto;touch-action:pan-y}
+body.science-finish .scene>.stage{flex:0 0 auto;min-height:240px;overflow:visible}
+.science-finish .scene>.task{margin-top:12px}
+.science-finish .stage>*{flex-shrink:0;max-width:100%;min-width:0}
+.science-finish .stage.success-motion{animation:none}
+.science-finish .feedback:not(.bad){visibility:hidden}
+.science-finish .kur-hedef{width:100%;min-width:0;display:block}
+.science-finish .kur-hedef>svg{display:block}
+.science-finish .kur-hedef svg,.science-finish .stage>.sahne-svg{width:100%;max-width:650px;height:auto}
+.science-finish .compass-needle.north{transform-origin:152px 68px;animation:needle-settle .7s ease-out}
+.science-finish .science-result{padding:10px;border:2px solid #74a17c;border-radius:12px;background:#edf8e8;color:#24462e;font-weight:850;text-align:center}
+.science-finish .lavabo{width:min(400px,100%);flex:none}
+.science-finish .lavabo .tap-handle{position:absolute;z-index:3;left:calc(71.33% - 25px);top:0;width:50px;height:48px;min-height:44px;border:3px solid #536777;border-radius:12px;background:linear-gradient(#edf6fa,#a8bac7);box-shadow:0 3px #4c6473;padding:4px;font-size:0;touch-action:none}
+.science-finish .tap-handle:after{content:'↻';font-size:27px;color:#274853}
+.science-finish .tap-handle.basili{transform:rotate(15deg);background:#94d6ef}
+.science-finish .tap-handle:focus-visible{outline:4px solid #e7b43e}
+.science-finish .habitat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%}
+.science-finish .habitat-card{padding:0;min-width:0;border:4px solid #768b76;border-radius:13px;background:#fffaf0;overflow:hidden;display:flex;flex-direction:column;font:inherit;color:#294554}
+.science-finish .habitat-card svg{display:block;width:100%;height:auto}
+.science-finish .habitat-card .hedef{font-size:13px;padding:9px;text-align:left;line-height:1.4}
+.science-finish .habitat-card .kondu{padding:9px;background:#d7edd9;font-weight:850;animation:specimen-arrive .35s ease}
+.science-finish .habitat-card.dolu{border-color:#36805b}
+@keyframes needle-settle{0%{transform:rotate(55deg)}65%{transform:rotate(-12deg)}100%{transform:none}}
+@keyframes specimen-arrive{from{transform:translateY(-7px);opacity:.3}to{transform:none;opacity:1}}
+@media(orientation:landscape) and (max-height:500px){.science-finish .scene{display:block}.science-finish .stage{min-height:0}.science-finish .task{margin-top:12px}.science-finish .habitat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.science-finish .compass-needle.north,.science-finish .habitat-card .kondu{animation:none!important}}

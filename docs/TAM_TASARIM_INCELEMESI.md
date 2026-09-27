@@ -1,5 +1,7 @@
 # Tam tasarım incelemesi — çalışma kaydı
 
+27 Eylül güncel durum: [Sekiz aşamanın ayrı kabul durumu](ASAMA_KABUL_DURUMU.md). Son paket fen/hayat deneylerini, küçük hedefleri, M13 seçim geri almasını ve W32 mozağini kapsar. Teknik çözüm, başlangıç yerleşimi, hedefli oynanış ve kullanıcı/cihaz onayı ayrı tutulur; 635 oyunun tamamı kabul edilmiş sayılmaz.
+
 635 oyunun teknik testten geçmesi, tasarımının veya animasyonunun onaylandığı anlamına gelmez.
 Öncelikli dış hedef sinyalleri değerlendirildi: 12 somut hedef sahnedeki nesneye taşındı; 27 kavramsal sinyalden biri cümleye yerleştirme olarak düzeltildi, 26'sı doğrudan karar olarak uygun bulundu. Bu çalışma, 635 oyunun gerçek etkileşim, sonuç animasyonu ve tam tasarım kabulü yerine geçmez.
 

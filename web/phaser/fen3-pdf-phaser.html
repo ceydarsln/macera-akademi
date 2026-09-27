@@ -203,6 +203,9 @@ svg.sahne{width:min(320px,94%);height:auto;max-height:168px;display:block}
 .konus-balon{flex:0 0 auto;background:#fff;border:3px solid var(--line);border-radius:16px 16px 16px 4px;padding:8px 11px;font-weight:870;font-size:clamp(12px,3.2vw,15px);line-height:1.35;max-width:min(324px,95%);overflow-wrap:break-word;text-align:left}
 @media (max-height:640px){.stage{min-height:160px}.scene{gap:6px}.choice{min-height:48px}svg.sahne{max-height:126px}.metin-kart{max-height:170px}.yazi-alan{min-height:74px}.hkart{min-height:54px}}
 </style>
+<link rel="stylesheet" href="scene-science-finish.css">
+<link rel="stylesheet" href="scene-safe-layout.css">
+<link rel="stylesheet" href="scene-touch-targets.css">
 </head>
 <body>
 <div class="app" id="app"></div>
@@ -3609,6 +3612,9 @@ window.__TEST__={
 };
 
 /* ===== açılış ===== */
+</script>
+<script src="scene-science-finish.js"></script>
+<script>
 game=GAMES[GAME_ID]||GAMES.g01;
 render();
 </script>

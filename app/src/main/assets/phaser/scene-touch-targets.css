@@ -1,0 +1,16 @@
+/* Enlarge physical hit areas without replacing any game's illustration/theme. */
+.pirate-map .grid-map{width:min(330px,100%);padding:4px;border-width:6px;grid-auto-rows:minmax(44px,1fr);transform:none}
+.delivery-tower .target{min-height:48px}
+.inline-count-ramp.target{height:64px;min-height:64px}
+.game-m33 .inline-pattern-slot.target{width:90px;min-width:90px;height:80px;min-height:80px}
+.apple-experiment button{min-height:48px}
+.cake-slot.scene-drop{width:48px;height:48px}
+.piggy-mouth.scene-drop{min-height:48px}
+.robot-slot.scene-drop{min-width:48px;min-height:48px}
+.robot-slot.left.scene-drop{left:0}
+.robot-slot.right.scene-drop{right:0}
+.nokta-sutun [data-eksi]{min-width:48px!important;min-height:48px!important}
+.motion-watch{min-width:48px;min-height:48px}
+.vote-source{min-height:48px}
+.hs-source{min-height:48px}
+@media(orientation:landscape) and (max-height:500px){.scene.mozaik-game{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.7fr);align-items:start}.scene.mozaik-game>.stage{height:auto;min-height:0}.scene.mozaik-game>.task{margin:0}}
