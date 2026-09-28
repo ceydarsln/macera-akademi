@@ -272,7 +272,7 @@ function sahneHtml(r){return typeof r.sahne==='function'?r.sahne(state):(r.sahne
    erişilebilir seç-koy yedeği olarak çalışmayı sürdürür. */
 function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
  k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
- k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointerdown=e=>{if(k.disabled)return;delete k.dataset.dragged;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
  k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
  const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit&&e.type!=='pointercancel')birak(k,hit)}};
  k.onpointerup=bitir;k.onpointercancel=bitir})}
@@ -761,12 +761,13 @@ function olcumCiz(r){
   (r.veri?veriKutu(r.veri):'')+
   (r.gorev?`<div class="konus-balon">${esc(r.gorev)}</div>`:'')+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
- $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
-  `<input class="olcek" id="olcek" type="range" min="${r.min}" max="${r.max}" step="${r.adim||1}" value="${d}">`+
-  `<div class="caption">${esc(String(d))} ${esc(r.birim||'birim')}</div>`+
+ if(!$('#olcek'))$('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+  `<input class="olcek" id="olcek" type="range" min="${r.min}" max="${r.max}" step="${r.adim||1}" value="${d}" aria-label="Dinamometre ölçeri">`+
+  `<div class="caption" id="olcekDeger"></div>`+
   `<button class="choice" id="olcOk">Bu değeri uygula</button>`+
   (r.ipucu?`<div class="hint">${esc(r.ipucu)}</div>`:'');
- const s=$('#olcek');
+ const s=$('#olcek');s.value=d;
+ $('#olcekDeger').textContent=String(d)+' '+(r.birim||'birim');
  s.oninput=()=>{state.deger=+s.value;olcumCiz(r)};
  $('#olcOk').onclick=()=>{
   if(locked)return;
@@ -774,7 +775,7 @@ function olcumCiz(r){
    state.not=r.yanlisIpucu||'Yay bu kadar uzadı. Gözlem tablosundaki satırlarla karşılaştır.';
    olcumCiz(r);return wrong(state.not)}
   good()}}
-function renderOlcum(r){state.deger=r.min;state.not='';olcumCiz(r)}
+function renderOlcum(r){document.body.classList.add('continuous-experiment');state.deger=r.min;state.not='';olcumCiz(r)}
 
 /* ===== SULA (eski holdFill/kronometre) =====
    Kronometre kaldırıldı: ekranda saksı, fide, toprak ve sulama kabı var.
@@ -796,11 +797,13 @@ function sulaCiz(r){
   `<button class="tut ${state.basili?'basili':''}" id="tut">Sulama kabını eğik tut</button>`+
   `<button class="choice" id="sulaOk">Sulamayı bitirdim</button>`;
  const t=$('#tut');
- const bas=e=>{e.preventDefault();if(locked||state.basili)return;state.basili=true;t.classList.add('basili');
+ const bas=e=>{e.preventDefault();if(locked||state.basili)return;if(e.pointerId!=null)t.setPointerCapture?.(e.pointerId);state.basili=true;t.classList.add('basili');
   state.saat=setInterval(()=>{state.verilen=(state.verilen||0)+1;state.sonuc='';sulaGuncelle(r)},FAST?4:70)};
  const birak=()=>{if(!state.basili)return;state.basili=false;t.classList.remove('basili');clearInterval(state.saat)};
  t.addEventListener('pointerdown',bas);t.addEventListener('pointerup',birak);
- t.addEventListener('pointerleave',birak);t.addEventListener('pointercancel',birak);
+ t.addEventListener('pointercancel',birak);t.addEventListener('lostpointercapture',birak);t.addEventListener('blur',birak);
+ t.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!e.repeat)bas(e)}};
+ t.onkeyup=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();birak()}};
  $('#sulaOk').onclick=()=>{
   if(locked)return;birak();
   const v2=state.verilen||0;
@@ -813,7 +816,7 @@ function sulaGuncelle(r){
  const v=state.verilen||0,oran=v/r.uygunUst;
  const st=$('#stage');if(st)st.firstElementChild.outerHTML=saksi(oran,oran>1?'cok':'');
  const c=$('.sure-cubuk i');if(c)c.style.setProperty('--w',Math.min(100,oran*62)+'%')}
-function renderSula(r){state.verilen=0;state.sonuc='';state.not='';state.basili=false;sulaCiz(r)}
+function renderSula(r){document.body.classList.add('continuous-experiment');state.verilen=0;state.sonuc='';state.not='';state.basili=false;sulaCiz(r)}
 
 /* ===== TUS (eski numPad) =====
    Ekranda gerçek bir ölçüm tablosu var ve soru o veriden okunuyor; cevap

@@ -1,6 +1,6 @@
 # Sekiz aşamanın gerçek kabul durumu
 
-27 Eylül 2026. Teknik testin geçmesi, oyunun bütün etkileşimlerinin veya görsel tasarımının kabul edildiği anlamına gelmez. Bu belge önceki kapsamlı “bitti” ifadelerinin yerine geçer.
+28 Eylül 2026. Teknik testin geçmesi, oyunun bütün etkileşimlerinin veya görsel tasarımının kabul edildiği anlamına gelmez. Bu belge önceki kapsamlı “bitti” ifadelerinin yerine geçer.
 
 | Aşama | Kanıtlanan kapsam | Tam kapsam durumu |
 | --- | --- | --- |
@@ -8,10 +8,28 @@
 | 2 — Diğer matematik sahneleri | M51/M54/M58/M59/M60 için 45 senaryo; önceki ölçüm/dondurma/sayı çizimi paketleri. Bu tur M13 seçim geri alma yarışı, küçük hedefler ve W32 mozaik düzeltildi. | Bütün matematik oyunlarının tüm davranışları ve estetik/pedagojik kalitesi ayrı ayrı kabul edilmedi. |
 | 3 — Türkçe sahne bağlantıları | 17 T oyununun üç tur/üç boyutta 153 senaryosu geçti. Yatay üretim bandında hedef/palet yan yana düzeni korundu. | Diğer Türkçe oyunlarında oyun özelinde tam kabul bekler. |
 | 4 — Üst sınıflar | Önceki 364 oyunluk başlangıç taraması, 27 hedefli oyun/243 tur-ekran kaydı; bunların 27 kaydı yalnız başlangıçtır, hepsi tamamlanmış oynanış değildir. W32'nin gerçek yerleştirme ve dış çevre akışı bu tur ayrıca doğrulandı. | Bütün 364 oyunun ayrı ayrı animasyon, yazma, yanlış işlem, geri alma ve son durum kabulü tamamlanmadı. |
-| 5 — Fen/hayat deneyleri | F30/F32/F34/F40/F41/G45/H13/H29 için 72 tur-ekran senaryosu, 258 doğru işlem, 201 görüntü; sekiz ayrı üretim can sıfırlama/dokunma/klavye kaydı. | Sekiz oyunluk kanıt, bütün 126 fen/hayat oyununun tam kabulü değildir. Önceki hedefli paketler de korunur. |
+| 5 — Fen/hayat deneyleri | 126 oyunda normal sürelerle üç doğal tur, oyun sonu ve yeniden başlatma; 87 oyunun ilk turunda yanlış işlem/yeniden deneme ve uygulanabilir dokunma iptali. Önceki sekiz hedefli deneyin ayrıntılı sahne kontrolleri korunur. | Doğru oynanış bütün 126 oyuna yayıldı. Bütün oyunların her turunda hata yolları, sahne sonuçlarının tek tek görsel değerlendirmesi ve fiziksel cihaz kabulü hâlâ açık. |
 | 6 — 635 oyunun tam oynanış kabulü | 635 oyunun 1905 tur teknik çözüm kaydı ve kaynak parmak izi; 5715 başlangıç yerleşimi kontrolü. Hedefli doğal tur oynanışları ayrı kaydedilir. | **Açık.** Teknik çözücüler bazı türlerde durum/eşleştirme yardımcıları kullanır; hepsi gerçek işaretçi/dokunma testi değildir. Her oyunda doğru/yanlış/iptal/can bitişi/yeniden başlatma/doğal geçiş/oyun sonu kanıtı henüz yok. |
 | 7 — Gerçek telefon ve ses | ADB ve devicectl cihaz listeleri okundu; bağlı Android/iPhone yok. Chromium mobil dokunması fiziksel telefon değildir. | **Cihaz bekliyor.** Android/iPhone/WebView, oynarken yön değiştirme, ekran klavyesi, sesli yönerge ve gerçek performans kabulü yapılmadı. |
 | 8 — Kullanıcı görsel onayı | Hedefli galeriler ve kabul takibi hazırlanır. | **Sizin onayınız bekliyor.** Otomatik test, sizin beğeni/onayınız olarak kaydedilmez. |
+
+## 28 Eylül — kesintisiz deney girdileri ve genişletilmiş oynanış
+
+- F21/F23: ısıtma sırasında kontrol düğmesi her karede silinip yeniden oluşturulmuyor. Düğme doğrudan ocağın üzerinde. Dokunmayı iptal etme, tuş bırakma ve odak kaybı ısıtmayı durduruyor.
+- G40: sulama düğmesinde işaretçi yakalama, iptal, odak kaybı ve Enter/Space desteği var.
+- G27/H08/H30/Z23: ölçüm/tahmin sürgüsü hareket ederken yeniden oluşturulmuyor; sürekli dokunma ve klavye odağı korunuyor. Ölçek değişince sahne güncelleniyor.
+- Fen 3/4, hayat bilgisi 2, Türkçe 3/4 ve matematik 4'te ortak sürükleme işlevi, iptalden kalmış tıklama engelini sonraki yeni dokunuşta temizliyor. Yanlış/iptal taramasında yakalanan gerçek bir giriş sorunudur.
+- Yedi oyunda üç boyutta 21 kontrol: dokunma iptali, bırakma, odak kaybı veya kesintisiz sürgü hareketi. Bu bir fiziksel telefon testi değildir.
+- 126 fen/hayat oyununun 378 turu, cevap/can/tur durumu atanmadan gerçek tarayıcı fare/klavye girdileriyle oynandı. Bazı sürükleme oyunlarında desteklenen dokun-seç/dokun-bırak yolu kullanılır; bütün işlemler gerçek sürükleme olarak raporlanmaz.
+- 87 oyunun ilk turunda üç yanlış işlem ve yeniden deneme kontrol edildi; sürükleme kaynağı olanlarda Chromium dokunma iptali de sınandı. Bu kayıt diğer iki turun hata yollarını kapsamıyor.
+- Kullanıcı Android bağlayabileceğini belirtti. 28 Eylül bağlantı kontrollerinde cihaz görünmedi; Android/iPhone ve gerçek ses kabulü verilmedi.
+- Android `:app:assembleDebug --offline` başarılı; güncel test APK'si `app/build/outputs/apk/debug/app-debug.apk`. Fiziksel telefona kurulup oynanmadığı için cihaz kabulü açık.
+
+Yeni galeri: `artifacts/fen-hayat-katalog-oynanis/index.html`.
+Kontrol görüntüleri: `artifacts/fen-hayat-katalog-oynanis/kontroller.html`.
+Kanıtlar: aynı klasörde `results.json`, `rejection.json`; `artifacts/surekli-deney-kontrolleri/results.json`.
+Yeniden üretim: `tools/verify-science-catalog-native.cjs`, `tools/verify-science-rejection.cjs`, `tools/verify-continuous-controls.cjs`, `tools/render-science-catalog-review.cjs`.
+Doğal oynanış aracında `--retry` yalnız güncel kaynak parmak iziyle geçmiş kayıtları korur. Galeri üreticisi 126/87/21 başarılı kayıt ve doğal oynanışın güncel kaynak eşleşmesini zorunlu tutar.
 
 ## Bu turda yapılan değişiklikler
 

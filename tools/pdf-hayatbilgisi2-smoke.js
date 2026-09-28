@@ -10,7 +10,7 @@ const args = process.argv.slice(2);
 const start = Math.max(1, Number(args[0]) || 1);
 const end = Math.min(36, Number(args[1]) || 30);
 const ids = Array.from({ length: end - start + 1 }, (_, i) => `h${String(start + i).padStart(2, '0')}`);
-const pause = page => page.waitForTimeout(70);
+const pause = async page => { await page.waitForTimeout(70); if (await page.evaluate(() => !!state.gecis)) await page.waitForFunction(() => !state.gecis); };
 
 async function roundData(page) {
   return page.evaluate(() => JSON.parse(JSON.stringify(round(), (k, v) => typeof v === 'function' ? undefined : v)));
@@ -54,6 +54,7 @@ async function solveRound(page, r) {
   } else if (r.kind === 'sinifla') {
     for (let n = 0; n < r.kartlar.length; n++) {
       const i = await page.evaluate(() => state.ix || 0);
+      if (await page.locator('[data-sinif-kart]').count()) await click(page, '[data-sinif-kart]');
       await click(page, `[data-kutu="${r.kartlar[i].dogru}"]`);
     }
   } else if (r.kind === 'sira') {
@@ -111,7 +112,7 @@ async function solveRound(page, r) {
   }
 }
 
-(async () => {
+if (require.main === module) (async () => {
   const browser = await chromium.launch({ headless: true, executablePath: process.env.SMOKE_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--allow-file-access-from-files', '--disable-speech-api'] });
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const passed = [];
@@ -131,3 +132,4 @@ async function solveRound(page, r) {
   await browser.close();
   console.log(`\n${passed.length}/${ids.length} oyun, ${passed.length * 3}/${ids.length * 3} tur geçti.`);
 })().catch(error => { console.error(error); process.exitCode = 1; });
+module.exports = { solveRound };

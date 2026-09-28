@@ -242,7 +242,7 @@ function karistir(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=(i*
    böylece küçük ekranlarda seç-koy erişim desteği de çalışmayı sürdürür. */
 function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
  k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
- k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointerdown=e=>{if(k.disabled)return;delete k.dataset.dragged;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
  k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
  const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit&&e.type!=='pointercancel')birak(k,hit)}};
  k.onpointerup=bitir;k.onpointercancel=bitir})}
@@ -752,12 +752,12 @@ function tahminCiz(r){
   ilerleme(r.durumlar.length,i)+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  if(state.faz===0){
-  $('#task').innerHTML=`<div class="caption soru">${esc(d.soru)}</div>`+
+  if(!$('#tahminAlan'))$('#task').innerHTML=`<div class="caption soru">${esc(d.soru)}</div>`+
    `<input class="olcek" type="range" min="0" max="${d.enCokOlcek}" step="${d.adim||1}" value="${t}" id="tahminAlan" aria-label="Tahmin ölçeri">`+
    `<button class="choice" id="tahminOk">Tahminim bu</button>`+
    `<div class="hint">Tahminini yukarıdaki bilgi metnine dayandır.</div>`;
-  const al=$('#tahminAlan');
-  al.oninput=()=>{state.tahmin=+al.value;tahminCiz(r);const y=$('#tahminAlan');if(y)y.focus()};
+  const al=$('#tahminAlan');al.value=t;
+  al.oninput=()=>{state.tahmin=+al.value;tahminCiz(r)};
   $('#tahminOk').onclick=()=>{if(locked)return;state.tahmin=t;state.faz=1;
    state.not='Şimdi gerçek değerle karşılaştır.';tahminCiz(r)};
   return}

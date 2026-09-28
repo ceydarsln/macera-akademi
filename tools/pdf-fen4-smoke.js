@@ -10,7 +10,7 @@ const args = process.argv.slice(2);
 const start = Math.max(1, Number(args[0]) || 1);
 const end = Math.min(48, Number(args[1]) || 30);
 const ids = Array.from({ length: end - start + 1 }, (_, i) => `f${String(start + i).padStart(2, '0')}`);
-const pause = page => page.waitForTimeout(70);
+const pause = async page => { await page.waitForTimeout(70); if (await page.evaluate(() => !!state.gecis)) await page.waitForFunction(() => !state.gecis); };
 
 async function roundData(page) {
   return page.evaluate(() => JSON.parse(JSON.stringify(round(), (k, v) => typeof v === 'function' ? undefined : v)));
@@ -102,7 +102,7 @@ async function solveRound(page, r) {
     }
   } else if (r.kind === 'gozlem') {
     await page.locator('#oynatBtn').click();
-    await page.waitForFunction(() => !state.oynuyor && state.izleme > 0, null, { timeout: 4000 });
+    await page.waitForFunction(() => !state.oynuyor && state.izleme > 0, null, { timeout: 20000 });
     for (const q of r.sorular) {
       const answer = q.secenekler.findIndex(x => x.dogru);
       await click(page, `[data-sec="${answer}"]`);

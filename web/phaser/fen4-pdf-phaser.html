@@ -249,7 +249,7 @@ function sahneHtml(r,ek){return typeof r.sahne==='function'?r.sahne(state,ek):(r
    erişilebilir yedek olarak korunur. */
 function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
  k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
- k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointerdown=e=>{if(k.disabled)return;delete k.dataset.dragged;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
  k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
  const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit&&e.type!=='pointercancel')birak(k,hit)}};
  k.onpointerup=bitir;k.onpointercancel=bitir})}
@@ -1111,18 +1111,23 @@ function isitDurum(r){
   faz:state.isitiyor?'acik':'kapali',madde:m,kayit:state.kayit||[],yaniyor:state.bozuldu}}
 function isitCiz(r){
  const m=r.madde;
- $('#stage').innerHTML=SAHNE.ocak(isitDurum(r))+
-  `<div class="gozlem-satir">${esc(state.gozlem||m.gozlem0)}</div>`+
-  (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
- $('#task').innerHTML=
+ if(!$('#heatingScene'))$('#stage').innerHTML=
+  '<div id="heatingScene" style="position:relative;width:100%;max-width:650px"><div id="heatingArt"></div><button class="isit-dugme" id="isitBtn" aria-label="Ocağın düğmesini basılı tutarak ısıt" style="position:absolute;left:7%;bottom:0;width:31%;min-width:44px;min-height:44px;padding:5px;font-size:14px;touch-action:none">🔥 Isıt</button></div><div class="gozlem-satir" id="heatObservation"></div><div class="caption" id="heatNote"></div>';
+ $('#heatingArt').innerHTML=SAHNE.ocak(isitDurum(r));
+ $('#heatObservation').textContent=state.gozlem||m.gozlem0;
+ $('#heatNote').textContent=state.not||'';
+ if(!$('#durBtn'))$('#task').innerHTML=
   (r.gorev?`<div class="istek">${esc(r.gorev)}</div>`:'')+
-  `<button class="isit-dugme ${state.isitiyor?'basili':''}" id="isitBtn">${state.isitiyor?'Isıtılıyor…':'Ocağı yak (basılı tut)'}</button>`+
   `<button class="choice" id="durBtn">Ocağı kapat</button>`+
   `<div class="hint">${esc(r.ipucu||'Maddeye bak: ne zaman duracağına sen karar ver.')}</div>`;
  const b=$('#isitBtn');
- const bas=e=>{e.preventDefault();if(locked||state.bozuldu)return;state.isitiyor=true;isitAdim(r);isitCiz(r)};
- const birak=e=>{e.preventDefault();if(!state.isitiyor)return;state.isitiyor=false;isitCiz(r)};
- b.onpointerdown=bas;b.onpointerup=birak;b.onpointercancel=birak;b.onpointerleave=birak;
+ b.textContent=state.isitiyor?'🔥 Isınıyor':'🔥 Isıt';
+ b.classList.toggle('basili',!!state.isitiyor);
+ const bas=e=>{e.preventDefault();if(locked||state.bozuldu||state.isitiyor)return;if(e.pointerId!=null)b.setPointerCapture?.(e.pointerId);state.isitiyor=true;isitAdim(r);isitCiz(r)};
+ const birak=e=>{e?.preventDefault();if(!state.isitiyor)return;state.isitiyor=false;isitCiz(r)};
+ b.onpointerdown=bas;b.onpointerup=birak;b.onpointercancel=birak;b.onlostpointercapture=birak;b.onblur=birak;
+ b.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){if(!e.repeat)bas(e);else e.preventDefault()}};
+ b.onkeyup=e=>{if(e.key===' '||e.key==='Enter')birak(e)};
  $('#durBtn').onclick=()=>{if(locked)return;state.isitiyor=false;isitKarar(r)}}
 function isitAdim(r){
  if(state.tik)return;
@@ -1150,7 +1155,7 @@ function isitKarar(r){
  if(state.oran<1)return wrong(m.erkenHint);
  if(state.T>m.bozulmaC)return wrong(m.bozukHint);
  state.not=m.sonuc||'';isitCiz(r);good('Tam zamanında!')}
-function renderIsit(r){const m=r.madde;
+function renderIsit(r){document.body.classList.add('continuous-experiment');const m=r.madde;
  state.T=m.baslangicC;state.oran=0;state.kayit=[m.baslangicC];state.isitiyor=false;
  state.bozuldu=false;state.tik=false;state.gozlem=m.gozlem0;state.not='';isitCiz(r)}
 

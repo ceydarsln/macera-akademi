@@ -246,7 +246,7 @@ function sahneHtml(r){return typeof r.sahne==='function'?r.sahne(state):(r.sahne
    mobil yedek olarak korunur. */
 function baglaSurukle(kaynakSec,hedefSec,birak){$$(kaynakSec).forEach(k=>{let aktif=false,tasindi=false,sx=0,sy=0;
  k.addEventListener('click',e=>{if(k.dataset.dragged){e.preventDefault();e.stopImmediatePropagation();delete k.dataset.dragged}},true);
- k.onpointerdown=e=>{if(k.disabled)return;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
+ k.onpointerdown=e=>{if(k.disabled)return;delete k.dataset.dragged;aktif=true;tasindi=false;sx=e.clientX;sy=e.clientY;k.setPointerCapture?.(e.pointerId)};
  k.onpointermove=e=>{if(!aktif)return;tasindi=tasindi||Math.hypot(e.clientX-sx,e.clientY-sy)>7;if(!tasindi)return;k.classList.add('ui-dragging');k.style.transform=`translate(${e.clientX-sx}px,${e.clientY-sy}px) scale(1.07)`;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();t.classList.toggle('drop-hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)})};
  const bitir=e=>{if(!aktif)return;let hit=null;$$(hedefSec).forEach(t=>{const b=t.getBoundingClientRect();if(e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)hit=t;t.classList.remove('drop-hot')});aktif=false;k.releasePointerCapture?.(e.pointerId);k.classList.remove('ui-dragging');k.style.transform='';if(tasindi){k.dataset.dragged='1';if(hit&&e.type!=='pointercancel')birak(k,hit)}};
  k.onpointerup=bitir;k.onpointercancel=bitir})}
@@ -639,12 +639,12 @@ function mesafeCiz(r){
    `<span class="figur">${figurSvg(d.renk||'#5b9bd0')}<b>${esc(d.kisi)}</b></span></div>`+
   `<div class="sahne-not">Aradaki boşluk: ${adim.toFixed(1)} adım</div>`+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
- $('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
+ if(!$('#mesafeAlan'))$('#task').innerHTML=`<div class="caption soru">${esc(r.soru)}</div>`+
   `<input class="olcek" type="range" min="0" max="100" step="5" value="${v}" id="mesafeAlan" aria-label="Mesafe ölçeri">`+
   `<button class="choice" id="mesafeOk">Bu mesafe uygun</button>`+
   `<div class="hint">${esc(r.ipucu||'Ölçeri sürükleyerek aradaki boşluğu ayarla.')}</div>`;
- const al=$('#mesafeAlan');
- al.oninput=()=>{state.olcek=+al.value;mesafeCiz(r);const y=$('#mesafeAlan');if(y)y.focus()};
+ const al=$('#mesafeAlan');al.value=v;
+ al.oninput=()=>{state.olcek=+al.value;mesafeCiz(r)};
  $('#mesafeOk').onclick=()=>{
   if(locked||state.gecis)return;
   const val=state.olcek==null?50:state.olcek;
@@ -652,7 +652,7 @@ function mesafeCiz(r){
   state.ix=i+1;state.not=d.neden||'';state.olcek=50;
   if(state.ix>=r.durumlar.length)return good();
   feedback('Uygun mesafe');gecisBasla(()=>mesafeCiz(r),FAST?30:560)}}
-function renderMesafe(r){state.ix=0;state.olcek=50;state.not='';mesafeCiz(r)}
+function renderMesafe(r){document.body.classList.add('continuous-experiment');state.ix=0;state.olcek=50;state.not='';mesafeCiz(r)}
 
 /* ===== TUS: gerçek telefon. Aranacak numara başlıkta, alt başlıkta ve
    yönergede YAZILI DEĞİL; öğrenci hatırlayarak tuşlar (şartname h10). ===== */
@@ -881,12 +881,12 @@ function tahminCiz(r){
   ilerleme(r.durumlar.length,i)+
   (state.not?`<div class="caption">${esc(state.not)}</div>`:'');
  if(state.faz===0){
-  $('#task').innerHTML=`<div class="caption soru">${esc(d.soru)}</div>`+
+  if(!$('#tahminAlan'))$('#task').innerHTML=`<div class="caption soru">${esc(d.soru)}</div>`+
    `<input class="olcek" type="range" min="0" max="${d.enCokOlcek}" step="${d.adim||1}" value="${t}" id="tahminAlan" aria-label="Tahmin ölçeri">`+
    `<button class="choice" id="tahminOk">Tahminim bu</button>`+
    `<div class="hint">Tahmininde doğru ya da yanlış yok; sonra gerçeğiyle karşılaştıracaksın.</div>`;
-  const al=$('#tahminAlan');
-  al.oninput=()=>{state.tahmin=+al.value;tahminCiz(r);const y=$('#tahminAlan');if(y)y.focus()};
+  const al=$('#tahminAlan');al.value=t;
+  al.oninput=()=>{state.tahmin=+al.value;tahminCiz(r)};
   $('#tahminOk').onclick=()=>{if(locked)return;state.tahmin=t;state.faz=1;
    state.not='Şimdi gerçek değerle karşılaştır.';tahminCiz(r)};
   return}
