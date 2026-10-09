@@ -14,6 +14,7 @@ final class WebViewController: UIViewController {
 
     private let speechSynthesizer = AVSpeechSynthesizer()
     private let turkishVoice = WebViewController.bestTurkishVoice()
+    private var appSpeechVolume: Float = 1
     private let schemeHandler = BundleSchemeHandler()
     private var webView: WKWebView!
     private var splashView: UIView?
@@ -183,7 +184,7 @@ final class WebViewController: UIViewController {
 
     private func speak(_ text: String) {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
+        guard !trimmed.isEmpty, appSpeechVolume > 0 else { return }
 
         speechSynthesizer.stopSpeaking(at: .immediate)
 
@@ -202,10 +203,16 @@ final class WebViewController: UIViewController {
 
         let utterance = AVSpeechUtterance(string: trimmed)
         utterance.voice = turkishVoice
-        utterance.rate = 0.43
+        utterance.rate = AVSpeechUtteranceDefaultSpeechRate
         utterance.pitchMultiplier = 1
-        utterance.volume = 1
+        utterance.volume = appSpeechVolume
         speechSynthesizer.speak(utterance)
+    }
+
+    private func setSpeechVolume(_ level: Double) {
+        guard level.isFinite else { return }
+        appSpeechVolume = Float(min(1, max(0, level)))
+        if appSpeechVolume == 0 { stopSpeech() }
     }
 
     @objc private func stopSpeech() {
@@ -273,6 +280,7 @@ final class WebViewController: UIViewController {
       const bridge = Object.freeze({
         speak(text) { return voiceAvailable ? send('speak', text) : false; },
         stop() { return send('stop'); },
+        setVolume(level) { return send('setVolume', level); },
         status() { return voiceAvailable ? 'ok' : 'missing'; },
         voice() { return voiceAvailable ? voiceName : ''; }
       });
@@ -307,6 +315,10 @@ extension WebViewController: WKScriptMessageHandler {
             speak(body["text"] as? String ?? "")
         case "stop":
             stopSpeech()
+        case "setVolume":
+            if let level = Double(body["text"] as? String ?? "") {
+                setSpeechVolume(level)
+            }
         default:
             break
         }

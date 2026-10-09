@@ -49,4 +49,4 @@ Macera Akademi reklam içermez. Hesap ve ilişkili veriler uygulama içinden kal
 - Destek URL'si ve yayımlanmış gizlilik politikası URL'si
 - Telif hakkı yılı ve şirket unvanı
 - Yaş derecelendirme anketi
-- iPhone ekran görüntüleri (uygulama yalnız iPhone hedefliyor; iPad seti gerekmez)
+- iPhone ve iPad ekran görüntüleri (güncel proje her iki cihaz ailesini hedefliyor)

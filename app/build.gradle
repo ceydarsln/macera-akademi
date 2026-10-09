@@ -48,6 +48,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Keep test builds alongside the Play-installed app and its saved progress.
+            applicationIdSuffix '.test'
+        }
         release {
             signingConfig signingConfigs.release
             minifyEnabled false

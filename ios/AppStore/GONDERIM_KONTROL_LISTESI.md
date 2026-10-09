@@ -1,7 +1,7 @@
 # App Store gönderim kontrol listesi
 
 Denetim tarihi: 4 Eylül 2026 — Xcode 16.3, iOS 18.4 SDK
-Son güncelleme: iPad riski ve açılış ekranı giderildi.
+Son iPad ön kontrolü: 9 Ekim 2026 — iPad (A16) simülatörü, iOS 26.5.
 
 ## Hazır olanlar (doğrulandı)
 
@@ -9,7 +9,7 @@ Son güncelleme: iPad riski ve açılış ekranı giderildi.
 | --- | --- |
 | Release derlemesi (`-sdk iphoneos`) | `** BUILD SUCCEEDED **`, hata ve uyarı yok |
 | Uygulama paketi | 7,3 MB; `macera-akademi.html` + 46 oyun dosyası eksiksiz |
-| Sürüm | `CFBundleShortVersionString 2.8.1`, `CFBundleVersion 22` — Android ile eşit |
+| Sürüm | iOS `2.8.1 (22)`; Android `2.8.2 (23)` — gönderim öncesi sürüm uyumu yeniden kararlaştırılmalı |
 | Bundle ID | `com.maceraakademi.app` |
 | Minimum iOS | 15.0 |
 | Şifreleme beyanı | `ITSAppUsesNonExemptEncryption = false` (ek belge gerekmez) |
@@ -17,9 +17,10 @@ Son güncelleme: iPad riski ve açılış ekranı giderildi.
 | Açılış rengi | `UILaunchScreen` → `LaunchBackground` renk kümesi mevcut |
 | Gizlilik bildirimi | `PrivacyInfo.xcprivacy` pakete giriyor |
 | Mağaza metinleri | `metadata-tr.md`, `app-privacy-tr.md`, `privacy-policy.html` hazır |
-| Cihaz ailesi | `UIDeviceFamily = [1]` — yalnız iPhone |
+| Cihaz ailesi | Güncel Debug paketi `UIDeviceFamily = [1,2]` — iPhone ve iPad |
+| iPad Release simülatörü | 9 Ekim 2026 derlemesi başarılı; pakette `UIDeviceFamily = [1,2]` doğrulandı. Bu, imzalı App Store arşivi değildir. |
 | Açılış ekranı | Yerel karşılama katmanı: 1. saniyede görünür, içerik gelince kaybolur |
-| Ekran görüntüleri | `ekran-goruntuleri/` — iPhone 6.9" (1320×2868) |
+| Ekran görüntüleri | `ekran-goruntuleri/` — iPhone görüntüleri mevcut; iPad gönderim görüntüleri ayrıca hazırlanmalı |
 
 ## Engelleyiciler — yalnız hesap sahibi çözebilir
 
@@ -47,12 +48,13 @@ Son güncelleme: iPad riski ve açılış ekranı giderildi.
 
 ## Çözülen riskler
 
-**iPad (giderildi).** `TARGETED_DEVICE_FAMILY` `"1,2"` iken iPad'de içerik
-telefon genişliğinde bir sütunda kalıyor, iki yanda geniş koyu boşluk
-oluşuyordu; Apple bunu "iPad'e uyarlanmamış" diye geri çevirebiliyor. Hedef
-`"1"` yapıldı. Derlenmiş pakette `UIDeviceFamily = [1]` doğrulandı. Uygulama
-iPad'de uyumluluk kipinde çalışmayı sürdürür, iPad ekran görüntüsü
-zorunluluğu ve ret riski kalktı.
+**iPad (yeniden açık).** Güncel proje `TARGETED_DEVICE_FAMILY = "1,2"`
+hedefliyor; önceki iPhone-yalnız kontrolü artık geçerli değil. iPad (A16)
+simülatöründe derleme, açılış, misafir sınıf/karakter akışı, arkadaşlar ve
+yarışma arenası ekranları geçti. Bu, iki hesapla canlı maç testi değildir.
+600 px oyun sütunu korunurken koyu yan bantlar tabletlerde
+arka planla uyumlu hale getirildi. Tüm oyunların iPad görsel kabulü, sesin
+gerçek iPad'de dinlenmesi ve App Store iPad ekran görüntüleri hâlâ açık.
 
 **Açılıştaki boş ekran (giderildi).** 1,7 MB'lık tek HTML ayrıştırılırken
 uygulama boş mor bir ekran gösteriyordu. `WebViewController` artık uygulama
