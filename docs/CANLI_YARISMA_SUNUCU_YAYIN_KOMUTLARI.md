@@ -1,8 +1,8 @@
-# Emre için canlı yarışma yayın komutları
+# Sunucu yöneticisi için canlı yarışma yayın komutları
 
-9 Ekim 2026. Bu dosya **canlı sunucuda çalıştırılmadı**; sunucu yöneticisinin kendi ortamında doğrulayıp uygulaması içindir. Depodaki eski notta Emre'nin Docker/MySQL ağ ayarını sağlayacağı yazıyor; sunucuyu gerçekten Emre'nin kurduğu yalnız bu nottan doğrulanamaz.
+9 Ekim 2026. Bu dosya **canlı sunucuda çalıştırılmadı**; sunucu yöneticisinin kendi ortamında doğrulayıp uygulaması içindir. Sunucunun kurulum geçmişi bu dosyada varsayılmaz.
 
-GitHub dalı: `codex/cuce-adimi-pilot`. Canlı yarışma kodu `14673586c2d3f1a492416833566fd00ed0d6e018` commit'inde. `main` dalına göre bu dal **onlarca commit ve yüzlerce dosya** ileridedir; yalnız yarışma değil, önceki oyun değişiklikleri de taşınır. Güncel sayı ön kontrol komutuyla görülür. Ceyda bu kapsamı onaylamadan canlıya almayın. Depodaki diğer kirli yerel dosyalar bu dala gönderilmedi.
+GitHub dalı: `codex/cuce-adimi-pilot`. Canlı yarışma kodu `14673586c2d3f1a492416833566fd00ed0d6e018` commit'inde. `main` dalına göre bu dal **onlarca commit ve yüzlerce dosya** ileridedir; yalnız yarışma değil, önceki oyun değişiklikleri de taşınır. Güncel sayı ön kontrol komutuyla görülür. Proje sahibinin açık onayı olmadan bu kapsamı canlıya almayın. Depodaki diğer kirli yerel dosyalar bu dala gönderilmedi.
 
 ## 1. Sunucuda salt-okunur ön kontrol
 
@@ -19,7 +19,7 @@ git merge-base --is-ancestor 14673586c2d3f1a492416833566fd00ed0d6e018 origin/cod
 docker compose ps
 ```
 
-Son komut yalnız Docker kurulumunda kullanılır. `git status --short` beklenmedik değişiklik gösterirse önce Emre bunları korumalı; `reset --hard`, zorla `checkout` veya `push --force` kullanmayın. Sunucunun gerçekten bu depo/Docker Compose ile yayınlandığını ve doğru MySQL veritabanına bağlı olduğunu doğrulayın. Klasik PHP kurulumunda aşağıdaki Docker komutlarını çalıştırmayın.
+Son komut yalnız Docker kurulumunda kullanılır. `git status --short` beklenmedik değişiklik gösterirse önce sunucu yöneticisi bunları korumalı; `reset --hard`, zorla `checkout` veya `push --force` kullanmayın. Sunucunun gerçekten bu depo/Docker Compose ile yayınlandığını ve doğru MySQL veritabanına bağlı olduğunu doğrulayın. Klasik PHP kurulumunda aşağıdaki Docker komutlarını çalıştırmayın.
 
 ## 2. Canlı veritabanını yedekle
 
@@ -39,7 +39,7 @@ docker compose --profile bundled-db exec -T db sh -c 'MYSQL_PWD="$MYSQL_ROOT_PAS
 test -s "$MACERA_YEDEK_DOSYASI" || exit 1
 ```
 
-**Seçenek B — şirketin ayrı MySQL/MariaDB sunucusu kullanılıyorsa:** Emre mevcut güvenli istemci yapılandırmasının yolunu ve veritabanı adını kendisi belirler. `--defaults-extra-file` ilk MySQL seçeneği olmalıdır.
+**Seçenek B — şirketin ayrı MySQL/MariaDB sunucusu kullanılıyorsa:** Sunucu yöneticisi mevcut güvenli istemci yapılandırmasının yolunu ve veritabanı adını kendisi belirler. `--defaults-extra-file` ilk MySQL seçeneği olmalıdır.
 
 ```bash
 MACERA_MYSQL_AYAR_DOSYASI=/guvenli/mysql-client.cnf
@@ -49,7 +49,7 @@ mysqldump --defaults-extra-file="$MACERA_MYSQL_AYAR_DOSYASI" --single-transactio
 test -s "$MACERA_YEDEK_DOSYASI" || exit 1
 ```
 
-Yedek dosyasının **geri yüklenebilir** olduğunu Emre kendi yöntemiyle doğrulamadan devam etmeyin. Yedeği bu repoya veya ZIP'e koymayın.
+Yedek dosyasının **geri yüklenebilir** olduğunu sunucu yöneticisi kendi yöntemiyle doğrulamadan devam etmeyin. Yedeği bu repoya veya ZIP'e koymayın.
 
 ## 3. Şema geçişini bir kez uygula
 
@@ -78,7 +78,7 @@ Her iki durumda da son sayı **3** olmalı. `schema.sql` dosyasını mevcut dolu
 
 ## 4. Onaylanan Git dalını dağıt
 
-Önce önceki commit'i kayıt altına alın. Aşağıdaki örnek, **Docker uygulama container'ı** için ve yalnız Ceyda geniş dal kapsamını onayladıktan sonra geçerlidir. Sunucunun kendi atomik yayın prosedürü varsa Emre onu tercih etsin.
+Önce önceki commit'i kayıt altına alın. Aşağıdaki örnek, **Docker uygulama container'ı** için ve yalnız proje sahibi geniş dal kapsamını onayladıktan sonra geçerlidir. Sunucunun kendi atomik yayın prosedürü varsa onu tercih edin.
 
 ```bash
 MACERA_ONCEKI_COMMIT=$(git rev-parse HEAD)
@@ -88,7 +88,7 @@ git switch --detach origin/codex/cuce-adimi-pilot
 docker compose up -d --build app
 ```
 
-Bundled DB kullanan kurulumda mevcut profilin korunması gerekebilir: `docker compose --profile bundled-db up -d --build app`. **`docker compose down -v` çalıştırmayın; MySQL volume'unu silebilir.** Klasik PHP kurulumunda `git switch` doğrudan canlı document root üzerinde kısmi güncellemeye yol açabilir; Emre'nin mevcut sürümleme/atomik dağıtım yöntemini kullanın.
+Bundled DB kullanan kurulumda mevcut profilin korunması gerekebilir: `docker compose --profile bundled-db up -d --build app`. **`docker compose down -v` çalıştırmayın; MySQL volume'unu silebilir.** Klasik PHP kurulumunda `git switch` doğrudan canlı document root üzerinde kısmi güncellemeye yol açabilir; sunucunun mevcut sürümleme/atomik dağıtım yöntemini kullanın.
 
 ## 5. Canlı kabul ve geri alma
 
@@ -110,4 +110,4 @@ docker compose up -d --build app
 
 Eklenen DB tablolarını veya yedeği otomatik silmeyin. Veritabanını geri yükleme kararı, mevcut canlı veriyi kaybettirebileceğinden ayrı değerlendirilmelidir.
 
-Emre'nin Ceyda'ya bildirmesi gerekenler: dağıtılan commit, veritabanı yedeğinin **alındığı/doğrulandığı** bilgisi (dosyanın kendisi değil), üç tablonun sonucu, iki hesaplı maç sonucu ve varsa geri alma durumu. Şifre, `.env`, SQL yedeği veya kullanıcı verisi paylaşılmasın.
+Sunucu yöneticisinin proje sahibine bildirmesi gerekenler: dağıtılan commit, veritabanı yedeğinin **alındığı/doğrulandığı** bilgisi (dosyanın kendisi değil), üç tablonun sonucu, iki hesaplı maç sonucu ve varsa geri alma durumu. Şifre, `.env`, SQL yedeği veya kullanıcı verisi paylaşılmasın.

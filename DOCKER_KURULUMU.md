@@ -36,7 +36,7 @@ docker compose up -d --build app
 
 MySQL aynı fiziksel sunucudaysa container içinden `127.0.0.1` kullanmayın.
 Linux sunucuda Compose tarafından tanımlanan `host.docker.internal` adresi veya
-Emre'nin sağlayacağı Docker ağı/özel MySQL host adı kullanılmalıdır. MySQL'in
+sunucu yöneticisinin sağlayacağı Docker ağı/özel MySQL host adı kullanılmalıdır. MySQL'in
 Docker ağından gelen bağlantılara izin vermesi gerekir.
 
 ## Seçenek B — ayrı MySQL container
