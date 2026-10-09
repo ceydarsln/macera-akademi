@@ -10,7 +10,7 @@
 | 4 — Üst sınıflar | Önceki 364 oyunluk başlangıç taraması, 27 hedefli oyun/243 tur-ekran kaydı; bunların 27 kaydı yalnız başlangıçtır, hepsi tamamlanmış oynanış değildir. W32'nin gerçek yerleştirme ve dış çevre akışı bu tur ayrıca doğrulandı. | Bütün 364 oyunun ayrı ayrı animasyon, yazma, yanlış işlem, geri alma ve son durum kabulü tamamlanmadı. |
 | 5 — Fen/hayat deneyleri | 126 oyunda normal sürelerle üç doğal tur, oyun sonu ve yeniden başlatma; 87 oyunun ilk turunda yanlış işlem/yeniden deneme ve uygulanabilir dokunma iptali. Önceki sekiz hedefli deneyin ayrıntılı sahne kontrolleri korunur. | Doğru oynanış bütün 126 oyuna yayıldı. Bütün oyunların her turunda hata yolları, sahne sonuçlarının tek tek görsel değerlendirmesi ve fiziksel cihaz kabulü hâlâ açık. |
 | 6 — 635 oyunun tam oynanış kabulü | 635 oyunun 1905 tur teknik çözüm kaydı ve kaynak parmak izi; 5715 başlangıç yerleşimi kontrolü. Hedefli doğal tur oynanışları ayrı kaydedilir. | **Açık.** Teknik çözücüler bazı türlerde durum/eşleştirme yardımcıları kullanır; hepsi gerçek işaretçi/dokunma testi değildir. Her oyunda doğru/yanlış/iptal/can bitişi/yeniden başlatma/doğal geçiş/oyun sonu kanıtı henüz yok. |
-| 7 — Gerçek telefon ve ses | ADB ve devicectl cihaz listeleri okundu; bağlı Android/iPhone yok. Chromium mobil dokunması fiziksel telefon değildir. | **Cihaz bekliyor.** Android/iPhone/WebView, oynarken yön değiştirme, ekran klavyesi, sesli yönerge ve gerçek performans kabulü yapılmadı. |
+| 7 — Gerçek telefon ve ses | Samsung SM-A065F Android telefona üretim uygulamasından ayrı `com.maceraakademi.app.test` kuruldu. V02'nin üç turu gerçek sürüklemeyle tamamlandı; yanlış seçim ve hedef dışı bırakma kontrol edildi. V03'te ilk tur, V05'te ilk süsleme ve V04'te ilk ritmik adım sahnede doğrulandı. Android 15+ durum çubuğu taşması ve V02–V05 alt kontrol görünürlüğü düzeltildi. | **Kısmen açık.** Bu, tek telefon ve dört hedefli oyundur. Sesin gerçekten duyulması, yön değiştirme, klavye, diğer oyunlar ve iPhone kabulü henüz doğrulanmadı. |
 | 8 — Kullanıcı görsel onayı | Hedefli galeriler ve kabul takibi hazırlanır. | **Sizin onayınız bekliyor.** Otomatik test, sizin beğeni/onayınız olarak kaydedilmez. |
 
 ## 28 Eylül — kesintisiz deney girdileri ve genişletilmiş oynanış
@@ -22,8 +22,9 @@
 - Yedi oyunda üç boyutta 21 kontrol: dokunma iptali, bırakma, odak kaybı veya kesintisiz sürgü hareketi. Bu bir fiziksel telefon testi değildir.
 - 126 fen/hayat oyununun 378 turu, cevap/can/tur durumu atanmadan gerçek tarayıcı fare/klavye girdileriyle oynandı. Bazı sürükleme oyunlarında desteklenen dokun-seç/dokun-bırak yolu kullanılır; bütün işlemler gerçek sürükleme olarak raporlanmaz.
 - 87 oyunun ilk turunda üç yanlış işlem ve yeniden deneme kontrol edildi; sürükleme kaynağı olanlarda Chromium dokunma iptali de sınandı. Bu kayıt diğer iki turun hata yollarını kapsamıyor.
-- Kullanıcı Android bağlayabileceğini belirtti. 28 Eylül bağlantı kontrollerinde cihaz görünmedi; Android/iPhone ve gerçek ses kabulü verilmedi.
-- Android `:app:assembleDebug --offline` başarılı; güncel test APK'si `app/build/outputs/apk/debug/app-debug.apk`. Fiziksel telefona kurulup oynanmadığı için cihaz kabulü açık.
+- Günün ilk bağlantı kontrolünde telefon görünmedi; sonra Samsung SM-A065F USB hata ayıklama ile bağlandı. `com.maceraakademi.app.test` üretim uygulamasının üzerine yazılmadan telefona kuruldu.
+- V02 Kargo Treni'nin üç turu fiziksel telefonda gerçek vagona sürüklemeyle oynandı (34, 47, 62). Yanlış seçim can azalttı; hedef dışına sürükleme ilerletmedi. V03'te nilüfere yerleştirilen sayı tek kez gösterildi; V04'te 2 seçimi uzaylıyı sonraki tramboline taşıdı; V05'te mum pastadaki gerçek boşluğa yerleşti. V03/V04/V05'in üçer tur tamamı sınanmadı.
+- Android `:app:assembleDebug --offline` başarılı; güncel test APK'si `app/build/outputs/apk/debug/app-debug.apk`. Gerçek telefon sınaması başlamıştır, fakat kapsamlı cihaz/ses kabulü açık kalır.
 
 Yeni galeri: `artifacts/fen-hayat-katalog-oynanis/index.html`.
 Kontrol görüntüleri: `artifacts/fen-hayat-katalog-oynanis/kontroller.html`.

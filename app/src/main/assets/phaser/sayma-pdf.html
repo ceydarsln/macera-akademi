@@ -334,6 +334,22 @@ button{font:inherit;color:inherit;cursor:pointer}.app{height:100%;display:grid;g
 .ses-yok{width:min(330px,96%);margin:6px auto 0;padding:7px 10px;border-radius:12px;
  background:#fff4d6;border:3px solid #e0a92b;color:#7a5210;font-weight:900;font-size:13px;text-align:center;line-height:1.25}
 .ses-yok b{color:#4a3000;font-size:15px}
+/* Yalnız iki hedef oyunda sahne telefon alanını kullanır. */
+body[data-game="s0"] .scene,body[data-game="s10"] .scene{padding:5px;gap:6px}
+body[data-game="s0"] .stage,body[data-game="s10"] .stage{padding:5px;align-items:stretch}
+body[data-game="s0"] .stage>.stack,body[data-game="s10"] .stage>.stack{width:100%;height:100%;min-height:0;justify-content:center;gap:4px}
+body[data-game="s0"] .sahne-katman,body[data-game="s10"] .sahne-katman{width:100%;flex:1;min-height:0;display:flex;justify-content:center}
+body[data-game="s0"] .iz-svg,body[data-game="s10"] .iz-svg{width:100%;height:100%;min-height:0;max-height:none;display:block}
+body[data-game="s0"] .stage .caption,body[data-game="s10"] .stage .caption{font-size:clamp(14px,3.7vw,18px);line-height:1.2}
+.empty-basket{display:flex;align-items:center;gap:9px;background:#fff8e9;border:3px solid #b7844f;border-radius:17px;padding:4px 15px;font-weight:950}.empty-basket .icon{font-size:40px;line-height:1}
+.wizard-interaction{position:relative;width:100%;height:100%;min-height:0;display:flex;align-items:center;justify-content:center}
+.wizard-interaction>.iz-svg{width:100%;height:100%}
+.wizard-bundle{position:absolute;z-index:5;left:50%;top:7%;transform:translateX(-50%);width:min(230px,66%);min-height:72px;border:4px solid #e3ac36;border-radius:20px;background:#fff8da;box-shadow:0 6px 0 #a76a27;color:#583b16;font-weight:950;font-size:15px;touch-action:none;user-select:none;cursor:grab}
+.wizard-bundle:active{cursor:grabbing}.wizard-bundle .stars{display:block;font-size:20px;letter-spacing:2px;line-height:1.2;color:#d28b11}
+.wizard-bundle.flying{transition:transform .55s ease-in,opacity .55s ease-in;opacity:.25;pointer-events:none}
+#wizardPotSvg.hot{filter:drop-shadow(0 0 12px #ffe17f)}
+.wizard-instruction{position:absolute;z-index:3;left:6%;right:6%;bottom:2%;padding:7px 10px;border-radius:12px;background:#fff7df;color:#593b22;text-align:center;font-size:clamp(14px,3.8vw,18px);font-weight:950}
+@media(orientation:landscape){body[data-game="s0"] .stage,body[data-game="s10"] .stage{min-height:0}body[data-game="s0"] .stage>.stack,body[data-game="s10"] .stage>.stack{flex-direction:row;align-items:center}body[data-game="s0"] .sahne-katman,body[data-game="s10"] .sahne-katman{height:100%}body[data-game="s0"] .stage .caption,body[data-game="s10"] .stage .caption{max-width:200px}body[data-game="s10"] .wizard-interaction{max-width:460px}}
 </style>
 </head>
 <body><div id="app" class="app"></div>
@@ -352,6 +368,7 @@ if(new URLSearchParams(location.search).has('test')){
 
 'use strict';
 const GAME_ID=new URLSearchParams(location.hash.slice(1)).get('oyun')||'s0';
+document.body.dataset.game=GAME_ID;
 const FAST=new URLSearchParams(location.search).has('test');
 const WAIT=FAST?25:760;
 let game,roundIndex=0,lives=3,score=0,state={},locked=false,drag=null,clockDrag=null;
@@ -477,7 +494,35 @@ const SAHNE={
  orchard:{gok:'#dff0d0',dekor:'<rect x="0" y="170" width="330" height="30" fill="#8db55f"/><rect x="56" y="118" width="14" height="54" fill="#7a4a24"/><circle cx="63" cy="104" r="34" fill="#4c9a4a"/><rect x="256" y="118" width="14" height="54" fill="#7a4a24"/><circle cx="263" cy="104" r="34" fill="#4c9a4a"/><path d="M138 176 L192 176 L184 148 L146 148Z" fill="#c9a86a"/>',karakter:'🧺',kx:274,ky:152,odul:'🍏'},
  iceberg:{gok:'#d7f0fb',dekor:'<path d="M0 200 L0 158 Q165 140 330 158 L330 200Z" fill="#4aa8d8"/><path d="M60 158 L110 96 L160 158Z" fill="#eaf8ff"/><path d="M150 158 L210 74 L272 158Z" fill="#f6fdff"/>',karakter:'🐧',kx:256,ky:72,odul:'🧊'}
 };
-function sahneSvg(ad,ic,odulUcur){const s=SAHNE[ad]||SAHNE.clouds;
+function sahneSvg(ad,ic,odulUcur){
+ if(ad==='cave'&&GAME_ID==='s0')return `<svg class="iz-svg" viewBox="0 0 330 500" aria-label="Büyük ayı mağarası">
+  <rect width="330" height="500" rx="18" fill="#182b3d"/>
+  <path d="M0 500V194Q24 32 165 26Q306 32 330 194V500Z" fill="#604738"/>
+  <path d="M25 500V208Q34 84 165 76Q296 84 305 208V500Z" fill="#332b2b"/>
+  <ellipse cx="165" cy="262" rx="111" ry="175" fill="#101c29"/>
+  <path d="M0 442Q165 404 330 442V500H0Z" fill="#765943"/>
+  <g aria-label="Uyuyan ayı"><ellipse cx="82" cy="425" rx="59" ry="34" fill="#bd854c"/>
+   <circle cx="55" cy="399" r="29" fill="#c99459"/><circle cx="36" cy="377" r="10" fill="#c99459"/><circle cx="71" cy="377" r="10" fill="#c99459"/>
+   <ellipse cx="53" cy="409" rx="13" ry="9" fill="#eac294"/><circle cx="53" cy="404" r="4" fill="#48302a"/>
+   <path d="M37 396q7 5 13 0m10 0q7 5 13 0" fill="none" stroke="#48302a" stroke-width="3" stroke-linecap="round"/></g>
+  ${ic}</svg>`;
+ if(ad==='wizard'&&GAME_ID==='s10'){
+  const digits=state.basamak||[null,null],shown=state.yazildi||[false,false];
+  const slot=(i,x)=>`<rect x="${x}" y="288" width="68" height="92" rx="13" fill="#fff6d7" stroke="${i===state.slot?'#f7ce55':'#b79c75'}" stroke-width="5"/><text x="${x+34}" y="356" text-anchor="middle" font-size="58" font-weight="900" fill="#293d55">${shown[i]?digits[i]:'?'}</text>`;
+  return `<svg class="iz-svg" viewBox="0 0 330 500" aria-label="Büyücünün büyük kazanı">
+   <rect width="330" height="500" rx="18" fill="#271e3d"/>
+   <circle cx="273" cy="71" r="4" fill="#ffe5a3"/><circle cx="205" cy="39" r="3" fill="#ffe5a3"/>
+   <g aria-label="Büyücü"><path d="M31 155L78 55l47 100Z" fill="#745ab8" stroke="#bca9ed" stroke-width="5"/>
+    <circle cx="78" cy="154" r="34" fill="#f4c69b"/><path d="M45 162q33 66 66 0" fill="#e9ecf1"/>
+    <circle cx="64" cy="146" r="3" fill="#293d55"/><circle cx="91" cy="146" r="3" fill="#293d55"/>
+    <path d="M38 220q40-39 80 0v96H38Z" fill="#745ab8"/></g>
+   <g id="wizardPotSvg"><ellipse cx="178" cy="204" rx="128" ry="31" fill="#8bacc0" stroke="#d0ebec" stroke-width="8"/>
+    <path d="M52 203Q49 405 110 438Q177 472 246 438Q308 405 304 203Z" fill="#496b83" stroke="#8db0c1" stroke-width="8"/>
+    <ellipse cx="178" cy="207" rx="112" ry="18" fill="${state.kazanDolu?'#f2bf58':'#233a4c'}"/>
+    ${state.kazanDolu?'<text x="178" y="245" text-anchor="middle" font-size="23" fill="#ffe9a3">✦ ✦ ✦ ✦ ✦</text><text x="178" y="270" text-anchor="middle" font-size="23" fill="#ffe9a3">✦ ✦ ✦ ✦ ✦</text>':''}
+    ${state.faz===2?'':slot(0,101)+slot(1,188)}</g>
+   ${ic}</svg>`}
+ const s=SAHNE[ad]||SAHNE.clouds;
  return `<svg class="iz-svg" viewBox="0 0 330 230" width="330" height="230">
   <rect x="0" y="0" width="330" height="230" rx="18" fill="${s.gok}"/>
   <g transform="translate(0,26)">${s.dekor}</g>
@@ -496,7 +541,9 @@ function izKur(r){const rk=r.rakam,yollar=RAKAM[rk];
  state.kilavuz=r.kilavuz;state.faz=0;state.sayilan=0}
 function izUzunluk(d){const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);return p.getTotalLength()}
 function izPointer(sv,e){const point=sv.createSVGPoint();point.x=e.clientX;point.y=e.clientY;return point.matrixTransform(sv.querySelector('.trace-ink-layer').getScreenCTM().inverse())}
-function izIc(r){let ic='<g class="trace-ink-layer" transform="translate(100,23) scale(1.3)">';
+function izIc(r){const buyuk=(r.sahne==='cave'&&GAME_ID==='s0')||(r.sahne==='wizard'&&GAME_ID==='s10');
+ const x=r.sahne==='wizard'&&r.rakam==='1'?69:45;
+ let ic=`<g class="trace-ink-layer" transform="${buyuk?`translate(${x},${r.sahne==='wizard'?140:55}) scale(2.4)`:'translate(100,23) scale(1.3)'}">`;
  state.yollar.forEach((y,i)=>{const bitti=i<state.hamle;
   const gorunur=state.kilavuz===0||(state.kilavuz===1&&i>=state.hamle);
   if(gorunur&&!bitti)ic+=`<path class="kilavuz" d="${y.d}" stroke="rgba(255,255,255,${state.kilavuz===0?0.85:0.32})" stroke-dasharray="${state.kilavuz===0?'0':'10 12'}"/>`;
@@ -545,8 +592,9 @@ function izBitti(r){state.basli=false;
  if(r.sayimHedef==null){state.not='Rakam tamam!';izCiz(r);return good()}
  state.faz=1;state.sayilan=0;feedback('Rakam tamam!');speak(r.rakamAdi+' yazıldı.');gecisBasla(()=>izSay(r),FAST?40:800)}
 function izSay(r){const n=r.sayimHedef;
- $('#stage').innerHTML=`<div class="stack">${sahneSvg(r.sahne,`<g transform="translate(115,44)"><path class="murekkep" d="${state.yollar[state.yollar.length-1].d}" stroke="${r.murekkep||'#ffd63a'}"/></g>`)}
-  <div class="nesne-alan">${n?Array.from({length:n},(_,i)=>`<span class="nesne${i<state.sayilan?' sayildi':''}" data-nesne="${i}">${r.nesne}</span>`).join(''):`<span class="caption">${esc(r.bosMetin||'Sepet tamamen boş.')}</span>`}</div>
+ const izKonum=r.sahne==='cave'&&GAME_ID==='s0'?'translate(45,55) scale(2.4)':'translate(115,44)';
+ $('#stage').innerHTML=`<div class="stack"><div class="sahne-katman">${sahneSvg(r.sahne,`<g transform="${izKonum}"><path class="murekkep" d="${state.yollar[state.yollar.length-1].d}" stroke="${r.murekkep||'#ffd63a'}"/></g>`)}</div>
+  <div class="nesne-alan">${n?Array.from({length:n},(_,i)=>`<span class="nesne${i<state.sayilan?' sayildi':''}" data-nesne="${i}">${r.nesne}</span>`).join(''):`<div class="empty-basket" aria-label="Boş sepet"><span class="icon">🧺</span><span>${esc(r.bosMetin||'Sepet tamamen boş.')}</span></div>`}</div>
   <div class="sayac-buyuk">${state.sayilan}</div>
   <div class="caption">${esc(state.not||(n?'Nesneleri tek tek sayarak dokun.':'Hiç nesne yok. Bu miktara hangi rakam uyar?'))}</div></div>`;
  $$('[data-nesne]').forEach(el=>el.onclick=()=>{const i=+el.dataset.nesne;
@@ -570,25 +618,48 @@ function izNoktaEkran(){const sv=$('#izKatman svg');if(!sv)return null;
 
 /* ===================== YAZ: iki basamaklı sayı (n1–n9) ===================== */
 function yazKur(r){state.hedef=r.sayilar[Math.floor(Math.random()*r.sayilar.length)];
- state.basamak=[null,null];state.slot=0;state.faz=r.nesneOnce?0:1;
+ state.basamak=[null,null];state.yazildi=[false,false];state.kazanDolu=false;
+ state.slot=0;state.faz=r.sahne==='wizard'&&GAME_ID==='s10'?0:(r.nesneOnce?0:1);
  state.kilavuz=r.kilavuz;state.sayilan=0;state.yollar=null;state.not=''}
 function yazSlotlar(){const d=String(state.hedef);
  return `<div class="row">${[0,1].map(i=>`<div class="yuva"><div class="kutu${state.basamak[i]!=null?' dolu':''}${state.slot===i&&state.basamak[i]==null?' aktif':''}">${state.basamak[i]!=null?state.basamak[i]:''}</div><small>${i?'birler':'onlar'}</small></div>`).join('')}</div>`}
+function yazKazan(r){
+ $('#stage').innerHTML=`<div class="wizard-interaction">${sahneSvg(r.sahne,'')}
+  <button class="wizard-bundle" id="wizardBundle" aria-label="On yıldızı kazana sürükle"><span class="stars">✦ ✦ ✦ ✦ ✦<br>✦ ✦ ✦ ✦ ✦</span>10 yıldız</button>
+  <div class="wizard-instruction">${esc(state.not||'Yıldızları kazanın içine sürükle veya dokun.')}</div></div>`;
+ $('#task').innerHTML='<div class="caption">10 yıldız = 1 onluk demet. Kazan dolunca üstüne 10 yaz.</div>';
+ const bundle=$('#wizardBundle'),pot=$('#wizardPotSvg');let start=null;
+ const yerleştir=()=>{if(state.kazanDolu)return;state.kazanDolu=true;
+  const a=bundle.getBoundingClientRect(),b=pot.getBoundingClientRect();
+  bundle.classList.add('flying');bundle.style.transform=`translate(-50%,0) translate(${(b.left+b.width/2)-(a.left+a.width/2)}px,${(b.top+b.height/2)-(a.top+a.height/2)}px) scale(.45)`;
+  state.not='10 yıldız kazanda! Önce 1’i, sonra 0’ı seç ve kazanın üstüne çiz.';
+  feedback('Kazan doldu!');speak('On yıldız kazanda. Önce bir, sonra sıfır yaz.');
+  gecisBasla(()=>{state.faz=1;yazCiz(r)},FAST?40:650)};
+ bundle.onpointerdown=e=>{e.preventDefault();start={x:e.clientX,y:e.clientY};bundle.setPointerCapture?.(e.pointerId)};
+ bundle.onpointermove=e=>{if(!start||state.kazanDolu)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;
+  bundle.style.transform=`translate(-50%,0) translate(${dx}px,${dy}px)`;
+  const b=pot.getBoundingClientRect();pot.classList.toggle('hot',e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)};
+ bundle.onpointerup=e=>{if(!start||state.kazanDolu)return;const moved=Math.hypot(e.clientX-start.x,e.clientY-start.y),b=pot.getBoundingClientRect();start=null;
+  pot.classList.remove('hot');if(moved<12||e.clientX>=b.left&&e.clientX<=b.right&&e.clientY>=b.top&&e.clientY<=b.bottom)return yerleştir();
+  bundle.style.transform='translateX(-50%)';state.not='Yıldızları kazanın içine bırak.';$('.wizard-instruction').textContent=state.not};
+ bundle.onpointercancel=()=>{start=null;bundle.style.transform='translateX(-50%)';pot.classList.remove('hot')};
+ bundle.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();yerleştir()}}}
 function yazCiz(r){
- if(state.faz===0)return yazNesne(r);
+ if(state.faz===0)return r.sahne==='wizard'&&GAME_ID==='s10'?yazKazan(r):yazNesne(r);
  if(state.faz===2)return yazIz(r);
- $('#stage').innerHTML=`<div class="stack">${sahneSvg(r.sahne,'')}
-  ${yazSlotlar()}
-  <div class="caption">${esc(state.not||(sesYok()?'Ses açılamadı: sayı aşağıda gösteriliyor. Rakamlarını seç.':'Sayıyı dinle, sonra rakamlarını seç. Sayı ekranda yazılı değil.'))}</div></div>`;
+ const kazan=r.sahne==='wizard'&&GAME_ID==='s10';
+ $('#stage').innerHTML=`<div class="stack"><div class="sahne-katman">${sahneSvg(r.sahne,'')}</div>
+  ${kazan?'':yazSlotlar()}
+  <div class="caption">${esc(state.not||(kazan?`${state.slot===0?'Önce onlar basamağını':'Şimdi birler basamağını'} seç; rakamı kazanın üstüne çiz.`:(sesYok()?'Ses açılamadı: sayı aşağıda gösteriliyor. Rakamlarını seç.':'Sayıyı dinle, sonra rakamlarını seç. Sayı ekranda yazılı değil.')))}</div></div>`;
  $('#task').innerHTML=`<div class="actions"><button class="action" id="yazDinle">🔊 Sayıyı dinle</button></div>
   <div class="tus-rakam">${[0,1,2,3,4,5,6,7,8,9].map(n=>`<button data-rakam="${n}">${n}</button>`).join('')}</div>`;
  $('#yazDinle').onclick=()=>speak(sayiAdiTR(state.hedef),true);
  $$('[data-rakam]').forEach(b=>b.onclick=()=>yazRakam(r,+b.dataset.rakam))}
 function yazRakam(r,n){const d=String(state.hedef),i=state.slot;
  if(state.basamak[i]!=null)return;
- if(String(n)!==d[i]){state.not=i===0
-   ?'Onlar basamağı bu değil. On onluk demet kaç eder? Sayıyı yeniden dinle.'
-   :'Birler basamağı bu değil. Demetten artan tek nesneleri say.';
+ if(String(n)!==d[i]){state.not=r.sahne==='wizard'&&GAME_ID==='s10'
+   ?(i===0?'Bir onluk için 1 rakamını seç.':'Hiç birlik kalmadı; 0 rakamını seç.')
+   :(i===0?'Onlar basamağı bu değil. On onluk demet kaç eder? Sayıyı yeniden dinle.':'Birler basamağı bu değil. Demetten artan tek nesneleri say.');
   yazCiz(r);return wrong(state.not)}
  state.basamak[i]=n;state.not='Şimdi bu rakamı yaz.';state.faz=2;
  state.rakamYaz=String(n);izKurYaz(r);yazIz(r)}
@@ -597,7 +668,7 @@ function izKurYaz(r){const yollar=RAKAM[state.rakamYaz];
  state.yollar=yollar.map(d=>({d,nokta:yolNoktalari(d,d.length>90?9:6),uz:izUzunluk(d)}))}
 function yazIz(r){
  $('#stage').innerHTML=`<div class="stack"><div class="sahne-katman" id="izKatman">${sahneSvg(r.sahne,izIc({...r,rakam:state.rakamYaz,murekkep:'#5cf0c8'}))}</div>
-  ${yazSlotlar()}
+  ${r.sahne==='wizard'&&GAME_ID==='s10'?'':yazSlotlar()}
   <div class="caption">${esc(state.not||'')} · ${esc(['Kılavuz açık','Kılavuz soluk','Kılavuz yok'][state.kilavuz])}</div></div>`;
  const sv=$('#izKatman svg');if(!sv)return;
  const cev=e=>{const p=izPointer(sv,e);return [p.x,p.y]};
@@ -615,6 +686,7 @@ function yazIz(r){
  $('#task').innerHTML=`<div class="caption">${esc(state.rakamYaz)} rakamını sarı toptan başlayarak yaz.</div><button class="action" id="izSes">🔊 Yönergeyi dinle</button>`;
  $('#izSes').onclick=()=>speak(YON[state.rakamYaz],true)}
 function yazIzBitti(r){state.basli=false;
+ if(r.sahne==='wizard'&&GAME_ID==='s10')state.yazildi[state.slot]=true;
  if(state.slot===0){state.slot=1;state.faz=1;state.not='Onlar basamağı tamam. Şimdi birler basamağı.';
   feedback('Onlar yazıldı');gecisBasla(()=>yazCiz(r),FAST?40:700);return}
  state.faz=3;feedback('Sayı yazıldı');speak(sayiAdiTR(state.hedef));gecisBasla(()=>yazDogrula(r),FAST?40:800)}
@@ -639,6 +711,10 @@ function yazNesne(r){const on=Math.floor(state.hedef/10),bir=state.hedef%10;
   if(+el.dataset.birlik!==state.sayilan-on)return wrong('Tek nesneleri sırayla say.');say()});
  $('#task').innerHTML='<div class="caption">Nesnelere sırayla dokunarak say.</div>'}
 function yazDogrula(r){const on=Math.floor(state.hedef/10),bir=state.hedef%10;
+ if(r.sahne==='wizard'&&GAME_ID==='s10'){
+  $('#stage').innerHTML=`<div class="stack"><div class="sahne-katman">${sahneSvg(r.sahne,'')}</div><div class="caption">1 onluk + 0 birlik = 10 yıldız. Kazanın üstünde 10 yazıyor!</div></div>`;
+  $('#task').innerHTML='<button class="action" id="yazOk">Sonraki tura geç</button>';
+  $('#yazOk').onclick=()=>good();return}
  $('#stage').innerHTML=`<div class="stack">${sahneSvg(r.sahne,'')}
   ${yazSlotlar()}
   <div class="nesne-alan">${'<span class="demet sayildi">'+'<i></i>'.repeat(10)+'</span>'.repeat(on)}${'<span class="birlik sayildi"></span>'.repeat(bir)}</div>
@@ -653,7 +729,7 @@ function sayiAdiTR(n){const b=['sıfır','bir','iki','üç','dört','beş','alt�
 function renderRound(){const r=round();if(!r)return;
  const fn={ciz:renderIzOyun,yaz:renderYazOyun}[r.kind];(fn||renderIzOyun)(r)}
 function renderYazOyun(r){yazKur(r);yazCiz(r);
- requestAnimationFrame(()=>speak(r.gorev+' '+sayiAdiTR(state.hedef)))}
+ requestAnimationFrame(()=>speak(r.sahne==='wizard'&&GAME_ID==='s10'?'On yıldızı kazana sürükle. Sonra kazanın üstüne on yaz.':r.gorev+' '+sayiAdiTR(state.hedef)))}
 
 const GAMES={};
 /* ===== 1. SINIF SAYMA — s0–s10 (rakam yazma) ve n1–n9 (iki basamaklı sayı) =====
@@ -762,13 +838,13 @@ cizOyun({id:'s9',title:'Uçan Balon',sahne:'clouds',rakam:'9',adi:'dokuz',miktar
  finish:'9 rakamının dairesini altıgen yapmadan çizdin ve 9 nesneyle eşleştirdin.'});
 
 yazOyun({id:'s10',title:'Büyücü ve Kazanı',sahne:'wizard',tema:'room',
- prompt:['Sayıyı dinle, iki basamağı ayrı ayrı yaz.','Kılavuz soluk: basamak sırasını koru.','Önce demeti say, sonra kılavuzsuz yaz.'],
- gorev:'Büyücünün kazanına yazılacak sayıyı dinle.',
+ prompt:['10 yıldızı kazana sürükle, sonra 10 yaz.','Yıldızları kazana koy; 1 ve 0’ı sırayla yaz.','Yıldızları kazana koy, 10’u kılavuzsuz yaz.'],
+ gorev:'Önce on yıldızı kazana koy, sonra 10 sayısını üzerine yaz.',
  sayilar:[[10],[10],[10]],
- sonuc:['1 asa, 0 kazanın ağzı: on yazıldı ve kazandan sihir çıktı.',
-  'Soluk kılavuzla da onlar-birler sırasını korudun.',
-  '1 onluk demet ve 0 birlik: on eder. Yazdığın sayı miktarla eşleşti.'],
- finish:'10 sayısını onlar ve birler basamağıyla yazdın; bir onluk demetin on ettiğini gördün.'});
+ sonuc:['10 yıldızı kazana koyup 10 sayısını üstüne yazdın.',
+  'Bir onluk için 1, hiç birlik kalmadığı için 0 yazdın.',
+  '10 yıldız = 1 onluk + 0 birlik. Sayıyı kılavuzsuz yazdın.'],
+ finish:'On yıldızı kazana koydun; 10 sayısını üstüne yazıp bir onluk olduğunu gördün.'});
 
 /* ---- İki Basamaklı Sayılar (10–20) ---- */
 yazOyun({id:'n1',title:'Uzay Şifresi',sahne:'airlock',

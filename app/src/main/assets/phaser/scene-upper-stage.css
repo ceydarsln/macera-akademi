@@ -12,8 +12,11 @@ html.upper-stage,body.upper-stage{touch-action:pan-y}
 .upper-y28 .bridge-world .bridge-spans{height:auto;grid-template-rows:none;grid-auto-rows:minmax(64px,auto)}
 .upper-stage .choice svg{max-width:100%;height:auto}
 .upper-stage .choice>span{max-width:100%}
-.upper-v02 .stage,.upper-v07 .stage,.upper-v10 .stage,.upper-v18 .stage,.upper-v26 .stage,.upper-v28 .stage{flex:0 0 auto;min-height:240px;align-content:flex-start;justify-content:flex-start}
-.upper-v02 .task,.upper-v07 .task,.upper-v10 .task,.upper-v18 .task,.upper-v26 .task,.upper-v28 .task{margin-top:8px}
+.upper-v02 .stage,.upper-v03 .stage,.upper-v04 .stage,.upper-v05 .stage,.upper-v07 .stage,.upper-v10 .stage,.upper-v18 .stage,.upper-v26 .stage,.upper-v28 .stage{flex:0 0 auto;min-height:240px;align-content:flex-start;justify-content:flex-start}
+.upper-v02 .task,.upper-v03 .task,.upper-v04 .task,.upper-v05 .task,.upper-v07 .task,.upper-v10 .task,.upper-v18 .task,.upper-v26 .task,.upper-v28 .task{margin-top:8px}
+/* Loaded cargo must leave the supply tray, otherwise invisible cards keep
+   empty slots and push the last draggable packet below the phone viewport. */
+.upper-v02 .piece.done{display:none}
 .upper-v07 .senior-polaroid .animal,.upper-v07 .senior-camera-roll .animal{font-size:46px;display:flex;flex-direction:column;align-items:center;min-width:45px;min-height:76px}
 .upper-v07 .senior-polaroid .jersey,.upper-v07 .senior-camera-roll .jersey{position:static;transform:none;font-size:14px;background:#fff;padding:3px 6px}
 .upper-y22 .stage [style*="nowrap"]{white-space:normal!important;flex-wrap:wrap!important;gap:5px}
