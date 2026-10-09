@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/bootstrap.php';
+require __DIR__ . '/live.php';
 
 try {
     api_cors();
@@ -127,6 +128,10 @@ try {
     $user = current_user($data);
     $userId = (int) $user['id'];
 
+    if (strpos($action, 'live_') === 0) {
+        live_handle($action, $data, $user, $pdo);
+    }
+
     if ($action === 'me') {
         respond(['ok' => true, 'data' => ['user' => profile_from_row($user)]]);
     }
@@ -146,32 +151,54 @@ try {
             throw new ApiProblem('Öğretmen kodu çok uzun.', 422, 'validation_error');
         }
         $class = $teacherCode !== '' ? class_for_code($teacherCode) : null;
-
-        $stmt = $pdo->prepare(
-            'UPDATE users SET grade = ?, level = ?, xp = ?, coins = ?, coins_earned = ?, '
-            . 'look_json = ?, owned_json = ?, badges_json = ?, duel_stats_json = ?, settings_json = ?, '
-            . 'completed_json = ?, teacher_code = ?, teacher_name = ?, teacher_id = ?, updated_at = UTC_TIMESTAMP() '
-            . 'WHERE id = ?'
-        );
-        $stmt->execute([
-            int_between($profile['grade'] ?? $user['grade'], 1, 4, (int) $user['grade']),
-            int_between($profile['level'] ?? $user['level'], 1, 100000, (int) $user['level']),
-            int_between($profile['xp'] ?? $user['xp'], 0, 2000000000, (int) $user['xp']),
-            int_between($profile['coins'] ?? $user['coins'], 0, 2000000000, (int) $user['coins']),
-            int_between($profile['coinsEarned'] ?? $user['coins_earned'], 0, 2000000000, (int) $user['coins_earned']),
-            json_db(json_value($profile['look'] ?? null, json_column($user['look_json'], []))),
-            json_db(json_value($profile['owned'] ?? null, json_column($user['owned_json'], []))),
-            json_db(json_value($profile['badges'] ?? null, json_column($user['badges_json'], []))),
-            json_db(json_value($profile['duelStats'] ?? null, json_column($user['duel_stats_json'], []))),
-            json_db(json_value($profile['settings'] ?? null, json_column($user['settings_json'], []))),
-            json_db(json_value($profile['completed'] ?? null, json_column($user['completed_json'], []))),
-            $class ? $teacherCode : null,
-            $class ? (string) $class['teacher_name'] : '',
-            $class && $class['teacher_id'] !== null ? (int) $class['teacher_id'] : null,
-            $userId,
-        ]);
+        $pdo->beginTransaction();
+        try {
+            // A queued, pre-match save must not overwrite an awarded live result.
+            $lockedStmt = $pdo->prepare('SELECT * FROM users WHERE id = ? FOR UPDATE');
+            $lockedStmt->execute([$userId]);
+            $stored = $lockedStmt->fetch();
+            if (!$stored) { throw new ApiProblem('Oturumdaki kullanıcı bulunamadı.', 401, 'session_expired'); }
+            $storedStats = json_column($stored['duel_stats_json'], []);
+            $incomingStats = json_value($profile['duelStats'] ?? null, $storedStats);
+            $incomingEarned = int_between($profile['coinsEarned'] ?? $stored['coins_earned'],
+                0, 2000000000, (int) $stored['coins_earned']);
+            $staleEconomy = $incomingEarned < (int) $stored['coins_earned'];
+            foreach (['wins', 'losses', 'draws'] as $resultKey) {
+                if ((int) ($incomingStats[$resultKey] ?? 0) < (int) ($storedStats[$resultKey] ?? 0)) {
+                    $staleEconomy = true;
+                }
+            }
+            $stmt = $pdo->prepare(
+                'UPDATE users SET grade = ?, level = ?, xp = ?, coins = ?, coins_earned = ?, '
+                . 'look_json = ?, owned_json = ?, badges_json = ?, duel_stats_json = ?, settings_json = ?, '
+                . 'completed_json = ?, teacher_code = ?, teacher_name = ?, teacher_id = ?, updated_at = UTC_TIMESTAMP() '
+                . 'WHERE id = ?'
+            );
+            $stmt->execute([
+                int_between($profile['grade'] ?? $stored['grade'], 1, 4, (int) $stored['grade']),
+                $staleEconomy ? (int) $stored['level'] : int_between($profile['level'] ?? $stored['level'], 1, 100000, (int) $stored['level']),
+                $staleEconomy ? (int) $stored['xp'] : int_between($profile['xp'] ?? $stored['xp'], 0, 2000000000, (int) $stored['xp']),
+                $staleEconomy ? (int) $stored['coins'] : int_between($profile['coins'] ?? $stored['coins'], 0, 2000000000, (int) $stored['coins']),
+                $staleEconomy ? (int) $stored['coins_earned'] : $incomingEarned,
+                json_db(json_value($profile['look'] ?? null, json_column($stored['look_json'], []))),
+                json_db(json_value($profile['owned'] ?? null, json_column($stored['owned_json'], []))),
+                json_db(json_value($profile['badges'] ?? null, json_column($stored['badges_json'], []))),
+                json_db($staleEconomy ? $storedStats : $incomingStats),
+                json_db(json_value($profile['settings'] ?? null, json_column($stored['settings_json'], []))),
+                json_db(json_value($profile['completed'] ?? null, json_column($stored['completed_json'], []))),
+                $class ? $teacherCode : null,
+                $class ? (string) $class['teacher_name'] : '',
+                $class && $class['teacher_id'] !== null ? (int) $class['teacher_id'] : null,
+                $userId,
+            ]);
+            $pdo->commit();
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) { $pdo->rollBack(); }
+            throw $e;
+        }
         respond(['ok' => true, 'data' => [
             'saved' => true,
+            'economyPreserved' => $staleEconomy,
             'classFound' => $teacherCode === '' || $class !== null,
             'class' => $class ? [
                 'code' => (string) $class['code'],

@@ -43,17 +43,27 @@
   }
   function mergeProgress(local,remote){
     if(!local)return remote;if(!remote)return local;
+    const duelCount=function(s){s=s||{};return (s.wins||0)+(s.losses||0)+(s.draws||0);};
+    const serverNewerEconomy=(remote.coinsEarned||0)>(local.coinsEarned||0)||
+      duelCount(remote.duelStats)>duelCount(local.duelStats);
+    const mergedStats=Object.assign({},remote.duelStats||{},local.duelStats||{});
+    ['wins','losses','draws','best','botWins'].forEach(function(k){
+      mergedStats[k]=Math.max((local.duelStats||{})[k]||0,(remote.duelStats||{})[k]||0);
+    });
+    if(duelCount(remote.duelStats)>duelCount(local.duelStats))
+      mergedStats.streak=(remote.duelStats||{}).streak||0;
     return {
       uid:remote.uid||local.uid||'',username:remote.username||local.username,
       grade:remote.grade||local.grade,email:remote.email||local.email,
-      level:Math.max(local.level||1,remote.level||1),xp:Math.max(local.xp||0,remote.xp||0),
-      coins:Math.max(local.coins||0,remote.coins||0),
+      level:serverNewerEconomy?remote.level:Math.max(local.level||1,remote.level||1),
+      xp:serverNewerEconomy?remote.xp:Math.max(local.xp||0,remote.xp||0),
+      coins:serverNewerEconomy?remote.coins:Math.max(local.coins||0,remote.coins||0),
       completed:Object.assign({},remote.completed||{},local.completed||{}),
       settings:local.settings||remote.settings,
       owned:Array.from(new Set([].concat(remote.owned||[],local.owned||[]))),
       badges:Array.from(new Set([].concat(remote.badges||[],local.badges||[]))),
       coinsEarned:Math.max(local.coinsEarned||0,remote.coinsEarned||0),
-      duelStats:Object.assign({},remote.duelStats||{},local.duelStats||{}),
+      duelStats:serverNewerEconomy?remote.duelStats:mergedStats,
       look:Object.assign({},LOOK_DEFAULT,remote.look||{},local.look||{}),
       teacherCode:remote.teacherCode||local.teacherCode||'',
       teacherUid:remote.teacherUid||local.teacherUid||'',
@@ -422,6 +432,12 @@
       answers:p.answers.map(function(a){return {ok:a.ok,ms:a.ms,score:a.score};})
     }),12000,'Sonuç kaydedilemedi');
   }
+  async function liveApiCall(action,payload){
+    const allowed=['live_invite','live_list','live_accept','live_decline','live_ready',
+      'live_state','live_answer','live_leave','live_cancel','live_claim'];
+    if(allowed.indexOf(action)<0) throw new Error('Geçersiz canlı yarışma işlemi.');
+    return withTimeout(apiCall(action,payload||{}),12000,'Canlı yarışma yanıt vermedi');
+  }
   async function duelsLoad(){
     const d=duelState();
     if(!duelCanOnline()){d.loaded=true;return;}
@@ -623,6 +639,7 @@
   window.writeUsernameIndex=writeUsernameIndex;
   window.duelCreate=duelCreate;
   window.duelRespond=duelRespond;
+  window.liveApiCall=liveApiCall;
   window.duelsLoad=duelsLoad;
   window.duelClaim=duelClaim;
   window.resolveTeacherUid=resolveTeacherUid;

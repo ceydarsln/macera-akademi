@@ -103,6 +103,11 @@ web/database/migrations/2026-09-09-teacher-panel.sql
 Yeni/boş kurulumlarda `schema.sql` tabloyu zaten oluşturduğu için ayrıca geçiş
 çalıştırılmaz.
 
+Canlı arkadaş yarışması için mevcut veritabanında önce yedek alın, sonra
+`web/database/migrations/2026-09-30-live-matches.sql` dosyasını bir kez
+uygulayın. Kodun container'a alınması tek başına mevcut MySQL volume'unu
+güncellemez. İki hesaplı gerçek maç kabulü ayrıca gereklidir.
+
 ## Önemli sınırlar
 
 - Öğrenci ve öğretmen paneli tek MySQL veritabanını kullanır.

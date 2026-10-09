@@ -52,6 +52,10 @@
     background:linear-gradient(180deg,#ffd7ea 0%, #f2cdf1 16%, #d3c0f5 34%, #b9cdf5 55%, #a2d6f0 75%, #86dcec 100%);
     padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px));
   }
+  /* Tabletlerde oyun sütununu koru; iki yandaki koyu boş bantları kaldır. */
+  @media (min-width:601px) and (pointer:coarse){
+    body{background:linear-gradient(180deg,#ffd7ea 0%, #f2cdf1 16%, #d3c0f5 34%, #b9cdf5 55%, #a2d6f0 75%, #86dcec 100%);}
+  }
   .sky-decor{position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0;}
   .cloud-shape{position:absolute; width:110px; height:34px; background:#fff; border-radius:50px; opacity:.5;}
   .cloud-shape:before,.cloud-shape:after{content:''; position:absolute; background:#fff; border-radius:50%;}
@@ -87,6 +91,7 @@
     transition:transform .08s ease, box-shadow .08s ease;
   }
   .btn:active{transform:translateY(3px) scale(.98); box-shadow:0 2px 0 rgba(0,0,0,.13);}
+  .btn-primary{background:linear-gradient(180deg,#6859b3,#48388b); color:#fff;}
   .btn-teal{background:linear-gradient(180deg,#9ff0ea,#33b6c2);}
   .btn-pink{background:linear-gradient(180deg,#ffb4d0,#ff6f9d);}
   .btn-outline{background:rgba(255,255,255,.7); color:var(--ink); box-shadow:none; border:2px solid rgba(120,90,160,.25);}
@@ -1649,6 +1654,28 @@
   .dl-fb.ok{ background:#e6faee; border:2px solid #7ce0a3; color:#12653a; }
   .dl-fb.bad{ background:#fff0f0; border:2px solid #ffb0b0; color:#8a2020; }
   .dl-fb-tip{ font-family:var(--font-body); font-size:16px; font-weight:800; margin-top:3px; opacity:.85; }
+  .live-card{ margin:12px 16px; padding:16px; border:2px solid #c8d8f1; border-radius:20px;
+    background:linear-gradient(160deg,#f2f8ff,#fff); box-shadow:0 4px 14px rgba(44,82,134,.08); }
+  .live-card h2{ font-family:var(--font-head); color:var(--ink); font-size:21px; margin:0 0 8px; }
+  .live-card p{ color:var(--ink-soft); font-weight:700; line-height:1.5; margin:6px 0 12px; }
+  .live-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .live-actions .btn{ flex:1 1 130px; margin:0; }
+  .live-status{ display:inline-block; padding:5px 10px; border-radius:20px; background:#e8f2ff;
+    color:#26578d; font-size:12px; font-weight:900; }
+  .live-countdown{ text-align:center; font-family:var(--font-head); color:#2768a8;
+    font-size:64px; line-height:1.1; margin:20px 0; animation:bounceIn .45s ease; }
+  .live-scoreboard{ display:flex; gap:10px; margin:12px 16px; }
+  .live-scoreboard>div{ flex:1; min-width:0; padding:12px; background:#fff; border:2px solid #dce7f7;
+    border-radius:16px; text-align:center; font-weight:800; color:var(--ink-soft); }
+  .live-scoreboard b{ display:block; font-family:var(--font-head); font-size:25px; color:var(--ink); }
+  .live-warning{ margin:10px 16px; padding:10px 12px; border-radius:14px; background:#fff4dd;
+    border:2px solid #ffd79a; color:#714c11; font-weight:800; line-height:1.45; }
+  .live-recap{ display:flex; justify-content:center; gap:6px; margin:12px 16px; flex-wrap:wrap; }
+  .live-recap span{ width:30px; height:30px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; background:#eef2f8; color:var(--ink); font-weight:900; }
+  .live-recap span.ok{ background:#c9f5d9; color:#12653a; }
+  .live-recap span.bad{ background:#ffd6d6; color:#8a2020; }
+  @media(max-width:420px){ .live-scoreboard{ gap:6px; } .live-card{ padding:13px; } }
 
   /* ---- sonuç ekranı ---- */
   .dl-res{ margin:16px; border-radius:24px; padding:22px 16px; text-align:center; }
@@ -22783,6 +22810,9 @@ function duelState(){
                                 error:'', play:null, result:null, setup:{catId:null}};
   if(!state.duel.stats) state.duel.stats = duelStatsDefault();
   if(!state.duel.setup) state.duel.setup = {catId:null};
+  if(!state.duel.live) state.duel.live = {list:[], loaded:false, loading:false, error:'',
+    match:null, activeId:null, polling:false, busy:false, answerPending:false,
+    picked:null, feedback:null, reward:null, clockOffset:0, notified:{}};
   return state.duel;
 }
 function duelWins(){ return Number(duelState().stats.wins) || 0; }
@@ -23079,6 +23109,366 @@ function openArena(){
   duelState();
   go('arena');
   if(duelCanOnline() && !state.duel.loaded) duelsLoad();
+  if(duelCanOnline()) liveLoad();
+  if(duelCanOnline() && !state.friends.loaded) friendsLoad();
+}
+const LIVE_REMEMBER_KEY = 'macera-live-match-v1';
+let liveMatchPollTimer = null;
+let liveMatchTickTimer = null;
+let liveBackgroundTimer = null;
+function liveState(){ return duelState().live; }
+function liveEsc(value){
+  return String(value == null ? '' : value).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function liveRemember(id){
+  try{ localStorage.setItem(LIVE_REMEMBER_KEY, String(myUid()) + ':' + String(id)); }catch(e){}
+}
+function liveForget(){ try{ localStorage.removeItem(LIVE_REMEMBER_KEY); }catch(e){} }
+function liveRemembered(){
+  try{
+    const parts = String(localStorage.getItem(LIVE_REMEMBER_KEY)||'').split(':');
+    return parts[0] === String(myUid()) && /^\d+$/.test(parts[1]||'') ? parts[1] : null;
+  }catch(e){ return null; }
+}
+function liveIsActive(status){ return ['invited','lobby','countdown','playing'].indexOf(status)>=0; }
+function liveServerNow(){ return Date.now() + (liveState().clockOffset||0); }
+function liveSecondsLeft(iso){ return Math.max(0,Math.ceil((Date.parse(iso||'')-liveServerNow())/1000)||0); }
+function liveApplyMatch(match){
+  if(!match) return;
+  const d = liveState();
+  const old = d.match;
+  const oldKey = old ? JSON.stringify([old.id,old.status,old.questionIndex,old.myScore,
+    old.opponentScore,old.myReady,old.opponentReady,old.myAnswer,old.rewardClaimed]) : '';
+  if(d.activeId && String(d.activeId)!==String(match.id)) return;
+  d.activeId = String(match.id);
+  d.match = match;
+  d.clockOffset = Date.parse(match.serverNow) - Date.now();
+  d.error = '';
+  if(old && old.questionIndex !== match.questionIndex){ d.picked=null; d.feedback=null; d.awaitingNext=false; }
+  if(!liveIsActive(match.status) && (match.status!=='finished'||match.rewardClaimed)) liveForget();
+  const nextKey = JSON.stringify([match.id,match.status,match.questionIndex,match.myScore,
+    match.opponentScore,match.myReady,match.opponentReady,match.myAnswer,match.rewardClaimed]);
+  if(state.screen==='liveMatch' && oldKey!==nextKey) renderAll();
+  if(old && old.status!==match.status && ['playing','finished','cancelled','expired','declined'].includes(match.status)){
+    document.querySelector('.app-shell').scrollTop=0;
+  }
+}
+async function liveLoad(silent){
+  if(!duelCanOnline()) return;
+  const d=liveState();
+  if(d.loading) return;
+  d.loading=true;
+  try{
+    const res=await liveApiCall('live_list',{});
+    d.list=Array.isArray(res.matches)?res.matches:[];
+    d.loaded=true;
+    d.error='';
+    d.list.filter(m=>m.status==='invited'&&m.to===String(myUid())).forEach(m=>{
+      if(!d.notified[m.id]){
+        d.notified[m.id]=true;
+        if(state.screen!=='arena'&&state.screen!=='liveMatch') toast('⚡ '+m.fromName+' seni canlı yarışa davet etti!');
+      }
+    });
+    if(state.screen==='arena') renderAll();
+  }catch(err){
+    if(!silent){ d.error=firebaseHata(err); if(state.screen==='arena') renderAll(); }
+  }finally{ d.loading=false; }
+}
+function liveStartMatchPolling(){
+  if(liveMatchPollTimer) clearInterval(liveMatchPollTimer);
+  if(liveMatchTickTimer) clearInterval(liveMatchTickTimer);
+  liveMatchPollTimer=setInterval(()=>{ if(state.screen==='liveMatch') livePoll(); },1000);
+  liveMatchTickTimer=setInterval(liveTick,250);
+}
+function liveStopMatchPolling(){
+  if(liveMatchPollTimer){ clearInterval(liveMatchPollTimer); liveMatchPollTimer=null; }
+  if(liveMatchTickTimer){ clearInterval(liveMatchTickTimer); liveMatchTickTimer=null; }
+}
+async function livePoll(){
+  const d=liveState();
+  if(!duelCanOnline()||!d.activeId||d.polling||state.screen!=='liveMatch'||
+     document.visibilityState==='hidden') return;
+  d.polling=true;
+  try{
+    const res=await liveApiCall('live_state',{matchId:d.activeId});
+    liveApplyMatch(res.match);
+    if(!liveIsActive(res.match.status)) liveLoad(true);
+  }catch(err){
+    d.error='Bağlantı kesildi. Yeniden bağlanmaya çalışıyoruz…';
+    if(state.screen==='liveMatch') renderAll();
+  }finally{ d.polling=false; }
+}
+function liveTick(){
+  if(state.screen!=='liveMatch') return;
+  const d=liveState(),m=d.match;
+  if(!m) return;
+  let left=0;
+  if(m.status==='invited') left=liveSecondsLeft(m.inviteExpiresAt);
+  else if(m.status==='lobby') left=liveSecondsLeft(m.lobbyExpiresAt);
+  else if(m.status==='countdown') left=liveSecondsLeft(m.startsAt);
+  else if(m.status==='playing'&&m.startsAt){
+    const elapsed=Math.max(0,liveServerNow()-Date.parse(m.startsAt));
+    const expected=Math.floor(elapsed/12000);
+    left=Math.max(0,Math.ceil((12000-(elapsed%12000))/1000));
+    if(expected!==m.questionIndex&&!d.awaitingNext){
+      d.awaitingNext=true; renderAll(); livePoll();
+    }
+  }
+  const timer=document.getElementById('liveTimer'); if(timer) timer.textContent=String(left);
+  const wait=document.getElementById('liveWaitNum'); if(wait) wait.textContent=String(left);
+  const fill=document.getElementById('liveTimeFill');
+  if(fill) fill.style.width=Math.max(0,Math.min(100,left/DUEL_SEC*100))+'%';
+}
+async function liveOpen(id){
+  if(!duelCanOnline()) return;
+  const d=liveState();
+  d.activeId=String(id); d.match=null; d.error=''; d.feedback=null; d.picked=null; d.awaitingNext=false;
+  liveRemember(id);
+  go('liveMatch');
+  liveStartMatchPolling();
+  await livePoll();
+}
+async function liveInvite(uid,name,catId){
+  if(!duelCanOnline()) return toast('Canlı yarış için hesabınla giriş yapmalısın');
+  const d=liveState(); if(d.busy) return;
+  d.busy=true;
+  try{
+    const res=await liveApiCall('live_invite',{oppUid:uid,catId:catId});
+    toast(name+' kişisine canlı davet gönderildi ⚡');
+    await liveOpen(res.match.id);
+  }catch(err){ toast('Davet gönderilemedi: '+firebaseHata(err)); }
+  finally{ d.busy=false; }
+}
+async function liveAction(action){
+  const d=liveState(); if(!d.activeId||d.busy) return;
+  d.busy=true; renderAll();
+  try{
+    const res=await liveApiCall(action,{matchId:d.activeId});
+    liveApplyMatch(res.match);
+    if(!liveIsActive(res.match.status)) liveLoad(true);
+  }catch(err){ d.error=firebaseHata(err); renderAll(); await livePoll(); }
+  finally{ d.busy=false; if(state.screen==='liveMatch') renderAll(); }
+}
+function liveAskLeave(){ liveState().confirmLeave=true; renderAll(); }
+function liveCancelLeave(){ liveState().confirmLeave=false; renderAll(); }
+async function liveLeave(){
+  const d=liveState();
+  if(!d.match||!liveIsActive(d.match.status)){ liveForget(); openArena(); return; }
+  if(d.busy) return;
+  d.busy=true;
+  try{
+    await liveApiCall('live_leave',{matchId:d.activeId});
+    d.confirmLeave=false; liveForget(); openArena();
+  }catch(err){ d.error='Maçtan çıkış kaydedilemedi: '+firebaseHata(err); renderAll(); }
+  finally{ d.busy=false; }
+}
+async function liveAnswer(optionIndex){
+  const d=liveState(),m=d.match;
+  if(!m||m.status!=='playing'||!m.question||m.myAnswer||d.answerPending||d.awaitingNext) return;
+  d.answerPending=true; d.picked=optionIndex; renderAll();
+  try{
+    const res=await liveApiCall('live_answer',{
+      matchId:d.activeId,questionIndex:m.questionIndex,optionIndex:optionIndex});
+    d.feedback=res.answer; liveApplyMatch(res.match);
+    if(state.screen==='liveMatch') renderAll();
+  }catch(err){
+    d.error=firebaseHata(err); await livePoll();
+  }finally{ d.answerPending=false; if(state.screen==='liveMatch') renderAll(); }
+}
+async function liveClaim(){
+  const d=liveState(),m=d.match;
+  if(!m||m.status!=='finished'||m.rewardClaimed||d.busy) return;
+  d.busy=true; renderAll();
+  try{
+    const res=await liveApiCall('live_claim',{matchId:d.activeId});
+    const profile=res.profile||{};
+    if(profile.level!=null) state.hero.level=profile.level;
+    if(profile.xp!=null) state.hero.xp=profile.xp;
+    if(profile.coins!=null) state.hero.coins=profile.coins;
+    if(profile.coinsEarned!=null) state.hero.coinsEarned=profile.coinsEarned;
+    if(profile.duelStats) Object.assign(duelState().stats,profile.duelStats);
+    const cached=cacheRead();
+    if(cached&&cached.username===state.currentUser){
+      cacheWrite(Object.assign({},cached,{level:state.hero.level,xp:state.hero.xp,
+        coins:state.hero.coins,coinsEarned:state.hero.coinsEarned,duelStats:duelState().stats}));
+    }
+    d.reward=res.reward; d.rewardMatchId=d.activeId;
+    liveApplyMatch(res.match);
+    liveForget();
+    if(res.claimed) toast('Canlı yarışma ödülü hesabına eklendi 🎁');
+    else toast('Bu ödül zaten alınmış');
+    try{ checkBadges(); }catch(e){}
+    try{ pushClassProgress(); }catch(e){}
+  }catch(err){ d.error='Ödül alınamadı: '+firebaseHata(err); renderAll(); }
+  finally{ d.busy=false; if(state.screen==='liveMatch') renderAll(); }
+}
+async function liveBoot(){
+  if(!liveBackgroundTimer){
+    liveBackgroundTimer=setInterval(()=>{
+      if(duelCanOnline()&&state.screen!=='liveMatch'&&document.visibilityState!=='hidden') liveLoad(true);
+    },8000);
+  }
+  const id=liveRemembered();
+  if(!id||!duelCanOnline()) return;
+  try{
+    const res=await liveApiCall('live_state',{matchId:id});
+    if(liveIsActive(res.match.status)||(res.match.status==='finished'&&!res.match.rewardClaimed)){
+      await liveOpen(id);
+    }else liveForget();
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&state.screen==='liveMatch') livePoll();
+});
+function renderLiveArenaSection(){
+  const d=liveState(), me=String(myUid()||'');
+  const active=d.list.filter(m=>liveIsActive(m.status));
+  const recent=d.list.filter(m=>m.status==='finished').slice(0,3);
+  let html='<div class="section-title" style="margin:16px 16px 6px;padding:0;">⚡ Canlı Yarış</div>';
+  if(!duelCanOnline()) return html+'<div class="live-card"><p>Arkadaşınla aynı anda yarışmak için hesabınla giriş yap.</p></div>';
+  if(!d.loaded) html+='<div class="live-card"><p>Canlı davetler yükleniyor…</p></div>';
+  if(d.loaded&&!active.length) html+='<div class="live-card"><p>Şu anda açık canlı maçın yok. Aşağıdan kategori ve arkadaş seçerek davet gönderebilirsin.</p></div>';
+  active.forEach(m=>{
+    const opponent=m.from===me?m.toName:m.fromName;
+    const incoming=m.status==='invited'&&m.to===me;
+    const title=incoming?'⚡ '+opponent+' seni davet etti':
+      (m.status==='invited'?'⏳ '+opponent+' daveti bekliyor':'🎮 '+opponent+' ile maç');
+    html+='<div class="dl-row '+(incoming?'dl-row-hot':'')+'" style="margin:0 16px 8px;">'+
+      '<div class="dl-row-ic">⚡</div><div style="flex:1;min-width:0">'+
+      '<div class="gtitle">'+liveEsc(title)+'</div><div class="gsub">'+liveEsc(m.catLabel)+
+      ' · '+liveEsc(m.status==='lobby'?'Hazırlık':m.status==='playing'?'Oynanıyor':
+        m.status==='countdown'?'Başlıyor':'Davet')+'</div></div>'+
+      '<button class="btn btn-primary dl-mini" onclick="liveOpen(\''+m.id+'\')">'+
+      (incoming?'Kabul et':'Aç')+'</button></div>';
+  });
+  if(recent.length){
+    html+='<div class="section-title" style="margin:14px 16px 6px;padding:0;">📋 Son Canlı Maçlar</div>';
+    recent.forEach(m=>{
+      const opponent=m.from===me?m.toName:m.fromName;
+      const mine=m.from===me?m.fromScore:m.toScore;
+      const theirs=m.from===me?m.toScore:m.fromScore;
+      html+='<div class="dl-row" style="margin:0 16px 8px;"><div class="dl-row-ic">'+
+        (m.winner==='draw'?'🤝':m.winner===me?'🏆':'💪')+'</div><div style="flex:1;min-width:0">'+
+        '<div class="gtitle">'+liveEsc(opponent)+'</div><div class="gsub">'+mine+' – '+theirs+ ' puan · '+
+        liveEsc(m.catLabel)+'</div></div><button class="btn btn-outline dl-mini" onclick="liveOpen(\''+
+        m.id+'\')">'+(m.rewardClaimed?'Sonuç':'Ödül')+'</button></div>';
+    });
+  }
+  if(d.error) html+='<div class="live-warning">'+liveEsc(d.error)+'</div>';
+  return html;
+}
+function renderLiveMatch(){
+  const d=liveState(),m=d.match;
+  const back=m&&liveIsActive(m.status)?'liveAskLeave()':'openArena()';
+  let html='<div class="dl-top"><button class="back-btn" onclick="'+back+'">←</button>'+
+    '<div class="dl-top-mid"><div class="dl-top-t">⚡ CANLI YARIŞ</div>'+
+    '<div class="dl-top-s">'+liveEsc(m?m.catLabel:'Bağlanılıyor…')+'</div></div></div>';
+  if(!m){
+    html+='<div class="live-card"><h2>Maça bağlanılıyor…</h2><p>'+
+      liveEsc(d.error||'Sunucudan güncel durumu alıyoruz.')+'</p>'+
+      '<button class="btn btn-outline" onclick="livePoll()">Tekrar dene</button></div>';
+    return '<div class="dl-screen">'+html+'</div>';
+  }
+  const me=String(myUid()), opponent=m.from===me?m.toName:m.fromName;
+  if(d.error) html+='<div class="live-warning">'+liveEsc(d.error)+'</div>';
+  if(d.confirmLeave){
+    html+='<div class="live-warning"><b>Maçtan ayrılmak istediğine emin misin?</b><br>'+
+      (m.status==='playing'?'Maç başladı; rakibin hükmen kazanır.':'Maç iptal edilir.')+
+      '<div class="live-actions"><button class="btn btn-outline" onclick="liveCancelLeave()">Vazgeç</button>'+
+      '<button class="btn btn-pink" onclick="liveLeave()">Evet, ayrıl</button></div></div>';
+  }
+  if(m.status==='invited'){
+    html+='<div class="live-card"><span class="live-status">Davet · <span id="liveWaitNum">'+
+      liveSecondsLeft(m.inviteExpiresAt)+'</span> sn</span><h2>'+liveEsc(opponent)+'</h2>'+
+      '<p>'+liveEsc(m.catLabel)+' · '+m.grade+'. sınıf · 8 soru</p>';
+    if(m.to===me){
+      html+='<p>Arkadaşın seninle aynı anda yarışmak istiyor. Hazır olduğunda kabul et.</p>'+
+        '<div class="live-actions"><button class="btn btn-primary" onclick="liveAction(\'live_accept\')" '+
+        (d.busy?'disabled':'')+'>Daveti Kabul Et</button><button class="btn btn-outline" '+
+        'onclick="liveAction(\'live_decline\')">Reddet</button></div>';
+    }else html+='<p>Arkadaşının kabul etmesini bekliyoruz. Maç henüz başlamadı.</p>'+
+      '<div class="live-actions"><button class="btn btn-outline" onclick="liveAction(\'live_cancel\')">Daveti İptal Et</button></div>';
+    html+='</div>';
+  }else if(m.status==='lobby'){
+    html+='<div class="live-card"><span class="live-status">Hazırlık · <span id="liveWaitNum">'+
+      liveSecondsLeft(m.lobbyExpiresAt)+'</span> sn</span><h2>İkiniz de hazır mısınız?</h2>'+
+      '<p>Sen: <b>'+(m.myReady?'✅ Hazır':'⏳ Bekliyor')+'</b><br>'+liveEsc(opponent)+': <b>'+
+      (m.opponentReady?'✅ Hazır':'⏳ Bekliyor')+'</b></p>'+
+      '<p>İkiniz hazır olunca ortak 3 saniyelik geri sayım başlayacak.</p>'+
+      '<div class="live-actions">'+(m.myReady?'<span class="live-status">Rakibin bekleniyor</span>':
+        '<button class="btn btn-primary" onclick="liveAction(\'live_ready\')" '+
+        (d.busy?'disabled':'')+'>Hazırım!</button>')+
+      '<button class="btn btn-outline" onclick="liveAskLeave()">Maçtan Çık</button></div></div>';
+  }else if(m.status==='countdown'){
+    html+='<div class="live-card" style="text-align:center;"><h2>İkiniz de hazırsınız!</h2>'+
+      '<div class="live-countdown" id="liveTimer">'+liveSecondsLeft(m.startsAt)+'</div>'+
+      '<p>Aynı sorular aynı anda açılacak.</p></div>';
+  }else if(m.status==='playing'){
+    const elapsed=Math.max(0,liveServerNow()-Date.parse(m.startsAt));
+    const expected=Math.floor(elapsed/12000);
+    const seconds=Math.max(0,Math.ceil((12000-(elapsed%12000))/1000));
+    html+='<div class="dl-timetrack"><div class="dl-timefill" id="liveTimeFill" style="width:'+
+      Math.min(100,seconds/DUEL_SEC*100)+'%"></div></div>'+
+      '<div class="live-scoreboard"><div>🙂 Sen<b>'+m.myScore+'</b>'+m.myCorrect+' doğru</div>'+
+      '<div>⚡ '+liveEsc(opponent)+'<b>'+m.opponentScore+'</b>'+m.opponentCorrect+' doğru</div></div>';
+    if(expected!==m.questionIndex||!m.question){
+      html+='<div class="live-card"><h2>Sonraki soru hazırlanıyor…</h2><p>Bağlantı güncelleniyor.</p></div>';
+    }else{
+      const own=m.myAnswer;
+      html+='<div class="dl-top" style="padding-top:0;"><div class="dl-top-mid"><div class="dl-top-s">Soru '+
+        (m.questionIndex+1)+' / '+m.questionCount+'</div></div><div class="dl-timer" id="liveTimer">'+
+        seconds+'</div></div><div class="dl-q">'+m.question.q+'</div>'+
+        '<div class="dl-opts">'+m.question.opts.map((option,index)=>{
+          let cls='dl-opt';
+          const selected=own?own.optionIndex===index:d.picked===index;
+          if(own) cls+=selected?(own.correct?' is-ok':' is-bad'):' is-dim';
+          return '<button class="'+cls+'" onclick="liveAnswer('+index+')" '+
+            (own||d.answerPending||d.awaitingNext?'disabled':'')+'>'+liveEsc(option)+'</button>';
+        }).join('')+'</div>';
+      if(own) html+='<div class="dl-fb '+(own.correct?'ok':'bad')+'">'+
+        (own.correct?'✅ Doğru! +'+own.points+' puan':'❌ Bu kez olmadı')+'</div>';
+      else if(d.answerPending) html+='<div class="live-warning">Cevabın sunucuya gönderiliyor…</div>';
+    }
+  }else if(m.status==='finished'){
+    const won=m.winner===me,draw=m.winner==='draw';
+    const label=draw?'BERABERE':won?'ZAFER!':'BU KEZ OLMADI';
+    const icon=draw?'🤝':won?'🏆':'💪';
+    const cls=draw?'draw':won?'win':'loss';
+    const note=m.finishReason==='forfeit'?(m.forfeitUserId===me?
+      'Maçtan ayrıldığın veya bağlantın uzun süre kesildiği için hükmen kaybettin.':
+      'Rakibinin bağlantısı kesildi veya maçtan ayrıldı.'):'İkiniz de aynı soruları aynı anda oynadınız.';
+    html+='<div class="dl-res '+cls+'"><div class="dl-res-emo">'+icon+'</div>'+
+      '<div class="dl-res-t">'+label+'</div><div class="dl-res-s">Sen '+m.myScore+
+      ' · '+liveEsc(opponent)+' '+m.opponentScore+'</div><div class="dl-res-c">'+
+      liveEsc(m.catLabel)+'</div></div><div class="live-card"><p>'+liveEsc(note)+'</p>'+
+      '<p>'+m.myCorrect+' / '+m.questionCount+' doğru</p>';
+    if(!m.rewardClaimed) html+='<button class="btn btn-primary" onclick="liveClaim()" '+
+      (d.busy?'disabled':'')+'>🎁 Ödülümü Al</button>';
+    else html+='<span class="live-status">🎁 Ödül hesabına eklendi</span>';
+    if(d.reward&&d.rewardMatchId===m.id){
+      html+='<table class="dl-tbl" style="margin-top:12px;">'+d.reward.lines.map(line=>
+        '<tr><td>'+liveEsc(line[0])+'</td><td>+'+line[1]+' XP</td><td>+'+line[2]+' 🪙</td></tr>').join('')+
+        '<tr><td>Toplam</td><td>+'+d.reward.xp+' XP</td><td>+'+d.reward.coin+' 🪙</td></tr></table>';
+      if(d.reward.levelBonus) html+='<p>Seviye atlama ödülü: +'+d.reward.levelBonus+' 🪙</p>';
+    }
+    html+='</div>';
+    if(Array.isArray(m.myAnswers)){
+      const answers=new Map(m.myAnswers.map(a=>[a.questionIndex,a]));
+      html+='<div class="live-recap">'+Array.from({length:m.questionCount},(_,i)=>{
+        const a=answers.get(i); return '<span class="'+(a?(a.correct?'ok':'bad'):'')+'">'+(i+1)+'</span>';
+      }).join('')+'</div>';
+    }
+  }else{
+    const text=m.status==='expired'?'Davet veya hazırlık süresi doldu.':
+      m.status==='declined'?'Davet kabul edilmedi.':'Maç iptal edildi.';
+    html+='<div class="live-card"><h2>Maç sona erdi</h2><p>'+text+'</p></div>';
+  }
+  html+='<div style="margin:14px 16px;"><button class="btn btn-outline" onclick="'+
+    (liveIsActive(m.status)?'liveAskLeave()':'openArena()')+'">'+
+    (liveIsActive(m.status)?'← Maçtan Ayrıl':'🏆 Arenaya Dön')+'</button></div>'+
+    '<div style="height:60px"></div>';
+  return '<div class="dl-screen">'+html+'</div>';
 }
 function duelPickCat(id){ duelState().setup = {catId:id}; renderAll(); }
 function duelClearCat(){ duelState().setup = {catId:null}; renderAll(); }
@@ -23119,6 +23509,8 @@ function renderArena(){
           Math.round(Math.min(100, duelWins() / nx.it.wins * 100)) + '%"></div></div></div>'
         : '<div class="dl-next">👑 Bütün kupa ödüllerini topladın!</div>') +
   '</div>';
+
+  html += renderLiveArenaSection();
 
   /* --- ödül bekleyen maçlar --- */
   if(alinacak.length){
@@ -23197,8 +23589,12 @@ function renderArena(){
           '<div class="dl-row-ic">' + avatarFor(f.username) + '</div>' +
           '<div style="flex:1;min-width:0"><div class="gtitle">' + f.username + '</div>' +
             '<div class="gsub">Seviye ' + f.level + ' · ' + f.grade + '. Sınıf</div></div>' +
-          '<button class="btn btn-primary dl-mini" onclick="dlStartChallenge(\'' + f.uid + '\',\'' +
-            qa(f.username) + '\',\'' + secili + '\')">⚔️ Davet</button>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end">' +
+          (Number(f.grade)===gr?'<button class="btn btn-primary dl-mini" onclick="liveInvite(\''+
+            f.uid+'\',\''+qa(f.username)+'\',\''+secili+'\')">⚡ Canlı</button>':
+            '<span class="live-status">Farklı sınıf</span>')+
+          '<button class="btn btn-outline dl-mini" onclick="dlStartChallenge(\'' + f.uid + '\',\'' +
+            qa(f.username) + '\',\'' + secili + '\')">⏳ Sonradan</button></div>' +
         '</div>';
       });
     }
@@ -25021,7 +25417,7 @@ function openFriends(){
 function duelInvite(uid, name, catId){
   if(!duelCanOnline()){ toast('Arkadaşına meydan okumak için hesapla giriş yapmalısın'); return; }
   duelState().setup = {catId:catId};
-  dlStartChallenge(uid, name, catId);
+  liveInvite(uid, name, catId);
 }
 
 function friendRow(f, actions){
@@ -25388,6 +25784,7 @@ function androidGeriTusu(){
       return 'handled';
     }
     if(state.screen === 'duelResult'){ go('arena'); return 'handled'; }
+    if(state.screen === 'liveMatch'){ liveAskLeave(); return 'handled'; }
     if(state.screen === 'messages'){ openFriends(); return 'handled'; }
     if(state.screen === 'privacy'){ go(privacyReturnScreen); return 'handled'; }
     if(state.screen === 'customize'){ cancelCustomize(); return 'handled'; }
@@ -25419,11 +25816,13 @@ function go(screen){
   if(typeof cgStopTimer === 'function') cgStopTimer();
   }
   if(screen !== 'duelPlay' && typeof dlStop === 'function') dlStop();
+  if(screen !== 'liveMatch') liveStopMatchPolling();
   if(screen !== 'gamePlayer' && otoGecisSayac){ clearInterval(otoGecisSayac); otoGecisSayac = null; }
   state.screen = screen;
   state.friendModal = null;
   renderAll();
   window.scrollTo(0,0);
+  document.querySelector('.app-shell').scrollTop = 0;
 }
 function renderAll(){
   const app = document.getElementById('app');
@@ -25452,6 +25851,7 @@ function renderAll(){
     case 'tasks': html = renderTasks() + renderBottomNav('home'); break;
     case 'duelPlay': html = renderDuelPlay(); break;
     case 'duelResult': html = renderDuelResult(); break;
+    case 'liveMatch': html = renderLiveMatch(); break;
     case 'gamePlayer': html = renderGamePlayerScreen(); break;
     default: html = '<p>?</p>';
   }
@@ -25545,8 +25945,9 @@ window.addEventListener('DOMContentLoaded', ()=>{
      isteyebileceği için kısa bir gecikmeyle sessizce ön yüklenir. */
   if(guest){
     setTimeout(()=>{ initServer().catch(()=>{}); }, 2500);
+    setTimeout(liveBoot,750);
   } else {
-    verifySessionInBackground(iyimser);
+    Promise.resolve(verifySessionInBackground(iyimser)).finally(liveBoot);
   }
 });
 </script>

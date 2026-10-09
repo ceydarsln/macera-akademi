@@ -45,6 +45,14 @@ Bu öğretmen paneli güncellemesinden önce kurulmuş veritabanlarında
 uygulayın. Yeni kurulumlar güncel `schema.sql` dosyasını kullandığı için buna
 ihtiyaç duymaz.
 
+Canlı arkadaş yarışması güncellemesinde mevcut veritabanının önce yedeğini alın,
+ardından `web/database/migrations/2026-09-30-live-matches.sql` geçişini bir kez
+uygulayın. Yeni kodu sunucuya yüklemeden önce bu üç tabloyu doğrulayın:
+`live_matches`, `live_match_answers`, `live_match_claims`. Mevcut Docker/MySQL
+volume'unda `schema.sql` değişikliği kendiliğinden uygulanmaz. Kod yayına
+alındıktan sonra iki gerçek hesapla davet, sekiz soru, kopma, sonuç ve tek
+seferlik ödül akışını ayrıca test edin; yalnız API sağlık yanıtı yeterli değildir.
+
 ## Güvenlik notları
 
 - Siteyi yalnızca HTTPS üzerinden yayınlayın.

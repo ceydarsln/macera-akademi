@@ -1,6 +1,6 @@
 Options -Indexes
 
-<FilesMatch "^(config\.local\.php|config\.sample\.php|bootstrap\.php)$">
+<FilesMatch "^(config\.local\.php|config\.sample\.php|bootstrap\.php|live\.php|live-questions\.php)$">
   Require all denied
 </FilesMatch>
 
