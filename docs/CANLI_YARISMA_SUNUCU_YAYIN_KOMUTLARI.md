@@ -1,8 +1,8 @@
 # Sunucu yöneticisi için canlı yarışma yayın komutları
 
-9 Ekim 2026. Bu dosya **canlı sunucuda çalıştırılmadı**; sunucu yöneticisinin kendi ortamında doğrulayıp uygulaması içindir. Sunucunun kurulum geçmişi bu dosyada varsayılmaz.
+10 Ekim 2026. Bu dosya **canlı sunucuda çalıştırılmadı**; sunucu yöneticisinin kendi ortamında doğrulayıp uygulaması içindir. Sunucunun kurulum geçmişi bu dosyada varsayılmaz.
 
-GitHub dalı: `codex/cuce-adimi-pilot`. Canlı yarışma kodu `14673586c2d3f1a492416833566fd00ed0d6e018` commit'inde. `main` dalına göre bu dal **onlarca commit ve yüzlerce dosya** ileridedir; yalnız yarışma değil, önceki oyun değişiklikleri de taşınır. Güncel sayı ön kontrol komutuyla görülür. Proje sahibinin açık onayı olmadan bu kapsamı canlıya almayın. Depodaki diğer kirli yerel dosyalar bu dala gönderilmedi.
+GitHub yayın kaynağı: `main`. Canlı yarışma kodu `14673586c2d3f1a492416833566fd00ed0d6e018` commit'inde; oyun ve mobil düzenlemeleriyle birlikte `main` dalına 10 Ekim'de alındı. Bu kapsam yalnız yarışma değil, önceki oyun değişikliklerini de içerir. `main`e alınmış olması canlı sunucuya dağıtıldığı anlamına gelmez. Depodaki diğer kirli yerel dosyalar gönderilmedi.
 
 ## 1. Sunucuda salt-okunur ön kontrol
 
@@ -13,9 +13,7 @@ git fetch origin
 git status --short
 git rev-parse HEAD
 git rev-parse origin/main
-git rev-parse origin/codex/cuce-adimi-pilot
-git rev-list --count origin/main..origin/codex/cuce-adimi-pilot
-git merge-base --is-ancestor 14673586c2d3f1a492416833566fd00ed0d6e018 origin/codex/cuce-adimi-pilot
+git merge-base --is-ancestor 14673586c2d3f1a492416833566fd00ed0d6e018 origin/main
 docker compose ps
 ```
 
@@ -53,38 +51,38 @@ Yedek dosyasının **geri yüklenebilir** olduğunu sunucu yöneticisi kendi yö
 
 ## 3. Şema geçişini bir kez uygula
 
-Geçiş dosyası: `web/database/migrations/2026-09-30-live-matches.sql`. Sunucunun mevcut `main` checkout'unda henüz bulunmayabilir; aşağıdaki `git show` komutu dosyayı **GitHub'dan çekilmiş yarışma dalından** okur. Önceki yedek başarılıysa ve doğru veritabanı doğrulandıysa yalnız uygun seçeneği çalıştırın.
+Geçiş dosyası: `web/database/migrations/2026-09-30-live-matches.sql`. Sunucunun mevcut checkout'unda henüz bulunmayabilir; aşağıdaki `git show` komutu dosyayı **GitHub'dan çekilmiş güncel `main` dalından** okur. Önceki yedek başarılıysa ve doğru veritabanı doğrulandıysa yalnız uygun seçeneği çalıştırın.
 
 ```bash
-git cat-file -e origin/codex/cuce-adimi-pilot:web/database/migrations/2026-09-30-live-matches.sql || exit 1
+git cat-file -e origin/main:web/database/migrations/2026-09-30-live-matches.sql || exit 1
 set -o pipefail
 ```
 
 **Bundled DB:**
 
 ```bash
-git show origin/codex/cuce-adimi-pilot:web/database/migrations/2026-09-30-live-matches.sql | docker compose --profile bundled-db exec -T db sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mysql -uroot "$MYSQL_DATABASE"'
+git show origin/main:web/database/migrations/2026-09-30-live-matches.sql | docker compose --profile bundled-db exec -T db sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mysql -uroot "$MYSQL_DATABASE"'
 printf '%s\n' "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name IN ('live_matches','live_match_answers','live_match_claims');" | docker compose --profile bundled-db exec -T db sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mysql -uroot -N "$MYSQL_DATABASE"'
 ```
 
 **Şirket DB:**
 
 ```bash
-git show origin/codex/cuce-adimi-pilot:web/database/migrations/2026-09-30-live-matches.sql | mysql --defaults-extra-file="$MACERA_MYSQL_AYAR_DOSYASI" "$MACERA_DB_ADI"
+git show origin/main:web/database/migrations/2026-09-30-live-matches.sql | mysql --defaults-extra-file="$MACERA_MYSQL_AYAR_DOSYASI" "$MACERA_DB_ADI"
 mysql --defaults-extra-file="$MACERA_MYSQL_AYAR_DOSYASI" -N "$MACERA_DB_ADI" -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name IN ('live_matches','live_match_answers','live_match_claims')"
 ```
 
 Her iki durumda da son sayı **3** olmalı. `schema.sql` dosyasını mevcut dolu veritabanına yeniden içe aktarmayın.
 
-## 4. Onaylanan Git dalını dağıt
+## 4. Onaylanan Git sürümünü dağıt
 
-Önce önceki commit'i kayıt altına alın. Aşağıdaki örnek, **Docker uygulama container'ı** için ve yalnız proje sahibi geniş dal kapsamını onayladıktan sonra geçerlidir. Sunucunun kendi atomik yayın prosedürü varsa onu tercih edin.
+Önce önceki commit'i kayıt altına alın. Aşağıdaki örnek, **Docker uygulama container'ı** içindir. Sunucunun kendi atomik yayın prosedürü varsa onu tercih edin.
 
 ```bash
 MACERA_ONCEKI_COMMIT=$(git rev-parse HEAD)
 printf 'Onceki commit: %s\n' "$MACERA_ONCEKI_COMMIT"
-git fetch origin codex/cuce-adimi-pilot
-git switch --detach origin/codex/cuce-adimi-pilot
+git fetch origin main
+git switch --detach origin/main
 docker compose up -d --build app
 ```
 
