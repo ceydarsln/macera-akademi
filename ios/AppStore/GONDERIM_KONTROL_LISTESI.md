@@ -1,15 +1,15 @@
 # App Store gönderim kontrol listesi
 
-Denetim tarihi: 4 Eylül 2026 — Xcode 16.3, iOS 18.4 SDK
+Son paket denetimi: 10 Ekim 2026 — Xcode 26.6, iOS 26.5 SDK
 Son iPad ön kontrolü: 9 Ekim 2026 — iPad (A16) simülatörü, iOS 26.5.
 
 ## Hazır olanlar (doğrulandı)
 
 | Öge | Durum |
 | --- | --- |
-| Release derlemesi (`-sdk iphoneos`) | `** BUILD SUCCEEDED **`, hata ve uyarı yok |
-| Uygulama paketi | 7,3 MB; `macera-akademi.html` + 46 oyun dosyası eksiksiz |
-| Sürüm | iOS `2.8.1 (22)`; Android `2.8.2 (23)` — gönderim öncesi sürüm uyumu yeniden kararlaştırılmalı |
+| Release derlemesi (`generic/platform=iOS`) | Xcode 26.6 ile arşiv ve App Store Connect IPA dışa aktarımı başarılı |
+| Uygulama paketi | Xcode 26.6 arşivindeki `.app` yaklaşık 8,2 MB; mağaza IPA'sı yaklaşık 2,3 MB. Ana HTML kaynak özetiyle eşleşiyor. |
+| Sürüm | iOS ve Android `2.8.2 (23)`; iOS IPA dışa aktarımı tamamlandı |
 | Bundle ID | `com.maceraakademi.app` |
 | Minimum iOS | 15.0 |
 | Şifreleme beyanı | `ITSAppUsesNonExemptEncryption = false` (ek belge gerekmez) |
@@ -17,34 +17,18 @@ Son iPad ön kontrolü: 9 Ekim 2026 — iPad (A16) simülatörü, iOS 26.5.
 | Açılış rengi | `UILaunchScreen` → `LaunchBackground` renk kümesi mevcut |
 | Gizlilik bildirimi | `PrivacyInfo.xcprivacy` pakete giriyor |
 | Mağaza metinleri | `metadata-tr.md`, `app-privacy-tr.md`, `privacy-policy.html` hazır |
-| Cihaz ailesi | Güncel Debug paketi `UIDeviceFamily = [1,2]` — iPhone ve iPad |
-| iPad Release simülatörü | 9 Ekim 2026 derlemesi başarılı; pakette `UIDeviceFamily = [1,2]` doğrulandı. Bu, imzalı App Store arşivi değildir. |
+| Cihaz ailesi | `UIDeviceFamily = [1,2]` — iPhone ve iPad |
+| iPad Release simülatörü | 9 Ekim 2026 derlemesi başarılı; pakette `UIDeviceFamily = [1,2]` doğrulandı. 10 Ekim'de Xcode 26.6 ile imzalı iPhone/iPad mağaza IPA'sı da üretildi. |
 | Açılış ekranı | Yerel karşılama katmanı: 1. saniyede görünür, içerik gelince kaybolur |
 | Ekran görüntüleri | `ekran-goruntuleri/` — iPhone görüntüleri mevcut; iPad gönderim görüntüleri ayrıca hazırlanmalı |
 
-## Engelleyiciler — yalnız hesap sahibi çözebilir
+## Gönderim öncesi açık kontroller
 
-1. **İmzalama takımı yok.** Arşiv denemesi şu hatada durdu:
-   `Signing for "MaceraAkademi" requires a development team.`
-   `security find-identity -p codesigning` → **0 geçerli kimlik**.
-   Gerekenler: Apple Developer Program üyeliği (yıllık 99 USD), Xcode >
-   Settings > Accounts'a Apple kimliğiyle giriş, ardından hedefin
-   Signing & Capabilities bölümünde takımın seçilmesi.
-
-2. **App Store Connect kaydı.** `com.maceraakademi.app` kimliğiyle uygulama
-   kaydı oluşturulmalı.
-
-3. **Yükleme kimlik doğrulaması.** App Store Connect > Users and Access >
-   Integrations bölümünden API anahtarı üretilip `.p8` dosyası
-   `~/.appstoreconnect/private_keys/` içine konmalı. (Bu adımı parola/anahtar
-   girmeyi gerektirdiği için ben yapamam.)
-
-4. **Gizlilik politikası URL'si.** `privacy-policy.html` herkese açık bir HTTPS
-   adresinde, uygulamanın PHP/MySQL sunucusuyla birlikte yayımlanmalı.
-
-5. **Destek URL'si** ve inceleme ekibi için **süreli test hesabı**.
-
-6. **Yaş derecelendirme anketi** App Store Connect üzerinden doldurulmalı.
+1. Apple Developer hesabı ve `L69J7JMD46` takımı Xcode'da doğrulandı. Xcode 26.6, bulut yönetimli Apple Distribution imzasıyla `2.8.2 (23)` IPA'sını başarıyla üretti. Paket: `output/release-paketleri-2026-10-10/ios-2.8.2-app-store-export/MaceraAkademi.ipa`.
+2. App Store Connect'te uygulama kaydı mevcut ve yayımdaki sürüm `2.8.1`. Xcode yükleme ön sorgusunda `build 23` için önceki bir build bulunmadı.
+3. `2.8.2 (23)` paketi 11 Ekim 2026'da Xcode 26.6 ile App Store Connect'e başarıyla yüklendi. Apple "Uploaded package is processing" yanıtını verdi; işleme/mağaza kabul sonucu ayrıca doğrulanmalı. İncelemeye gönderme veya yayımlama yapılmadı.
+4. Gizlilik politikası/destek URL'leri, inceleme ekibi test hesabı, yaş derecelendirmesi ve güncel iPad ekran görüntüleri gönderimden önce App Store Connect'te doğrulanmalı.
+5. iPad (A16) / iOS 26.5 simülatöründe Release uygulaması kuruldu ve ana ekranı açıldı; iPhone 17 / iOS 26.5 simülatöründe ilk karşılama ekranı açıldı. Simülatör içindeki dokunma otomasyonu yanıt vermedi; gerçek iPad'de ses ve dokunma testi ile canlı yarışmanın iki ayrı hesapla kabul testi hâlâ açık.
 
 ## Çözülen riskler
 
@@ -64,11 +48,6 @@ karşılama katmanı kuruyor; katman `didFinish` ile kalkıyor, gezinme geri
 Soğuk başlatma sınandı: 1. saniyede karşılama katmanı, 4. saniyede içerik;
 arada boş kare yok.
 
-## Engeller kalkınca yayın komutları
+## Yayın notu
 
-```bash
-TEAM_ID=XXXXXXXXXX ./ios/yayinla.sh arsiv
-TEAM_ID=XXXXXXXXXX ./ios/yayinla.sh ipa
-ASC_KEY_ID=... ASC_ISSUER_ID=... ./ios/yayinla.sh dogrula
-ASC_KEY_ID=... ASC_ISSUER_ID=... ./ios/yayinla.sh yukle
-```
+Bu Mac'te sistemin varsayılan `xcodebuild` komutu hâlâ eski Xcode 16.3'e bağlı. Yeniden paketleme gerektiğinde Xcode 26.6'nın geliştirici dizinini `DEVELOPER_DIR` olarak seçin; eski Xcode ile mağaza paketi üretmeyin. IPA'yı yüklemeden önce sürüm ve derleme numarasını App Store Connect'te kontrol edin.

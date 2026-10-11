@@ -6,8 +6,8 @@
 - Alt başlık: `Oyna, öğren, maceraya katıl`
 - Birincil kategori: `Education`
 - İkincil kategori: `Games / Family`
-- Cihaz: yalnız iPhone
-- Sürüm: `2.8.1 (22)`
+- Cihaz: iPhone ve iPad
+- Sürüm: `2.8.2 (23)`
 - Bundle ID: `com.maceraakademi.app`
 
 ## Tanıtım metni
